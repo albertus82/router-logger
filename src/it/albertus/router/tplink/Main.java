@@ -1,4 +1,4 @@
-package it.albertus.net.adsl.tplink;
+package it.albertus.router.tplink;
 
 import java.io.IOException;
 import java.io.InputStream;
