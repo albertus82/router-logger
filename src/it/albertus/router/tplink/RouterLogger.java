@@ -15,22 +15,62 @@ public abstract class RouterLogger {
 	private final TelnetClient telnet = new TelnetClient();
 	private InputStream in;
 	private OutputStream out;
-	protected final Map<String, String> info = new LinkedHashMap<String, String>();
+	private final Map<String, String> info = new LinkedHashMap<String, String>();
 	protected final Properties configuration = new Properties();
+	
+	public void run() throws IOException, InterruptedException {
+		boolean end = false;
+
+		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count"));
+
+		for (int index = 0; index <= retries && !end; index++) {
+			// Gestione riconnessione in caso di errore...
+			if (index > 0) {
+				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms"));
+				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
+				Thread.sleep(retryIntervalInMillis);
+			}
+
+			// Avvio della procedura...
+			connect();
+			login();
+			try {
+				loop();
+				end = true; // Se non si sono verificati errori.
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			finally {
+				// In ogni caso, si esegue la disconnessione dal server...
+				System.out.println();
+				logout();
+				disconnect();
+			}
+		}
+	}
 
 	/**
 	 * Da implementare con la logica che estrae le informazioni di interesse da
 	 * telnet, utilizzando i metodi {@link #writeToTelnet(String)} e
 	 * {@link #readFromTelnet(char, boolean)}.
+	 * 
+	 * @return una mappa contenente le informazioni estratte.
+	 * 
+	 * @throws IOException
 	 */
-	protected abstract void readInfo() throws IOException;
+	protected abstract Map<String, String> readInfo() throws IOException;
 
 	/**
 	 * Da implementare con la logica che salva le informazioni di interesse
 	 * precedentemente estratte con {@link #readInfo()} con le modalita'
 	 * desiderate (ad esempio su file o in un database).
+	 * 
+	 * @param info le informazioni da salvare.
+	 * 
+	 * @throws IOException
 	 */
-	protected abstract void saveInfo() throws IOException;
+	protected abstract void saveInfo(Map<String, String> info) throws IOException;
 
 	public RouterLogger() {
 		try {
@@ -127,8 +167,8 @@ public abstract class RouterLogger {
 			}
 
 			// Chiamata alle implementazioni specifiche...
-			readInfo();
-			saveInfo();
+			info.putAll(readInfo());
+			saveInfo(info);
 			// Fine implementazioni specifiche.
 
 			String log = iteration + " ";
@@ -172,41 +212,6 @@ public abstract class RouterLogger {
 			text.append(character);
 		}
 		return text.toString().trim();
-	}
-	
-	public void run() throws IOException, InterruptedException {
-		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger *****");
-		System.out.println();
-
-		boolean end = false;
-
-		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count"));
-
-		for (int index = 0; index <= retries && !end; index++) {
-			// Gestione riconnessione in caso di errore...
-			if (index > 0) {
-				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms"));
-				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
-				Thread.sleep(retryIntervalInMillis);
-			}
-
-			// Avvio della procedura...
-			connect();
-			login();
-			try {
-				loop();
-				end = true; // Se non si sono verificati errori.
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			finally {
-				// In ogni caso, si esegue la disconnessione dal server...
-				System.out.println();
-				logout();
-				disconnect();
-			}
-		}
 	}
 
 }

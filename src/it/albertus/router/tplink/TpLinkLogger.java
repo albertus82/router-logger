@@ -8,6 +8,8 @@ import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class TpLinkLogger extends RouterLogger {
 
@@ -23,6 +25,8 @@ public class TpLinkLogger extends RouterLogger {
 	private FileWriter logFileWriter = null;
 
 	public static void main(String... args) throws IOException, InterruptedException {
+		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger *****");
+		System.out.println();
 		new TpLinkLogger().run();
 	}
 
@@ -49,11 +53,12 @@ public class TpLinkLogger extends RouterLogger {
 	}
 
 	@Override
-	protected void readInfo() throws IOException {
+	protected Map<String, String> readInfo() throws IOException {
 		writeToTelnet("adsl show info");
 		readFromTelnet('{', true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 
 		// Inizio estrazione dati...
+		Map<String, String> info = new LinkedHashMap<String, String>();
 		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet('}', false)));
 		String line;
 		while ((line = reader.readLine()) != null) {
@@ -63,10 +68,12 @@ public class TpLinkLogger extends RouterLogger {
 		// Fine estrazione dati.
 
 		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
+
+		return info;
 	}
 
 	@Override
-	protected void saveInfo() throws IOException {
+	protected void saveInfo(Map<String, String> info) throws IOException {
 		logFile = new File(configuration.getProperty("log.destination.dir") + '/' + dateFormatFileName.format(new Date()) + ".csv");
 
 		// Scrittura header CSV (solo se il file non esiste gia')...
@@ -74,7 +81,7 @@ public class TpLinkLogger extends RouterLogger {
 			logFileWriter = new FileWriter(logFile);
 			System.out.println();
 			System.out.println("Logging to: " + logFile.getAbsolutePath());
-			logFileWriter.append(buildCsvHeader());
+			logFileWriter.append(buildCsvHeader(info));
 		}
 
 		if (logFileWriter == null) {
@@ -82,11 +89,11 @@ public class TpLinkLogger extends RouterLogger {
 			System.out.println();
 			System.out.println("Logging to: " + logFile.getAbsolutePath());
 		}
-		logFileWriter.append(buildCsvRow());
+		logFileWriter.append(buildCsvRow(info));
 		logFileWriter.flush();
 	}
 
-	private String buildCsvHeader() {
+	private String buildCsvHeader(Map<String, String> info) {
 		StringBuilder header = new StringBuilder("Timestamp").append(CSV_SEPARATOR);
 		for (String field : info.keySet()) {
 			header.append(field).append(CSV_SEPARATOR);
@@ -95,7 +102,7 @@ public class TpLinkLogger extends RouterLogger {
 		return header.toString();
 	}
 
-	private String buildCsvRow() {
+	private String buildCsvRow(Map<String, String> info) {
 		StringBuilder row = new StringBuilder(dateFormatLog.format(new Date())).append(CSV_SEPARATOR);
 		for (String field : info.values()) {
 			row.append(field.replace(CSV_SEPARATOR, ' ')).append(CSV_SEPARATOR);
