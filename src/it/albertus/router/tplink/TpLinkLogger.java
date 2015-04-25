@@ -12,17 +12,25 @@ import java.util.Date;
 
 public class TpLinkLogger extends RouterLogger {
 
+	private static final char COMMAND_PROMPT = '#';
+	private static final char LOGIN_PROMPT = ':';
 	private static final String LINE_SEPARATOR = "\r\n";
 	private static final char CSV_SEPARATOR = ';';
+
 	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+
+	private File logFile = null;
+	private FileWriter logFileWriter = null;
 
 	public static void main(String... args) throws Exception {
 		RouterLogger logger = new TpLinkLogger();
 
-		while (true) {
+		int retries = 0;
+		while (retries < 3) {
 			logger.login();
 			logger.loop();
+			retries++;
 			logger.logout();
 		}
 	}
@@ -41,18 +49,45 @@ public class TpLinkLogger extends RouterLogger {
 			telnet.setSoTimeout(Integer.parseInt(configuration.getProperty("socket.timeout.ms")));
 			in = telnet.getInputStream();
 			out = telnet.getOutputStream();
-			read(':', true);
+			System.out.print(read(LOGIN_PROMPT, true));
 			write(configuration.getProperty("router.username"));
-			read(':', true);
+			System.out.println(read(LOGIN_PROMPT, true));
 			write(configuration.getProperty("router.password"));
-			read('#', true);
+			System.out.print(read(COMMAND_PROMPT, true));
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
+	protected void loop() {
+		int iteration = 1;
+		while (true) {
+			try {
+				System.out.print(" " + iteration++);
+
+				info();
+
+				logFile = new File(configuration.getProperty("log.destination.dir") + '/' + dateFormatFileName.format(new Date()) + ".csv");
+
+				// Scrittura header CSV (solo se il file non esiste gia')...
+				if (!logFile.exists()) {
+					logFileWriter = new FileWriter(logFile);
+					logFileWriter.append(buildCsvHeader());
+				}
+
+				save();
+
+				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+	}
+
 	protected void info() throws IOException {
 		write("adsl show info");
 		read('{', true);
@@ -74,35 +109,12 @@ public class TpLinkLogger extends RouterLogger {
 		}
 	}
 
-	@Override
-	protected void save() {
-		FileWriter output = null;
-
-		File file = new File(configuration.getProperty("log.destination.dir") + '/' + dateFormatFileName.format(new Date()) + ".csv");
-
-		// Header...
-		if (!file.exists()) {
-			try {
-				output = new FileWriter(file);
-				output.append(buildCsvHeader());
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+	protected void save() throws IOException {
+		if (logFileWriter == null) {
+			logFileWriter = new FileWriter(logFile, true);
 		}
-
-		try {
-			if (output == null) {
-				output = new FileWriter(file, true);
-			}
-			output.append(buildCsv());
-			output.flush();
-			output.close();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		logFileWriter.append(buildCsv());
+		logFileWriter.flush();
 	}
 
 	private String buildCsvHeader() {

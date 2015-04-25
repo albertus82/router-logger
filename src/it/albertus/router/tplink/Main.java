@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
-
+@Deprecated
 public class Main {
 
 	public static void main(String... args) throws Exception {

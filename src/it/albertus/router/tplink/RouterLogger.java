@@ -18,65 +18,43 @@ public abstract class RouterLogger {
 	protected Properties configuration = new Properties();
 
 	protected abstract void login();
-	
+
 	protected abstract void logout();
-	
-	protected void loop() {
-		while (true) {
-			try {
-				info();
-				save();
-				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				break;
-			}
-		}
-	}
+
+	protected abstract void loop();
 
 	protected abstract void info() throws IOException;
 
-	protected abstract void save();
+	protected abstract void save() throws IOException;
 
-	protected String write(String command) {
+	protected String write(String command) throws IOException {
 		StringBuilder echo = new StringBuilder();
-		try {
-			for (char character : command.toCharArray()) {
-				if (character == '\n' || character == '\r') {
-					break;
-				}
-				out.write(character);
-				echo.append(character);
+		for (char character : command.toCharArray()) {
+			if (character == '\n' || character == '\r') {
+				break;
 			}
-			out.flush();
-//			Thread.sleep(50);
-			out.write('\n');
-			echo.append('\n');
-			out.flush();
+			out.write(character);
+			echo.append(character);
 		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		out.flush();
+		// Thread.sleep(50);
+		out.write('\n');
+		echo.append('\n');
+		out.flush();
 		return echo.toString();
 	}
-	
-	protected String read(char until, boolean inclusive) {
+
+	protected String read(char until, boolean inclusive) throws IOException {
 		StringBuilder text = new StringBuilder();
 		char bt;
-		try {
-			while ((bt = (char) in.read()) != -1) {
-				if (bt == until) {
-					if (inclusive) {
-						text.append(bt);
-					}
-					break;
+		while ((bt = (char) in.read()) != -1) {
+			if (bt == until) {
+				if (inclusive) {
+					text.append(bt);
 				}
-				text.append(bt);
+				break;
 			}
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
+			text.append(bt);
 		}
 		return text.toString().trim();
 	}
