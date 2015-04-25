@@ -3,6 +3,8 @@ package it.albertus.router.tplink;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.net.telnet.TelnetClient;
@@ -12,13 +14,26 @@ public abstract class RouterLogger {
 	protected TelnetClient telnet = new TelnetClient();
 	protected InputStream in;
 	protected OutputStream out;
-	protected Properties info = new Properties();
+	protected Map<String, String> info = new LinkedHashMap<String, String>();
 	protected Properties configuration = new Properties();
-	protected int intervalInMillis;
 
 	protected abstract void login();
 	
 	protected abstract void logout();
+	
+	protected void loop() {
+		while (true) {
+			try {
+				info();
+				save();
+				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+	}
 
 	protected abstract void info() throws IOException;
 
