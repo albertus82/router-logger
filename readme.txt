@@ -1,0 +1,1 @@
+Semplice programma di registrazione dello stato della connessione ADSL con router TP-Link TD-W8970.
