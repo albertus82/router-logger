@@ -1,0 +1,65 @@
+<project name="RouterLogger">
+	
+	<property file="build.properties" />
+	<property file="build.properties.default" />
+	
+	<property file="src/version.properties" />
+	
+	<property name="main.class" value="it.albertus.router.tplink.TpLinkLogger" />
+	
+	<scriptdef language="javascript" name="lower">
+		<attribute name="string" />
+		<attribute name="to" />
+		project.setProperty( attributes.get( "to" ), attributes.get( "string" ).toLowerCase() );
+	</scriptdef>
+	
+	<lower string="${ant.project.name}" to="project.name.lowercase" />
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${build.dir}/classes" />
+		<javac srcdir="src" destdir="${build.dir}/classes" source="1.6" target="1.6">
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+		
+	<target name="batch">
+		<echo file="${build.dir}/dist/${project.name.lowercase}.bat">@java -classpath "%~dp0${project.name.lowercase}.jar;%~dp0lib/*" ${main.class}</echo>
+	</target>
+		
+	<target name="jar" depends="compile, copy, batch">
+		<jar destfile="${build.dir}/dist/${project.name.lowercase}.jar" basedir="${build.dir}/classes" level="9" />
+	</target>
+	
+	<target name="zip" depends="jar">
+		<zip destfile="${build.dir}/release/${project.name.lowercase}-${version.number}-bin.zip" basedir="${build.dir}/dist" level="9" />
+	</target>
+
+	<target name="copy">
+		<copy todir="${build.dir}/classes">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+				<exclude name="**/routerlogger.cfg" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/dist/lib" >
+			<fileset dir="lib" />
+		</copy>
+		
+		<copy todir="${build.dir}/dist" file="src/license.txt" />
+		
+		<copy todir="${build.dir}/dist" file="readme.txt" />
+		
+		<copy todir="${build.dir}/dist" file="src/routerlogger.cfg" />
+		
+	</target>
+	
+</project>

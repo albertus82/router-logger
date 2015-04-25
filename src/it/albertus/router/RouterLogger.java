@@ -1,8 +1,8 @@
 package it.albertus.router;
 
-import it.albertus.router.tplink.TpLinkLogger;
-
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,14 +13,39 @@ import java.util.Properties;
 import org.apache.commons.net.telnet.TelnetClient;
 
 public abstract class RouterLogger {
+	
+	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
+	private static final String VERSION_FILE_PATH = "/";
+	private static final String VERSION_FILE_NAME = "version.properties";
+	protected static final Properties version = new Properties();
+	
+	static {
+		InputStream is = RouterLogger.class.getResourceAsStream(VERSION_FILE_PATH + VERSION_FILE_NAME);
+		if (is != null) {
+			try {
+				version.load(is);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			finally {
+				try {
+					is.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	private final TelnetClient telnet = new TelnetClient();
 	private InputStream in;
 	private OutputStream out;
 	private final Map<String, String> info = new LinkedHashMap<String, String>();
 	protected final Properties configuration = new Properties();
-	
-	public void run() throws IOException, InterruptedException {
+
+	public void run() throws Exception {
 		boolean end = false;
 
 		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count"));
@@ -76,7 +101,14 @@ public abstract class RouterLogger {
 
 	public RouterLogger() {
 		try {
-			BufferedInputStream reader = new BufferedInputStream(TpLinkLogger.class.getResourceAsStream("/logger.cfg"));
+			BufferedInputStream reader;
+			File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + CONFIGURATION_FILE_NAME);
+			if (config.exists()) {
+				reader = new BufferedInputStream(new FileInputStream(config));
+			}
+			else {
+				reader = new BufferedInputStream(getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME));
+			}
 			configuration.load(reader);
 			reader.close();
 		}
@@ -86,7 +118,7 @@ public abstract class RouterLogger {
 	}
 
 	/** Effettua la connessione al server telnet, ma non l'autenticazione. */
-	private final void connect() throws IOException {
+	private final void connect() throws Exception {
 		String routerAddress = configuration.getProperty("router.address");
 		int routerPort = Integer.parseInt(configuration.getProperty("router.port"));
 		int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms"));
@@ -125,8 +157,10 @@ public abstract class RouterLogger {
 	 * telnet, utilizzando i metodi {@link #readFromTelnet(char, boolean)} e
 	 * {@link #writeToTelnet(String)} per interagire con il server e comunicare
 	 * le credenziali di accesso.
+	 * 
+	 * @throws Exception 
 	 */
-	protected abstract void login() throws IOException;
+	protected abstract void login() throws Exception;
 
 	/**
 	 * Effettua il logout dal server telnet inviando il comando

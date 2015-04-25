@@ -26,14 +26,14 @@ public class TpLinkLogger extends RouterLogger {
 	private File logFile = null;
 	private FileWriter logFileWriter = null;
 
-	public static void main(String... args) throws IOException, InterruptedException {
-		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger *****");
+	public static void main(String... args) throws Exception {
+		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger v" + version.getProperty("version.number") + " (" + version.getProperty("version.date") + ") *****");
 		System.out.println();
 		new TpLinkLogger().run();
 	}
 
 	@Override
-	protected void login() throws IOException {
+	protected void login() throws Exception {
 		try {
 			// Username...
 			System.out.print(readFromTelnet(LOGIN_PROMPT, true));
