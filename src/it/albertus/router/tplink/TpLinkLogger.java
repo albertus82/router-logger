@@ -76,7 +76,14 @@ public class TpLinkLogger extends RouterLogger {
 
 	@Override
 	protected void saveInfo(Map<String, String> info) throws IOException {
-		logFile = new File(configuration.getProperty("log.destination.dir") + '/' + dateFormatFileName.format(new Date()) + ".csv");
+		// Selezione del percorso e nome del file di destinazione...
+		String logDestinationDir = configuration.getProperty("log.destination.dir");
+		if (logDestinationDir != null && !"".equals(logDestinationDir)) {
+			logFile = new File(logDestinationDir + '/' + dateFormatFileName.format(new Date()) + ".csv");
+		}
+		else {
+			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + dateFormatFileName.format(new Date()) + ".csv");
+		}
 
 		// Scrittura header CSV (solo se il file non esiste gia')...
 		if (!logFile.exists()) {
