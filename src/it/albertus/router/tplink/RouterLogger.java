@@ -1,5 +1,6 @@
 package it.albertus.router.tplink;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,20 +12,61 @@ import org.apache.commons.net.telnet.TelnetClient;
 
 public abstract class RouterLogger {
 
-	protected TelnetClient telnet = new TelnetClient();
-	protected InputStream in;
-	protected OutputStream out;
+	private TelnetClient telnet = new TelnetClient();
+	private InputStream in;
+	private OutputStream out;
 	protected Map<String, String> info = new LinkedHashMap<String, String>();
 	protected Properties configuration = new Properties();
 
+	public RouterLogger() {
+		try {
+			BufferedInputStream reader = new BufferedInputStream(TpLinkLogger.class.getResourceAsStream("/logger.cfg"));
+			configuration.load(reader);
+			reader.close();
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
+	}
+
+	protected void connect() throws IOException {
+		String routerAddress = configuration.getProperty("router.address");
+		int routerPort = Integer.parseInt(configuration.getProperty("router.port"));
+		int connectionTimeout = Integer.parseInt(configuration.getProperty("connection.timeout.ms"));
+		int socketTimeout = Integer.parseInt(configuration.getProperty("socket.timeout.ms"));
+
+		System.out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
+		try {
+			telnet.connect(routerAddress, routerPort);
+			telnet.setConnectTimeout(connectionTimeout);
+			telnet.setSoTimeout(socketTimeout);
+			in = telnet.getInputStream();
+			out = telnet.getOutputStream();
+		}
+		catch (Exception e) {
+			telnet.disconnect();
+			throw e;
+		}
+	}
+
+	protected void disconnect() {
+		try {
+			telnet.disconnect();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected abstract void login() throws IOException;
 
-	protected abstract void logout();
+	protected void logout() {
+	}
 
-	protected abstract void info() throws IOException;
+	protected abstract void readInfo() throws IOException;
 
-	protected abstract void save() throws IOException;
-	
+	protected abstract void saveInfo() throws IOException;
+
 	protected void loop() {
 		int iteration = 0;
 		while (true) {
@@ -32,8 +74,8 @@ public abstract class RouterLogger {
 				if (iteration % 15 == 0) {
 					System.out.println();
 				}
-				info();
-				save();
+				readInfo();
+				saveInfo();
 				System.out.print(++iteration + " ");
 				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
 			}

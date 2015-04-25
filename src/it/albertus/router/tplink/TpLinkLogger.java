@@ -1,6 +1,5 @@
 package it.albertus.router.tplink;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -29,35 +28,18 @@ public class TpLinkLogger extends RouterLogger {
 
 		int retries = 0;
 		while (retries < 3) {
+			logger.connect();
 			logger.login();
 			logger.loop();
 			retries++;
 			logger.logout();
+			logger.disconnect();
 		}
-	}
-
-	public TpLinkLogger() throws IOException {
-		BufferedInputStream reader = new BufferedInputStream(TpLinkLogger.class.getResourceAsStream("/logger.cfg"));
-		configuration.load(reader);
-		reader.close();
 	}
 
 	@Override
 	protected void login() throws IOException {
-		// Lettura parametri da file di configurazione...
-		String routerAddress = configuration.getProperty("router.address");
-		int routerPort = Integer.parseInt(configuration.getProperty("router.port"));
-		int connectionTimeout = Integer.parseInt(configuration.getProperty("connection.timeout.ms"));
-		int socketTimeout = Integer.parseInt(configuration.getProperty("socket.timeout.ms"));
-
-		System.out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
 		try {
-			telnet.connect(routerAddress, routerPort);
-			telnet.setConnectTimeout(connectionTimeout);
-			telnet.setSoTimeout(socketTimeout);
-			in = telnet.getInputStream();
-			out = telnet.getOutputStream();
-
 			// Username...
 			System.out.print(readFromTelnet(LOGIN_PROMPT, true));
 			writeToTelnet(configuration.getProperty("router.username"));
@@ -66,23 +48,21 @@ public class TpLinkLogger extends RouterLogger {
 			System.out.println(readFromTelnet(LOGIN_PROMPT, true));
 			writeToTelnet(configuration.getProperty("router.password"));
 
-			readFromTelnet('-', false); // Salto caratteri speciali (clear
-										// screen)
+			readFromTelnet('-', false); // Salto caratteri speciali (clear screen)
 
 			// Prompt...
 			System.out.print(readFromTelnet(COMMAND_PROMPT, true));
 		}
 		catch (Exception e) {
-			telnet.disconnect();
+			disconnect();
 			throw e;
 		}
 	}
 
 	@Override
-	protected void info() throws IOException {
+	protected void readInfo() throws IOException {
 		writeToTelnet("adsl show info");
-		readFromTelnet('{', true); // Avanzamento del reader fino all'inizio dei
-									// dati di interesse.
+		readFromTelnet('{', true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 
 		// Inizio estrazione dati...
 		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet('}', false)));
@@ -93,12 +73,11 @@ public class TpLinkLogger extends RouterLogger {
 		reader.close();
 		// Fine estrazione dati.
 
-		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al
-												// prompt dei comandi.
+		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
 	}
 
 	@Override
-	protected void save() throws IOException {
+	protected void saveInfo() throws IOException {
 		logFile = new File(configuration.getProperty("log.destination.dir") + '/' + dateFormatFileName.format(new Date()) + ".csv");
 
 		// Scrittura header CSV (solo se il file non esiste gia')...
@@ -114,16 +93,6 @@ public class TpLinkLogger extends RouterLogger {
 		}
 		logFileWriter.append(buildCsv());
 		logFileWriter.flush();
-	}
-
-	@Override
-	protected void logout() {
-		try {
-			telnet.disconnect();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private String buildCsvHeader() {
