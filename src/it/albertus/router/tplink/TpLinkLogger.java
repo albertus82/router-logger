@@ -26,14 +26,26 @@ public class TpLinkLogger extends RouterLogger {
 		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger *****");
 		RouterLogger logger = new TpLinkLogger();
 
+		boolean end = false;
 		int retries = 0;
-		while (retries < 3) {
+		while (!end && retries++ <= 3) {
+			if ( retries > 1 ) {
+				Thread.sleep(5000);
+			}
 			logger.connect();
 			logger.login();
-			logger.loop();
-			retries++;
-			logger.logout();
-			logger.disconnect();
+			try {
+				logger.loop();
+				end = true;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			finally {
+				System.out.println();
+				logger.logout();
+				logger.disconnect();
+			}
 		}
 	}
 
@@ -48,7 +60,7 @@ public class TpLinkLogger extends RouterLogger {
 			System.out.println(readFromTelnet(LOGIN_PROMPT, true));
 			writeToTelnet(configuration.getProperty("router.password"));
 
-			readFromTelnet('-', false); // Salto caratteri speciali (clear screen)
+			readFromTelnet('-', false); // Salto caratteri speciali (clear screen).
 
 			// Prompt...
 			System.out.print(readFromTelnet(COMMAND_PROMPT, true));
@@ -83,15 +95,17 @@ public class TpLinkLogger extends RouterLogger {
 		// Scrittura header CSV (solo se il file non esiste gia')...
 		if (!logFile.exists()) {
 			logFileWriter = new FileWriter(logFile);
+			System.out.println();
 			System.out.println("Logging to: " + logFile.getAbsolutePath());
 			logFileWriter.append(buildCsvHeader());
 		}
 
 		if (logFileWriter == null) {
 			logFileWriter = new FileWriter(logFile, true);
+			System.out.println();
 			System.out.println("Logging to: " + logFile.getAbsolutePath());
 		}
-		logFileWriter.append(buildCsv());
+		logFileWriter.append(buildCsvRow());
 		logFileWriter.flush();
 	}
 
@@ -104,7 +118,7 @@ public class TpLinkLogger extends RouterLogger {
 		return header.toString();
 	}
 
-	private String buildCsv() {
+	private String buildCsvRow() {
 		StringBuilder row = new StringBuilder(dateFormatLog.format(new Date())).append(CSV_SEPARATOR);
 		for (String field : info.values()) {
 			row.append(field.replace(CSV_SEPARATOR, ' ')).append(CSV_SEPARATOR);

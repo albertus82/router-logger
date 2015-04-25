@@ -18,6 +18,20 @@ public abstract class RouterLogger {
 	protected final Map<String, String> info = new LinkedHashMap<String, String>();
 	protected final Properties configuration = new Properties();
 
+	/**
+	 * Da implementare con la logica che estrae le informazioni di interesse da
+	 * telnet, utilizzando i metodi {@link #writeToTelnet(String)} e
+	 * {@link #readFromTelnet(char, boolean)}.
+	 */
+	protected abstract void readInfo() throws IOException;
+
+	/**
+	 * Da implementare con la logica che salva le informazioni di interesse
+	 * precedentemente estratte con {@link #readInfo()} con le modalita'
+	 * desiderate (ad esempio su file o in un database).
+	 */
+	protected abstract void saveInfo() throws IOException;
+
 	public RouterLogger() {
 		try {
 			BufferedInputStream reader = new BufferedInputStream(TpLinkLogger.class.getResourceAsStream("/logger.cfg"));
@@ -29,6 +43,7 @@ public abstract class RouterLogger {
 		}
 	}
 
+	/** Effettua la connessione al server telnet, ma non l'autenticazione. */
 	protected void connect() throws IOException {
 		String routerAddress = configuration.getProperty("router.address");
 		int routerPort = Integer.parseInt(configuration.getProperty("router.port"));
@@ -44,12 +59,17 @@ public abstract class RouterLogger {
 			out = telnet.getOutputStream();
 		}
 		catch (Exception e) {
-			telnet.disconnect();
+			disconnect();
 			throw e;
 		}
 	}
 
+	/**
+	 * Effettua la disconnessione dal server telnet, ma non invia alcun comando
+	 * di logout.
+	 */
 	protected void disconnect() {
+		System.out.println("Disconnecting...");
 		try {
 			telnet.disconnect();
 		}
@@ -58,30 +78,49 @@ public abstract class RouterLogger {
 		}
 	}
 
+	/**
+	 * Da implementare con la logica che effettua l'autenticazione sul server
+	 * telnet, utilizzando i metodi {@link #readFromTelnet(char, boolean)} e
+	 * {@link #writeToTelnet(String)} per interagire con il server e comunicare
+	 * le credenziali di accesso.
+	 */
 	protected abstract void login() throws IOException;
 
-	protected void logout() {}
+	/**
+	 * Effettua il logout dal server telnet inviando il comando
+	 * <code>logout</code>. E' possibile sovrascrivere questo metodo per
+	 * aggiungere altri eventuali comandi che debbano essere eseguiti in fase di
+	 * logout.
+	 */
+	protected void logout() {
+		System.out.println("Logging out...");
+		try {
+			writeToTelnet("logout");
+		}
+		catch (IOException e) {
+			disconnect();
+		}
+	}
 
-	protected abstract void readInfo() throws IOException;
-
-	protected abstract void saveInfo() throws IOException;
-
-	protected void loop() {
+	protected void loop() throws IOException, InterruptedException {
+		int iterations = Integer.parseInt(configuration.getProperty("logger.iterations"));
 		int iteration = 0;
-		while (true) {
-			try {
-				if (iteration % 15 == 0) {
-					System.out.println();
-				}
-				readInfo();
-				saveInfo();
-				System.out.print(++iteration + " ");
-				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
+		byte consoleColumn = 0;
+		while (iteration < (iterations > 0 ? iterations : Integer.MAX_VALUE)) {
+			if (consoleColumn > 60) {
+				System.out.println();
+				consoleColumn = 0;
 			}
-			catch (Exception e) {
-				e.printStackTrace();
-				break;
-			}
+
+			// Chiamata alle implementazioni specifiche...
+			readInfo();
+			saveInfo();
+			// Fine implementazioni specifiche.
+
+			String log = ++iteration + " ";
+			System.out.print(log);
+			consoleColumn += log.length();
+			Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
 		}
 	}
 
@@ -104,15 +143,15 @@ public abstract class RouterLogger {
 
 	protected String readFromTelnet(char until, boolean inclusive) throws IOException {
 		StringBuilder text = new StringBuilder();
-		char bt;
-		while ((bt = (char) in.read()) != -1) {
-			if (bt == until) {
+		char character;
+		while ((character = (char) in.read()) != -1) {
+			if (character == until) {
 				if (inclusive) {
-					text.append(bt);
+					text.append(character);
 				}
 				break;
 			}
-			text.append(bt);
+			text.append(character);
 		}
 		return text.toString().trim();
 	}
