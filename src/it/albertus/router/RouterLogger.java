@@ -57,7 +57,7 @@ public abstract class RouterLogger {
 	 * telnet, utilizzando i metodi {@link #writeToTelnet(String)} e
 	 * {@link #readFromTelnet(char, boolean)}.
 	 * 
-	 * @return una mappa contenente le informazioni estratte.
+	 * @return la mappa contenente le informazioni estratte.
 	 * 
 	 * @throws IOException
 	 */
