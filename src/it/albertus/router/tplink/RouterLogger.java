@@ -12,11 +12,11 @@ import org.apache.commons.net.telnet.TelnetClient;
 
 public abstract class RouterLogger {
 
-	private TelnetClient telnet = new TelnetClient();
+	private final TelnetClient telnet = new TelnetClient();
 	private InputStream in;
 	private OutputStream out;
-	protected Map<String, String> info = new LinkedHashMap<String, String>();
-	protected Properties configuration = new Properties();
+	protected final Map<String, String> info = new LinkedHashMap<String, String>();
+	protected final Properties configuration = new Properties();
 
 	public RouterLogger() {
 		try {
@@ -60,8 +60,7 @@ public abstract class RouterLogger {
 
 	protected abstract void login() throws IOException;
 
-	protected void logout() {
-	}
+	protected void logout() {}
 
 	protected abstract void readInfo() throws IOException;
 
