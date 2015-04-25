@@ -9,6 +9,7 @@ import org.apache.commons.net.telnet.TelnetClient;
 @Deprecated
 public class Main {
 
+	@Deprecated
 	public static void main(String... args) throws Exception {
 //		int ok = 0;
 //		int err = 0;
