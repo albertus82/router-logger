@@ -24,6 +24,7 @@ public class TpLinkLogger extends RouterLogger {
 	private FileWriter logFileWriter = null;
 
 	public static void main(String... args) throws Exception {
+		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger *****");
 		RouterLogger logger = new TpLinkLogger();
 
 		int retries = 0;
@@ -42,61 +43,77 @@ public class TpLinkLogger extends RouterLogger {
 	}
 
 	@Override
-	protected void login() {
+	protected void login() throws IOException {
+		// Lettura parametri da file di configurazione...
+		String routerAddress = configuration.getProperty("router.address");
+		int routerPort = Integer.parseInt(configuration.getProperty("router.port"));
+		int connectionTimeout = Integer.parseInt(configuration.getProperty("connection.timeout.ms"));
+		int socketTimeout = Integer.parseInt(configuration.getProperty("socket.timeout.ms"));
+
+		System.out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
 		try {
-			telnet.connect(configuration.getProperty("router.address"), Integer.parseInt(configuration.getProperty("router.port")));
-			telnet.setConnectTimeout(Integer.parseInt(configuration.getProperty("connection.timeout.ms")));
-			telnet.setSoTimeout(Integer.parseInt(configuration.getProperty("socket.timeout.ms")));
+			telnet.connect(routerAddress, routerPort);
+			telnet.setConnectTimeout(connectionTimeout);
+			telnet.setSoTimeout(socketTimeout);
 			in = telnet.getInputStream();
 			out = telnet.getOutputStream();
-			System.out.print(read(LOGIN_PROMPT, true));
-			write(configuration.getProperty("router.username"));
-			System.out.println(read(LOGIN_PROMPT, true));
-			write(configuration.getProperty("router.password"));
-			System.out.print(read(COMMAND_PROMPT, true));
+
+			// Username...
+			System.out.print(readFromTelnet(LOGIN_PROMPT, true));
+			writeToTelnet(configuration.getProperty("router.username"));
+
+			// Password...
+			System.out.println(readFromTelnet(LOGIN_PROMPT, true));
+			writeToTelnet(configuration.getProperty("router.password"));
+
+			readFromTelnet('-', false); // Salto caratteri speciali (clear
+										// screen)
+
+			// Prompt...
+			System.out.print(readFromTelnet(COMMAND_PROMPT, true));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			telnet.disconnect();
+			throw e;
 		}
 	}
 
 	@Override
-	protected void loop() {
-		int iteration = 1;
-		while (true) {
-			try {
-				System.out.print(" " + iteration++);
-
-				info();
-
-				logFile = new File(configuration.getProperty("log.destination.dir") + '/' + dateFormatFileName.format(new Date()) + ".csv");
-
-				// Scrittura header CSV (solo se il file non esiste gia')...
-				if (!logFile.exists()) {
-					logFileWriter = new FileWriter(logFile);
-					logFileWriter.append(buildCsvHeader());
-				}
-
-				save();
-
-				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-				break;
-			}
-		}
-	}
-
 	protected void info() throws IOException {
-		write("adsl show info");
-		read('{', true);
-		BufferedReader reader = new BufferedReader(new StringReader(read('}', false)));
+		writeToTelnet("adsl show info");
+		readFromTelnet('{', true); // Avanzamento del reader fino all'inizio dei
+									// dati di interesse.
+
+		// Inizio estrazione dati...
+		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet('}', false)));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
 		}
 		reader.close();
+		// Fine estrazione dati.
+
+		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al
+												// prompt dei comandi.
+	}
+
+	@Override
+	protected void save() throws IOException {
+		logFile = new File(configuration.getProperty("log.destination.dir") + '/' + dateFormatFileName.format(new Date()) + ".csv");
+
+		// Scrittura header CSV (solo se il file non esiste gia')...
+		if (!logFile.exists()) {
+			logFileWriter = new FileWriter(logFile);
+			System.out.println("Logging to: " + logFile.getAbsolutePath());
+			logFileWriter.append(buildCsvHeader());
+		}
+
+		if (logFileWriter == null) {
+			logFileWriter = new FileWriter(logFile, true);
+			System.out.println("Logging to: " + logFile.getAbsolutePath());
+		}
+		logFileWriter.append(buildCsv());
+		logFileWriter.flush();
 	}
 
 	@Override
@@ -107,14 +124,6 @@ public class TpLinkLogger extends RouterLogger {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected void save() throws IOException {
-		if (logFileWriter == null) {
-			logFileWriter = new FileWriter(logFile, true);
-		}
-		logFileWriter.append(buildCsv());
-		logFileWriter.flush();
 	}
 
 	private String buildCsvHeader() {

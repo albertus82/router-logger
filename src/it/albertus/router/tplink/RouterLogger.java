@@ -17,17 +17,34 @@ public abstract class RouterLogger {
 	protected Map<String, String> info = new LinkedHashMap<String, String>();
 	protected Properties configuration = new Properties();
 
-	protected abstract void login();
+	protected abstract void login() throws IOException;
 
 	protected abstract void logout();
-
-	protected abstract void loop();
 
 	protected abstract void info() throws IOException;
 
 	protected abstract void save() throws IOException;
+	
+	protected void loop() {
+		int iteration = 0;
+		while (true) {
+			try {
+				if (iteration % 15 == 0) {
+					System.out.println();
+				}
+				info();
+				save();
+				System.out.print(++iteration + " ");
+				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}
+		}
+	}
 
-	protected String write(String command) throws IOException {
+	protected String writeToTelnet(String command) throws IOException {
 		StringBuilder echo = new StringBuilder();
 		for (char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
@@ -44,7 +61,7 @@ public abstract class RouterLogger {
 		return echo.toString();
 	}
 
-	protected String read(char until, boolean inclusive) throws IOException {
+	protected String readFromTelnet(char until, boolean inclusive) throws IOException {
 		StringBuilder text = new StringBuilder();
 		char bt;
 		while ((bt = (char) in.read()) != -1) {
