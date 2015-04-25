@@ -44,17 +44,17 @@ public abstract class RouterLogger {
 	}
 
 	/** Effettua la connessione al server telnet, ma non l'autenticazione. */
-	protected void connect() throws IOException {
+	private final void connect() throws IOException {
 		String routerAddress = configuration.getProperty("router.address");
 		int routerPort = Integer.parseInt(configuration.getProperty("router.port"));
-		int connectionTimeout = Integer.parseInt(configuration.getProperty("connection.timeout.ms"));
-		int socketTimeout = Integer.parseInt(configuration.getProperty("socket.timeout.ms"));
+		int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms"));
+		int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms"));
 
 		System.out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
 		try {
 			telnet.connect(routerAddress, routerPort);
-			telnet.setConnectTimeout(connectionTimeout);
-			telnet.setSoTimeout(socketTimeout);
+			telnet.setConnectTimeout(connectionTimeoutInMillis);
+			telnet.setSoTimeout(socketTimeoutInMillis);
 			in = telnet.getInputStream();
 			out = telnet.getOutputStream();
 		}
@@ -68,7 +68,7 @@ public abstract class RouterLogger {
 	 * Effettua la disconnessione dal server telnet, ma non invia alcun comando
 	 * di logout.
 	 */
-	protected void disconnect() {
+	protected final void disconnect() {
 		System.out.println("Disconnecting...");
 		try {
 			telnet.disconnect();
@@ -89,7 +89,7 @@ public abstract class RouterLogger {
 	/**
 	 * Effettua il logout dal server telnet inviando il comando
 	 * <code>logout</code>. E' possibile sovrascrivere questo metodo per
-	 * aggiungere altri eventuali comandi che debbano essere eseguiti in fase di
+	 * aggiungere altri o diversi comandi che debbano essere eseguiti in fase di
 	 * logout.
 	 */
 	protected void logout() {
@@ -102,11 +102,25 @@ public abstract class RouterLogger {
 		}
 	}
 
-	protected void loop() throws IOException, InterruptedException {
-		int iterations = Integer.parseInt(configuration.getProperty("logger.iterations"));
-		int iteration = 0;
-		byte consoleColumn = 0;
-		while (iteration < (iterations > 0 ? iterations : Integer.MAX_VALUE)) {
+	protected final void loop() throws IOException, InterruptedException {
+		// Determinazione numero di iterazioni...
+		String iterationsProperty = configuration.getProperty("logger.iterations");
+		final int iterations;
+		if (iterationsProperty != null) {
+			int iterationsPropertyNumeric = Integer.parseInt(iterationsProperty);
+			if (iterationsPropertyNumeric > 0) {
+				iterations = iterationsPropertyNumeric;
+			}
+			else {
+				iterations = Integer.MAX_VALUE;
+			}
+		}
+		else {
+			iterations = Integer.MAX_VALUE;
+		}
+
+		// Iterazione...
+		for (int iteration = 1, consoleColumn = 0; iteration <= iterations; iteration++) {
 			if (consoleColumn > 60) {
 				System.out.println();
 				consoleColumn = 0;
@@ -117,10 +131,14 @@ public abstract class RouterLogger {
 			saveInfo();
 			// Fine implementazioni specifiche.
 
-			String log = ++iteration + " ";
+			String log = iteration + " ";
 			System.out.print(log);
 			consoleColumn += log.length();
-			Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
+
+			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
+			if (iteration != iterations) {
+				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
+			}
 		}
 	}
 
@@ -154,6 +172,41 @@ public abstract class RouterLogger {
 			text.append(character);
 		}
 		return text.toString().trim();
+	}
+	
+	public void run() throws IOException, InterruptedException {
+		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger *****");
+		System.out.println();
+
+		boolean end = false;
+
+		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count"));
+
+		for (int index = 0; index <= retries && !end; index++) {
+			// Gestione riconnessione in caso di errore...
+			if (index > 0) {
+				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms"));
+				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
+				Thread.sleep(retryIntervalInMillis);
+			}
+
+			// Avvio della procedura...
+			connect();
+			login();
+			try {
+				loop();
+				end = true; // Se non si sono verificati errori.
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			finally {
+				// In ogni caso, si esegue la disconnessione dal server...
+				System.out.println();
+				logout();
+				disconnect();
+			}
+		}
 	}
 
 }

@@ -22,31 +22,8 @@ public class TpLinkLogger extends RouterLogger {
 	private File logFile = null;
 	private FileWriter logFileWriter = null;
 
-	public static void main(String... args) throws Exception {
-		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger *****");
-		RouterLogger logger = new TpLinkLogger();
-
-		boolean end = false;
-		int retries = 0;
-		while (!end && retries++ <= 3) {
-			if ( retries > 1 ) {
-				Thread.sleep(5000);
-			}
-			logger.connect();
-			logger.login();
-			try {
-				logger.loop();
-				end = true;
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			finally {
-				System.out.println();
-				logger.logout();
-				logger.disconnect();
-			}
-		}
+	public static void main(String... args) throws IOException, InterruptedException {
+		new TpLinkLogger().run();
 	}
 
 	@Override
