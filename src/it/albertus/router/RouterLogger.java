@@ -1,4 +1,6 @@
-package it.albertus.router.tplink;
+package it.albertus.router;
+
+import it.albertus.router.tplink.TpLinkLogger;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
