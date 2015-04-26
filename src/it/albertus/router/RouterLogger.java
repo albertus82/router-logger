@@ -16,14 +16,14 @@ public abstract class RouterLogger {
 	
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
 	private static final String VERSION_FILE_NAME = "version.properties";
-	
+
 	private final TelnetClient telnet = new TelnetClient();
 	protected InputStream in;
 	protected OutputStream out;
 	private final Map<String, String> info = new LinkedHashMap<String, String>();
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
-	private char[] animation = {'-','\\','|','/'};
+	private char[] animation = { '-', '\\', '|', '/' };
 
 	protected final void run() throws Exception {
 		welcome();
