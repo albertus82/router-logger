@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class TpLinkLogger extends RouterLogger {
 
+	private static final String DEVICE_MODEL = "TP-Link TD-W8970";
 	private static final char COMMAND_PROMPT = '#';
 	private static final char LOGIN_PROMPT = ':';
 	private static final String LINE_SEPARATOR = "\r\n";
@@ -27,8 +28,6 @@ public class TpLinkLogger extends RouterLogger {
 	private FileWriter logFileWriter = null;
 
 	public static void main(String... args) throws Exception {
-		System.out.println("***** TP-Link TD-W8970 ADSL Modem Router Logger v" + version.getProperty("version.number") + " (" + version.getProperty("version.date") + ") *****");
-		System.out.println();
 		new TpLinkLogger().run();
 	}
 
@@ -79,8 +78,8 @@ public class TpLinkLogger extends RouterLogger {
 	protected void saveInfo(Map<String, String> info) throws IOException {
 		// Selezione del percorso e nome del file di destinazione...
 		String logDestinationDir = configuration.getProperty("log.destination.dir");
-		if (logDestinationDir != null && !"".equals(logDestinationDir)) {
-			logFile = new File(logDestinationDir + '/' + dateFormatFileName.format(new Date()) + ".csv");
+		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
+			logFile = new File(logDestinationDir.trim() + '/' + dateFormatFileName.format(new Date()) + ".csv");
 		}
 		else {
 			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + dateFormatFileName.format(new Date()) + ".csv");
@@ -130,6 +129,11 @@ public class TpLinkLogger extends RouterLogger {
 			logFileWriter.close();
 		}
 		catch (IOException ioe) {}
+	}
+	
+	@Override
+	protected String getDeviceModel() {
+		return DEVICE_MODEL;
 	}
 	
 	@Override

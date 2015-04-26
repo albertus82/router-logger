@@ -15,37 +15,18 @@ import org.apache.commons.net.telnet.TelnetClient;
 public abstract class RouterLogger {
 	
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
-	private static final String VERSION_FILE_PATH = "/";
 	private static final String VERSION_FILE_NAME = "version.properties";
-	protected static final Properties version = new Properties();
 	
-	static {
-		InputStream is = RouterLogger.class.getResourceAsStream(VERSION_FILE_PATH + VERSION_FILE_NAME);
-		if (is != null) {
-			try {
-				version.load(is);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-			finally {
-				try {
-					is.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	private final TelnetClient telnet = new TelnetClient();
-	private InputStream in;
-	private OutputStream out;
+	protected InputStream in;
+	protected OutputStream out;
 	private final Map<String, String> info = new LinkedHashMap<String, String>();
 	protected final Properties configuration = new Properties();
+	protected final Properties version = new Properties();
 
 	protected final void run() throws Exception {
+		welcome();
+		
 		boolean end = false;
 
 		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count"));
@@ -80,9 +61,8 @@ public abstract class RouterLogger {
 	}
 
 	/**
-	 * Da implementare con la logica che estrae le informazioni di interesse da
-	 * telnet, utilizzando i metodi {@link #writeToTelnet(String)} e
-	 * {@link #readFromTelnet(char, boolean)}.
+	 * Estrae le informazioni di interesse da telnet, utilizzando i metodi
+	 * {@link #writeToTelnet(String)} e {@link #readFromTelnet(char, boolean)}.
 	 * 
 	 * @return la mappa contenente le informazioni estratte.
 	 * 
@@ -91,28 +71,44 @@ public abstract class RouterLogger {
 	protected abstract Map<String, String> readInfo() throws IOException;
 
 	/**
-	 * Da implementare con la logica che salva le informazioni di interesse
-	 * precedentemente estratte con {@link #readInfo()} con le modalita'
-	 * desiderate (ad esempio su file o in un database).
+	 * Salva le informazioni di interesse precedentemente estratte con
+	 * {@link #readInfo()} con le modalita' desiderate (ad esempio su file o in
+	 * un database).
 	 * 
-	 * @param info le informazioni da salvare.
+	 * @param info  le informazioni da salvare.
 	 * 
 	 * @throws IOException
 	 */
 	protected abstract void saveInfo(Map<String, String> info) throws IOException;
+	
+	/**
+	 * Restituisce una stringa contenente marca e modello del router relativo
+	 * all'implementazione realizzata.
+	 */
+	protected String getDeviceModel() {
+		return null;
+	}
 
 	public RouterLogger() {
 		try {
-			BufferedInputStream reader;
+			// Caricamento file di configurazione...
+			InputStream inputStream;
 			File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + CONFIGURATION_FILE_NAME);
 			if (config.exists()) {
-				reader = new BufferedInputStream(new FileInputStream(config));
+				inputStream = new BufferedInputStream(new FileInputStream(config));
 			}
 			else {
-				reader = new BufferedInputStream(getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME));
+				inputStream = new BufferedInputStream(getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME));
 			}
-			configuration.load(reader);
-			reader.close();
+			configuration.load(inputStream);
+			inputStream.close();
+
+			// Caricamento file versione...
+			inputStream = getClass().getResourceAsStream('/' + VERSION_FILE_NAME);
+			if (inputStream != null) {
+				version.load(inputStream);
+				inputStream.close();
+			}
 		}
 		catch (IOException ioe) {
 			throw new RuntimeException(ioe);
@@ -155,12 +151,11 @@ public abstract class RouterLogger {
 	}
 
 	/**
-	 * Da implementare con la logica che effettua l'autenticazione sul server
-	 * telnet, utilizzando i metodi {@link #readFromTelnet(char, boolean)} e
-	 * {@link #writeToTelnet(String)} per interagire con il server e comunicare
-	 * le credenziali di accesso.
+	 * Effettua l'autenticazione sul server telnet, utilizzando i metodi
+	 * {@link #readFromTelnet(char, boolean)} e {@link #writeToTelnet(String)}
+	 * per interagire con il server e comunicare le credenziali di accesso.
 	 * 
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	protected abstract void login() throws Exception;
 
@@ -220,7 +215,7 @@ public abstract class RouterLogger {
 		}
 	}
 
-	protected final String writeToTelnet(String command) throws IOException {
+	protected String writeToTelnet(String command) throws IOException {
 		StringBuilder echo = new StringBuilder();
 		for (char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
@@ -237,7 +232,7 @@ public abstract class RouterLogger {
 		return echo.toString();
 	}
 
-	protected final String readFromTelnet(char until, boolean inclusive) throws IOException {
+	protected String readFromTelnet(char until, boolean inclusive) throws IOException {
 		StringBuilder text = new StringBuilder();
 		char character;
 		while ((character = (char) in.read()) != -1) {
@@ -250,6 +245,25 @@ public abstract class RouterLogger {
 			text.append(character);
 		}
 		return text.toString().trim();
+	}
+	
+	private void welcome() {
+		// Preparazione numero di versione (se presente)...
+		StringBuilder versionInfo = new StringBuilder();
+		String versionNumber = version.getProperty("version.number");
+		if ( versionNumber != null && !"".equals(versionNumber.trim())) {
+			versionInfo.append('v').append(versionNumber.trim()).append(' ');
+		}
+		String versionDate = version.getProperty("version.date");
+		if ( versionDate != null && !"".equals(versionDate.trim())) {
+			versionInfo.append('(').append(versionDate.trim()).append(") ");
+		}
+		
+		System.out.println("********** ADSL Modem Router Logger " + versionInfo.toString() + "**********");
+		System.out.println();
+		if (getDeviceModel() != null && !"".equals(getDeviceModel().trim())) {
+			System.out.println("Device model: " + getDeviceModel().trim() + '.');
+		}
 	}
 	
 	/**
