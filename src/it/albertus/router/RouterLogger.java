@@ -197,18 +197,20 @@ public abstract class RouterLogger {
 		}
 
 		// Iterazione...
-		for (int iteration = 1, consoleColumn = 0; iteration <= iterations; iteration++) {
+		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			info.putAll(readInfo());
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
-			String log = Integer.toString(iteration) + ' ';
-			for ( byte i = 0; i < consoleColumn; i++) {
-				System.out.print("\b");
+			// Scrittura indice dell'iterazione in console...
+			String clean = "";
+			while (lastLogLength-- > 0) {
+				clean += '\b';
 			}
-			System.out.print(log);
-			consoleColumn = log.length();
+			String log = Integer.toString(iteration) + ' ';
+			lastLogLength = log.length();
+			System.out.print(clean + log);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
