@@ -75,6 +75,7 @@ public abstract class RouterLogger {
 				disconnect();
 			}
 		}
+		System.out.println("Bye!");
 	}
 
 	/**
@@ -197,19 +198,17 @@ public abstract class RouterLogger {
 
 		// Iterazione...
 		for (int iteration = 1, consoleColumn = 0; iteration <= iterations; iteration++) {
-			if (consoleColumn > 60) {
-				System.out.println();
-				consoleColumn = 0;
-			}
-
 			// Chiamata alle implementazioni specifiche...
 			info.putAll(readInfo());
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
-			String log = iteration + " ";
+			String log = Integer.toString(iteration) + ' ';
+			for ( byte i = 0; i < consoleColumn; i++) {
+				System.out.print("\b");
+			}
 			System.out.print(log);
-			consoleColumn += log.length();
+			consoleColumn = log.length();
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {

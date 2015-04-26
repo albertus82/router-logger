@@ -1,4 +1,4 @@
-<project name="RouterLogger">
+<project name="RouterLogger" default="jar">
 	
 	<property file="build.properties" />
 	<property file="build.properties.default" />
