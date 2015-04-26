@@ -45,7 +45,7 @@ public abstract class RouterLogger {
 	private final Map<String, String> info = new LinkedHashMap<String, String>();
 	protected final Properties configuration = new Properties();
 
-	public void run() throws Exception {
+	protected final void run() throws Exception {
 		boolean end = false;
 
 		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count"));
@@ -179,7 +179,7 @@ public abstract class RouterLogger {
 		}
 	}
 
-	protected final void loop() throws IOException, InterruptedException {
+	private final void loop() throws IOException, InterruptedException {
 		// Determinazione numero di iterazioni...
 		String iterationsProperty = configuration.getProperty("logger.iterations");
 		final int iterations;
@@ -219,7 +219,7 @@ public abstract class RouterLogger {
 		}
 	}
 
-	protected String writeToTelnet(String command) throws IOException {
+	protected final String writeToTelnet(String command) throws IOException {
 		StringBuilder echo = new StringBuilder();
 		for (char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
@@ -236,7 +236,7 @@ public abstract class RouterLogger {
 		return echo.toString();
 	}
 
-	protected String readFromTelnet(char until, boolean inclusive) throws IOException {
+	protected final String readFromTelnet(char until, boolean inclusive) throws IOException {
 		StringBuilder text = new StringBuilder();
 		char character;
 		while ((character = (char) in.read()) != -1) {
