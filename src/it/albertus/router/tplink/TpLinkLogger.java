@@ -88,16 +88,19 @@ public class TpLinkLogger extends RouterLogger {
 
 		// Scrittura header CSV (solo se il file non esiste gia')...
 		if (!logFile.exists()) {
+			if (logFileWriter != null) {
+				closeOutputFile();
+			}
 			logFileWriter = new FileWriter(logFile);
 			System.out.println();
-			System.out.print("Logging to: " + logFile.getAbsolutePath() + " .. ");
+			System.out.print("Logging to: " + logFile.getAbsolutePath() + " ...... ");
 			logFileWriter.append(buildCsvHeader(info));
 		}
 
 		if (logFileWriter == null) {
 			logFileWriter = new FileWriter(logFile, true);
 			System.out.println();
-			System.out.print("Logging to: " + logFile.getAbsolutePath() + " .. ");
+			System.out.print("Logging to: " + logFile.getAbsolutePath() + " ...... ");
 		}
 		logFileWriter.append(buildCsvRow(info));
 		logFileWriter.flush();
@@ -119,6 +122,20 @@ public class TpLinkLogger extends RouterLogger {
 		}
 		row.replace(row.length() - 1, row.length(), LINE_SEPARATOR);
 		return row.toString();
+	}
+	
+	private void closeOutputFile() {
+		System.out.println("Closing output file...");
+		try {
+			logFileWriter.close();
+		}
+		catch (IOException ioe) {}
+	}
+	
+	@Override
+	protected void finalize() {
+		super.finalize();
+		closeOutputFile();
 	}
 
 }

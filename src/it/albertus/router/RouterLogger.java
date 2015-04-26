@@ -75,6 +75,7 @@ public abstract class RouterLogger {
 				disconnect();
 			}
 		}
+		finalize();
 		System.out.println("Bye!");
 	}
 
@@ -249,6 +250,19 @@ public abstract class RouterLogger {
 			text.append(character);
 		}
 		return text.toString().trim();
+	}
+	
+	/**
+	 * Da implementare con la logica che libera le risorse eventualmente
+	 * allocate (file, connessioni a database, ecc.).
+	 */
+	@Override
+	protected void finalize() {
+		try {
+			super.finalize();
+		}
+		catch (Throwable t) {
+		}
 	}
 
 }
