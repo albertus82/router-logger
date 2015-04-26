@@ -23,6 +23,7 @@ public abstract class RouterLogger {
 	private final Map<String, String> info = new LinkedHashMap<String, String>();
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
+	private char[] animation = {'-','\\','|','/'};
 
 	protected final void run() throws Exception {
 		welcome();
@@ -204,9 +205,17 @@ public abstract class RouterLogger {
 			while (lastLogLength-- > 0) {
 				clean += '\b';
 			}
-			String log = Integer.toString(iteration) + ' ';
+			StringBuilder log = new StringBuilder();
+			boolean animate = Boolean.parseBoolean(configuration.getProperty("logger.animation"));
+			if (animate) {
+				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
+			}
+			log.append(iteration).append(' ');
+			if (animate) {
+				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
+			}
 			lastLogLength = log.length();
-			System.out.print(clean + log);
+			System.out.print(clean + log.toString());
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {

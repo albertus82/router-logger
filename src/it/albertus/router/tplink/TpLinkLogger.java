@@ -45,8 +45,7 @@ public class TpLinkLogger extends RouterLogger {
 			readFromTelnet('-', false); // Salto caratteri speciali (clear screen).
 
 			// Prompt...
-			System.out.print(readFromTelnet(COMMAND_PROMPT, true));
-			System.out.print(' ');
+			System.out.println(readFromTelnet(COMMAND_PROMPT, true));
 		}
 		catch (Exception e) {
 			disconnect();
@@ -91,15 +90,13 @@ public class TpLinkLogger extends RouterLogger {
 				closeOutputFile();
 			}
 			logFileWriter = new FileWriter(logFile);
-			System.out.println();
-			System.out.print("Logging to: " + logFile.getAbsolutePath() + " ...... ");
+			System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 			logFileWriter.append(buildCsvHeader(info));
 		}
 
 		if (logFileWriter == null) {
 			logFileWriter = new FileWriter(logFile, true);
-			System.out.println();
-			System.out.print("Logging to: " + logFile.getAbsolutePath() + " ...... ");
+			System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 		}
 		logFileWriter.append(buildCsvRow(info));
 		logFileWriter.flush();
@@ -124,7 +121,7 @@ public class TpLinkLogger extends RouterLogger {
 	}
 	
 	private void closeOutputFile() {
-		System.out.println("Closing output file...");
+		System.out.println("Closing output file.");
 		try {
 			logFileWriter.close();
 		}
