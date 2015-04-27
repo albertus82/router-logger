@@ -1,19 +1,34 @@
 package it.albertus.router;
 
+import it.albertus.router.Threshold.Type;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
 public abstract class RouterLogger {
 	
+	private interface Defaults {
+		int ROUTER_PORT = 23;
+		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
+		int CONNECTION_TIMEOUT_IN_MILLIS = 30000;
+		int ITERATIONS = -1;
+		long INTERVAL_FAST_IN_MILLIS = 1000;
+		long INTERVAL_NORMAL_IN_MILLIS = 5000;
+		int RETRIES = 3;
+		long RETRY_INTERVAL_IN_MILLIS = 60000;
+	}
+
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
 	private static final String VERSION_FILE_NAME = "version.properties";
 
@@ -21,6 +36,7 @@ public abstract class RouterLogger {
 	protected InputStream in;
 	protected OutputStream out;
 	private final Map<String, String> info = new LinkedHashMap<String, String>();
+	protected final Set<Threshold> thresholds = new HashSet<Threshold>();
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
 	private char[] animation = { '-', '\\', '|', '/' };
@@ -30,12 +46,12 @@ public abstract class RouterLogger {
 		
 		boolean end = false;
 
-		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count"));
+		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count",Integer.toString(Defaults.RETRIES)));
 
 		for (int index = 0; index <= retries && !end; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
-				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms"));
+				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms",Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
 				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
 				Thread.sleep(retryIntervalInMillis);
 			}
@@ -93,35 +109,67 @@ public abstract class RouterLogger {
 	public RouterLogger() {
 		try {
 			// Caricamento file di configurazione...
-			InputStream inputStream;
-			File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + CONFIGURATION_FILE_NAME);
-			if (config.exists()) {
-				inputStream = new BufferedInputStream(new FileInputStream(config));
-			}
-			else {
-				inputStream = new BufferedInputStream(getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME));
-			}
-			configuration.load(inputStream);
-			inputStream.close();
+			loadConfiguration();
+			
+			// Valorizzazione delle soglie...
+			loadThresholds();
 
 			// Caricamento file versione...
-			inputStream = getClass().getResourceAsStream('/' + VERSION_FILE_NAME);
-			if (inputStream != null) {
-				version.load(inputStream);
-				inputStream.close();
-			}
+			loadVersion();
 		}
 		catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
 	}
 
+	private void loadThresholds() {
+		Set<String> thresholdsAdded = new HashSet<String>();
+		for (Object objectKey : configuration.keySet()) {
+			String key = (String) objectKey;
+			if (key.startsWith("threshold.")) {
+				String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
+				if (thresholdsAdded.contains(thresholdName)) {
+					continue;
+				}
+				String thresholdKey = configuration.getProperty("threshold." + thresholdName + ".key");
+				double thresholdValue = Double.parseDouble(configuration.getProperty("threshold." + thresholdName + ".value"));
+				Type thresholdType = Type.findByName(configuration.getProperty("threshold." + thresholdName + ".type"));
+				if (thresholdKey == null || "".equals(thresholdKey) || thresholdType == null) {
+					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\".");
+				}
+				thresholds.add(new Threshold(thresholdType, thresholdKey, thresholdValue));
+				thresholdsAdded.add(thresholdName);
+			}
+		}
+	}
+
+	private void loadVersion() throws IOException {
+		InputStream inputStream = getClass().getResourceAsStream('/' + VERSION_FILE_NAME);
+		if (inputStream != null) {
+			version.load(inputStream);
+			inputStream.close();
+		}
+	}
+
+	private void loadConfiguration() throws IOException {
+		InputStream inputStream;
+		File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + CONFIGURATION_FILE_NAME);
+		if (config.exists()) {
+			inputStream = new BufferedInputStream(new FileInputStream(config));
+		}
+		else {
+			inputStream = new BufferedInputStream(getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME));
+		}
+		configuration.load(inputStream);
+		inputStream.close();
+	}
+
 	/** Effettua la connessione al server telnet, ma non l'autenticazione. */
 	private final void connect() throws Exception {
 		String routerAddress = configuration.getProperty("router.address");
-		int routerPort = Integer.parseInt(configuration.getProperty("router.port"));
-		int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms"));
-		int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms"));
+		int routerPort = Integer.parseInt(configuration.getProperty("router.port", Integer.toString(Defaults.ROUTER_PORT)));
+		int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms", Integer.toString(Defaults.CONNECTION_TIMEOUT_IN_MILLIS)));
+		int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms", Integer.toString(Defaults.SOCKET_TIMEOUT_IN_MILLIS)));
 
 		System.out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
 		try {
@@ -178,16 +226,11 @@ public abstract class RouterLogger {
 
 	private final void loop() throws IOException, InterruptedException {
 		// Determinazione numero di iterazioni...
-		String iterationsProperty = configuration.getProperty("logger.iterations");
+		String iterationsProperty = configuration.getProperty("logger.iterations", Integer.toString(Defaults.ITERATIONS));
 		final int iterations;
-		if (iterationsProperty != null) {
-			int iterationsPropertyNumeric = Integer.parseInt(iterationsProperty);
-			if (iterationsPropertyNumeric > 0) {
-				iterations = iterationsPropertyNumeric;
-			}
-			else {
-				iterations = Integer.MAX_VALUE;
-			}
+		int iterationsPropertyNumeric = Integer.parseInt(iterationsProperty);
+		if (iterationsPropertyNumeric > 0) {
+			iterations = iterationsPropertyNumeric;
 		}
 		else {
 			iterations = Integer.MAX_VALUE;
@@ -219,7 +262,19 @@ public abstract class RouterLogger {
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
-				Thread.sleep(Long.parseLong(configuration.getProperty("logger.interval.ms")));
+				long wait = Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
+				for (Threshold threshold : thresholds) {
+					try {
+						if (info.keySet().contains(threshold.getKey()) && threshold.isReached(Double.parseDouble(info.get(threshold.getKey())))) {
+							wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
+							break;
+						}
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				Thread.sleep(wait);
 			}
 		}
 	}
@@ -270,8 +325,17 @@ public abstract class RouterLogger {
 		
 		System.out.println("********** ADSL Modem Router Logger " + versionInfo.toString() + "**********");
 		System.out.println();
+		boolean lineBreak = false;
 		if (getDeviceModel() != null && !"".equals(getDeviceModel().trim())) {
 			System.out.println("Device model: " + getDeviceModel().trim() + '.');
+			lineBreak = true;
+		}
+		if (!thresholds.isEmpty()) {
+			System.out.println("Thresholds: " + thresholds.toString());
+			lineBreak = true;
+		}
+		if (lineBreak) {
+			System.out.println();
 		}
 	}
 	
