@@ -7,28 +7,30 @@ import java.util.Set;
 public class Threshold {
 
 	public enum Type {
-		NOT_EQUAL(new String[] { "ne", "!=", "<>", "^=" }, "<>"),
-		LESS_THAN(new String[] { "lt", "<" }, "<"),
-		LESS_OR_EQUAL(new String[] { "le", "<=" }, "<="),
-		EQUAL(new String[] { "eq", "==", "=" }, "="),
-		GREATER_OR_EQUAL(new String[] { "ge", ">=" }, ">="),
-		GREATER_THAN(new String[] { "gt", ">" }, ">");
+		NOT_EQUAL("<>", new String[] { "ne", "!=", "<>", "^=" }),
+		LESS_THAN("<", new String[] { "lt", "<" }),
+		LESS_OR_EQUAL("<=", new String[] { "le", "<=" }),
+		EQUAL("=", new String[] { "eq", "==", "=" }),
+		GREATER_OR_EQUAL(">=", new String[] { "ge", ">=" }),
+		GREATER_THAN(">", new String[] { "gt", ">" });
 
 		private final String description;
 		private final Set<String> abbreviations = new HashSet<String>();
-		
+
+		private Type(String description, String[] abbreviations) {
+			this.description = description;
+			this.abbreviations.addAll(Arrays.asList(abbreviations));
+		}
+
 		public String getDescription() {
 			return description;
 		}
+
 		public Set<String> getAbbreviations() {
 			return abbreviations;
 		}
 
-		private Type(String[] abbreviations, String description) {
-			this.description = description;
-			this.abbreviations.addAll(Arrays.asList(abbreviations));
-		}
-		
+		@Override
 		public String toString() {
 			return description;
 		}
@@ -120,6 +122,7 @@ public class Threshold {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return key + ' ' + type + ' ' + value;
 	}
