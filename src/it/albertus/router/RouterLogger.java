@@ -31,6 +31,11 @@ public abstract class RouterLogger {
 
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
 	private static final String VERSION_FILE_NAME = "version.properties";
+	
+	private static final String THRESHOLD_PREFIX = "threshold";
+	private static final String THRESHOLD_SUFFIX_KEY = "key";
+	private static final String THRESHOLD_SUFFIX_TYPE = "type";
+	private static final String THRESHOLD_SUFFIX_VALUE = "value";
 
 	private final TelnetClient telnet = new TelnetClient();
 	protected InputStream in;
@@ -126,14 +131,14 @@ public abstract class RouterLogger {
 		Set<String> thresholdsAdded = new HashSet<String>();
 		for (Object objectKey : configuration.keySet()) {
 			String key = (String) objectKey;
-			if (key.startsWith("threshold.")) {
+			if (key.startsWith(THRESHOLD_PREFIX + '.')) {
 				String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 				if (thresholdsAdded.contains(thresholdName)) {
 					continue;
 				}
-				String thresholdKey = configuration.getProperty("threshold." + thresholdName + ".key");
-				double thresholdValue = Double.parseDouble(configuration.getProperty("threshold." + thresholdName + ".value"));
-				Type thresholdType = Type.findByName(configuration.getProperty("threshold." + thresholdName + ".type"));
+				String thresholdKey = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
+				double thresholdValue = Double.parseDouble(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE));
+				Type thresholdType = Type.findByName(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
 				if (thresholdKey == null || "".equals(thresholdKey) || thresholdType == null) {
 					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\".");
 				}
