@@ -111,7 +111,7 @@ public abstract class RouterLogger {
 		return null;
 	}
 
-	public RouterLogger() {
+	protected RouterLogger() {
 		try {
 			// Caricamento file di configurazione...
 			loadConfiguration();
