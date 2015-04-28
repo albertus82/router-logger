@@ -21,8 +21,8 @@ public class TpLinkLogger extends RouterLogger {
 	private static final String LINE_SEPARATOR = "\r\n";
 	private static final char CSV_SEPARATOR = ';';
 
-	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 
 	private File logFile = null;
 	private FileWriter logFileWriter = null;
@@ -77,10 +77,10 @@ public class TpLinkLogger extends RouterLogger {
 		// Selezione del percorso e nome del file di destinazione...
 		String logDestinationDir = configuration.getProperty("log.destination.dir");
 		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
-			logFile = new File(logDestinationDir.trim() + '/' + dateFormatFileName.format(new Date()) + ".csv");
+			logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 		}
 		else {
-			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + dateFormatFileName.format(new Date()) + ".csv");
+			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 		}
 
 		// Scrittura header CSV (solo se il file non esiste gia')...
@@ -111,7 +111,7 @@ public class TpLinkLogger extends RouterLogger {
 	}
 
 	private String buildCsvRow(Map<String, String> info) {
-		StringBuilder row = new StringBuilder(dateFormatLog.format(new Date())).append(CSV_SEPARATOR);
+		StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(new Date())).append(CSV_SEPARATOR);
 		for (String field : info.values()) {
 			row.append(field.replace(CSV_SEPARATOR, ' ')).append(CSV_SEPARATOR);
 		}
