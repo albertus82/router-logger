@@ -69,7 +69,7 @@ public class Threshold {
 		return value;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public boolean isReached(final String value) {
 		if (value != null) {
 			Comparable threshold;
