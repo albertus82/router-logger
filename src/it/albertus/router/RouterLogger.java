@@ -132,17 +132,17 @@ public abstract class RouterLogger {
 		for (Object objectKey : configuration.keySet()) {
 			String key = (String) objectKey;
 			if (key.startsWith(THRESHOLD_PREFIX + '.')) {
-				String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
+				final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 				if (thresholdsAdded.contains(thresholdName)) {
 					continue;
 				}
-				String thresholdKey = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
-				double thresholdValue = Double.parseDouble(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE));
-				Type thresholdType = Type.findByName(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
-				if (thresholdKey == null || "".equals(thresholdKey) || thresholdType == null) {
+				final String thresholdKey = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
+				final Type thresholdType = Type.findByName(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
+				final String thresholdValue = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE);
+				if (thresholdKey == null || "".equals(thresholdKey) || thresholdValue == null || thresholdType == null) {
 					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\".");
 				}
-				thresholds.add(new Threshold(thresholdType, thresholdKey, thresholdValue));
+				thresholds.add(new Threshold(thresholdKey, thresholdType, thresholdValue));
 				thresholdsAdded.add(thresholdName);
 			}
 		}
@@ -270,7 +270,7 @@ public abstract class RouterLogger {
 				long wait = Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
 				for (Threshold threshold : thresholds) {
 					try {
-						if (info.keySet().contains(threshold.getKey()) && threshold.isReached(Double.parseDouble(info.get(threshold.getKey())))) {
+						if (info.keySet().contains(threshold.getKey()) && threshold.isReached(info.get(threshold.getKey()))) {
 							wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
 							break;
 						}
@@ -301,19 +301,21 @@ public abstract class RouterLogger {
 		return echo.toString();
 	}
 
-	protected String readFromTelnet(char until, boolean inclusive) throws IOException {
+	protected String readFromTelnet(String until, boolean inclusive) throws IOException {
+		char lastChar = until.charAt(until.length() - 1);
 		StringBuilder text = new StringBuilder();
-		char character;
-		while ((character = (char) in.read()) != -1) {
-			if (character == until) {
-				if (inclusive) {
-					text.append(character);
+		int currentByte;
+		while ((currentByte = in.read()) != -1) {
+			char currentChar = (char) currentByte;
+			text.append(currentChar);
+			if (currentChar == lastChar && text.toString().endsWith(until)) {
+				if (!inclusive) {
+					text.delete(text.length() - until.length(), text.length());
 				}
 				break;
 			}
-			text.append(character);
 		}
-		return text.toString().trim();
+		return text.toString();
 	}
 	
 	private void welcome() {

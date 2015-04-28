@@ -47,13 +47,13 @@ public class Threshold {
 		}
 	}
 
-	private final Type type;
 	private final String key;
-	private final double value;
+	private final Type type;
+	private final String value;
 
-	public Threshold(Type type, String key, double value) {
-		this.type = type;
+	public Threshold(String key, Type type, String value) {
 		this.key = key;
+		this.type = type;
 		this.value = value;
 	}
 
@@ -65,24 +65,37 @@ public class Threshold {
 		return key;
 	}
 
-	public double getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public boolean isReached(final double value) {
-		switch (type) {
-		case EQUAL:
-			return value == this.value;
-		case GREATER_OR_EQUAL:
-			return value >= this.value;
-		case GREATER_THAN:
-			return value > this.value;
-		case LESS_OR_EQUAL:
-			return value <= this.value;
-		case LESS_THAN:
-			return value < this.value;
-		case NOT_EQUAL:
-			return value != this.value;
+	@SuppressWarnings("rawtypes")
+	public boolean isReached(final String value) {
+		if (value != null) {
+			Comparable threshold;
+			Comparable current;
+			try { // Tento la conversione a Number...
+				threshold = Double.valueOf(this.value);
+				current = Double.valueOf(value);
+			}
+			catch (NumberFormatException nfe) {
+				threshold = this.value;
+				current = value;
+			}
+			switch (type) {
+			case EQUAL:
+				return current.equals(threshold);
+			case GREATER_OR_EQUAL:
+				return current.compareTo(threshold) >= 0;
+			case GREATER_THAN:
+				return current.compareTo(threshold) > 0;
+			case LESS_OR_EQUAL:
+				return current.compareTo(threshold) <= 0;
+			case LESS_THAN:
+				return current.compareTo(threshold) < 0;
+			case NOT_EQUAL:
+				return !current.equals(threshold);
+			}
 		}
 		return false;
 	}

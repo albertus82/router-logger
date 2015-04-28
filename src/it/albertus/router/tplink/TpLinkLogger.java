@@ -16,8 +16,8 @@ import java.util.Map;
 public class TpLinkLogger extends RouterLogger {
 
 	private static final String DEVICE_MODEL = "TP-Link TD-W8970";
-	private static final char COMMAND_PROMPT = '#';
-	private static final char LOGIN_PROMPT = ':';
+	private static final String COMMAND_PROMPT = "#";
+	private static final String LOGIN_PROMPT = ":";
 	private static final String LINE_SEPARATOR = "\r\n";
 	private static final char CSV_SEPARATOR = ';';
 
@@ -42,10 +42,9 @@ public class TpLinkLogger extends RouterLogger {
 			System.out.println(readFromTelnet(LOGIN_PROMPT, true));
 			writeToTelnet(configuration.getProperty("router.password"));
 
-			readFromTelnet('-', false); // Salto caratteri speciali (clear screen).
-
-			// Prompt...
-			System.out.println(readFromTelnet(COMMAND_PROMPT, true));
+			// Welcome! (salto caratteri speciali (clear screen, ecc.)...
+			String welcome = readFromTelnet("-", true); // 
+			System.out.println(welcome.charAt(welcome.length() - 1) + readFromTelnet(COMMAND_PROMPT, true));
 		}
 		catch (Exception e) {
 			disconnect();
@@ -56,11 +55,11 @@ public class TpLinkLogger extends RouterLogger {
 	@Override
 	protected Map<String, String> readInfo() throws IOException {
 		writeToTelnet("adsl show info");
-		readFromTelnet('{', true); // Avanzamento del reader fino all'inizio dei dati di interesse.
+		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 
 		// Inizio estrazione dati...
 		Map<String, String> info = new LinkedHashMap<String, String>();
-		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet('}', false)));
+		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false)));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
