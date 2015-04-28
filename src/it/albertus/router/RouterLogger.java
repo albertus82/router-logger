@@ -249,12 +249,12 @@ public abstract class RouterLogger {
 			// Fine implementazioni specifiche.
 
 			// Scrittura indice dell'iterazione in console...
-			String clean = "";
+			StringBuilder clean = new StringBuilder();
 			while (lastLogLength-- > 0) {
-				clean += '\b';
+				clean.append('\b');
 			}
 			StringBuilder log = new StringBuilder();
-			boolean animate = Boolean.parseBoolean(configuration.getProperty("logger.animation"));
+			boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation"));
 			if (animate) {
 				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
 			}
@@ -262,8 +262,28 @@ public abstract class RouterLogger {
 			if (animate) {
 				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
 			}
+			
+			// Stampa informazioni aggiuntive richieste...
+			final StringBuilder infoToShow = new StringBuilder();
+			for (String key : configuration.getProperty("console.show.keys", "").split(",")) {
+				key = key.trim();
+				if (info.containsKey(key)) {
+					if (infoToShow.length() == 0) {
+						infoToShow.append('[');
+					}
+					else {
+						infoToShow.append(", ");
+					}
+					infoToShow.append(key + ": " + info.get(key));
+				}
+			}
+			if (infoToShow.length() != 0) {
+				infoToShow.append("] ");
+			}
+			log.append(infoToShow);
+			
 			lastLogLength = log.length();
-			System.out.print(clean + log.toString());
+			System.out.print(clean.toString() + log.toString());
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
