@@ -91,8 +91,8 @@ public abstract class RouterLogger {
 
 	/**
 	 * Salva le informazioni di interesse precedentemente estratte con
-	 * {@link #readInfo()} con le modalita' desiderate (ad esempio su file o in
-	 * un database).
+	 * {@link #readInfo()} con le modalit&agrave; desiderate, ad esempio su file
+	 * o in un database.
 	 * 
 	 * @param info  le informazioni da salvare.
 	 * 
@@ -187,7 +187,9 @@ public abstract class RouterLogger {
 
 	/**
 	 * Effettua la disconnessione dal server telnet, ma non invia alcun comando
-	 * di logout.
+	 * di logout. &Egrave; buona norma richiamare prima il metodo
+	 * {@link #logout()} per inviare al server telnet gli opportuni comandi di
+	 * chiusura della sessione (ad esempio <code>logout</code>).
 	 */
 	protected final void disconnect() {
 		System.out.println("Disconnecting...");
@@ -201,7 +203,7 @@ public abstract class RouterLogger {
 
 	/**
 	 * Effettua l'autenticazione sul server telnet, utilizzando i metodi
-	 * {@link #readFromTelnet(char, boolean)} e {@link #writeToTelnet(String)}
+	 * {@link #readFromTelnet(String, boolean)} e {@link #writeToTelnet(String)}
 	 * per interagire con il server e comunicare le credenziali di accesso.
 	 * 
 	 * @throws Exception
@@ -210,7 +212,7 @@ public abstract class RouterLogger {
 
 	/**
 	 * Effettua il logout dal server telnet inviando il comando
-	 * <code>logout</code>. E' possibile sovrascrivere questo metodo per
+	 * <code>logout</code>. &Egrave; possibile sovrascrivere questo metodo per
 	 * aggiungere altri o diversi comandi che debbano essere eseguiti in fase di
 	 * logout.
 	 */
@@ -300,10 +302,10 @@ public abstract class RouterLogger {
 	}
 
 	/**
-	 * Invia comandi al server telnet. La stringa passata viene automaticamente
-	 * inviata al server, non occorre la presenza del carattere <code>\n</code>.
-	 * Se nella stringa sono presenti caratteri <code>\n</code> o
-	 * <code>\r</code>, questa viene troncata alla prima occorrenza di uno di
+	 * Invia un comando al server telnet. La stringa passata viene
+	 * automaticamente inviata al server e non occorre la presenza del carattere
+	 * <code>\n</code>. Se nella stringa sono presenti caratteri <code>\n</code>
+	 * o <code>\r</code>, questa viene troncata alla prima occorrenza di uno di
 	 * questi caratteri.
 	 * 
 	 * @param command  il comando da inviare al server telnet.
@@ -388,16 +390,15 @@ public abstract class RouterLogger {
 	}
 
 	/**
-	 * Da implementare con la logica che libera le risorse eventualmente
-	 * allocate (file, connessioni a database, ecc.).
+	 * Libera le risorse eventualmente allocate (file, connessioni a database,
+	 * ecc.).
 	 */
 	@Override
 	protected void finalize() {
 		try {
 			super.finalize();
 		}
-		catch (Throwable t) {
-		}
+		catch (Throwable t) {}
 	}
 
 }
