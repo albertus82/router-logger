@@ -22,10 +22,10 @@ public abstract class RouterLogger {
 		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
 		int CONNECTION_TIMEOUT_IN_MILLIS = 30000;
 		int ITERATIONS = -1;
-		long INTERVAL_FAST_IN_MILLIS = 1000;
-		long INTERVAL_NORMAL_IN_MILLIS = 5000;
+		long INTERVAL_FAST_IN_MILLIS = 1000L;
+		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
 		int RETRIES = 3;
-		long RETRY_INTERVAL_IN_MILLIS = 60000;
+		long RETRY_INTERVAL_IN_MILLIS = 60000L;
 	}
 
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
@@ -214,7 +214,8 @@ public abstract class RouterLogger {
 	 * Effettua il logout dal server telnet inviando il comando
 	 * <code>logout</code>. &Egrave; possibile sovrascrivere questo metodo per
 	 * aggiungere altri o diversi comandi che debbano essere eseguiti in fase di
-	 * logout.
+	 * logout. <b>Questo metodo non effettua esplicitamente la disconnessione dal
+	 * server</b>.
 	 */
 	protected void logout() {
 		System.out.println("Logging out...");
@@ -285,9 +286,11 @@ public abstract class RouterLogger {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
 				long wait = Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
+
+				// Gestione delle soglie...
 				for (Threshold threshold : thresholds) {
 					try {
-						if (info.keySet().contains(threshold.getKey()) && threshold.isReached(info.get(threshold.getKey()))) {
+						if (info.containsKey(threshold.getKey()) && threshold.isReached(info.get(threshold.getKey()))) {
 							wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
 							break;
 						}
@@ -332,9 +335,9 @@ public abstract class RouterLogger {
 
 	/**
 	 * Legge i dati inviati dal server telnet fin quando non incontra la stringa
-	 * limite passata come parametro. Se la stringa non viene trovata e lo
+	 * limite passata come parametro. <b>Se la stringa non viene trovata e lo
 	 * stream si esaurisce, il programma si blocca in attesa di altri dati dal
-	 * server, che potrebbero non arrivare mai.
+	 * server</b>, che potrebbero non arrivare mai.
 	 * 
 	 * @param until  la stringa limite che determina la fine della lettura.
 	 * @param inclusive
