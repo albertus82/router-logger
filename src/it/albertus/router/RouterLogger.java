@@ -16,7 +16,7 @@ import java.util.Set;
 import org.apache.commons.net.telnet.TelnetClient;
 
 public abstract class RouterLogger {
-	
+
 	private interface Defaults {
 		int ROUTER_PORT = 23;
 		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
@@ -30,7 +30,7 @@ public abstract class RouterLogger {
 
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
 	private static final String VERSION_FILE_NAME = "version.properties";
-	
+
 	private static final String THRESHOLD_PREFIX = "threshold";
 	private static final String THRESHOLD_SUFFIX_KEY = "key";
 	private static final String THRESHOLD_SUFFIX_TYPE = "type";
@@ -44,15 +44,15 @@ public abstract class RouterLogger {
 
 	protected final void run() throws Exception {
 		welcome();
-		
+
 		boolean end = false;
 
-		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count",Integer.toString(Defaults.RETRIES)));
+		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count", Integer.toString(Defaults.RETRIES)));
 
 		for (int index = 0; index <= retries && !end; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
-				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms",Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
+				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms", Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
 				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
 				Thread.sleep(retryIntervalInMillis);
 			}
@@ -79,8 +79,9 @@ public abstract class RouterLogger {
 	}
 
 	/**
-	 * Estrae le informazioni di interesse da telnet, utilizzando i metodi
-	 * {@link #writeToTelnet(String)} e {@link #readFromTelnet(String, boolean)}.
+	 * Estrae le informazioni di interesse dai dati ricevuti dal server telnet,
+	 * utilizzando i metodi {@link #writeToTelnet(String)} e
+	 * {@link #readFromTelnet(String, boolean)}.
 	 * 
 	 * @return la mappa contenente le informazioni estratte.
 	 * 
@@ -98,7 +99,7 @@ public abstract class RouterLogger {
 	 * @throws IOException
 	 */
 	protected abstract void saveInfo(Map<String, String> info) throws IOException;
-	
+
 	/**
 	 * Restituisce una stringa contenente marca e modello del router relativo
 	 * all'implementazione realizzata.
@@ -111,7 +112,7 @@ public abstract class RouterLogger {
 		try {
 			// Caricamento file di configurazione...
 			loadConfiguration();
-			
+
 			// Valorizzazione delle soglie...
 			loadThresholds();
 
@@ -256,7 +257,7 @@ public abstract class RouterLogger {
 			if (animate) {
 				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
 			}
-			
+
 			// Stampa informazioni aggiuntive richieste...
 			final StringBuilder infoToShow = new StringBuilder();
 			for (String key : configuration.getProperty("console.show.keys", "").split(",")) {
@@ -275,7 +276,7 @@ public abstract class RouterLogger {
 				infoToShow.append("] ");
 			}
 			log.append(infoToShow);
-			
+
 			lastLogLength = log.length();
 			System.out.print(clean.toString() + log.toString());
 
@@ -298,6 +299,17 @@ public abstract class RouterLogger {
 		}
 	}
 
+	/**
+	 * Invia comandi al server telnet. La stringa passata viene automaticamente
+	 * inviata al server, non occorre la presenza del carattere <code>\n</code>.
+	 * Se nella stringa sono presenti caratteri <code>\n</code> o
+	 * <code>\r</code>, questa viene troncata alla prima occorrenza di uno di
+	 * questi caratteri.
+	 * 
+	 * @param command  il comando da inviare al server telnet.
+	 * @return l'eco del testo inviato al server telnet.
+	 * @throws IOException
+	 */
 	protected String writeToTelnet(String command) throws IOException {
 		OutputStream out = telnet.getOutputStream();
 		StringBuilder echo = new StringBuilder();
@@ -316,6 +328,19 @@ public abstract class RouterLogger {
 		return echo.toString();
 	}
 
+	/**
+	 * Legge i dati inviati dal server telnet fin quando non incontra la stringa
+	 * limite passata come parametro. Se la stringa non viene trovata e lo
+	 * stream si esaurisce, il programma si blocca in attesa di altri dati dal
+	 * server, che potrebbero non arrivare mai.
+	 * 
+	 * @param until  la stringa limite che determina la fine della lettura.
+	 * @param inclusive
+	 *            determina l'inclusione o meno della stringa limite all'interno
+	 *            della stringa restituita.
+	 * @return la stringa contenente i dati ricevuti dal server telnet.
+	 * @throws IOException
+	 */
 	protected String readFromTelnet(String until, boolean inclusive) throws IOException {
 		InputStream in = telnet.getInputStream();
 		char lastChar = until.charAt(until.length() - 1);
@@ -333,19 +358,19 @@ public abstract class RouterLogger {
 		}
 		return text.toString();
 	}
-	
+
 	private void welcome() {
 		// Preparazione numero di versione (se presente)...
 		StringBuilder versionInfo = new StringBuilder();
 		String versionNumber = version.getProperty("version.number");
-		if ( versionNumber != null && !"".equals(versionNumber.trim())) {
+		if (versionNumber != null && !"".equals(versionNumber.trim())) {
 			versionInfo.append('v').append(versionNumber.trim()).append(' ');
 		}
 		String versionDate = version.getProperty("version.date");
-		if ( versionDate != null && !"".equals(versionDate.trim())) {
+		if (versionDate != null && !"".equals(versionDate.trim())) {
 			versionInfo.append('(').append(versionDate.trim()).append(") ");
 		}
-		
+
 		System.out.println("********** ADSL Modem Router Logger " + versionInfo.toString() + "**********");
 		System.out.println();
 		boolean lineBreak = false;
@@ -361,7 +386,7 @@ public abstract class RouterLogger {
 			System.out.println();
 		}
 	}
-	
+
 	/**
 	 * Da implementare con la logica che libera le risorse eventualmente
 	 * allocate (file, connessioni a database, ecc.).
