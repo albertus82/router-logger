@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -37,10 +36,7 @@ public abstract class RouterLogger {
 	private static final String THRESHOLD_SUFFIX_TYPE = "type";
 	private static final String THRESHOLD_SUFFIX_VALUE = "value";
 
-	private final TelnetClient telnet = new TelnetClient();
-	protected InputStream in;
-	protected OutputStream out;
-	private final Map<String, String> info = new LinkedHashMap<String, String>();
+	protected final TelnetClient telnet = new TelnetClient();
 	protected final Set<Threshold> thresholds = new HashSet<Threshold>();
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
@@ -181,8 +177,6 @@ public abstract class RouterLogger {
 			telnet.connect(routerAddress, routerPort);
 			telnet.setConnectTimeout(connectionTimeoutInMillis);
 			telnet.setSoTimeout(socketTimeoutInMillis);
-			in = telnet.getInputStream();
-			out = telnet.getOutputStream();
 		}
 		catch (Exception e) {
 			disconnect();
@@ -244,7 +238,7 @@ public abstract class RouterLogger {
 		// Iterazione...
 		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
 			// Chiamata alle implementazioni specifiche...
-			info.putAll(readInfo());
+			final Map<String, String> info = readInfo();
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
@@ -305,6 +299,7 @@ public abstract class RouterLogger {
 	}
 
 	protected String writeToTelnet(String command) throws IOException {
+		OutputStream out = telnet.getOutputStream();
 		StringBuilder echo = new StringBuilder();
 		for (char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
@@ -322,6 +317,7 @@ public abstract class RouterLogger {
 	}
 
 	protected String readFromTelnet(String until, boolean inclusive) throws IOException {
+		InputStream in = telnet.getInputStream();
 		char lastChar = until.charAt(until.length() - 1);
 		StringBuilder text = new StringBuilder();
 		int currentByte;
