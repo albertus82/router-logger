@@ -20,6 +20,7 @@ public class TpLinkLogger extends RouterLogger {
 	private static final String LOGIN_PROMPT = ":";
 	private static final String LINE_SEPARATOR = "\r\n";
 	private static final char CSV_SEPARATOR = ';';
+	private static final char CSV_SEPARATOR_REPLACEMENT = ' ';
 
 	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
@@ -110,7 +111,7 @@ public class TpLinkLogger extends RouterLogger {
 	private String buildCsvHeader(final Map<String, String> info) {
 		final StringBuilder header = new StringBuilder("Timestamp").append(CSV_SEPARATOR);
 		for (String field : info.keySet()) {
-			header.append(field).append(CSV_SEPARATOR);
+			header.append(field.replace(CSV_SEPARATOR, CSV_SEPARATOR_REPLACEMENT)).append(CSV_SEPARATOR);
 		}
 		header.replace(header.length() - 1, header.length(), LINE_SEPARATOR);
 		return header.toString();
@@ -119,7 +120,7 @@ public class TpLinkLogger extends RouterLogger {
 	private String buildCsvRow(final Map<String, String> info) {
 		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(new Date())).append(CSV_SEPARATOR);
 		for (String field : info.values()) {
-			row.append(field.replace(CSV_SEPARATOR, ' ')).append(CSV_SEPARATOR);
+			row.append(field.replace(CSV_SEPARATOR, CSV_SEPARATOR_REPLACEMENT)).append(CSV_SEPARATOR);
 		}
 		row.replace(row.length() - 1, row.length(), LINE_SEPARATOR);
 		return row.toString();
