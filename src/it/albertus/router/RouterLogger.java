@@ -42,7 +42,7 @@ public abstract class RouterLogger {
 	protected final Set<Threshold> thresholds = new HashSet<Threshold>();
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
-	private char[] animation = { '-', '\\', '|', '/' };
+	private final char[] animation = { '-', '\\', '|', '/' };
 
 	protected final void run() throws Exception {
 		welcome();
@@ -54,7 +54,7 @@ public abstract class RouterLogger {
 		for (int index = 0; index <= retries && !exit; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
-				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms", Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
+				final long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms", Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
 				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
 				Thread.sleep(retryIntervalInMillis);
 			}
@@ -352,11 +352,12 @@ public abstract class RouterLogger {
 	 * 
 	 * @param command  il comando da inviare al server telnet.
 	 * @return l'eco del testo inviato al server telnet.
-	 * @throws IOException
+	 * @throws IOException in caso di errore nella comunicazione con il server.
+	 * @throws NullPointerException se il comando fornito &egrave; null.
 	 */
-	protected String writeToTelnet(String command) throws IOException {
-		OutputStream out = telnet.getOutputStream();
-		StringBuilder echo = new StringBuilder();
+	protected String writeToTelnet(final String command) throws IOException {
+		final OutputStream out = telnet.getOutputStream();
+		final StringBuilder echo = new StringBuilder();
 		for (char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
 				break;
@@ -388,11 +389,12 @@ public abstract class RouterLogger {
 	 *            della stringa restituita.
 	 * @return la stringa contenente i dati ricevuti dal server telnet.
 	 * @throws IOException in caso di errore durante la lettura dei dati.
+	 * @throws NullPointerException se la stringa fornita &egrave; null.
 	 */
-	protected String readFromTelnet(String until, boolean inclusive) throws IOException {
-		InputStream in = telnet.getInputStream();
-		char lastChar = until.charAt(until.length() - 1);
-		StringBuilder text = new StringBuilder();
+	protected String readFromTelnet(final String until, final boolean inclusive) throws IOException {
+		final InputStream in = telnet.getInputStream();
+		final char lastChar = until.charAt(until.length() - 1);
+		final StringBuilder text = new StringBuilder();
 		int currentByte;
 		while ((currentByte = in.read()) != -1) {
 			char currentChar = (char) currentByte;
@@ -409,8 +411,8 @@ public abstract class RouterLogger {
 
 	private void welcome() {
 		// Preparazione numero di versione (se presente)...
-		StringBuilder versionInfo = new StringBuilder();
-		String versionNumber = version.getProperty("version.number");
+		final StringBuilder versionInfo = new StringBuilder();
+		final String versionNumber = version.getProperty("version.number");
 		if (versionNumber != null && !"".equals(versionNumber.trim())) {
 			versionInfo.append('v').append(versionNumber.trim()).append(' ');
 		}

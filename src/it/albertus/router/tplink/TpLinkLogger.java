@@ -74,7 +74,7 @@ public class TpLinkLogger extends RouterLogger {
 		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
 			File logDestDir = new File(logDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException("Il percorso \"" + logDestDir + "\" non \u00E8 valido.");
+				throw new RuntimeException("Invalid path: \"" + logDestDir + "\".");
 			}
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
@@ -97,8 +97,7 @@ public class TpLinkLogger extends RouterLogger {
 			}
 
 			if (logFileWriter == null) {
-				logFileWriter = new FileWriter(logFile, true); // Apre file
-																// esistente.
+				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
 				System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 			}
 			logFileWriter.append(buildCsvRow(info));
