@@ -20,7 +20,7 @@ public abstract class RouterLogger {
 	private interface Defaults {
 		int ROUTER_PORT = 23;
 		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
-		int CONNECTION_TIMEOUT_IN_MILLIS = 30000;
+		int CONNECTION_TIMEOUT_IN_MILLIS = 20000;
 		int ITERATIONS = -1;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
@@ -45,11 +45,11 @@ public abstract class RouterLogger {
 	protected final void run() throws Exception {
 		welcome();
 
-		boolean end = false;
+		boolean exit = false;
 
-		int retries = Integer.parseInt(configuration.getProperty("logger.retry.count", Integer.toString(Defaults.RETRIES)));
+		final int retries = Integer.parseInt(configuration.getProperty("logger.retry.count", Integer.toString(Defaults.RETRIES)));
 
-		for (int index = 0; index <= retries && !end; index++) {
+		for (int index = 0; index <= retries && !exit; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
 				long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms", Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
@@ -58,20 +58,39 @@ public abstract class RouterLogger {
 			}
 
 			// Avvio della procedura...
-			connect();
-			login();
-			try {
-				loop();
-				end = true; // Se non si sono verificati errori.
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			finally {
-				// In ogni caso, si esegue la disconnessione dal server...
-				System.out.println();
-				logout();
-				disconnect();
+			final boolean connected = connect();
+
+			// Log in...
+			if (connected) {
+				boolean loggedIn = false;
+				try {
+					loggedIn = login();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// Loop...
+				if (loggedIn) {
+					try {
+						loop();
+						exit = true; // Se non si sono verificati errori.
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					finally {
+						// In ogni caso, si esegue la disconnessione dal server...
+						System.out.println();
+						logout();
+						disconnect();
+					}
+				}
+				else {
+					// In caso di autenticazione fallita, si esce subito per evitare il blocco dell'account.
+					exit = true;
+					disconnect();
+				}
 			}
 		}
 		finalize();
@@ -85,7 +104,7 @@ public abstract class RouterLogger {
 	 * 
 	 * @return la mappa contenente le informazioni estratte.
 	 * 
-	 * @throws IOException
+	 * @throws IOException in caso di problemi nell'estrazione dei dati.
 	 */
 	protected abstract Map<String, String> readInfo() throws IOException;
 
@@ -95,10 +114,8 @@ public abstract class RouterLogger {
 	 * o in un database.
 	 * 
 	 * @param info  le informazioni da salvare.
-	 * 
-	 * @throws IOException
 	 */
-	protected abstract void saveInfo(Map<String, String> info) throws IOException;
+	protected abstract void saveInfo(Map<String, String> info);
 
 	/**
 	 * Restituisce una stringa contenente marca e modello del router relativo
@@ -125,7 +142,7 @@ public abstract class RouterLogger {
 	}
 
 	private void loadThresholds() {
-		Set<String> thresholdsAdded = new HashSet<String>();
+		final Set<String> thresholdsAdded = new HashSet<String>();
 		for (Object objectKey : configuration.keySet()) {
 			String key = (String) objectKey;
 			if (key.startsWith(THRESHOLD_PREFIX + '.')) {
@@ -145,44 +162,56 @@ public abstract class RouterLogger {
 		}
 	}
 
-	private void loadVersion() throws IOException {
-		InputStream inputStream = getClass().getResourceAsStream('/' + VERSION_FILE_NAME);
+	private void loadVersion() {
+		final InputStream inputStream = getClass().getResourceAsStream('/' + VERSION_FILE_NAME);
 		if (inputStream != null) {
-			version.load(inputStream);
-			inputStream.close();
+			try {
+				version.load(inputStream);
+				inputStream.close();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	private void loadConfiguration() throws IOException {
-		InputStream inputStream;
-		File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + CONFIGURATION_FILE_NAME);
+		final InputStream inputStream;
+		final File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + CONFIGURATION_FILE_NAME);
 		if (config.exists()) {
 			inputStream = new BufferedInputStream(new FileInputStream(config));
 		}
 		else {
-			inputStream = new BufferedInputStream(getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME));
+			inputStream = getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME);
 		}
 		configuration.load(inputStream);
 		inputStream.close();
 	}
 
-	/** Effettua la connessione al server telnet, ma non l'autenticazione. */
-	private final void connect() throws Exception {
-		String routerAddress = configuration.getProperty("router.address");
-		int routerPort = Integer.parseInt(configuration.getProperty("router.port", Integer.toString(Defaults.ROUTER_PORT)));
-		int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms", Integer.toString(Defaults.CONNECTION_TIMEOUT_IN_MILLIS)));
-		int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms", Integer.toString(Defaults.SOCKET_TIMEOUT_IN_MILLIS)));
+	/**
+	 * Effettua la connessione al server telnet, ma non l'autenticazione.
+	 * 
+	 * @return <code>true</code> se la connessione &egrave; riuscita,
+	 *         <code>false</code> altrimenti.
+	 */
+	private final boolean connect() {
+		final String routerAddress = configuration.getProperty("router.address");
+		final int routerPort = Integer.parseInt(configuration.getProperty("router.port", Integer.toString(Defaults.ROUTER_PORT)));
+		final int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms", Integer.toString(Defaults.CONNECTION_TIMEOUT_IN_MILLIS)));
+		final int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms", Integer.toString(Defaults.SOCKET_TIMEOUT_IN_MILLIS)));
 
+		telnet.setConnectTimeout(connectionTimeoutInMillis);
 		System.out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
+		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
-			telnet.setConnectTimeout(connectionTimeoutInMillis);
+			connected = true;
 			telnet.setSoTimeout(socketTimeoutInMillis);
 		}
 		catch (Exception e) {
-			disconnect();
-			throw e;
+			e.printStackTrace();
 		}
+		return connected;
 	}
 
 	/**
@@ -196,7 +225,7 @@ public abstract class RouterLogger {
 		try {
 			telnet.disconnect();
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -206,9 +235,11 @@ public abstract class RouterLogger {
 	 * {@link #readFromTelnet(String, boolean)} e {@link #writeToTelnet(String)}
 	 * per interagire con il server e comunicare le credenziali di accesso.
 	 * 
-	 * @throws Exception
+	 * @return <code>true</code> se l'autenticazione &egrave; riuscita,
+	 *         <code>false</code> altrimenti.
+	 * @throws IOException in caso di errori durante la lettura dei dati.
 	 */
-	protected abstract void login() throws Exception;
+	protected abstract boolean login() throws IOException;
 
 	/**
 	 * Effettua il logout dal server telnet inviando il comando
@@ -222,14 +253,15 @@ public abstract class RouterLogger {
 		try {
 			writeToTelnet("logout");
 		}
-		catch (IOException e) {
+		catch (Exception e) {
+			e.printStackTrace();
 			disconnect();
 		}
 	}
 
 	private final void loop() throws IOException, InterruptedException {
 		// Determinazione numero di iterazioni...
-		String iterationsProperty = configuration.getProperty("logger.iterations", Integer.toString(Defaults.ITERATIONS));
+		final String iterationsProperty = configuration.getProperty("logger.iterations", Integer.toString(Defaults.ITERATIONS));
 		final int iterations;
 		int iterationsPropertyNumeric = Integer.parseInt(iterationsProperty);
 		if (iterationsPropertyNumeric > 0) {
@@ -247,12 +279,12 @@ public abstract class RouterLogger {
 			// Fine implementazioni specifiche.
 
 			// Scrittura indice dell'iterazione in console...
-			StringBuilder clean = new StringBuilder();
+			final StringBuilder clean = new StringBuilder();
 			while (lastLogLength-- > 0) {
 				clean.append('\b');
 			}
-			StringBuilder log = new StringBuilder();
-			boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation"));
+			final StringBuilder log = new StringBuilder();
+			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation"));
 			if (animate) {
 				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
 			}
@@ -262,23 +294,25 @@ public abstract class RouterLogger {
 			}
 
 			// Stampa informazioni aggiuntive richieste...
-			final StringBuilder infoToShow = new StringBuilder();
-			for (String key : configuration.getProperty("console.show.keys", "").split(",")) {
-				key = key.trim();
-				if (info.containsKey(key)) {
-					if (infoToShow.length() == 0) {
-						infoToShow.append('[');
+			if (info != null && !info.isEmpty()) {
+				final StringBuilder infoToShow = new StringBuilder();
+				for (String key : configuration.getProperty("console.show.keys", "").split(",")) {
+					key = key.trim();
+					if (info.containsKey(key)) {
+						if (infoToShow.length() == 0) {
+							infoToShow.append('[');
+						}
+						else {
+							infoToShow.append(", ");
+						}
+						infoToShow.append(key + ": " + info.get(key));
 					}
-					else {
-						infoToShow.append(", ");
-					}
-					infoToShow.append(key + ": " + info.get(key));
 				}
+				if (infoToShow.length() != 0) {
+					infoToShow.append("] ");
+				}
+				log.append(infoToShow);
 			}
-			if (infoToShow.length() != 0) {
-				infoToShow.append("] ");
-			}
-			log.append(infoToShow);
 
 			lastLogLength = log.length();
 			System.out.print(clean.toString() + log.toString());
@@ -288,15 +322,17 @@ public abstract class RouterLogger {
 				long wait = Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
 
 				// Gestione delle soglie...
-				for (Threshold threshold : thresholds) {
-					try {
-						if (info.containsKey(threshold.getKey()) && threshold.isReached(info.get(threshold.getKey()))) {
-							wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
-							break;
+				if (info != null && !info.isEmpty()) {
+					for (Threshold threshold : thresholds) {
+						try {
+							if (info.containsKey(threshold.getKey()) && threshold.isReached(info.get(threshold.getKey()))) {
+								wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
+								break;
+							}
 						}
-					}
-					catch (Exception e) {
-						e.printStackTrace();
+						catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 				Thread.sleep(wait);
@@ -344,7 +380,7 @@ public abstract class RouterLogger {
 	 *            determina l'inclusione o meno della stringa limite all'interno
 	 *            della stringa restituita.
 	 * @return la stringa contenente i dati ricevuti dal server telnet.
-	 * @throws IOException
+	 * @throws IOException in caso di errore durante la lettura dei dati.
 	 */
 	protected String readFromTelnet(String until, boolean inclusive) throws IOException {
 		InputStream in = telnet.getInputStream();
@@ -401,7 +437,9 @@ public abstract class RouterLogger {
 		try {
 			super.finalize();
 		}
-		catch (Throwable t) {}
+		catch (Throwable t) {
+			t.printStackTrace();
+		}
 	}
 
 }

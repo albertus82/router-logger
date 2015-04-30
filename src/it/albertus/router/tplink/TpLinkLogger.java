@@ -24,7 +24,6 @@ public class TpLinkLogger extends RouterLogger {
 	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 
-	private File logFile = null;
 	private FileWriter logFileWriter = null;
 
 	public static void main(String... args) throws Exception {
@@ -32,24 +31,19 @@ public class TpLinkLogger extends RouterLogger {
 	}
 
 	@Override
-	protected void login() throws Exception {
-		try {
-			// Username...
-			System.out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
-			writeToTelnet(configuration.getProperty("router.username"));
+	protected boolean login() throws IOException {
+		// Username...
+		System.out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
+		writeToTelnet(configuration.getProperty("router.username"));
 
-			// Password...
-			System.out.println(readFromTelnet(LOGIN_PROMPT, true).trim());
-			writeToTelnet(configuration.getProperty("router.password"));
+		// Password...
+		System.out.println(readFromTelnet(LOGIN_PROMPT, true).trim());
+		writeToTelnet(configuration.getProperty("router.password"));
 
-			// Welcome! (salto caratteri speciali (clear screen, ecc.)...
-			String welcome = readFromTelnet("-", true); // 
-			System.out.println(welcome.charAt(welcome.length() - 1) + readFromTelnet(COMMAND_PROMPT, true).trim());
-		}
-		catch (Exception e) {
-			disconnect();
-			throw e;
-		}
+		// Welcome! (salto caratteri speciali (clear screen, ecc.)...
+		String welcome = readFromTelnet("-", true);
+		System.out.println(welcome.charAt(welcome.length() - 1) + readFromTelnet(COMMAND_PROMPT, true).trim());
+		return true;
 	}
 
 	@Override
@@ -73,32 +67,47 @@ public class TpLinkLogger extends RouterLogger {
 	}
 
 	@Override
-	protected void saveInfo(Map<String, String> info) throws IOException {
+	protected void saveInfo(Map<String, String> info) {
 		// Selezione del percorso e nome del file di destinazione...
 		String logDestinationDir = configuration.getProperty("log.destination.dir");
-		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
-			logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
-		}
-		else {
-			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
-		}
-
-		// Scrittura header CSV (solo se il file non esiste gia')...
-		if (!logFile.exists()) {
-			if (logFileWriter != null) {
-				closeOutputFile();
+		final File logFile;
+		try {
+			if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
+				File logDestDir = new File(logDestinationDir.trim());
+				if (logDestDir.exists() && !logDestDir.isDirectory()) {
+					throw new IOException("Il percorso specificato non \u00E8 valido.");
+				}
+				if (!logDestDir.exists()) {
+					logDestDir.mkdirs();
+				}
+				logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
-			logFileWriter = new FileWriter(logFile);
-			System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
-			logFileWriter.append(buildCsvHeader(info));
-		}
+			else {
+				logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			}
 
-		if (logFileWriter == null) {
-			logFileWriter = new FileWriter(logFile, true);
-			System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+			// Scrittura header CSV (solo se il file non esiste gia')...
+			if (!logFile.exists()) {
+				if (logFileWriter != null) {
+					closeOutputFile();
+				}
+				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
+				System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				logFileWriter.append(buildCsvHeader(info));
+			}
+
+			if (logFileWriter == null) {
+				logFileWriter = new FileWriter(logFile, true); // Apre file
+																// esistente.
+				System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+			}
+			logFileWriter.append(buildCsvRow(info));
+			logFileWriter.flush();
 		}
-		logFileWriter.append(buildCsvRow(info));
-		logFileWriter.flush();
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+			closeOutputFile();
+		}
 	}
 
 	private String buildCsvHeader(Map<String, String> info) {
@@ -120,11 +129,16 @@ public class TpLinkLogger extends RouterLogger {
 	}
 	
 	private void closeOutputFile() {
-		System.out.println("Closing output file.");
 		try {
-			logFileWriter.close();
+			if (logFileWriter != null) {
+				System.out.println("Closing output file.");
+				logFileWriter.close();
+				logFileWriter = null;
+			}
 		}
-		catch (IOException ioe) {}
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 	
 	@Override
