@@ -52,8 +52,8 @@ public class TpLinkLogger extends RouterLogger {
 		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 
 		// Inizio estrazione dati...
-		Map<String, String> info = new LinkedHashMap<String, String>();
-		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
+		final Map<String, String> info = new LinkedHashMap<String, String>();
+		final BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
@@ -67,25 +67,25 @@ public class TpLinkLogger extends RouterLogger {
 	}
 
 	@Override
-	protected void saveInfo(Map<String, String> info) {
+	protected void saveInfo(final Map<String, String> info) {
 		// Selezione del percorso e nome del file di destinazione...
-		String logDestinationDir = configuration.getProperty("log.destination.dir");
+		final String logDestinationDir = configuration.getProperty("log.destination.dir");
 		final File logFile;
-		try {
-			if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
-				File logDestDir = new File(logDestinationDir.trim());
-				if (logDestDir.exists() && !logDestDir.isDirectory()) {
-					throw new IOException("Il percorso specificato non \u00E8 valido.");
-				}
-				if (!logDestDir.exists()) {
-					logDestDir.mkdirs();
-				}
-				logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
+			File logDestDir = new File(logDestinationDir.trim());
+			if (logDestDir.exists() && !logDestDir.isDirectory()) {
+				throw new RuntimeException("Il percorso \"" + logDestDir + "\" non \u00E8 valido.");
 			}
-			else {
-				logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			if (!logDestDir.exists()) {
+				logDestDir.mkdirs();
 			}
+			logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+		}
+		else {
+			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+		}
 
+		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
 			if (!logFile.exists()) {
 				if (logFileWriter != null) {
@@ -110,8 +110,8 @@ public class TpLinkLogger extends RouterLogger {
 		}
 	}
 
-	private String buildCsvHeader(Map<String, String> info) {
-		StringBuilder header = new StringBuilder("Timestamp").append(CSV_SEPARATOR);
+	private String buildCsvHeader(final Map<String, String> info) {
+		final StringBuilder header = new StringBuilder("Timestamp").append(CSV_SEPARATOR);
 		for (String field : info.keySet()) {
 			header.append(field).append(CSV_SEPARATOR);
 		}
@@ -119,15 +119,15 @@ public class TpLinkLogger extends RouterLogger {
 		return header.toString();
 	}
 
-	private String buildCsvRow(Map<String, String> info) {
-		StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(new Date())).append(CSV_SEPARATOR);
+	private String buildCsvRow(final Map<String, String> info) {
+		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(new Date())).append(CSV_SEPARATOR);
 		for (String field : info.values()) {
 			row.append(field.replace(CSV_SEPARATOR, ' ')).append(CSV_SEPARATOR);
 		}
 		row.replace(row.length() - 1, row.length(), LINE_SEPARATOR);
 		return row.toString();
 	}
-	
+
 	private void closeOutputFile() {
 		try {
 			if (logFileWriter != null) {
@@ -140,12 +140,12 @@ public class TpLinkLogger extends RouterLogger {
 			ioe.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected String getDeviceModel() {
 		return DEVICE_MODEL;
 	}
-	
+
 	@Override
 	protected void finalize() {
 		super.finalize();
