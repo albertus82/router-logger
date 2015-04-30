@@ -88,9 +88,7 @@ public class TpLinkLogger extends RouterLogger {
 		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
 			if (!logFile.exists()) {
-				if (logFileWriter != null) {
-					closeOutputFile();
-				}
+				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
 				System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 				logFileWriter.append(buildCsvHeader(info));
