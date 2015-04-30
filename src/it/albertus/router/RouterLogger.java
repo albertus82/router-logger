@@ -26,6 +26,8 @@ public abstract class RouterLogger {
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 60000L;
+		boolean TELNET_SEND_CRLF = false;
+		boolean CONSOLE_ANIMATION = true;
 	}
 
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
@@ -284,7 +286,7 @@ public abstract class RouterLogger {
 				clean.append('\b');
 			}
 			final StringBuilder log = new StringBuilder();
-			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation"));
+			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation", Boolean.toString(Defaults.CONSOLE_ANIMATION)));
 			if (animate) {
 				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
 			}
@@ -363,6 +365,10 @@ public abstract class RouterLogger {
 		}
 		out.flush();
 		// Thread.sleep(50);
+		if (Boolean.parseBoolean(configuration.getProperty("telnet.send.crlf", Boolean.toString(Defaults.TELNET_SEND_CRLF)))) {
+			out.write('\r');
+			echo.append('\r');
+		}
 		out.write('\n');
 		echo.append('\n');
 		out.flush();
