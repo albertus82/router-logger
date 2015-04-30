@@ -264,13 +264,8 @@ public abstract class RouterLogger {
 
 	private final void loop() throws IOException, InterruptedException {
 		// Determinazione numero di iterazioni...
-		final String iterationsProperty = configuration.getProperty("logger.iterations", Integer.toString(Defaults.ITERATIONS));
-		final int iterations;
-		int iterationsPropertyNumeric = Integer.parseInt(iterationsProperty);
-		if (iterationsPropertyNumeric > 0) {
-			iterations = iterationsPropertyNumeric;
-		}
-		else {
+		int iterations = Integer.parseInt(configuration.getProperty("logger.iterations", Integer.toString(Defaults.ITERATIONS)));
+		if (iterations <= 0) {
 			iterations = Integer.MAX_VALUE;
 		}
 
@@ -291,12 +286,17 @@ public abstract class RouterLogger {
 			if (animate) {
 				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
 			}
-			log.append(iteration).append(' ');
+			log.append(iteration);
+			if (iterations != Integer.MAX_VALUE) {
+				log.append('/').append(iterations);
+			}
+			log.append(' ');
 			if (animate) {
 				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
 			}
+			// Fine scrittura indice.
 
-			// Stampa informazioni aggiuntive richieste...
+			// Scrittura informazioni aggiuntive richieste...
 			if (info != null && !info.isEmpty()) {
 				final StringBuilder infoToShow = new StringBuilder();
 				for (String key : configuration.getProperty("console.show.keys", "").split(",")) {
@@ -316,6 +316,7 @@ public abstract class RouterLogger {
 				}
 				log.append(infoToShow);
 			}
+			// Fine scrittura informazioni aggiuntive.
 
 			lastLogLength = log.length();
 			System.out.print(clean.toString() + log.toString());
