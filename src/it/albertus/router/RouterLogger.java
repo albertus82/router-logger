@@ -26,7 +26,7 @@ public abstract class RouterLogger {
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 60000L;
-		boolean TELNET_SEND_CRLF = false;
+		boolean TELNET_SEND_CRLF = true;
 		boolean CONSOLE_ANIMATION = true;
 	}
 
