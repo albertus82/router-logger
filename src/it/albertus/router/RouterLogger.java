@@ -84,7 +84,12 @@ public abstract class RouterLogger {
 					finally {
 						// In ogni caso, si esegue la disconnessione dal server...
 						System.out.println();
-						logout();
+						try {
+							logout();
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
 						disconnect();
 					}
 				}
@@ -106,7 +111,7 @@ public abstract class RouterLogger {
 	 * 
 	 * @return la mappa contenente le informazioni estratte.
 	 * 
-	 * @throws IOException in caso di problemi nell'estrazione dei dati.
+	 * @throws IOException in caso di errore nella lettura dei dati.
 	 */
 	protected abstract Map<String, String> readInfo() throws IOException;
 
@@ -239,7 +244,7 @@ public abstract class RouterLogger {
 	 * 
 	 * @return <code>true</code> se l'autenticazione &egrave; riuscita,
 	 *         <code>false</code> altrimenti.
-	 * @throws IOException in caso di errori durante la lettura dei dati.
+	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	protected abstract boolean login() throws IOException;
 
@@ -249,16 +254,12 @@ public abstract class RouterLogger {
 	 * aggiungere altri o diversi comandi che debbano essere eseguiti in fase di
 	 * logout. <b>Questo metodo non effettua esplicitamente la disconnessione dal
 	 * server</b>.
+	 * 
+	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
-	protected void logout() {
+	protected void logout() throws IOException {
 		System.out.println("Logging out...");
-		try {
-			writeToTelnet("logout");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			disconnect();
-		}
+		writeToTelnet("logout");
 	}
 
 	private final void loop() throws IOException, InterruptedException {
