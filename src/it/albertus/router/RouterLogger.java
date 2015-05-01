@@ -164,7 +164,7 @@ public abstract class RouterLogger {
 				if (thresholdKey == null || "".equals(thresholdKey) || thresholdValue == null || thresholdType == null) {
 					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\".");
 				}
-				thresholds.add(new Threshold(thresholdKey, thresholdType, thresholdValue));
+				thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
 				thresholdsAdded.add(thresholdName);
 			}
 		}
@@ -203,7 +203,7 @@ public abstract class RouterLogger {
 	 *         <code>false</code> altrimenti.
 	 */
 	private final boolean connect() {
-		final String routerAddress = configuration.getProperty("router.address", Defaults.ROUTER_ADDRESS);
+		final String routerAddress = configuration.getProperty("router.address", Defaults.ROUTER_ADDRESS).trim();
 		final int routerPort = Integer.parseInt(configuration.getProperty("router.port", Integer.toString(Defaults.ROUTER_PORT)));
 		final int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms", Integer.toString(Defaults.CONNECTION_TIMEOUT_IN_MILLIS)));
 		final int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms", Integer.toString(Defaults.SOCKET_TIMEOUT_IN_MILLIS)));
