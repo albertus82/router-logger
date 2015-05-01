@@ -27,7 +27,7 @@ public class TpLinkLogger extends RouterLogger {
 
 	private FileWriter logFileWriter = null;
 
-	public static void main(String... args) throws Exception {
+	public static void main(String... args) {
 		new TpLinkLogger().run();
 	}
 

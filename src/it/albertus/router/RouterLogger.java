@@ -45,7 +45,7 @@ public abstract class RouterLogger {
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
 
-	protected final void run() throws Exception {
+	protected final void run() {
 		welcome();
 
 		boolean exit = false;
@@ -57,7 +57,12 @@ public abstract class RouterLogger {
 			if (index > 0) {
 				final long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms", Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
 				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
-				Thread.sleep(retryIntervalInMillis);
+				try {
+					Thread.sleep(retryIntervalInMillis);
+				}
+				catch (InterruptedException ie) {
+					throw new RuntimeException(ie);
+				}
 			}
 
 			// Avvio della procedura...
