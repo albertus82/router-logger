@@ -159,7 +159,7 @@ public abstract class RouterLogger {
 					continue;
 				}
 				final String thresholdKey = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
-				final Type thresholdType = Type.findByName(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
+				final Type thresholdType = Type.getEnum(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
 				final String thresholdValue = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE);
 				if (thresholdKey == null || "".equals(thresholdKey) || thresholdValue == null || thresholdType == null) {
 					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\".");

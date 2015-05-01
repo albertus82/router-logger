@@ -35,10 +35,10 @@ public class Threshold {
 			return description;
 		}
 
-		public static Type findByName(String name) {
-			if (name != null) {
+		public static Type getEnum(String abbreviation) {
+			if (abbreviation != null) {
 				for (Type type : Type.values()) {
-					if (type.name().equalsIgnoreCase(name.trim()) || type.abbreviations.contains(name.trim().toLowerCase())) {
+					if (type.name().equalsIgnoreCase(abbreviation.trim()) || type.abbreviations.contains(abbreviation.trim().toLowerCase())) {
 						return type;
 					}
 				}
