@@ -290,7 +290,7 @@ public abstract class RouterLogger {
 			final StringBuilder log = new StringBuilder();
 			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation", Boolean.toString(Defaults.CONSOLE_ANIMATION)));
 			if (animate) {
-				log.append(ANIMATION[iteration & ((1 << 2) - 1)]).append(' ');
+				log.append(ANIMATION[iteration & 3]).append(' ');
 			}
 			log.append(iteration);
 			if (iterations != Integer.MAX_VALUE) {
@@ -298,7 +298,7 @@ public abstract class RouterLogger {
 			}
 			log.append(' ');
 			if (animate) {
-				log.append(ANIMATION[iteration & ((1 << 2) - 1)]).append(' ');
+				log.append(ANIMATION[iteration & 3]).append(' ');
 			}
 			// Fine scrittura indice.
 
