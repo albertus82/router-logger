@@ -404,7 +404,7 @@ public abstract class RouterLogger {
 		final StringBuilder text = new StringBuilder();
 		int currentByte;
 		while ((currentByte = in.read()) != -1) {
-			char currentChar = (char) currentByte;
+			final char currentChar = (char) currentByte;
 			text.append(currentChar);
 			if (currentChar == lastChar && text.toString().endsWith(until)) {
 				if (!inclusive) {
