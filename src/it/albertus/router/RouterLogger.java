@@ -37,12 +37,12 @@ public abstract class RouterLogger {
 	private static final String THRESHOLD_SUFFIX_KEY = "key";
 	private static final String THRESHOLD_SUFFIX_TYPE = "type";
 	private static final String THRESHOLD_SUFFIX_VALUE = "value";
+	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
 	protected final TelnetClient telnet = new TelnetClient();
 	protected final Set<Threshold> thresholds = new HashSet<Threshold>();
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
-	private final char[] animation = { '-', '\\', '|', '/' };
 
 	protected final void run() throws Exception {
 		welcome();
@@ -100,7 +100,7 @@ public abstract class RouterLogger {
 				}
 			}
 		}
-		finalize();
+		release();
 		System.out.println("Bye!");
 	}
 
@@ -284,7 +284,7 @@ public abstract class RouterLogger {
 			final StringBuilder log = new StringBuilder();
 			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation", Boolean.toString(Defaults.CONSOLE_ANIMATION)));
 			if (animate) {
-				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
+				log.append(ANIMATION[iteration & ((1 << 2) - 1)]).append(' ');
 			}
 			log.append(iteration);
 			if (iterations != Integer.MAX_VALUE) {
@@ -292,7 +292,7 @@ public abstract class RouterLogger {
 			}
 			log.append(' ');
 			if (animate) {
-				log.append(animation[(iteration & ((1 << 2) - 1))]).append(' ');
+				log.append(ANIMATION[iteration & ((1 << 2) - 1)]).append(' ');
 			}
 			// Fine scrittura indice.
 
@@ -442,14 +442,6 @@ public abstract class RouterLogger {
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,
 	 * ecc.).
 	 */
-	@Override
-	protected void finalize() {
-		try {
-			super.finalize();
-		}
-		catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
+	protected void release() {}
 
 }

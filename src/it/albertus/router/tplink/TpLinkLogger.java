@@ -145,8 +145,7 @@ public class TpLinkLogger extends RouterLogger {
 	}
 
 	@Override
-	protected void finalize() {
-		super.finalize();
+	protected void release() {
 		closeOutputFile();
 	}
 
