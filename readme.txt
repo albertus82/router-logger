@@ -1,4 +1,4 @@
-RouterLogger e' una semplice applicazione console per la registrazione dello stato della connessione ADSL, che include un'implementazione specifica per il router TP-Link TD-W8970. Il funzionamento e' basato sull'interfaccia telnet esposta dalla maggior parte dei modem/router ADSL odierni.
+RouterLogger e' una semplice applicazione Java console per la registrazione dello stato della connessione ADSL, che include un'implementazione specifica per il router TP-Link TD-W8970. Il funzionamento e' basato sull'interfaccia telnet esposta dalla maggior parte dei modem/router ADSL odierni.
 
 E' possibile estendere l'applicazione in modo da farla lavorare con qualsiasi router disponga di un'interfaccia telnet che permetta di recuperare informazioni sullo stato della connessione.
 Per farlo, e' sufficiente implementare una classe personalizzata che estenda la classe astratta RouterLogger.
