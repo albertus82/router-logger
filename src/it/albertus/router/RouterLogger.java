@@ -337,12 +337,12 @@ public abstract class RouterLogger {
 
 				// Gestione delle soglie...
 				if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
-					for (final String key : info.keySet()) {
+					outer: for (final String key : info.keySet()) {
 						if (key != null && !"".equals(key.trim())) {
 							for (final Threshold threshold : thresholds) {
 								if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
 									wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
-									break;
+									break outer;
 								}
 							}
 						}
