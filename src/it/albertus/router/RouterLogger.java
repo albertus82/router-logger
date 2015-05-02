@@ -340,7 +340,7 @@ public abstract class RouterLogger {
 				if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
 					for (final String key : info.keySet()) {
 						if (key != null && !"".equals(key.trim())) {
-							for (Threshold threshold : thresholds) {
+							for (final Threshold threshold : thresholds) {
 								if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
 									wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
 									break;
