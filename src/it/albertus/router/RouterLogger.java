@@ -306,16 +306,20 @@ public abstract class RouterLogger {
 			// Scrittura informazioni aggiuntive richieste...
 			if (info != null && !info.isEmpty()) {
 				final StringBuilder infoToShow = new StringBuilder();
-				for (String key : configuration.getProperty("console.show.keys", "").split(",")) {
-					key = key.trim();
-					if (info.containsKey(key)) {
-						if (infoToShow.length() == 0) {
-							infoToShow.append('[');
+				for (String keyToShow : configuration.getProperty("console.show.keys", "").split(",")) {
+					if (keyToShow != null && !"".equals(keyToShow.trim())) {
+						keyToShow = keyToShow.trim();
+						for (final String key : info.keySet()) {
+							if (key != null && key.trim().equals(keyToShow)) {
+								if (infoToShow.length() == 0) {
+									infoToShow.append('[');
+								}
+								else {
+									infoToShow.append(", ");
+								}
+								infoToShow.append(keyToShow + ": " + info.get(key));
+							}
 						}
-						else {
-							infoToShow.append(", ");
-						}
-						infoToShow.append(key + ": " + info.get(key));
 					}
 				}
 				if (infoToShow.length() != 0) {
@@ -334,20 +338,13 @@ public abstract class RouterLogger {
 
 				// Gestione delle soglie...
 				if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
-					for (String key : info.keySet()) {
+					for (final String key : info.keySet()) {
 						if (key != null && !"".equals(key.trim())) {
-							int found = 0, reached = 0;
 							for (Threshold threshold : thresholds) {
-								if (key.trim().equals(threshold.getKey())) {
-									found++;
-									if (threshold.isReached(info.get(key))) {
-										reached++;
-									}
+								if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
+									wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
+									break;
 								}
-							}
-							if (found != 0 && found == reached) {
-								wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
-								break;
 							}
 						}
 					}
