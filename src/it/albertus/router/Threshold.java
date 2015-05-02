@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Threshold {
+public class Threshold implements Comparable<Threshold> {
 
 	public enum Type {
 		NOT_EQUAL("<>", new String[] { "ne", "!=", "<>", "^=" }),
@@ -138,6 +138,11 @@ public class Threshold {
 	@Override
 	public String toString() {
 		return key + ' ' + type + ' ' + value;
+	}
+
+	@Override
+	public int compareTo(Threshold other) {
+		return this.key.compareTo(other.key) + this.type.compareTo(other.type);
 	}
 
 }

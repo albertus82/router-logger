@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
@@ -41,7 +42,7 @@ public abstract class RouterLogger {
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
 	protected final TelnetClient telnet = new TelnetClient();
-	protected final Set<Threshold> thresholds = new HashSet<Threshold>();
+	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
 
@@ -332,16 +333,22 @@ public abstract class RouterLogger {
 				long wait = Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
 
 				// Gestione delle soglie...
-				if (info != null && !info.isEmpty()) {
-					for (Threshold threshold : thresholds) {
-						try {
-							if (info.containsKey(threshold.getKey()) && threshold.isReached(info.get(threshold.getKey()))) {
+				if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
+					for (String key : info.keySet()) {
+						if (key != null && !"".equals(key.trim())) {
+							int found = 0, reached = 0;
+							for (Threshold threshold : thresholds) {
+								if (key.trim().equals(threshold.getKey())) {
+									found++;
+									if (threshold.isReached(info.get(key))) {
+										reached++;
+									}
+								}
+							}
+							if (found != 0 && found == reached) {
 								wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
 								break;
 							}
-						}
-						catch (Exception e) {
-							e.printStackTrace();
 						}
 					}
 				}
