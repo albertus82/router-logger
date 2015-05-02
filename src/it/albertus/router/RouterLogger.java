@@ -205,8 +205,8 @@ public abstract class RouterLogger {
 	/**
 	 * Effettua la connessione al server telnet, ma non l'autenticazione.
 	 * 
-	 * @return <code>true</code> se la connessione &egrave; riuscita,
-	 *         <code>false</code> altrimenti.
+	 * @return <tt>true</tt> se la connessione &egrave; riuscita, <tt>false</tt>
+	 *         altrimenti.
 	 */
 	private final boolean connect() {
 		final String routerAddress = configuration.getProperty("router.address", Defaults.ROUTER_ADDRESS).trim();
@@ -232,7 +232,7 @@ public abstract class RouterLogger {
 	 * Effettua la disconnessione dal server telnet, ma non invia alcun comando
 	 * di logout. &Egrave; buona norma richiamare prima il metodo
 	 * {@link #logout()} per inviare al server telnet gli opportuni comandi di
-	 * chiusura della sessione (ad esempio <code>logout</code>).
+	 * chiusura della sessione (ad esempio <tt>logout</tt>).
 	 */
 	protected final void disconnect() {
 		System.out.println("Disconnecting...");
@@ -249,18 +249,17 @@ public abstract class RouterLogger {
 	 * {@link #readFromTelnet(String, boolean)} e {@link #writeToTelnet(String)}
 	 * per interagire con il server e comunicare le credenziali di accesso.
 	 * 
-	 * @return <code>true</code> se l'autenticazione &egrave; riuscita,
-	 *         <code>false</code> altrimenti.
+	 * @return <tt>true</tt> se l'autenticazione &egrave; riuscita,
+	 *         <tt>false</tt> altrimenti.
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	protected abstract boolean login() throws IOException;
 
 	/**
-	 * Effettua il logout dal server telnet inviando il comando
-	 * <code>logout</code>. &Egrave; possibile sovrascrivere questo metodo per
-	 * aggiungere altri o diversi comandi che debbano essere eseguiti in fase di
-	 * logout. <b>Questo metodo non effettua esplicitamente la disconnessione dal
-	 * server</b>.
+	 * Effettua il logout dal server telnet inviando il comando <tt>logout</tt>.
+	 * &Egrave; possibile sovrascrivere questo metodo per aggiungere altri o
+	 * diversi comandi che debbano essere eseguiti in fase di logout. <b>Questo
+	 * metodo non effettua esplicitamente la disconnessione dal server</b>.
 	 * 
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
@@ -357,9 +356,9 @@ public abstract class RouterLogger {
 	/**
 	 * Invia un comando al server telnet. La stringa passata viene
 	 * automaticamente inviata al server e non occorre la presenza del carattere
-	 * <code>\n</code>. Se nella stringa sono presenti caratteri <code>\n</code>
-	 * o <code>\r</code>, questa viene troncata alla prima occorrenza di uno di
-	 * questi caratteri.
+	 * <tt>\n</tt>. Se nella stringa sono presenti caratteri <tt>\n</tt> o
+	 * <tt>\r</tt>, questa viene troncata alla prima occorrenza di uno di questi
+	 * caratteri.
 	 * 
 	 * @param command  il comando da inviare al server telnet.
 	 * @return l'eco del testo inviato al server telnet.
