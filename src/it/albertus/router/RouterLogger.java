@@ -159,7 +159,10 @@ public abstract class RouterLogger {
 		final Set<String> thresholdsAdded = new HashSet<String>();
 		for (Object objectKey : configuration.keySet()) {
 			String key = (String) objectKey;
-			if (key.startsWith(THRESHOLD_PREFIX + '.')) {
+			if (key != null && key.startsWith(THRESHOLD_PREFIX + '.')) {
+				if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(THRESHOLD_SUFFIX_KEY) && !key.endsWith(THRESHOLD_SUFFIX_TYPE) && !key.endsWith(THRESHOLD_SUFFIX_VALUE))) {
+					throw new IllegalArgumentException("Thresholds misconfigured. Review your " + CONFIGURATION_FILE_NAME + " file.");
+				}
 				final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 				if (thresholdsAdded.contains(thresholdName)) {
 					continue;
@@ -168,7 +171,7 @@ public abstract class RouterLogger {
 				final Type thresholdType = Type.getEnum(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
 				final String thresholdValue = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE);
 				if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\".");
+					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\". Review your " + CONFIGURATION_FILE_NAME + " file.");
 				}
 				thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
 				thresholdsAdded.add(thresholdName);
