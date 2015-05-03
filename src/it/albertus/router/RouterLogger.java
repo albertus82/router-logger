@@ -336,24 +336,25 @@ public abstract class RouterLogger {
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
-				long wait = Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
+				Thread.sleep(getWaitTimeInMillis(info));
+			}
+		}
+	}
 
-				// Gestione delle soglie...
-				if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
-					outer: for (final String key : info.keySet()) {
-						if (key != null && !"".equals(key.trim())) {
-							for (final Threshold threshold : thresholds) {
-								if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-									wait = Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
-									break outer;
-								}
-							}
+	private long getWaitTimeInMillis(final Map<String, String> info) {
+		// Gestione delle soglie...
+		if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
+			for (final String key : info.keySet()) {
+				if (key != null && !"".equals(key.trim())) {
+					for (final Threshold threshold : thresholds) {
+						if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
+							return Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
 						}
 					}
 				}
-				Thread.sleep(wait);
 			}
 		}
+		return Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
 	}
 
 	/**
