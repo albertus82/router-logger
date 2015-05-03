@@ -30,6 +30,7 @@ public abstract class RouterLogger {
 		long RETRY_INTERVAL_IN_MILLIS = 60000L;
 		boolean TELNET_SEND_CRLF = true;
 		boolean CONSOLE_ANIMATION = true;
+		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 	}
 
 	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
@@ -308,7 +309,7 @@ public abstract class RouterLogger {
 			// Scrittura informazioni aggiuntive richieste...
 			if (info != null && !info.isEmpty()) {
 				final StringBuilder infoToShow = new StringBuilder();
-				for (String keyToShow : configuration.getProperty("console.show.keys", "").split(",")) {
+				for (String keyToShow : configuration.getProperty("console.show.keys", "").split(configuration.getProperty("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
 					if (keyToShow != null && !"".equals(keyToShow.trim())) {
 						keyToShow = keyToShow.trim();
 						for (final String key : info.keySet()) {
