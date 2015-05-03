@@ -341,7 +341,7 @@ public abstract class RouterLogger {
 		}
 	}
 
-	private long getWaitTimeInMillis(final Map<String, String> info) {
+	protected long getWaitTimeInMillis(final Map<String, String> info) {
 		// Gestione delle soglie...
 		if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
 			for (final String key : info.keySet()) {
