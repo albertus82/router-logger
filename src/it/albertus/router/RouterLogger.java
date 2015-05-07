@@ -118,7 +118,6 @@ public abstract class RouterLogger {
 	 * {@link #readFromTelnet(String, boolean)}.
 	 * 
 	 * @return la mappa contenente le informazioni estratte.
-	 * 
 	 * @throws IOException in caso di errore nella lettura dei dati.
 	 */
 	protected abstract Map<String, String> readInfo() throws IOException;
