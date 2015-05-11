@@ -291,7 +291,7 @@ public abstract class RouterLogger {
 				clean.append('\b');
 			}
 			final StringBuilder log = new StringBuilder();
-			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation", Boolean.toString(Defaults.CONSOLE_ANIMATION)));
+			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation", Boolean.toString(Defaults.CONSOLE_ANIMATION)).trim());
 			if (animate) {
 				log.append(ANIMATION[iteration & 3]).append(' ');
 			}
@@ -381,7 +381,7 @@ public abstract class RouterLogger {
 		}
 		out.flush();
 		// Thread.sleep(50);
-		if (Boolean.parseBoolean(configuration.getProperty("telnet.send.crlf", Boolean.toString(Defaults.TELNET_SEND_CRLF)))) {
+		if (Boolean.parseBoolean(configuration.getProperty("telnet.send.crlf", Boolean.toString(Defaults.TELNET_SEND_CRLF)).trim())) {
 			out.write('\r');
 			echo.append('\r');
 		}
