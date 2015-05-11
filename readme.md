@@ -6,7 +6,7 @@ RouterLogger
 
 ### Installazione e configurazione di base
 
-1. scaricare una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
+1. [scaricare](/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file **`routerlogger.cfg`** configurando le seguenti propriet&agrave;:
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` o `192.168.1.1`).
@@ -14,7 +14,7 @@ RouterLogger
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
   * **`router.password`**= password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
 
-Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di Java Runtime Environment (JRE) versione 6 (1.6) o successiva.
+Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
 In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `/lib/*.jar` e la classe da eseguire: `it.albertus.router.tplink.TpLinkLogger`.
 
