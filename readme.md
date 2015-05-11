@@ -17,20 +17,20 @@ Per avviare l'applicazione &egrave; richiesta la presenza della variabile di amb
 
 In ambiente Windows &egrave; sufficiente richiamare il file batch <code>routerlogger.bat</code>, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa <code>routerlogger.jar</code> e <code>/lib/*.jar</code> e la classe da eseguire: <code>it.albertus.router.tplink.TpLinkLogger</code>.
 
-Il programma si connetter&agrave; al router e inizier&agrave; a salvare le informazioni in formato CSV all'interno della cartella del programma, generando un file per ogni giornata. Per specificare una cartella diversa, abilitare (rimuovendo <code>#</code>) e modificare la propriet&agrave; <code>**log.destination.dir**</code>.
+Il programma si connetter&agrave; al router e inizier&agrave; a salvare ciclicamente le informazioni in formato CSV all'interno della cartella del programma, generando un file per ogni giornata. Per specificare una cartella diversa, abilitare (rimuovendo <code>#</code>) e modificare la propriet&agrave; <code>**log.destination.dir**</code>.
 
 ### Configurazione avanzata
 
-Il file <code>routerlogger.cfg</code> contiene diverse impostazioni, molte delle quali disabilitate (<code>#</code>) ma che possono essere attivate in caso di necessit&agrave;:
+Il file <code>routerlogger.cfg</code> contiene varie impostazioni, molte delle quali  disabilitate per impostazione predefinita (chiave preceduta dal carattere <code>#</code>) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento <code>#</code> presente all'inizio della relativa chiave. Le impostazioni disponibili sono le seguenti:
 
-* <code>socket.timeout.ms</code>= (default: <code>30000</code>).
-* <code>connection.timeout.ms</code>= (default: <code>20000</code>).
-* <code>telnet.send.crlf</code>= determina se (default: <code>true</code>).
-* <code>logger.iterations</code>= (default: <code>-1</code>).
-* <code>logger.interval.normal.ms</code>= (default: <code>5000</code>).
-* <code>logger.interval.fast.ms</code>= (default: <code>1000</code>).
-* <code>logger.retry.count</code>= (default: <code>3</code>).
-* <code>logger.retry.interval.ms</code>= (default: <code>60000</code>).
+* <code>socket.timeout.ms</code>= timeout del socket in millisecondi, ossia il tempo di inattivita massimo durante la comunicazione con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: <code>30000</code>).
+* <code>connection.timeout.ms</code>= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: <code>20000</code> ms).
+* <code>telnet.send.crlf</code>= specifica come inviare il comando di ritorno a capo al server: se impostato a <code>true</code>, sar&agrave; inviata la coppia di caratteri di controllo <code>CR</code> e <code>LF</code> (<code>\r\n</code>); se impostato a <code>false</code> sar&agrave; invece inviato il solo carattere <code>LF</code> (<code>\n</code>); (default: <code>true</code>).
+* <code>logger.iterations</code>= numero di iterazioni da effettuare. Normalmente l'applicazione registra l'attivit&agrave; del modem per un tempo indefinito, ossia finch&eacute; non viene chiusa dall'utente, ma &egrave; possibile indicare un numero di iterazioni massimo dopo il quale l'applicazione si chiuder&agrave; automaticamente. Valori minori o uguali a zero equivalgono a infinito (default: <code>-1</code>).
+* <code>logger.interval.normal.ms</code>= intervallo tra le richieste di informazioni al modem in condizioni normali (default: <code>5000</code> ms). Valori inferiori a <code>1000</code> potrebbero creare problemi di funzionamento del dispositivo o blocco dell'applicazione a causa dell'elevato numero di richieste.
+* <code>logger.interval.fast.ms</code>= intervallo tra le richieste di informazioni al modem in caso di raggiungimento di una o pi&ugrave; soglie (cfr. par. *soglie*) (default: <code>1000</code> ms). Valori inferiori a <code>1000</code> potrebbero creare problemi di funzionamento del dispositivo o blocco dell'applicazione a causa dell'elevato numero di richieste.
+* <code>logger.retry.count</code>= numero di tentativi di riavvio del ciclo da effettuare in caso di errore durante l'esecuzione (default: <code>3</code>). Utile, ad esempio, in caso di riavvio del modem.
+* <code>logger.retry.interval.ms</code>= intervallo tra i tentativi di riavvio (default: <code>60000</code> ms).
 
 ### Estensione
 
