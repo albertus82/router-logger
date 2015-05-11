@@ -1,6 +1,6 @@
 **RouterLogger** &egrave; una semplice applicazione Java in riga di comando per la registrazione dello stato della connessione ADSL, che include un'implementazione specifica per il router **TP-Link TD-W8970**. Il funzionamento &egrave; basato sull'interfaccia telnet esposta dalla maggior parte dei modem/router ADSL odierni.
 
-Per eseguire l'applicazione in ambiente Windows, occorre:
+## Installazione
 
 1. scaricare una release <code>bin</code> in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattarla in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
@@ -9,7 +9,8 @@ Per eseguire l'applicazione in ambiente Windows, occorre:
   * <code>**router.port**</code>= porta telnet del router, normalmente <code>23</code>;
   * <code>**router.username**</code>= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
   * <code>**router.password**</code>= password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser);
-4. avviare l'applicazione richiamando il file batch <code>routerlogger.bat</code> (&egrave; richiesta la presenza della variabile di ambiente <code>JAVA_HOME</code> e di Java Runtime Environment (JRE) versione 6 (1.6) o successiva).
+
+Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente <code>JAVA_HOME</code> e di Java Runtime Environment (JRE) versione 6 (1.6) o successiva. In ambiente Windows &egrave; sufficiente richiamare il file batch <code>routerlogger.bat</code, mentre in ambienti diversi (es. Linux) occorre eseguire Java specificando un *classpath* che includa <code>routerlogger.jar</code> e <code>/lib/*.jar</code> e indicando la classe <code>it.albertus.router.tplink.TpLinkLogger</code>.
 
 Il programma si connetter&agrave; al router e inizier&agrave; a salvare le informazioni in formato CSV all'interno della cartella del programma, generando un file per ogni giornata. Per specificare una cartella diversa, abilitare (rimuovendo <code>#</code>) e modificare la propriet&agrave; <code>**log.destination.dir**</code>.
 
