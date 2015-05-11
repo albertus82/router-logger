@@ -9,7 +9,7 @@ Per eseguire l'applicazione in ambiente Windows, &egrave; occorre:
   * <code>**router.port**</code>=porta telnet del router, normalmente <code>23</code>;
   * <code>**router.username**</code>=nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
   * <code>**router.password**</code>=password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser);
-4. avviare l'applicazione richiamando il file batch <code>routerlogger.bat</code> (<code>java.exe</code> deve essere nel path).
+4. avviare l'applicazione richiamando il file batch <code>routerlogger.bat</code> (deve essere presente la variabile di ambiente <code>JAVA_HOME</code>).
 
 &Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi router disponga di un'interfaccia **telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta <code>**RouterLogger**</code>, la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
 
