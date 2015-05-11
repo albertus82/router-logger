@@ -7,7 +7,7 @@ RouterLogger
 ### Installazione e configurazione di base
 
 1. scaricare una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
-2. scompattarla in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
+2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file **`routerlogger.cfg`** configurando le seguenti propriet&agrave;:
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` o `192.168.1.1`).
   * **`router.port`**= porta telnet del router, default: `23`.
@@ -19,7 +19,7 @@ Per avviare l'applicazione &egrave; richiesta la presenza della variabile di amb
 In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `/lib/*.jar` e la classe da eseguire: `it.albertus.router.tplink.TpLinkLogger`.
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene aggiunto ad un file in formato CSV. L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file.
-Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare (rimuovendo `#`) e modificare la propriet&agrave; **`log.destination.dir`** nel file `routerlogger.cfg`.
+Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`log.destination.dir`** nel file `routerlogger.cfg` (rimuovendo `#`) e modificarne il valore.
 
 
 ### Configurazione avanzata
@@ -46,7 +46,7 @@ Le soglie permettono di specificare dei valori limite per uno o pi&ugrave; param
 
 Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`):
 
-* **`threshold.`**_identificativo.univoco.soglia_**`.key`**= chiave del parametro di interesse.
+* **`threshold.`**_identificativo.univoco.soglia_**`.key`**= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
 * **`threshold.`**_identificativo.univoco.soglia_**`.type`**= condizione di raggiungimento:
  * **`lt`**: minore di...
  * **`le`**: minore o uguale a...
@@ -56,7 +56,17 @@ Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key
  * **`ne`**: diverso da...
 * **`threshold.`**_identificativo.univoco.soglia_**`.value`**= valore di soglia.
 
+Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applicazione che la propriet&agrave; riguarda una soglia.
+
 L'identificativo univoco di soglia pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere `=`) e ha l'unico scopo di raggruppare le tre propriet&agrave; `key`, `type` e `value`, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero impossibile da correlare.
+
+Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie sono `.key`, `.type`, `.value`.
+
+###### Esempio
+
+* threshold.snr.down.key=downstreamNoiseMargin
+* threshold.snr.down.type=lt
+* threshold.snr.down.value=100
 
 
 ### Estensione
