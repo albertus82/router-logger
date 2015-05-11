@@ -50,8 +50,7 @@ public abstract class CsvRouterLogger extends RouterLogger {
 			}
 
 			if (logFileWriter == null) {
-				logFileWriter = new FileWriter(logFile, true); // Apre file
-																// esistente.
+				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
 				System.out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 			}
 			logFileWriter.append(buildCsvRow(info));
