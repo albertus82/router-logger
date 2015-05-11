@@ -70,27 +70,23 @@ public abstract class CsvRouterLogger extends RouterLogger {
 
 	private String buildCsvHeader(final Map<String, String> info) {
 		final String fieldSeparator = getFieldSeparator();
-		final String fieldSeparatorReplacement = getFieldSeparatorReplacement();
-		final String recordSeparator = getRecordSeparator();
 
 		final StringBuilder header = new StringBuilder("Timestamp").append(fieldSeparator);
 		for (String field : info.keySet()) {
-			header.append(field.replace(fieldSeparator, fieldSeparatorReplacement)).append(fieldSeparator);
+			header.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
-		header.replace(header.length() - 1, header.length(), recordSeparator);
+		header.replace(header.length() - 1, header.length(), getRecordSeparator());
 		return header.toString();
 	}
 
 	private String buildCsvRow(final Map<String, String> info) {
 		final String fieldSeparator = getFieldSeparator();
-		final String fieldSeparatorReplacement = getFieldSeparatorReplacement();
-		final String recordSeparator = getRecordSeparator();
 
 		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(new Date())).append(fieldSeparator);
 		for (String field : info.values()) {
-			row.append(field.replace(fieldSeparator, fieldSeparatorReplacement)).append(fieldSeparator);
+			row.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
-		row.replace(row.length() - 1, row.length(), recordSeparator);
+		row.replace(row.length() - 1, row.length(), getRecordSeparator());
 		return row.toString();
 	}
 
