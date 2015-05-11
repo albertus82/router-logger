@@ -44,7 +44,7 @@ Il file `routerlogger.cfg` contiene varie impostazioni, molte delle quali disabi
 
 Le soglie permettono di specificare dei valori limite per uno o pi&ugrave; parametri di funzionamento del dispositivo; lo scopo è quello di poter incrementare la frequenza di interrogazione nelle situazioni critiche, in modo da aggiungere informazioni che potrebbero essere utili per la diagnosi di eventuali problemi della linea. Nel caso delle linee ADSL, ad esempio, un parametro che determina la stabilit&agrave; della connessione e che pu&ograve; essere soggetto ad ampie e talvolta repentine variazioni, &egrave; il *rapporto segnale-rumore* (SNR); utilizzando le soglie &egrave; possibile specificare un valore del SNR al raggiungimento del quale la frequenza di registrazione dei dati verr&agrave; incrementata al valore in millisecodi definito dalla propriet&agrave; `logger.interval.fast.ms`.
 
-Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`):
+Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`) nel file `routerlogger.cfg`:
 
 * **`threshold.`**_identificativo.univoco.soglia_**`.key`**= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
 * **`threshold.`**_identificativo.univoco.soglia_**`.type`**= condizione di raggiungimento:
@@ -58,15 +58,17 @@ Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key
 
 Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applicazione che la propriet&agrave; riguarda una soglia.
 
-L'identificativo univoco di soglia pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere `=`) e ha l'unico scopo di raggruppare le tre propriet&agrave; `key`, `type` e `value`, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero impossibile da correlare.
+L'identificativo univoco di soglia pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere `=`) e ha l'unico scopo di raggruppare le tre propriet&agrave; `key`, `type` e `value`, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero impossibili da correlare.
 
-Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie sono `.key`, `.type` e `.value`.
+Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`threshold.`) sono `.key`, `.type` e `.value`.
 
 ###### Esempio
 
-* `threshold.snr.down.key=downstreamNoiseMargin`
-* `threshold.snr.down.type=lt`
-* `threshold.snr.down.value=100`
+```
+threshold.snr.down.key=downstreamNoiseMargin
+threshold.snr.down.type=lt
+threshold.snr.down.value=100
+```
 
 
 ### Estensione
