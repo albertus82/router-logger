@@ -16,14 +16,15 @@ RouterLogger
 
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente <code>JAVA_HOME</code> e di Java Runtime Environment (JRE) versione 6 (1.6) o successiva.
 
-In ambiente Windows &egrave; sufficiente richiamare il file batch <code>routerlogger.bat</code>, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa <code>routerlogger.jar</code> e <code>/lib/*.jar</code> e la classe da eseguire: <code>it.albertus.router.tplink.TpLinkLogger</code>.
+In ambiente Windows &egrave; sufficiente richiamare il file batch <code>**routerlogger.bat**</code>, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa <code>routerlogger.jar</code> e <code>/lib/*.jar</code> e la classe da eseguire: <code>it.albertus.router.tplink.TpLinkLogger</code>.
 
-Il programma si connetter&agrave; al router e inizier&agrave; a salvare ciclicamente le informazioni in formato CSV all'interno della cartella del programma, generando un file per ogni giornata. Per specificare una cartella diversa, abilitare (rimuovendo <code>#</code>) e modificare la propriet&agrave; <code>**log.destination.dir**</code> nel file <code>routerlogger.cfg</code>.
+Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene aggiunto ad un file in formato CSV. L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file.
+Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare (rimuovendo <code>#</code>) e modificare la propriet&agrave; <code>**log.destination.dir**</code> nel file <code>routerlogger.cfg</code>.
 
 
 ### Configurazione avanzata
 
-Il file <code>routerlogger.cfg</code> contiene varie impostazioni, molte delle quali  disabilitate per impostazione predefinita (chiave preceduta dal carattere <code>#</code>) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento <code>#</code> presente all'inizio della relativa chiave. Le impostazioni disponibili, in aggiunta alle quattro gi&agrave; viste per la configurazione della connessione al dispositivo, sono le seguenti:
+Il file <code>routerlogger.cfg</code> contiene varie impostazioni, molte delle quali disabilitate per impostazione predefinita (chiave preceduta dal carattere <code>#</code>) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento <code>#</code> presente all'inizio della relativa chiave. Le impostazioni disponibili, in aggiunta alle quattro gi&agrave; viste per la configurazione della connessione al dispositivo, sono le seguenti:
 
 ##### Impostazioni generali
 
@@ -41,6 +42,13 @@ Il file <code>routerlogger.cfg</code> contiene varie impostazioni, molte delle q
 
 ##### Soglie
 
+Le soglie permettono di specificare dei valori limite per uno o pi&ugrave; parametri di funzionamento del dispositivo; lo scopo è quello di poter incrementare la frequenza di interrogazione nelle situazioni critiche, in modo da aggiungere informazioni che potrebbero essere utili per la diagnosi di eventuali problemi della linea. Nel caso delle linee ADSL, ad esempio, un parametro che determina la stabilit&agrave; della connessione e che pu&ograve; essere soggetto ad ampie e talvolta repentine variazioni, &egrave; il *rapporto segnale-rumore* (SNR); utilizzando le soglie &egrave; possibile specificare un valore del SNR al raggiungimento del quale la frequenza di registrazione dei dati verr&agrave; incrementata al valore in millisecodi definito dalla propriet&agrave; <code>logger.interval.fast.ms</code>.
+
+Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: chiave (key), tipologia (type) e valore di soglia (value):
+
+* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.key**</code>= downstreamNoiseMargin
+* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.type**</code>= lt
+* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.value**</code>= 100
 
 
 ### Estensione
