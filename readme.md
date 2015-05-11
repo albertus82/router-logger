@@ -28,7 +28,7 @@ Il file <code>routerlogger.cfg</code> contiene varie impostazioni, molte delle q
 
 ##### Impostazioni generali
 
-* <code>**socket.timeout.ms**</code>= timeout del socket in millisecondi, ossia il tempo di inattivita massimo durante la comunicazione con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: <code>30000</code>).
+* <code>**socket.timeout.ms**</code>= timeout del socket in millisecondi, ossia il tempo di inattivita massimo durante la comunicazione con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: <code>30000</code> ms).
 * <code>**connection.timeout.ms**</code>= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: <code>20000</code> ms).
 * <code>**telnet.send.crlf**</code>= specifica come inviare il comando di ritorno a capo al server: se impostato a <code>true</code>, sar&agrave; inviata la coppia di caratteri di controllo <code>CR</code> (<code>0x0D</code>) e <code>LF</code> (<code>0x0A</code>) (<code>\r\n</code>, stile DOS/Windows); se impostato a <code>false</code> sar&agrave; invece inviato il solo carattere <code>LF</code> (<code>0x0A</code>) (<code>\n</code>, stile Unix/Posix); (default: <code>true</code>).
 * <code>**logger.iterations**</code>= numero di iterazioni da effettuare. Normalmente l'applicazione registra l'attivit&agrave; del modem per un tempo indefinito, ossia finch&eacute; non viene chiusa dall'utente, ma &egrave; possibile indicare un numero di iterazioni massimo dopo il quale l'applicazione si chiuder&agrave; automaticamente. Valori minori o uguali a zero equivalgono a infinito (default: <code>-1</code>).
@@ -46,10 +46,17 @@ Le soglie permettono di specificare dei valori limite per uno o pi&ugrave; param
 
 Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: chiave (key), tipologia (type) e valore di soglia (value):
 
-* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.key**</code>= downstreamNoiseMargin
-* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.type**</code>= lt
-* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.value**</code>= 100
+* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.key**</code>= chiave del parametro di interesse
+* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.type**</code>= condizione di raggiungimento:
+ * <code>**lt**</code>: minore di...
+ * <code>**le**</code>: minore o uguale a...
+ * <code>**eq**</code>: uguale a...
+ * <code>**ge**</code>: maggiore o uguale a...
+ * <code>**gt**</code>: maggiore di...
+ * <code>**ne**</code>: diverso da...
+* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.value**</code>= valore di soglia.
 
+L'identificativo univoco di soglia pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere <code>=</code>) e ha l'unico scopo di raggruppare le tre propriet&agrave; key, type e value, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero scorrelate tra loro.
 
 ### Estensione
 
