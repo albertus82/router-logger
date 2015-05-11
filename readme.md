@@ -46,7 +46,7 @@ Le soglie permettono di specificare dei valori limite per uno o pi&ugrave; param
 
 Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: chiave (key), tipologia (type) e valore di soglia (value):
 
-* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.key**</code>= chiave del parametro di interesse
+* <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.key**</code>= chiave del parametro di interesse.
 * <code>**threshold.**</code>*identificativo.univoco.soglia*<code>**.type**</code>= condizione di raggiungimento:
  * <code>**lt**</code>: minore di...
  * <code>**le**</code>: minore o uguale a...
