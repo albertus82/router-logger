@@ -6,7 +6,7 @@ RouterLogger
 
 ### Installazione e configurazione di base
 
-1. [scaricare](/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
+1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file **`routerlogger.cfg`** configurando le seguenti propriet&agrave;:
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` o `192.168.1.1`).
