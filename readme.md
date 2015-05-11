@@ -21,7 +21,16 @@ Il programma si connetter&agrave; al router e inizier&agrave; a salvare le infor
 
 ### Configurazione avanzata
 
-Il file <code>routerlogger.cfg</code> contiene diverse impostazioni, molte delle quali disabilitate.
+Il file <code>routerlogger.cfg</code> contiene diverse impostazioni, molte delle quali disabilitate (<code>#</code>) ma che possono essere attivate in caso di necessit&agrave;:
+
+* <code>socket.timeout.ms</code>= (default: <code>30000</code>).
+* <code>connection.timeout.ms</code>= (default: <code>20000</code>).
+* <code>telnet.send.crlf</code>= determina se (default: <code>true</code>).
+* <code>logger.iterations</code>= (default: <code>-1</code>).
+* <code>logger.interval.normal.ms</code>= (default: <code>5000</code>).
+* <code>logger.interval.fast.ms</code>= (default: <code>1000</code>).
+* <code>logger.retry.count</code>= (default: <code>3</code>).
+* <code>logger.retry.interval.ms</code>= (default: <code>60000</code>).
 
 ### Estensione
 
