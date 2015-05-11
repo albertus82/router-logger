@@ -60,7 +60,7 @@ Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applica
 
 L'identificativo univoco di soglia pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere `=`) e ha l'unico scopo di raggruppare le tre propriet&agrave; `key`, `type` e `value`, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero impossibile da correlare.
 
-Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie sono `.key`, `.type`, `.value`.
+Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie sono `.key`, `.type` e `.value`.
 
 ###### Esempio
 
