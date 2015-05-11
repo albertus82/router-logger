@@ -64,9 +64,9 @@ Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie sono `.k
 
 ###### Esempio
 
-* threshold.snr.down.key=downstreamNoiseMargin
-* threshold.snr.down.type=lt
-* threshold.snr.down.value=100
+* `threshold.snr.down.key=downstreamNoiseMargin`
+* `threshold.snr.down.type=lt`
+* `threshold.snr.down.value=100`
 
 
 ### Estensione
