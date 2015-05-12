@@ -8,7 +8,7 @@ RouterLogger
 
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
-3. modificare il file **`routerlogger.cfg`** configurando le seguenti propriet&agrave;:
+3. modificare il file **<code>[routerlogger.cfg](src/routerlogger.cfg)</code>** configurando le seguenti propriet&agrave;:
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` o `192.168.1.1`).
   * **`router.port`**= porta telnet del router, default: `23`.
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
