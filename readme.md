@@ -16,7 +16,7 @@ RouterLogger
 
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
-In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `/lib/*.jar` e la classe da eseguire: `it.albertus.router.tplink.TpLinkLogger`.
+In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `lib/*.jar` e la classe da eseguire: `it.albertus.router.tplink.TpLinkLogger`.
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene aggiunto ad un file in formato CSV. L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file.
 Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file `routerlogger.cfg` (rimuovendo `#`) e modificarne il valore.
