@@ -7,7 +7,7 @@
 
 	<property file="src/version.properties" />
 
-	<property name="main.class" value="it.albertus.router.tplink.TDW8970V1Logger" />
+	<property name="main.class" value="it.albertus.router.tplink.Tdw8970v1Logger" />
 
 	<scriptdef language="javascript" name="lower">
 		<attribute name="string" />

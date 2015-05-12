@@ -8,14 +8,14 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TDW8970V1Logger extends CsvRouterLogger {
+public class Tdw8970v1Logger extends CsvRouterLogger {
 
 	private static final String DEVICE_MODEL = "TP-Link TD-W8970 V1";
 	private static final String COMMAND_PROMPT = "#";
 	private static final String LOGIN_PROMPT = ":";
 
 	public static void main(String... args) {
-		new TDW8970V1Logger().run();
+		new Tdw8970v1Logger().run();
 	}
 
 	@Override
