@@ -19,7 +19,7 @@ Per avviare l'applicazione &egrave; richiesta la presenza della variabile di amb
 In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `lib/*.jar` e la classe da eseguire: [`it.albertus.router.tplink.TDW8970V1Logger`](src/it/albertus/router/tplink/TDW8970V1Logger.java).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene aggiunto ad un file in formato CSV. L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file.
-Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file `routerlogger.cfg` (rimuovendo `#`) e modificarne il valore.
+Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e modificarne il valore.
 
 
 ### Configurazione avanzata
@@ -63,7 +63,7 @@ Quando una soglia viene raggiunta, il periodo di registrazione passa da quello n
 
 ##### Configurazione
 
-Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`) nel file `routerlogger.cfg`:
+Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`) nel file [`routerlogger.cfg`](src/routerlogger.cfg):
 
 * <code>**threshold.*identificativo.univoco.soglia*.key**</code>= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
 * <code>**threshold.*identificativo.univoco.soglia*.type**</code>= condizione di raggiungimento:
@@ -83,7 +83,7 @@ Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`thresh
 
 ##### Esempio
 
-Aggiungendo queste tre righe al file `routerlogger.cfg`, si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
+Aggiungendo queste tre righe al file [`routerlogger.cfg`](src/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
 
 ```
 threshold.snr.down.key=downstreamNoiseMargin
@@ -104,6 +104,6 @@ All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce `null`, determinando cos&igrave; l'assenza dell'informazione a video.
 
-Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV (ad esempio in un database), si pu&ograve; estendere la classe astratta [**`RouterLogger`**](src/it/albertus/router/RouterLogger.java) invece della `CsvRouterLogger`, ma sar&agrave; ovviamente necessario implementare altri due metodi:
+Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV (ad esempio in un database), si pu&ograve; estendere la classe astratta [**`RouterLogger`**](src/it/albertus/router/RouterLogger.java) invece della [`CsvRouterLogger`](src/it/albertus/router/CsvRouterLogger.java), ma sar&agrave; ovviamente necessario implementare altri due metodi:
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute (ad esempio su database o su file).
 * **`release`**: libera risorse eventualmente allocate dal programma (file, connessioni a database, ecc.); l'implementazione predefinita non fa nulla.
