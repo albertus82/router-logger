@@ -102,15 +102,15 @@ public abstract class CsvRouterLogger extends RouterLogger {
 	}
 
 	private void closeOutputFile() {
-		try {
-			if (logFileWriter != null) {
+		if (logFileWriter != null) {
+			try {
 				System.out.println("Closing output file.");
 				logFileWriter.close();
 				logFileWriter = null;
 			}
-		}
-		catch (IOException ioe) {
-			ioe.printStackTrace();
+			catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
 		}
 	}
 
