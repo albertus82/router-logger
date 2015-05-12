@@ -24,7 +24,7 @@ Di norma i file generati vengono salvati all'interno della cartella del programm
 
 ### Configurazione avanzata
 
-Il file `routerlogger.cfg` contiene gi&agrave; varie impostazioni, quasi tutte disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento `#` presente all'inizio della relativa chiave. Segue una disamina di tutte le impostazioni disponibili, in aggiunta alle quattro gi&agrave; viste per la configurazione della connessione al dispositivo. Le seguenti impostazioni sono tutte facoltative.
+Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie impostazioni, quasi tutte disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento `#` presente all'inizio della relativa chiave. Segue una disamina di tutte le impostazioni disponibili, in aggiunta alle quattro gi&agrave; viste per la configurazione della connessione al dispositivo. Le seguenti impostazioni sono tutte facoltative.
 
 ##### Impostazioni generali
 
@@ -100,7 +100,7 @@ I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server telnet comunicando le credenziali di accesso.
 * **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di mappa chiave-valore.
 
-All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in `RouterLogger`:
+All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`RouterLogger`](src/it/albertus/router/RouterLogger.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce `null`, determinando cos&igrave; l'assenza dell'informazione a video.
 
