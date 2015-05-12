@@ -13,7 +13,7 @@ public abstract class CsvRouterLogger extends RouterLogger {
 	private interface Defaults {
 		boolean RECORD_SEPARATOR_CRLF = true;
 		String FIELD_SEPARATOR = ";";
-		String FIELD_SEPARATOR_REPLACEMENT = " ";
+		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
 
 	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
@@ -24,7 +24,7 @@ public abstract class CsvRouterLogger extends RouterLogger {
 	@Override
 	protected void saveInfo(final Map<String, String> info) {
 		// Selezione del percorso e nome del file di destinazione...
-		final String logDestinationDir = configuration.getProperty("log.destination.dir");
+		final String logDestinationDir = configuration.getProperty("csv.destination.path");
 		final File logFile;
 		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
 			File logDestDir = new File(logDestinationDir.trim());
