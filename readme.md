@@ -19,7 +19,7 @@ Per avviare l'applicazione &egrave; richiesta la presenza della variabile di amb
 In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `/lib/*.jar` e la classe da eseguire: `it.albertus.router.tplink.TpLinkLogger`.
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene aggiunto ad un file in formato CSV. L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file.
-Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`log.destination.dir`** nel file `routerlogger.cfg` (rimuovendo `#`) e modificarne il valore.
+Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file `routerlogger.cfg` (rimuovendo `#`) e modificarne il valore.
 
 
 ### Configurazione avanzata
@@ -50,7 +50,8 @@ Il file `routerlogger.cfg` contiene gi&agrave; varie impostazioni, quasi tutte d
 
 * **`csv.record.separator.crlf`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati; se impostato a `true`, sar&agrave; utilizzata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece utilizzato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
-* **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: spazio).
+* **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
+* **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
 
 #### Soglie
 
