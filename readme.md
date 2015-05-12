@@ -48,10 +48,10 @@ Il file `routerlogger.cfg` contiene gi&agrave; varie impostazioni, quasi tutte d
 
 ##### CSV
 
+* **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
 * **`csv.record.separator.crlf`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati; se impostato a `true`, sar&agrave; utilizzata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece utilizzato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
 * **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
-* **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
 
 #### Soglie
 
