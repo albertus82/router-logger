@@ -52,7 +52,9 @@
 			</fileset>
 		</copy>
 		<copy todir="${build.dir}/dist/lib" >
-			<fileset dir="lib" />
+			<fileset dir="lib">
+				<include name="*.jar" />
+			</fileset>
 		</copy>
 		<copy todir="${build.dir}/dist" file="src/license.txt" />
 		<copy todir="${build.dir}/dist" file="readme.md" />
