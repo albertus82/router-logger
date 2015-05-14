@@ -1,10 +1,12 @@
 package it.albertus.router;
 
 import it.albertus.router.Threshold.Type;
+import it.albertus.router.writer.CsvWriter;
+import it.albertus.router.writer.DatabaseWriter;
+import it.albertus.router.writer.DummyWriter;
+import it.albertus.router.writer.Writer;
+import it.albertus.router.writer.Writer.Destination;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,7 +18,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
-public abstract class RouterLogger {
+public abstract class RouterLogger extends Configurable {
 
 	private interface Defaults {
 		String ROUTER_ADDRESS = "192.168.1.1";
@@ -31,9 +33,9 @@ public abstract class RouterLogger {
 		boolean TELNET_SEND_CRLF = true;
 		boolean CONSOLE_ANIMATION = true;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
+		int DESTINATION = Destination.CSV.getId();
 	}
 
-	private static final String CONFIGURATION_FILE_NAME = "routerlogger.cfg";
 	private static final String VERSION_FILE_NAME = "version.properties";
 
 	private static final String THRESHOLD_PREFIX = "threshold";
@@ -44,8 +46,8 @@ public abstract class RouterLogger {
 
 	protected final TelnetClient telnet = new TelnetClient();
 	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
-	protected final Properties configuration = new Properties();
 	protected final Properties version = new Properties();
+	protected final Writer writer;
 
 	protected final void run() {
 		welcome();
@@ -129,7 +131,9 @@ public abstract class RouterLogger {
 	 * 
 	 * @param info  le informazioni da salvare.
 	 */
-	protected abstract void saveInfo(Map<String, String> info);
+	protected void saveInfo(Map<String, String> info) {
+		writer.saveInfo(info);
+	}
 
 	/**
 	 * Restituisce una stringa contenente marca e modello del router relativo
@@ -140,18 +144,31 @@ public abstract class RouterLogger {
 	}
 
 	protected RouterLogger() {
-		try {
-			// Caricamento file di configurazione...
-			loadConfiguration();
+		// Valorizzazione delle soglie...
+		loadThresholds();
+	
+		// Caricamento file versione...
+		loadVersion();
+		
+		// Inizializzazione del Writer...
+		writer = initWriter();
+	}
 
-			// Valorizzazione delle soglie...
-			loadThresholds();
-
-			// Caricamento file versione...
-			loadVersion();
+	private Writer initWriter() {
+		final String key = "logger.destination";
+		Destination destination = Destination.getEnum(configuration.getProperty(key, Integer.toString(Defaults.DESTINATION)));
+		if (destination == null) {
+			throw new IllegalArgumentException("Invalid \"" + key + "\" property. Review your " + CONFIGURATION_FILE_NAME + " file.");
 		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
+		switch (destination) {
+		case NONE:
+			return new DummyWriter();
+		case CSV:
+			return new CsvWriter();
+		case DATABASE:
+			return new DatabaseWriter();
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -190,19 +207,6 @@ public abstract class RouterLogger {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private void loadConfiguration() throws IOException {
-		final InputStream inputStream;
-		final File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + CONFIGURATION_FILE_NAME);
-		if (config.exists()) {
-			inputStream = new BufferedInputStream(new FileInputStream(config));
-		}
-		else {
-			inputStream = getClass().getResourceAsStream('/' + CONFIGURATION_FILE_NAME);
-		}
-		configuration.load(inputStream);
-		inputStream.close();
 	}
 
 	/**
@@ -455,6 +459,8 @@ public abstract class RouterLogger {
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,
 	 * ecc.).
 	 */
-	protected void release() {}
+	protected void release() {
+		writer.release();
+	}
 
 }

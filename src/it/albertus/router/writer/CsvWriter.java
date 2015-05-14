@@ -1,4 +1,6 @@
-package it.albertus.router;
+package it.albertus.router.writer;
+
+import it.albertus.router.Configurable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -8,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-public abstract class CsvRouterLogger extends RouterLogger {
+public class CsvWriter extends Configurable implements Writer {
 
 	private interface Defaults {
 		boolean RECORD_SEPARATOR_CRLF = true;
@@ -22,7 +24,7 @@ public abstract class CsvRouterLogger extends RouterLogger {
 	private FileWriter logFileWriter = null;
 
 	@Override
-	protected void saveInfo(final Map<String, String> info) {
+	public void saveInfo(final Map<String, String> info) {
 		// Selezione del percorso e nome del file di destinazione...
 		final String logDestinationDir = configuration.getProperty("csv.destination.path");
 		final File logFile;
@@ -63,7 +65,7 @@ public abstract class CsvRouterLogger extends RouterLogger {
 	}
 
 	@Override
-	protected void release() {
+	public void release() {
 		closeOutputFile();
 	}
 
@@ -113,5 +115,5 @@ public abstract class CsvRouterLogger extends RouterLogger {
 			}
 		}
 	}
-
+	
 }

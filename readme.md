@@ -24,7 +24,7 @@ Di norma i file generati vengono salvati all'interno della cartella del programm
 
 ### Configurazione avanzata
 
-Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie impostazioni, quasi tutte disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento `#` presente all'inizio della relativa chiave. Segue una disamina di tutte le impostazioni disponibili, in aggiunta alle quattro gi&agrave; viste per la configurazione della connessione al dispositivo. Le seguenti impostazioni sono tutte facoltative.
+Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie impostazioni, quasi tutte disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento `#` presente all'inizio della relativa chiave. Segue una disamina di tutte le impostazioni disponibili, in aggiunta alle quattro gi&agrave; viste per la configurazione della connessione al dispositivo. Le seguenti impostazioni sono tutte facoltative, salvo diversa indicazione.
 
 ##### Impostazioni generali
 
