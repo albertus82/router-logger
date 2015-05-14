@@ -63,7 +63,7 @@ Quando una soglia viene raggiunta, il periodo di registrazione passa da quello n
 
 ##### Configurazione
 
-Ogni soglia &egrave; costituita da tre distinte propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`) nel file [`routerlogger.cfg`](src/routerlogger.cfg):
+Ogni soglia &egrave; costituita da una terna di propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`) nel file [`routerlogger.cfg`](src/routerlogger.cfg):
 
 * <code>**threshold.*identificativo.univoco.soglia*.key**</code>= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
 * <code>**threshold.*identificativo.univoco.soglia*.type**</code>= condizione di raggiungimento:
@@ -83,7 +83,7 @@ Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`thresh
 
 ##### Esempio
 
-Aggiungendo queste tre righe al file [`routerlogger.cfg`](src/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
+Aggiungendo le seguenti tre righe al file [`routerlogger.cfg`](src/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
 
 ```
 threshold.snr.down.key=downstreamNoiseMargin
