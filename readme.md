@@ -16,14 +16,16 @@ RouterLogger
 
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
-In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, passando come parametro il nome completo della classe che implementa il RouterLogger desiderato. Esempio:
+In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, passando come parametro il nome della classe che implementa il RouterLogger desiderato. Esempio:
 
-`routerlogger `[`it.albertus.router.logger.TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java)
+`routerlogger `[`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java)
 
 In ambienti diversi (es. Linux) occorre richiamare Java specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
 * la classe da eseguire: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
-* il nome completo della classe che implementa il RouterLogger desiderato, ad es.: [`it.albertus.router.logger.TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
+* il nome della classe che implementa il RouterLogger desiderato, ad es.: [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
+
+> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) esterne al progetto, occorrer&agrave; specificare come parametro in riga di comando, il nome completo (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
@@ -70,7 +72,7 @@ Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie imp
 #### Destinazione
 
 La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la seguente propriet&agrave;:
-* **`logger.writer.class.name`**: identifica la classe che salva le informazioni, e pu&ograve; assumere i valori seguenti:
+* **`logger.writer.class.name`**: identifica la classe che si occupa del salvataggio delle informazioni, e pu&ograve; assumere i valori seguenti:
   * [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV (default).
   * [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
   * [**`DummyWriter`**](src/it/albertus/router/writer/DummyWriter.java): nessuna scrittura.
