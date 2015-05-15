@@ -2,7 +2,7 @@ package it.albertus.router.writer;
 
 import java.util.Map;
 
-public class DummyWriter implements Writer {
+public class DummyWriter extends Writer {
 
 	@Override
 	public void saveInfo(Map<String, String> info) {}

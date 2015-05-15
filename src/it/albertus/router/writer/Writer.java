@@ -1,8 +1,10 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.Configurable;
+
 import java.util.Map;
 
-public interface Writer {
+public abstract class Writer extends Configurable {
 
 	/**
 	 * Salva le informazioni di interesse, precedentemente estratte tramite
@@ -12,12 +14,12 @@ public interface Writer {
 	 * @param info
 	 *            le informazioni da salvare.
 	 */
-	void saveInfo(Map<String, String> info);
+	public abstract void saveInfo(Map<String, String> info);
 
 	/**
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,
 	 * ecc.).
 	 */
-	void release();
+	public abstract void release();
 
 }

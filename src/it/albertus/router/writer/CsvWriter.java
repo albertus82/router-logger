@@ -1,7 +1,5 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.Configurable;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-public class CsvWriter extends Configurable implements Writer {
+public class CsvWriter extends Writer {
 
 	private interface Defaults {
 		boolean RECORD_SEPARATOR_CRLF = true;

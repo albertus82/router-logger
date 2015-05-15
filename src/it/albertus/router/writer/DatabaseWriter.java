@@ -1,7 +1,5 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.Configurable;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DatabaseWriter extends Configurable implements Writer {
+public class DatabaseWriter extends Writer {
 
 	private interface Defaults {
 		String TABLE_NAME = "ROUTER_LOG";
