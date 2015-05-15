@@ -22,7 +22,7 @@ public class DatabaseWriter extends Writer {
 	private static final String CONFIGURATION_KEY_DATABASE_USERNAME = "database.username";
 	private static final String CONFIGURATION_KEY_DATABASE_URL = "database.url";
 	private static final String CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME = "database.driver.class.name";
-	
+
 	private static final String TIMESTAMP_COLUMN_NAME = "log_timestamp";
 
 	private Connection connection = null;
@@ -67,20 +67,23 @@ public class DatabaseWriter extends Writer {
 			System.out.println("Logging into database table: " + tableName + "...");
 			showMessage = false;
 		}
+
+		Map<Integer, String> columns = new HashMap<Integer, String>();
+		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (" + TIMESTAMP_COLUMN_NAME);
+		int index = 2;
+		for (String key : info.keySet()) {
+			columns.put(index++, key);
+			dml.append(", ").append(cleanColumnName(key));
+		}
+		dml.append(") VALUES (?");
+		for (int i = 0; i < info.size(); i++) {
+			dml.append(", ?");
+		}
+		dml.append(')');
+
+		PreparedStatement insert = null;
 		try {
-			Map<Integer, String> columns = new HashMap<Integer, String>();
-			StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (" + TIMESTAMP_COLUMN_NAME);
-			int index = 2;
-			for (String key : info.keySet()) {
-				columns.put(index++, key);
-				dml.append(", ").append(cleanColumnName(key));
-			}
-			dml.append(") VALUES (?");
-			for (int i = 0; i < info.size(); i++) {
-				dml.append(", ?");
-			}
-			dml.append(')');
-			PreparedStatement insert = connection.prepareStatement(dml.toString());
+			insert = connection.prepareStatement(dml.toString());
 			insert.setTimestamp(1, new Timestamp(new Date().getTime()));
 			for (int parameterIndex : columns.keySet()) {
 				insert.setString(parameterIndex, info.get(columns.get(parameterIndex)));
@@ -90,18 +93,31 @@ public class DatabaseWriter extends Writer {
 		catch (SQLException se) {
 			se.printStackTrace();
 		}
+		finally {
+			try {
+				insert.close();
+			}
+			catch (Exception e) {}
+		}
 	}
 
 	private boolean tableExists(final String tableName) {
+		PreparedStatement statement = null;
 		try {
 			// Verifica esistenza tabella...
-			PreparedStatement st = connection.prepareStatement("SELECT 1 FROM " + tableName);
-			st.setFetchSize(1);
-			st.executeQuery();
+			statement = connection.prepareStatement("SELECT 1 FROM " + tableName);
+			statement.setFetchSize(1);
+			statement.executeQuery();
 			return true;
 		}
 		catch (SQLException e) {
 			return false;
+		}
+		finally {
+			try {
+				statement.close();
+			}
+			catch (Exception e) {}
 		}
 	}
 
@@ -113,12 +129,19 @@ public class DatabaseWriter extends Writer {
 		}
 		ddl.append(", CONSTRAINT pk_routerlogger PRIMARY KEY (").append(TIMESTAMP_COLUMN_NAME).append("))");
 
+		PreparedStatement createTable = null;
 		try {
-			PreparedStatement createTable = connection.prepareStatement(ddl.toString());
+			createTable = connection.prepareStatement(ddl.toString());
 			createTable.executeUpdate();
 		}
 		catch (SQLException se) {
 			throw new RuntimeException(se);
+		}
+		finally {
+			try {
+				createTable.close();
+			}
+			catch (Exception e) {}
 		}
 	}
 

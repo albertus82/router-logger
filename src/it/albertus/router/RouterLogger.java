@@ -154,8 +154,14 @@ public abstract class RouterLogger extends Configurable {
 	private Writer initWriter() {
 		final String configurationKey = "logger.writer.class.name";
 		String writerClassName = configuration.getProperty(configurationKey, Defaults.WRITER_CLASS.getName()).trim();
-		if (writerClassName.indexOf('.') == -1) {
-			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
+
+		try {
+			Class.forName(writerClassName); // Default package.
+		}
+		catch (ClassNotFoundException e) {
+			if (writerClassName.indexOf('.') == -1) {
+				writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
+			}
 		}
 
 		final Writer writer;
