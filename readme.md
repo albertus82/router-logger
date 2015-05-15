@@ -27,10 +27,11 @@ Di norma i file generati vengono salvati all'interno della cartella del programm
 ##### Database
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
 Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database all'interno della directory `lib` dell'applicazione, quindi abilitare una serie di propriet&agrave; nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnare ad esse il valore desiderato:
+* **`logger.writer.class.name`**=**`DatabaseWriter`**
 * **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.driver.OracleDriver`).
-* **`database.url=`** URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
-* **`database.username=`** nome utente per la connessione al database.
-* **`database.password=`** password per la connessione al database.p
+* **`database.url`**= URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
+* **`database.username`**= nome utente per la connessione al database.
+* **`database.password`**= password per la connessione al database.p
 
 
 ### Configurazione avanzata
