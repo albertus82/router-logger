@@ -18,7 +18,9 @@ Per avviare l'applicazione &egrave; richiesta la presenza della variabile di amb
 
 In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, passando come parametro il nome della classe che implementa il RouterLogger desiderato. Esempio:
 
-`routerlogger `[`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java)
+```
+routerlogger TPLinkTDW8970V1
+```
 
 In ambienti diversi (es. Linux) occorre richiamare Java specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
