@@ -36,7 +36,7 @@ public abstract class RouterLogger extends Configurable {
 	}
 
 	private static final String COMMAND_LINE_HELP = "Usage: routerlogger logger.class.Name";
-	
+
 	private static final String VERSION_FILE_NAME = "version.properties";
 
 	private static final String THRESHOLD_PREFIX = "threshold";
@@ -49,7 +49,7 @@ public abstract class RouterLogger extends Configurable {
 	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	protected final Properties version = new Properties();
 	protected final Writer writer;
-	
+
 	public static final void main(final String... args) {
 		if (args.length != 1) {
 			System.out.println(COMMAND_LINE_HELP);
@@ -171,10 +171,10 @@ public abstract class RouterLogger extends Configurable {
 	protected RouterLogger() {
 		// Valorizzazione delle soglie...
 		loadThresholds();
-	
+
 		// Caricamento file versione...
 		loadVersion();
-		
+
 		// Inizializzazione del Writer...
 		writer = initWriter();
 	}
