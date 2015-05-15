@@ -58,6 +58,13 @@ Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie imp
 * **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto).
 * **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 
+#### Destinazione
+
+La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la propriet&agrave; **`logger.writer.class.name`**, che pu&ograve; assumere i seguenti valori:
+* [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV.
+* [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
+* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java).
+
 ##### CSV
 
 * **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
