@@ -31,12 +31,12 @@ Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la lib
 * **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.driver.OracleDriver`).
 * **`database.url`**= URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
 * **`database.username`**= nome utente per la connessione al database.
-* **`database.password`**= password per la connessione al database.p
+* **`database.password`**= password per la connessione al database.
 
 
 ### Configurazione avanzata
 
-Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie impostazioni, quasi tutte disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento `#` presente all'inizio della relativa chiave. Segue una disamina di tutte le impostazioni disponibili, in aggiunta alle quattro gi&agrave; viste per la configurazione della connessione al dispositivo. Le seguenti impostazioni sono tutte facoltative, salvo diversa indicazione.
+Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie impostazioni, quasi tutte disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento `#` presente all'inizio della relativa chiave. Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi&agrave; viste per la configurazione di base. Le seguenti impostazioni sono tutte facoltative, salvo diversa indicazione.
 
 ##### Impostazioni generali
 
@@ -64,6 +64,13 @@ Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie imp
 * **`csv.record.separator.crlf`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati; se impostato a `true`, sar&agrave; utilizzata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece utilizzato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
 * **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
+
+##### Database
+
+* **`database.table.name`**= nome della tabella in cui saranno inseriti i dati (default: `ROUTER_LOG`).
+* **`database.connection.validation.timeout.ms`**= tempo di attesa massimo su richiesta di verifica della validit&agrave; della connessione al database, in millisecondi (default: `2000` ms).
+* **`database.column.type`**= tipo di dato utilizzato per le colonne in fase di creazione della tabella (default: `VARCHAR`).
+* **`database.column.length`**= lunghezza delle colonne utilizzata in fase di creazione della tabella (default: `250`).
 
 #### Soglie
 
