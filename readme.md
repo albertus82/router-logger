@@ -18,15 +18,19 @@ Per avviare l'applicazione &egrave; richiesta la presenza della variabile di amb
 
 In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `lib/*.jar` e la classe da eseguire: [`it.albertus.router.tplink.TDW8970V1Logger`](src/it/albertus/router/tplink/TDW8970V1Logger.java).
 
-Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene aggiunto ad un file in formato CSV oppure inserito in una tabella di un database. 
+Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
-#### CSV
+##### CSV
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file.
-Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnarle il valore desiderato.
+Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnarle il valore desiderato (ad es.: `C:/Router/Logs`).
 
-#### Database
+##### Database
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
-Di norma i file generati vengono salvati all'interno della cartella del programma. Per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnarle il valore desiderato.
+Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database all'interno della directory `lib` dell'applicazione, quindi abilitare una serie di propriet&agrave; nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnare ad esse il valore desiderato:
+* **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.driver.OracleDriver`).
+* **`database.url=`** URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
+* **`database.username=`** nome utente per la connessione al database.
+* **`database.password=`** password per la connessione al database.p
 
 
 ### Configurazione avanzata
