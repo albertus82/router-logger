@@ -62,10 +62,11 @@ Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie imp
 
 #### Destinazione
 
-La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la propriet&agrave; **`logger.writer.class.name`**, che pu&ograve; assumere i seguenti valori:
-* [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV.
-* [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
-* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java).
+La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la seguente propriet&agrave;:
+* **`logger.writer.class.name`**, che pu&ograve; assumere i valori seguenti:
+  * [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV (default).
+  * [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
+  * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java).
 
 ##### CSV
 
