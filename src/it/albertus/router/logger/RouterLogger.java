@@ -67,7 +67,7 @@ public abstract class RouterLogger extends Configurable {
 				((RouterLogger) Class.forName(className).newInstance()).run();
 			}
 			catch (Exception e) {
-				System.out.println(e.getClass().getName() + ": " + args[0]);
+				e.printStackTrace();
 				System.out.println();
 				System.out.println(COMMAND_LINE_HELP);
 			}
