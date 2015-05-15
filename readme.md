@@ -25,13 +25,12 @@ In ambienti diversi (es. Linux) occorre richiamare Java specificando:
 * la classe da eseguire: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
 * il nome della classe che implementa il RouterLogger desiderato, ad es.: [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
 
-> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) esterne al progetto, occorrer&agrave; specificare come parametro in riga di comando, il nome completo (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java).
+> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; specificare come parametro in riga di comando, il nome completo (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna.
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
 ##### CSV
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file. Per attivare questo tipo di salvataggio non occorre configurare nulla: questa &egrave; la modalit&agrave; predefinita.
-
 
 Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnarle il valore desiderato (ad es.: `C:/Router/Logs`).
 
@@ -133,13 +132,13 @@ threshold.snr.down.value=100
 
 ### Estensione
 
-&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi router disponga di un'interfaccia **telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`RouterLogger`**](src/it/albertus/router/RouterLogger.java), la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
+&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi router disponga di un'interfaccia **telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`RouterLogger`**](src/it/albertus/router/logger/RouterLogger.java), la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server telnet comunicando le credenziali di accesso.
 * **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di mappa chiave-valore.
 
-All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`RouterLogger`](src/it/albertus/router/RouterLogger.java):
+All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce `null`, determinando cos&igrave; l'assenza dell'informazione a video.
 
