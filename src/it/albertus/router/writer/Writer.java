@@ -4,40 +4,20 @@ import java.util.Map;
 
 public interface Writer {
 
-	enum Destination {
-		NONE(0),
-		CSV(1),
-		DATABASE(2);
-
-		private final int id;
-
-		private Destination(int id) {
-			this.id = id;
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		public static Destination getEnum(String id) {
-			if (id != null) {
-				try {
-					int code = Integer.parseInt(id);
-					for (Destination destination : Destination.values()) {
-						if (destination.id == code) {
-							return destination;
-						}
-					}
-				}
-				catch (Exception e) {
-				}
-			}
-			return null;
-		}
-	}
-
+	/**
+	 * Salva le informazioni di interesse, precedentemente estratte tramite
+	 * Telnet, con le modalit&agrave; desiderate, ad esempio su file o in un
+	 * database.
+	 * 
+	 * @param info
+	 *            le informazioni da salvare.
+	 */
 	void saveInfo(Map<String, String> info);
 
+	/**
+	 * Libera le risorse eventualmente allocate (file, connessioni a database,
+	 * ecc.).
+	 */
 	void release();
 
 }

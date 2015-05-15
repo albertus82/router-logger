@@ -2,10 +2,7 @@ package it.albertus.router;
 
 import it.albertus.router.Threshold.Type;
 import it.albertus.router.writer.CsvWriter;
-import it.albertus.router.writer.DatabaseWriter;
-import it.albertus.router.writer.DummyWriter;
 import it.albertus.router.writer.Writer;
-import it.albertus.router.writer.Writer.Destination;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +30,7 @@ public abstract class RouterLogger extends Configurable {
 		boolean TELNET_SEND_CRLF = true;
 		boolean CONSOLE_ANIMATION = true;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
-		int DESTINATION = Destination.CSV.getId();
+		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
 	private static final String VERSION_FILE_NAME = "version.properties";
@@ -155,21 +152,23 @@ public abstract class RouterLogger extends Configurable {
 	}
 
 	private Writer initWriter() {
-		final String key = "logger.destination";
-		Destination destination = Destination.getEnum(configuration.getProperty(key, Integer.toString(Defaults.DESTINATION)));
-		if (destination == null) {
-			throw new IllegalArgumentException("Invalid \"" + key + "\" property. Review your " + CONFIGURATION_FILE_NAME + " file.");
+		final String configurationKey = "logger.writer.class.name";
+		String writerClassName = configuration.getProperty(configurationKey, Defaults.WRITER_CLASS.getName()).trim();
+		if (writerClassName.indexOf('.') == -1) {
+			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
 		}
-		switch (destination) {
-		case NONE:
-			return new DummyWriter();
-		case CSV:
-			return new CsvWriter();
-		case DATABASE:
-			return new DatabaseWriter();
-		default:
-			throw new IllegalArgumentException();
+
+		final Writer writer;
+		try {
+			writer = (Writer) Class.forName(writerClassName).newInstance();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + CONFIGURATION_FILE_NAME + " file.", e);
+		}
+		return writer;
 	}
 
 	private void loadThresholds() {

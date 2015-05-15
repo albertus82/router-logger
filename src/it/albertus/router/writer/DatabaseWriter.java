@@ -20,6 +20,11 @@ public class DatabaseWriter extends Configurable implements Writer {
 		int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
 	}
 
+	private static final String CONFIGURATION_KEY_DATABASE_PASSWORD = "database.password";
+	private static final String CONFIGURATION_KEY_DATABASE_USERNAME = "database.username";
+	private static final String CONFIGURATION_KEY_DATABASE_URL = "database.url";
+	private static final String CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME = "database.driver.class.name";
+	
 	private static final String TIMESTAMP_COLUMN_NAME = "log_timestamp";
 
 	private Connection connection = null;
@@ -27,14 +32,14 @@ public class DatabaseWriter extends Configurable implements Writer {
 	private final int connectionValidationTimeoutInMillis;
 
 	public DatabaseWriter() {
-		if (configuration.getProperty("database.driver.class") == null || configuration.getProperty("database.url") == null || configuration.getProperty("database.username") == null || configuration.getProperty("database.password") == null) {
+		if (configuration.getProperty(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) == null || configuration.getProperty(CONFIGURATION_KEY_DATABASE_URL) == null || configuration.getProperty(CONFIGURATION_KEY_DATABASE_USERNAME) == null || configuration.getProperty(CONFIGURATION_KEY_DATABASE_PASSWORD) == null) {
 			throw new RuntimeException("Database configuration error. Review your " + CONFIGURATION_FILE_NAME + " file.");
 		}
 		try {
-			Class.forName(configuration.getProperty("database.driver.class"));
+			Class.forName(configuration.getProperty(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME));
 		}
 		catch (ClassNotFoundException e) {
-			throw new RuntimeException("Missing database driver library (JAR) or misspelled class name \"" + configuration.getProperty("database.driver.class") + "\" in your " + CONFIGURATION_FILE_NAME + " file.", e);
+			throw new RuntimeException("Missing database driver library (JAR) or misspelled class name \"" + configuration.getProperty(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) + "\" in your " + CONFIGURATION_FILE_NAME + " file.", e);
 		}
 		connectionValidationTimeoutInMillis = Integer.parseInt(configuration.getProperty("database.connection.validation.timeout.ms", Integer.toString(Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS)));
 	}
@@ -44,7 +49,7 @@ public class DatabaseWriter extends Configurable implements Writer {
 		// Connessione al database...
 		try {
 			if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
-				connection = DriverManager.getConnection(configuration.getProperty("database.url"), configuration.getProperty("database.username"), configuration.getProperty("database.password"));
+				connection = DriverManager.getConnection(configuration.getProperty(CONFIGURATION_KEY_DATABASE_URL), configuration.getProperty(CONFIGURATION_KEY_DATABASE_USERNAME), configuration.getProperty(CONFIGURATION_KEY_DATABASE_PASSWORD));
 				connection.setAutoCommit(true);
 			}
 		}
