@@ -16,7 +16,14 @@ RouterLogger
 
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
-In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, mentre in ambienti diversi (es. Linux) occorre richiamare Java specificando un *classpath* che includa `routerlogger.jar` e `lib/*.jar` e la classe da eseguire: [`it.albertus.router.tplink.TDW8970V1Logger`](src/it/albertus/router/tplink/TDW8970V1Logger.java).
+In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, passando come parametro il nome completo della classe che implementa il RouterLogger desiderato. Esempio:
+
+`routerlogger `[`it.albertus.router.logger.TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java)
+
+In ambienti diversi (es. Linux) occorre richiamare Java specificando:
+* un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
+* la classe da eseguire: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
+* il nome completo della classe che implementa il RouterLogger desiderato, ad es.: [`it.albertus.router.logger.TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
