@@ -25,7 +25,7 @@ In ambienti diversi (es. Linux) occorre richiamare Java specificando:
 * la classe da eseguire: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
 * il nome della classe che implementa il RouterLogger desiderato, ad es.: [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
 
-> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; specificare come parametro in riga di comando, il nome completo (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna. Per maggiori informazioni, vedere il paragrafo [Supporto di altri modelli di router](#supporto-di-altri-modelli-di-router).
+> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; specificare come parametro in riga di comando, il nome completo (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna. Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
@@ -36,7 +36,7 @@ Di norma i file generati vengono salvati all'interno della cartella del programm
 
 ##### Database
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
-Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database all'interno della directory `lib` dell'applicazione, quindi abilitare una serie di propriet&agrave; nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnare ad esse il valore desiderato:
+Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi abilitare una serie di propriet&agrave; nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnare ad esse il valore desiderato:
 * **`logger.writer.class.name`**=[**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java)
 * **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.driver.OracleDriver`).
 * **`database.url`**= URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
@@ -75,7 +75,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
   * [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV (default).
   * [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
   * [**`DummyWriter`**](src/it/albertus/router/writer/DummyWriter.java): nessuna scrittura.
-  * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [Modalit&agrave; di salvataggio alternative](#modalit%C3%A0-di-salvataggio-alternative).
+  * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
 
 ##### CSV
 
