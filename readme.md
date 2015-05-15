@@ -94,7 +94,7 @@ threshold.snr.down.value=100
 
 ### Estensione
 
-&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi router disponga di un'interfaccia **telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`CsvRouterLogger`**](src/it/albertus/router/CsvRouterLogger.java), la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
+&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi router disponga di un'interfaccia **telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`RouterLogger`**](src/it/albertus/router/RouterLogger.java), la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server telnet comunicando le credenziali di accesso.
@@ -104,6 +104,6 @@ All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce `null`, determinando cos&igrave; l'assenza dell'informazione a video.
 
-Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV (ad esempio in un database), si pu&ograve; estendere la classe astratta [**`RouterLogger`**](src/it/albertus/router/RouterLogger.java) invece della [`CsvRouterLogger`](src/it/albertus/router/CsvRouterLogger.java), ma sar&agrave; ovviamente necessario implementare altri due metodi:
+Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV (ad esempio in un database), si pu&ograve; estendere la classe astratta [**`Writer`**](src/it/albertus/router/writer/Writer.java) e sar&agrave; ovviamente necessario implementare altri due metodi:
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute (ad esempio su database o su file).
 * **`release`**: libera risorse eventualmente allocate dal programma (file, connessioni a database, ecc.); l'implementazione predefinita non fa nulla.
