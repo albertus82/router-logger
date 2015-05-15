@@ -11,8 +11,7 @@ public abstract class Writer extends Configurable {
 	 * Telnet, con le modalit&agrave; desiderate, ad esempio su file o in un
 	 * database.
 	 * 
-	 * @param info
-	 *            le informazioni da salvare.
+	 * @param info  le informazioni da salvare.
 	 */
 	public abstract void saveInfo(Map<String, String> info);
 
