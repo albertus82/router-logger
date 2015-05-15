@@ -7,7 +7,7 @@
 
 	<property file="src/version.properties" />
 
-	<property name="main.class" value="it.albertus.router.tplink.TDW8970V1Logger" />
+	<property name="main.class" value="it.albertus.router.logger.RouterLogger" />
 
 	<scriptdef language="javascript" name="lower">
 		<attribute name="string" />
@@ -33,7 +33,7 @@
 	</target>
 
 	<target name="batch">
-		<echo file="${build.dir}/dist/${project.name.lowercase}.bat">@"%JAVA_HOME%\bin\java.exe" -Xms4m -Xmx8m -classpath "%~dp0${project.name.lowercase}.jar;%~dp0lib/*" ${main.class}</echo>
+		<echo file="${build.dir}/dist/${project.name.lowercase}.bat">@"%JAVA_HOME%\bin\java.exe" -Xms4m -Xmx8m -classpath "%~dp0${project.name.lowercase}.jar;%~dp0lib/*" ${main.class} %1</echo>
 	</target>
 
 	<target name="jar" depends="compile, copy, batch">

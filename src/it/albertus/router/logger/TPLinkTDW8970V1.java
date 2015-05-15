@@ -1,6 +1,4 @@
-package it.albertus.router.tplink;
-
-import it.albertus.router.RouterLogger;
+package it.albertus.router.logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,15 +6,11 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TDW8970V1Logger extends RouterLogger {
+public class TPLinkTDW8970V1 extends RouterLogger {
 
 	private static final String DEVICE_MODEL = "TP-Link TD-W8970 V1";
 	private static final String COMMAND_PROMPT = "#";
 	private static final String LOGIN_PROMPT = ":";
-
-	public static void main(String... args) {
-		new TDW8970V1Logger().run();
-	}
 
 	@Override
 	protected boolean login() throws IOException {

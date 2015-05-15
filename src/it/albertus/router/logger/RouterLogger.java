@@ -1,5 +1,7 @@
-package it.albertus.router;
+package it.albertus.router.logger;
 
+import it.albertus.router.Configurable;
+import it.albertus.router.Threshold;
 import it.albertus.router.Threshold.Type;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
@@ -33,6 +35,8 @@ public abstract class RouterLogger extends Configurable {
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
+	private static final String COMMAND_LINE_HELP = "Usage: routerlogger logger.class.Name";
+	
 	private static final String VERSION_FILE_NAME = "version.properties";
 
 	private static final String THRESHOLD_PREFIX = "threshold";
@@ -45,6 +49,30 @@ public abstract class RouterLogger extends Configurable {
 	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	protected final Properties version = new Properties();
 	protected final Writer writer;
+	
+	public static final void main(final String... args) {
+		if (args.length != 1) {
+			System.out.println(COMMAND_LINE_HELP);
+		}
+		else {
+			String className = args[0];
+			try {
+				Class.forName(className);
+			}
+			catch (ClassNotFoundException e) {
+				className = RouterLogger.class.getPackage().getName() + '.' + className;
+			}
+
+			try {
+				((RouterLogger) Class.forName(className).newInstance()).run();
+			}
+			catch (Exception e) {
+				System.out.println(e.getClass().getName() + ": " + args[0]);
+				System.out.println();
+				System.out.println(COMMAND_LINE_HELP);
+			}
+		}
+	}
 
 	protected final void run() {
 		welcome();
@@ -137,7 +165,7 @@ public abstract class RouterLogger extends Configurable {
 	 * all'implementazione realizzata.
 	 */
 	protected String getDeviceModel() {
-		return null;
+		return getClass().getSimpleName();
 	}
 
 	protected RouterLogger() {
@@ -159,9 +187,7 @@ public abstract class RouterLogger extends Configurable {
 			Class.forName(writerClassName); // Default package.
 		}
 		catch (ClassNotFoundException e) {
-			if (writerClassName.indexOf('.') == -1) {
-				writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
-			}
+			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
 		}
 
 		final Writer writer;
