@@ -75,7 +75,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
   * [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV (default).
   * [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
   * [**`DummyWriter`**](src/it/albertus/router/writer/DummyWriter.java): nessuna scrittura.
-  * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [Estensione](#estensione).
+  * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [Modalit&agrave; di salvataggio alternative](#modalit&agrave;-di-salvataggio-alternative).
 
 ##### CSV
 
