@@ -150,17 +150,6 @@ public abstract class RouterLogger extends Configurable {
 	protected abstract Map<String, String> readInfo() throws IOException;
 
 	/**
-	 * Salva le informazioni di interesse precedentemente estratte con
-	 * {@link #readInfo()} con le modalit&agrave; desiderate, ad esempio su file
-	 * o in un database.
-	 * 
-	 * @param info  le informazioni da salvare.
-	 */
-	protected void saveInfo(Map<String, String> info) {
-		writer.saveInfo(info);
-	}
-
-	/**
 	 * Restituisce una stringa contenente marca e modello del router relativo
 	 * all'implementazione realizzata.
 	 */
@@ -317,7 +306,7 @@ public abstract class RouterLogger extends Configurable {
 		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = readInfo();
-			saveInfo(info);
+			writer.saveInfo(info);
 			// Fine implementazioni specifiche.
 
 			// Scrittura indice dell'iterazione in console...
