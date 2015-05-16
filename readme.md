@@ -24,7 +24,7 @@ routerlogger TPLinkTDW8970V1
 
 In ambienti diversi (es. Linux) occorre richiamare `java` specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
-* la classe da eseguire: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
+* la classe da eseguire, che &egrave; sempre: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
 * il nome della classe che implementa il RouterLogger desiderato, ad es.: [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
 
 > Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; specificare come parametro in riga di comando, il nome **completo** (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna. Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di modem/router**](#supporto-di-altri-modelli-di-modemrouter).
