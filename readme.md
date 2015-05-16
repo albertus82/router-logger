@@ -22,7 +22,7 @@ In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogge
 routerlogger TPLinkTDW8970V1
 ```
 
-In ambienti diversi (es. Linux) occorre richiamare Java specificando:
+In ambienti diversi (es. Linux) occorre richiamare `java` specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
 * la classe da eseguire: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
 * il nome della classe che implementa il RouterLogger desiderato, ad es.: [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
