@@ -109,6 +109,7 @@ public abstract class RouterLogger extends Configurable {
 
 				// Loop...
 				if (loggedIn) {
+					index = 0;
 					try {
 						loop();
 						exit = true; // Se non si sono verificati errori.
