@@ -28,7 +28,7 @@ public abstract class RouterLogger extends Configurable {
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
 		int RETRIES = 3;
-		long RETRY_INTERVAL_IN_MILLIS = 60000L;
+		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean TELNET_SEND_CRLF = true;
 		boolean CONSOLE_ANIMATION = true;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
