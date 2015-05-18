@@ -69,7 +69,7 @@ public class DatabaseWriter extends Writer {
 		}
 
 		Map<Integer, String> columns = new HashMap<Integer, String>();
-		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (" + TIMESTAMP_COLUMN_NAME);
+		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(TIMESTAMP_COLUMN_NAME);
 		int index = 2;
 		for (String key : info.keySet()) {
 			columns.put(index++, key);
