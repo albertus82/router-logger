@@ -1,14 +1,18 @@
 package it.albertus.router.logger;
 
 import it.albertus.router.Configurable;
+import it.albertus.router.LoggerTerminal;
 import it.albertus.router.Threshold;
 import it.albertus.router.Threshold.Type;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -16,6 +20,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.net.telnet.TelnetClient;
+
+import com.googlecode.lanterna.terminal.swing.SwingTerminal;
 
 public abstract class RouterLogger extends Configurable {
 
@@ -49,10 +55,12 @@ public abstract class RouterLogger extends Configurable {
 	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	protected final Properties version = new Properties();
 	protected final Writer writer;
+//	protected static final LoggerTerminal terminal = LoggerTerminal.getInstance();
+	protected static final PrintStream terminal = System.out;
 
 	public static final void main(final String... args) {
 		if (args.length != 1) {
-			System.out.println(COMMAND_LINE_HELP);
+			terminal.println(COMMAND_LINE_HELP);
 		}
 		else {
 			String className = args[0];
@@ -68,13 +76,24 @@ public abstract class RouterLogger extends Configurable {
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-				System.out.println();
-				System.out.println(COMMAND_LINE_HELP);
+				terminal.println();
+				terminal.println(COMMAND_LINE_HELP);
 			}
 		}
 	}
 
 	protected final void run() {
+//		terminal.getScreen().startScreen();
+//		((SwingTerminal)terminal.getScreen().getTerminal()).getJFrame().addWindowListener(new WindowAdapter()
+//        {
+//            @Override
+//            public void windowClosing(WindowEvent e)
+//            {
+//            	release();
+//                terminal.getScreen().stopScreen();
+//                System.exit(0);
+//            }
+//        });
 		welcome();
 
 		boolean exit = false;
@@ -85,7 +104,7 @@ public abstract class RouterLogger extends Configurable {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
 				final long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms", Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
-				System.out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
+				terminal.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
 				try {
 					Thread.sleep(retryIntervalInMillis);
 				}
@@ -119,7 +138,7 @@ public abstract class RouterLogger extends Configurable {
 					}
 					finally {
 						// In ogni caso, si esegue la disconnessione dal server...
-						System.out.println();
+						terminal.println();
 						try {
 							logout();
 						}
@@ -137,7 +156,8 @@ public abstract class RouterLogger extends Configurable {
 			}
 		}
 		release();
-		System.out.println("Bye!");
+		terminal.println("Bye!");
+//		terminal.getScreen().stopScreen();
 	}
 
 	/**
@@ -243,7 +263,7 @@ public abstract class RouterLogger extends Configurable {
 		final int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms", Integer.toString(Defaults.SOCKET_TIMEOUT_IN_MILLIS)));
 
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		System.out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
+		terminal.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
@@ -263,7 +283,7 @@ public abstract class RouterLogger extends Configurable {
 	 * chiusura della sessione (ad esempio <tt>logout</tt>).
 	 */
 	protected final void disconnect() {
-		System.out.println("Disconnecting...");
+		terminal.println("Disconnecting...");
 		try {
 			telnet.disconnect();
 		}
@@ -292,7 +312,7 @@ public abstract class RouterLogger extends Configurable {
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	protected void logout() throws IOException {
-		System.out.println("Logging out...");
+		terminal.println("Logging out...");
 		writeToTelnet("logout");
 	}
 
@@ -357,7 +377,7 @@ public abstract class RouterLogger extends Configurable {
 			// Fine scrittura informazioni aggiuntive.
 
 			lastLogLength = log.length();
-			System.out.print(clean.toString() + log.toString());
+			terminal.print(clean.toString() + log.toString());
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -460,19 +480,19 @@ public abstract class RouterLogger extends Configurable {
 			versionInfo.append('(').append(versionDate.trim()).append(") ");
 		}
 
-		System.out.println("********** ADSL Modem Router Logger " + versionInfo.toString() + "**********");
-		System.out.println();
+		terminal.println("********** ADSL Modem Router Logger " + versionInfo.toString() + "**********");
+		terminal.println();
 		boolean lineBreak = false;
 		if (getDeviceModel() != null && !"".equals(getDeviceModel().trim())) {
-			System.out.println("Device model: " + getDeviceModel().trim() + '.');
+			terminal.println("Device model: " + getDeviceModel().trim() + '.');
 			lineBreak = true;
 		}
 		if (!thresholds.isEmpty()) {
-			System.out.println("Thresholds: " + thresholds.toString());
+			terminal.println("Thresholds: " + thresholds.toString());
 			lineBreak = true;
 		}
 		if (lineBreak) {
-			System.out.println();
+			terminal.println();
 		}
 	}
 

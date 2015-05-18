@@ -58,13 +58,13 @@ public class DatabaseWriter extends Writer {
 		// Verifica esistenza tabella ed eventuale creazione...
 		final String tableName = configuration.getProperty("database.table.name", Defaults.TABLE_NAME).trim().replace(' ', '_');
 		if (!tableExists(tableName)) {
-			System.out.println("Creating database table: " + tableName + "...");
+			terminal.println("Creating database table: " + tableName + "...");
 			createTable(tableName, info);
 		}
 
 		// Inserimento dati...
 		if (showMessage) {
-			System.out.println("Logging into database table: " + tableName + "...");
+			terminal.println("Logging into database table: " + tableName + "...");
 			showMessage = false;
 		}
 
@@ -158,7 +158,7 @@ public class DatabaseWriter extends Writer {
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
-					System.out.println("Closing database connection.");
+					terminal.println("Closing database connection.");
 					connection.close();
 					connection = null;
 				}

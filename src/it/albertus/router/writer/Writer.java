@@ -2,9 +2,13 @@ package it.albertus.router.writer;
 
 import it.albertus.router.Configurable;
 
+import java.io.PrintStream;
 import java.util.Map;
 
 public abstract class Writer extends Configurable {
+	
+//	protected final LoggerTerminal terminal = LoggerTerminal.getInstance();
+	protected final PrintStream terminal = System.out;
 
 	/**
 	 * Salva le informazioni di interesse, precedentemente estratte tramite
