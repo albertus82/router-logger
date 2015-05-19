@@ -44,13 +44,13 @@ public abstract class RouterLogger {
 	private static final String THRESHOLD_SUFFIX_TYPE = "type";
 	private static final String THRESHOLD_SUFFIX_VALUE = "value";
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
-
+	
+	protected static final PrintStream out = System.out;
+	
 	protected final TelnetClient telnet = new TelnetClient();
 	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	protected final Writer writer;
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	protected static final PrintStream out = System.out;
-//	protected static final LoggerTerminal terminal = LoggerTerminal.getInstance();
 
 	public static final void main(final String... args) {
 		if (args.length != 1) {
@@ -76,17 +76,6 @@ public abstract class RouterLogger {
 	}
 
 	protected final void run() {
-//		terminal.getScreen().startScreen();
-//		((SwingTerminal)terminal.getScreen().getTerminal()).getJFrame().addWindowListener(new WindowAdapter()
-//        {
-//            @Override
-//            public void windowClosing(WindowEvent e)
-//            {
-//            	release();
-//                terminal.getScreen().stopScreen();
-//                System.exit(0);
-//            }
-//        });
 		welcome();
 
 		boolean exit = false;
@@ -150,7 +139,6 @@ public abstract class RouterLogger {
 		}
 		release();
 		out.println("Bye!");
-//		terminal.getScreen().stopScreen();
 	}
 
 	/**

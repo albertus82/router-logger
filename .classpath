@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-net-3.3.jar" sourcepath="lib/src/commons-net-3.3-src.zip"/>
-	<classpathentry kind="lib" path="lib/lanterna-2.1.9-renderinghints.jar" sourcepath="lib/src/lanterna-2.1.9-renderinghints-sources.jar"/>
 	<classpathentry kind="lib" path="lib/albertus-utils-1.0.0.jar" sourcepath="lib/src/albertus-utils-1.0.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
