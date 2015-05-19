@@ -48,7 +48,7 @@ public abstract class Configuration {
 	public Boolean getBoolean(String key) {
 		String value = getString(key);
 		if (value != null) {
-			return Boolean.parseBoolean(value.trim());
+			return Boolean.valueOf(value.trim());
 		}
 		return null;
 	}
@@ -64,7 +64,7 @@ public abstract class Configuration {
 	public Long getLong(String key) {
 		String value = getString(key);
 		if (value != null) {
-			return Long.parseLong(value);
+			return Long.valueOf(value);
 		}
 		return null;
 	}
@@ -80,7 +80,7 @@ public abstract class Configuration {
 	public Integer getInt(String key) {
 		String value = getString(key);
 		if (value != null) {
-			return Integer.parseInt(value);
+			return Integer.valueOf(value);
 		}
 		return null;
 	}
@@ -89,6 +89,38 @@ public abstract class Configuration {
 		String value = getString(key);
 		if (value != null) {
 			return Integer.parseInt(value);
+		}
+		return defaultValue;
+	}
+
+	public Float getFloat(String key) {
+		String value = getString(key);
+		if (value != null) {
+			return Float.valueOf(value);
+		}
+		return null;
+	}
+
+	public float getFloat(String key, float defaultValue) {
+		String value = getString(key);
+		if (value != null) {
+			return Float.parseFloat(value);
+		}
+		return defaultValue;
+	}
+
+	public Double getDouble(String key) {
+		String value = getString(key);
+		if (value != null) {
+			return Double.valueOf(value);
+		}
+		return null;
+	}
+
+	public double getDouble(String key, double defaultValue) {
+		String value = getString(key);
+		if (value != null) {
+			return Double.parseDouble(value);
 		}
 		return defaultValue;
 	}
