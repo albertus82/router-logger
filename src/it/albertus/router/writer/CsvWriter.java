@@ -45,13 +45,13 @@ public class CsvWriter extends Writer {
 			if (!logFile.exists()) {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
-				terminal.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 				logFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
-				terminal.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 			}
 			logFileWriter.append(buildCsvRow(info));
 			logFileWriter.flush();
@@ -104,7 +104,7 @@ public class CsvWriter extends Writer {
 	private void closeOutputFile() {
 		if (logFileWriter != null) {
 			try {
-				terminal.println("Closing output file.");
+				out.println("Closing output file.");
 				logFileWriter.close();
 				logFileWriter = null;
 			}

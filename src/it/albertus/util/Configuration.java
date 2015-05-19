@@ -14,6 +14,12 @@ public abstract class Configuration {
 
 	protected Configuration(String fileName) {
 		this.fileName = fileName;
+		try {
+			load();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void load() throws IOException {
@@ -93,6 +99,38 @@ public abstract class Configuration {
 		return defaultValue;
 	}
 
+	public Short getShort(String key) {
+		String value = getString(key);
+		if (value != null) {
+			return Short.valueOf(value);
+		}
+		return null;
+	}
+
+	public short getShort(String key, short defaultValue) {
+		String value = getString(key);
+		if (value != null) {
+			return Short.parseShort(value);
+		}
+		return defaultValue;
+	}
+
+	public Byte getByte(String key) {
+		String value = getString(key);
+		if (value != null) {
+			return Byte.valueOf(value);
+		}
+		return null;
+	}
+
+	public byte getByte(String key, byte defaultValue) {
+		String value = getString(key);
+		if (value != null) {
+			return Byte.parseByte(value);
+		}
+		return defaultValue;
+	}
+
 	public Float getFloat(String key) {
 		String value = getString(key);
 		if (value != null) {
@@ -123,6 +161,31 @@ public abstract class Configuration {
 			return Double.parseDouble(value);
 		}
 		return defaultValue;
+	}
+
+	public Character getChar(String key) {
+		String value = getString(key);
+		if (value != null) {
+			return parseChar(value);
+		}
+		return null;
+	}
+
+	public char getChar(String key, char defaultValue) {
+		String value = getString(key);
+		if (value != null) {
+			return parseChar(value);
+		}
+		return defaultValue;
+	}
+
+	private char parseChar(String value) {
+		if (value.length() == 1) {
+			return value.charAt(0);
+		}
+		else {
+			throw new IllegalArgumentException("value length != 1");
+		}
 	}
 
 	public boolean contains(String key) {

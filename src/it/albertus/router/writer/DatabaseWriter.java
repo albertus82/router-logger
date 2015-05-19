@@ -58,13 +58,13 @@ public class DatabaseWriter extends Writer {
 		// Verifica esistenza tabella ed eventuale creazione...
 		final String tableName = configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
 		if (!tableExists(tableName)) {
-			terminal.println("Creating database table: " + tableName + "...");
+			out.println("Creating database table: " + tableName + "...");
 			createTable(tableName, info);
 		}
 
 		// Inserimento dati...
 		if (showMessage) {
-			terminal.println("Logging into database table: " + tableName + "...");
+			out.println("Logging into database table: " + tableName + "...");
 			showMessage = false;
 		}
 
@@ -158,7 +158,7 @@ public class DatabaseWriter extends Writer {
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
-					terminal.println("Closing database connection.");
+					out.println("Closing database connection.");
 					connection.close();
 					connection = null;
 				}

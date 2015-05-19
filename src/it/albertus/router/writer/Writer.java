@@ -9,8 +9,8 @@ public abstract class Writer {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
+	protected static final PrintStream out = System.out;
 //	protected final LoggerTerminal terminal = LoggerTerminal.getInstance();
-	protected final PrintStream terminal = System.out;
 
 	/**
 	 * Salva le informazioni di interesse, precedentemente estratte tramite
