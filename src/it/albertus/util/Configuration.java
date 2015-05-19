@@ -18,12 +18,12 @@ public abstract class Configuration {
 
 	protected void load() throws IOException {
 		final InputStream inputStream;
-		final File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + getFileName());
+		final File config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + fileName);
 		if (config.exists()) {
 			inputStream = new BufferedInputStream(new FileInputStream(config));
 		}
 		else {
-			inputStream = getClass().getResourceAsStream('/' + getFileName());
+			inputStream = getClass().getResourceAsStream('/' + fileName);
 		}
 		properties.load(inputStream);
 		inputStream.close();
