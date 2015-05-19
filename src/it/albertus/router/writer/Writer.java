@@ -7,8 +7,7 @@ import java.util.Map;
 
 public abstract class Writer {
 
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-
+	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected static final PrintStream out = System.out;
 
 	/**

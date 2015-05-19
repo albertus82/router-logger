@@ -45,12 +45,12 @@ public abstract class RouterLogger {
 	private static final String THRESHOLD_SUFFIX_VALUE = "value";
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 	
+	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected static final PrintStream out = System.out;
 	
 	protected final TelnetClient telnet = new TelnetClient();
 	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	protected final Writer writer;
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	public static final void main(final String... args) {
 		if (args.length != 1) {
