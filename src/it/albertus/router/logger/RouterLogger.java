@@ -5,6 +5,7 @@ import it.albertus.router.Threshold;
 import it.albertus.router.Threshold.Type;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
+import it.albertus.util.ExceptionUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
@@ -68,8 +69,7 @@ public abstract class RouterLogger {
 				((RouterLogger) Class.forName(className).newInstance()).run();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
-				out.println();
+				out.println(ExceptionUtils.getStackTrace(e));
 				out.println(COMMAND_LINE_HELP);
 			}
 		}
@@ -116,7 +116,7 @@ public abstract class RouterLogger {
 					loggedIn = login();
 				}
 				catch (Exception e) {
-					e.printStackTrace();
+					out.print(ExceptionUtils.getStackTrace(e));
 				}
 
 				// Loop...
@@ -127,7 +127,7 @@ public abstract class RouterLogger {
 						exit = true; // Se non si sono verificati errori.
 					}
 					catch (Exception e) {
-						e.printStackTrace();
+						out.print(ExceptionUtils.getStackTrace(e));
 					}
 					finally {
 						// In ogni caso, si esegue la disconnessione dal server...
@@ -136,7 +136,7 @@ public abstract class RouterLogger {
 							logout();
 						}
 						catch (Exception e) {
-							e.printStackTrace();
+							out.print(ExceptionUtils.getStackTrace(e));
 						}
 						disconnect();
 					}
@@ -248,7 +248,7 @@ public abstract class RouterLogger {
 			telnet.setSoTimeout(socketTimeoutInMillis);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			out.print(ExceptionUtils.getStackTrace(e));
 		}
 		return connected;
 	}
@@ -265,7 +265,7 @@ public abstract class RouterLogger {
 			telnet.disconnect();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			out.print(ExceptionUtils.getStackTrace(e));
 		}
 	}
 

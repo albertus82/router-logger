@@ -1,5 +1,7 @@
 package it.albertus.router.writer;
 
+import it.albertus.util.ExceptionUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -57,7 +59,7 @@ public class CsvWriter extends Writer {
 			logFileWriter.flush();
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
+			out.print(ExceptionUtils.getStackTrace(ioe));
 			closeOutputFile();
 		}
 	}
@@ -109,7 +111,7 @@ public class CsvWriter extends Writer {
 				logFileWriter = null;
 			}
 			catch (IOException ioe) {
-				ioe.printStackTrace();
+				out.print(ExceptionUtils.getStackTrace(ioe));
 			}
 		}
 	}

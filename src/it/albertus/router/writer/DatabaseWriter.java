@@ -1,5 +1,7 @@
 package it.albertus.router.writer;
 
+import it.albertus.util.ExceptionUtils;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -91,7 +93,7 @@ public class DatabaseWriter extends Writer {
 			insert.executeUpdate();
 		}
 		catch (SQLException se) {
-			se.printStackTrace();
+			out.print(ExceptionUtils.getStackTrace(se));
 		}
 		finally {
 			try {
@@ -164,7 +166,7 @@ public class DatabaseWriter extends Writer {
 				}
 			}
 			catch (SQLException se) {
-				se.printStackTrace();
+				out.print(ExceptionUtils.getStackTrace(se));
 			}
 		}
 	}
