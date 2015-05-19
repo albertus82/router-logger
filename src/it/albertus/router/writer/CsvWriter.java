@@ -24,7 +24,7 @@ public class CsvWriter extends Writer {
 	@Override
 	public void saveInfo(final Map<String, String> info) {
 		// Selezione del percorso e nome del file di destinazione...
-		final String logDestinationDir = configuration.getProperty("csv.destination.path");
+		final String logDestinationDir = configuration.getString("csv.destination.path");
 		final File logFile;
 		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
 			File logDestDir = new File(logDestinationDir.trim());
@@ -90,15 +90,15 @@ public class CsvWriter extends Writer {
 	}
 
 	private String getFieldSeparator() {
-		return configuration.getProperty("csv.field.separator", Defaults.FIELD_SEPARATOR);
+		return configuration.getString("csv.field.separator", Defaults.FIELD_SEPARATOR);
 	}
 
 	private String getFieldSeparatorReplacement() {
-		return configuration.getProperty("csv.field.separator.replacement", Defaults.FIELD_SEPARATOR_REPLACEMENT);
+		return configuration.getString("csv.field.separator.replacement", Defaults.FIELD_SEPARATOR_REPLACEMENT);
 	}
 
 	private String getRecordSeparator() {
-		return Boolean.parseBoolean(configuration.getProperty("csv.record.separator.crlf", String.valueOf(Defaults.RECORD_SEPARATOR_CRLF)).trim()) ? "\r\n" : "\n";
+		return configuration.getBoolean("csv.record.separator.crlf", Defaults.RECORD_SEPARATOR_CRLF) ? "\r\n" : "\n";
 	}
 
 	private void closeOutputFile() {

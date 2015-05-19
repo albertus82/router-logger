@@ -1,12 +1,14 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.Configurable;
+import it.albertus.router.RouterLoggerConfiguration;
 
 import java.io.PrintStream;
 import java.util.Map;
 
-public abstract class Writer extends Configurable {
-	
+public abstract class Writer {
+
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+
 //	protected final LoggerTerminal terminal = LoggerTerminal.getInstance();
 	protected final PrintStream terminal = System.out;
 

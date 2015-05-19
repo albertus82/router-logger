@@ -1,14 +1,11 @@
 package it.albertus.router.logger;
 
-import it.albertus.router.Configurable;
-import it.albertus.router.LoggerTerminal;
+import it.albertus.router.RouterLoggerConfiguration;
 import it.albertus.router.Threshold;
 import it.albertus.router.Threshold.Type;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,9 +18,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
-import com.googlecode.lanterna.terminal.swing.SwingTerminal;
-
-public abstract class RouterLogger extends Configurable {
+public abstract class RouterLogger {
 
 	private interface Defaults {
 		String ROUTER_ADDRESS = "192.168.1.1";
@@ -55,6 +50,7 @@ public abstract class RouterLogger extends Configurable {
 	protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	protected final Properties version = new Properties();
 	protected final Writer writer;
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 //	protected static final LoggerTerminal terminal = LoggerTerminal.getInstance();
 	protected static final PrintStream terminal = System.out;
 
@@ -98,12 +94,12 @@ public abstract class RouterLogger extends Configurable {
 
 		boolean exit = false;
 
-		final int retries = Integer.parseInt(configuration.getProperty("logger.retry.count", Integer.toString(Defaults.RETRIES)));
+		final int retries = configuration.getInt("logger.retry.count", Defaults.RETRIES);
 
 		for (int index = 0; index <= retries && !exit; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
-				final long retryIntervalInMillis = Long.parseLong(configuration.getProperty("logger.retry.interval.ms", Long.toString(Defaults.RETRY_INTERVAL_IN_MILLIS)));
+				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
 				terminal.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
 				try {
 					Thread.sleep(retryIntervalInMillis);
@@ -191,7 +187,7 @@ public abstract class RouterLogger extends Configurable {
 
 	private Writer initWriter() {
 		final String configurationKey = "logger.writer.class.name";
-		String writerClassName = configuration.getProperty(configurationKey, Defaults.WRITER_CLASS.getName()).trim();
+		String writerClassName = configuration.getString(configurationKey, Defaults.WRITER_CLASS.getName()).trim();
 
 		try {
 			Class.forName(writerClassName); // Default package.
@@ -208,28 +204,28 @@ public abstract class RouterLogger extends Configurable {
 			throw re;
 		}
 		catch (Exception e) {
-			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + CONFIGURATION_FILE_NAME + " file.", e);
+			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
 		}
 		return writer;
 	}
 
 	private void loadThresholds() {
 		final Set<String> thresholdsAdded = new HashSet<String>();
-		for (Object objectKey : configuration.keySet()) {
+		for (Object objectKey : configuration.getProperties().keySet()) {
 			String key = (String) objectKey;
 			if (key != null && key.startsWith(THRESHOLD_PREFIX + '.')) {
 				if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(THRESHOLD_SUFFIX_KEY) && !key.endsWith(THRESHOLD_SUFFIX_TYPE) && !key.endsWith(THRESHOLD_SUFFIX_VALUE))) {
-					throw new IllegalArgumentException("Thresholds misconfigured. Review your " + CONFIGURATION_FILE_NAME + " file.");
+					throw new IllegalArgumentException("Thresholds misconfigured. Review your " + configuration.getFileName() + " file.");
 				}
 				final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 				if (thresholdsAdded.contains(thresholdName)) {
 					continue;
 				}
-				final String thresholdKey = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
-				final Type thresholdType = Type.getEnum(configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
-				final String thresholdValue = configuration.getProperty(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE);
+				final String thresholdKey = configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
+				final Type thresholdType = Type.getEnum(configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
+				final String thresholdValue = configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE);
 				if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\". Review your " + CONFIGURATION_FILE_NAME + " file.");
+					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\". Review your " + configuration.getFileName() + " file.");
 				}
 				thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
 				thresholdsAdded.add(thresholdName);
@@ -257,10 +253,10 @@ public abstract class RouterLogger extends Configurable {
 	 *         altrimenti.
 	 */
 	private final boolean connect() {
-		final String routerAddress = configuration.getProperty("router.address", Defaults.ROUTER_ADDRESS).trim();
-		final int routerPort = Integer.parseInt(configuration.getProperty("router.port", Integer.toString(Defaults.ROUTER_PORT)));
-		final int connectionTimeoutInMillis = Integer.parseInt(configuration.getProperty("connection.timeout.ms", Integer.toString(Defaults.CONNECTION_TIMEOUT_IN_MILLIS)));
-		final int socketTimeoutInMillis = Integer.parseInt(configuration.getProperty("socket.timeout.ms", Integer.toString(Defaults.SOCKET_TIMEOUT_IN_MILLIS)));
+		final String routerAddress = configuration.getString("router.address", Defaults.ROUTER_ADDRESS).trim();
+		final int routerPort = configuration.getInt("router.port", Defaults.ROUTER_PORT);
+		final int connectionTimeoutInMillis = configuration.getInt("connection.timeout.ms", Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
+		final int socketTimeoutInMillis = configuration.getInt("socket.timeout.ms", Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
 		terminal.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
@@ -318,7 +314,7 @@ public abstract class RouterLogger extends Configurable {
 
 	private final void loop() throws IOException, InterruptedException {
 		// Determinazione numero di iterazioni...
-		int iterations = Integer.parseInt(configuration.getProperty("logger.iterations", Integer.toString(Defaults.ITERATIONS)));
+		int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
 		if (iterations <= 0) {
 			iterations = Integer.MAX_VALUE;
 		}
@@ -336,7 +332,7 @@ public abstract class RouterLogger extends Configurable {
 				clean.append('\b');
 			}
 			final StringBuilder log = new StringBuilder();
-			final boolean animate = Boolean.parseBoolean(configuration.getProperty("console.animation", Boolean.toString(Defaults.CONSOLE_ANIMATION)).trim());
+			final boolean animate = configuration.getBoolean("console.animation", Defaults.CONSOLE_ANIMATION);
 			if (animate) {
 				log.append(ANIMATION[iteration & 3]).append(' ');
 			}
@@ -353,7 +349,7 @@ public abstract class RouterLogger extends Configurable {
 			// Scrittura informazioni aggiuntive richieste...
 			if (info != null && !info.isEmpty()) {
 				final StringBuilder infoToShow = new StringBuilder();
-				for (String keyToShow : configuration.getProperty("console.show.keys", "").split(configuration.getProperty("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
+				for (String keyToShow : configuration.getString("console.show.keys", "").split(configuration.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
 					if (keyToShow != null && !"".equals(keyToShow.trim())) {
 						keyToShow = keyToShow.trim();
 						for (final String key : info.keySet()) {
@@ -393,13 +389,13 @@ public abstract class RouterLogger extends Configurable {
 				if (key != null && !"".equals(key.trim())) {
 					for (final Threshold threshold : thresholds) {
 						if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-							return Long.parseLong(configuration.getProperty("logger.interval.fast.ms", Long.toString(Defaults.INTERVAL_FAST_IN_MILLIS)));
+							return configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 						}
 					}
 				}
 			}
 		}
-		return Long.parseLong(configuration.getProperty("logger.interval.normal.ms", Long.toString(Defaults.INTERVAL_NORMAL_IN_MILLIS)));
+		return configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
 	}
 
 	/**
@@ -426,7 +422,7 @@ public abstract class RouterLogger extends Configurable {
 		}
 		out.flush();
 		// Thread.sleep(50);
-		if (Boolean.parseBoolean(configuration.getProperty("telnet.send.crlf", Boolean.toString(Defaults.TELNET_SEND_CRLF)).trim())) {
+		if (configuration.getBoolean("telnet.send.crlf", Defaults.TELNET_SEND_CRLF)) {
 			out.write('\r');
 			echo.append('\r');
 		}

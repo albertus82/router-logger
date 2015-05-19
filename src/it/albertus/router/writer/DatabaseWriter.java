@@ -30,16 +30,16 @@ public class DatabaseWriter extends Writer {
 	private final int connectionValidationTimeoutInMillis;
 
 	public DatabaseWriter() {
-		if (configuration.getProperty(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) == null || configuration.getProperty(CONFIGURATION_KEY_DATABASE_URL) == null || configuration.getProperty(CONFIGURATION_KEY_DATABASE_USERNAME) == null || configuration.getProperty(CONFIGURATION_KEY_DATABASE_PASSWORD) == null) {
-			throw new RuntimeException("Database configuration error. Review your " + CONFIGURATION_FILE_NAME + " file.");
+		if (!configuration.contains(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) || !configuration.contains(CONFIGURATION_KEY_DATABASE_URL) || !configuration.contains(CONFIGURATION_KEY_DATABASE_USERNAME) || !configuration.contains(CONFIGURATION_KEY_DATABASE_PASSWORD)) {
+			throw new RuntimeException("Database configuration error. Review your " + configuration.getFileName() + " file.");
 		}
 		try {
-			Class.forName(configuration.getProperty(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME));
+			Class.forName(configuration.getString(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME));
 		}
 		catch (ClassNotFoundException e) {
-			throw new RuntimeException("Missing database driver library (JAR) or misspelled class name \"" + configuration.getProperty(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) + "\" in your " + CONFIGURATION_FILE_NAME + " file.", e);
+			throw new RuntimeException("Missing database driver library (JAR) or misspelled class name \"" + configuration.getString(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) + "\" in your " + configuration.getFileName() + " file.", e);
 		}
-		connectionValidationTimeoutInMillis = Integer.parseInt(configuration.getProperty("database.connection.validation.timeout.ms", Integer.toString(Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS)));
+		connectionValidationTimeoutInMillis = configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class DatabaseWriter extends Writer {
 		// Connessione al database...
 		try {
 			if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
-				connection = DriverManager.getConnection(configuration.getProperty(CONFIGURATION_KEY_DATABASE_URL), configuration.getProperty(CONFIGURATION_KEY_DATABASE_USERNAME), configuration.getProperty(CONFIGURATION_KEY_DATABASE_PASSWORD));
+				connection = DriverManager.getConnection(configuration.getString(CONFIGURATION_KEY_DATABASE_URL), configuration.getString(CONFIGURATION_KEY_DATABASE_USERNAME), configuration.getString(CONFIGURATION_KEY_DATABASE_PASSWORD));
 				connection.setAutoCommit(true);
 			}
 		}
@@ -56,7 +56,7 @@ public class DatabaseWriter extends Writer {
 		}
 
 		// Verifica esistenza tabella ed eventuale creazione...
-		final String tableName = configuration.getProperty("database.table.name", Defaults.TABLE_NAME).trim().replace(' ', '_');
+		final String tableName = configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
 		if (!tableExists(tableName)) {
 			terminal.println("Creating database table: " + tableName + "...");
 			createTable(tableName, info);
@@ -125,7 +125,7 @@ public class DatabaseWriter extends Writer {
 		// Creazione tabella...
 		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(TIMESTAMP_COLUMN_NAME).append(" TIMESTAMP");
 		for (String key : info.keySet()) {
-			ddl.append(", ").append(cleanColumnName(key)).append(' ').append(configuration.getProperty("database.column.type", Defaults.COLUMN_TYPE)).append('(').append(configuration.getProperty("database.column.length", Defaults.COLUMN_LENGTH)).append(')');
+			ddl.append(", ").append(cleanColumnName(key)).append(' ').append(configuration.getString("database.column.type", Defaults.COLUMN_TYPE)).append('(').append(configuration.getString("database.column.length", Defaults.COLUMN_LENGTH)).append(')');
 		}
 		ddl.append(", CONSTRAINT pk_routerlogger PRIMARY KEY (").append(TIMESTAMP_COLUMN_NAME).append("))");
 

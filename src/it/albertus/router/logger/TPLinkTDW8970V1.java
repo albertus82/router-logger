@@ -16,11 +16,11 @@ public class TPLinkTDW8970V1 extends RouterLogger {
 	protected boolean login() throws IOException {
 		// Username...
 		terminal.print(readFromTelnet(LOGIN_PROMPT, true).trim());
-		writeToTelnet(configuration.getProperty("router.username"));
+		writeToTelnet(configuration.getString("router.username"));
 
 		// Password...
 		terminal.println(readFromTelnet(LOGIN_PROMPT, true).trim());
-		writeToTelnet(configuration.getProperty("router.password"));
+		writeToTelnet(configuration.getString("router.password"));
 
 		// Welcome! (salto caratteri speciali (clear screen, ecc.)...
 		String welcome = readFromTelnet("-", true);
