@@ -29,6 +29,7 @@ public abstract class RouterLogger {
 		int ITERATIONS = -1;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
+		long HYSTERESIS_IN_MILLIS = 5000L;
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean TELNET_SEND_CRLF = true;
@@ -288,6 +289,8 @@ public abstract class RouterLogger {
 			iterations = Integer.MAX_VALUE;
 		}
 
+		long hysteresis = System.nanoTime() - (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000);
+
 		// Iterazione...
 		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
 			// Chiamata alle implementazioni specifiche...
@@ -346,25 +349,37 @@ public abstract class RouterLogger {
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
-				Thread.sleep(getWaitTimeInMillis(info));
+				final long waitTimeInMillis;
+				final boolean thresholdReached = isTresholdReached(info);
+				System.out.println(hysteresis);
+				if (thresholdReached || (System.nanoTime() - hysteresis) < (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000)) {
+					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
+					if (thresholdReached) {
+						hysteresis = System.nanoTime();
+					}
+				}
+				else {
+					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
+				}
+				Thread.sleep(waitTimeInMillis);
 			}
 		}
 	}
-
-	protected long getWaitTimeInMillis(final Map<String, String> info) {
+	
+	private boolean isTresholdReached(final Map<String, String> info) {
 		// Gestione delle soglie...
 		if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
 			for (final String key : info.keySet()) {
-				if (key != null && !"".equals(key.trim())) {
+				if (key != null && key.trim().length() != 0) {
 					for (final Threshold threshold : thresholds) {
 						if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-							return configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
+							return true;
 						}
 					}
 				}
 			}
 		}
-		return configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
+		return false;
 	}
 
 	/**
