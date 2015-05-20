@@ -32,18 +32,6 @@
 		</javac>
 	</target>
 
-	<target name="batch">
-		<echo file="${build.dir}/dist/${project.name.lowercase}.bat">@"%JAVA_HOME%\bin\java.exe" -Xms4m -Xmx8m -classpath "%~dp0${project.name.lowercase}.jar;%~dp0lib/*" ${main.class} %1</echo>
-	</target>
-
-	<target name="jar" depends="compile, copy, batch">
-		<jar destfile="${build.dir}/dist/${project.name.lowercase}.jar" basedir="${build.dir}/classes" level="9" />
-	</target>
-
-	<target name="zip" depends="jar">
-		<zip destfile="${build.dir}/release/${project.name.lowercase}-${version.number}-bin.zip" basedir="${build.dir}/dist" level="9" />
-	</target>
-
 	<target name="copy">
 		<copy todir="${build.dir}/classes">
 			<fileset dir="src">
@@ -54,11 +42,24 @@
 		<copy todir="${build.dir}/dist/lib" >
 			<fileset dir="lib">
 				<include name="*.jar" />
+				<include name="license/*.txt" />
 			</fileset>
 		</copy>
 		<copy todir="${build.dir}/dist" file="src/license.txt" />
 		<copy todir="${build.dir}/dist" file="readme.md" />
 		<copy todir="${build.dir}/dist" file="src/routerlogger.cfg" />
+	</target>
+
+	<target name="batch">
+		<echo file="${build.dir}/dist/${project.name.lowercase}.bat">@"%JAVA_HOME%\bin\java.exe" -Xms4m -Xmx8m -classpath "%~dp0${project.name.lowercase}.jar;%~dp0lib/*" ${main.class} %1</echo>
+	</target>
+
+	<target name="jar" depends="compile, copy, batch">
+		<jar destfile="${build.dir}/dist/${project.name.lowercase}.jar" basedir="${build.dir}/classes" level="9" />
+	</target>
+
+	<target name="zip" depends="jar">
+		<zip destfile="${build.dir}/release/${project.name.lowercase}-${version.number}-bin.zip" basedir="${build.dir}/dist" level="9" />
 	</target>
 
 </project>
