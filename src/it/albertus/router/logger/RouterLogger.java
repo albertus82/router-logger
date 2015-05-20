@@ -29,7 +29,7 @@ public abstract class RouterLogger {
 		int ITERATIONS = -1;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
-		long HYSTERESIS_IN_MILLIS = 5000L;
+		long HYSTERESIS_IN_MILLIS = 10000L;
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean TELNET_SEND_CRLF = true;
@@ -289,7 +289,7 @@ public abstract class RouterLogger {
 			iterations = Integer.MAX_VALUE;
 		}
 
-		long hysteresis = System.nanoTime() - (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000);
+		long hysteresis = System.nanoTime() - (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000L);
 
 		// Iterazione...
 		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
@@ -351,8 +351,7 @@ public abstract class RouterLogger {
 			if (iteration != iterations) {
 				final long waitTimeInMillis;
 				final boolean thresholdReached = isTresholdReached(info);
-				System.out.println(hysteresis);
-				if (thresholdReached || (System.nanoTime() - hysteresis) < (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000)) {
+				if (thresholdReached || (System.nanoTime() - hysteresis) < (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000L)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 					if (thresholdReached) {
 						hysteresis = System.nanoTime();
