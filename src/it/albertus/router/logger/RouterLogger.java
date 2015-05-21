@@ -289,7 +289,7 @@ public abstract class RouterLogger {
 			iterations = Integer.MAX_VALUE;
 		}
 
-		long hysteresis = System.nanoTime() - (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000L);
+		long hysteresis = 0;
 
 		// Iterazione...
 		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
@@ -351,10 +351,10 @@ public abstract class RouterLogger {
 			if (iteration != iterations) {
 				final long waitTimeInMillis;
 				final boolean thresholdReached = isTresholdReached(info);
-				if (thresholdReached || (System.nanoTime() - hysteresis) < (configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS) * 1000000L)) {
+				if (thresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 					if (thresholdReached) {
-						hysteresis = System.nanoTime();
+						hysteresis = System.currentTimeMillis();
 					}
 				}
 				else {
