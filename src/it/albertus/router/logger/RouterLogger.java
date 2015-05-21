@@ -5,6 +5,7 @@ import it.albertus.router.Threshold;
 import it.albertus.router.Threshold.Type;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
+import it.albertus.util.Configuration;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.Version;
 
@@ -46,7 +47,7 @@ public abstract class RouterLogger {
 	private static final String THRESHOLD_SUFFIX_VALUE = "value";
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 	
-	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected static final PrintStream out = System.out;
 	
 	protected final TelnetClient telnet = new TelnetClient();
