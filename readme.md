@@ -9,7 +9,7 @@ RouterLogger
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file [**`routerlogger.cfg`**](src/routerlogger.cfg) configurando le seguenti propriet&agrave;:
-  * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` o `192.168.1.1`).
+  * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
   * **`router.port`**= porta telnet del router, default: `23`.
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
   * **`router.password`**= password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
@@ -48,7 +48,11 @@ Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la lib
 
 ### Configurazione avanzata
 
-Il file [`routerlogger.cfg`](src/routerlogger.cfg) contiene gi&agrave; varie impostazioni, quasi tutte disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`) ma che possono essere attivate in caso di necessit&agrave;. Per abilitare un'impostazione, &egrave; sufficiente rimuovere il carattere di commento `#` presente all'inizio della relativa chiave. Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi&agrave; viste per la configurazione di base. Le seguenti impostazioni sono tutte facoltative, salvo diversa indicazione.
+Il file [`routerlogger.cfg`](src/routerlogger.cfg) fornito contiene gi&agrave; tutte le impostazioni dell'applicazione, e quasi tutte sono disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`). Il principio &egrave; il cosiddetto *Convention Over Configuration* (noto anche come *Configuration by Exception*), secondo il quale non occorre preoccuparsi di configurare nulla esplicitamente, fatta eccezione per pochi parametri per i quali non pu&ograve; esistere un valore predefinito; nel nostro caso si tratta esclusivamente delle credenziali di accesso del router e degli eventuali parametri di connessione al database.
+
+Tutte le propriet&agrave; che non vengono configurate esplicitamente assumono un certo valore predefinito (default) che sar&agrave; specificato nei paragrafi seguenti. In caso di necessit&agrave;, &egrave; possibile abilitare una o pi&ugrave; impostazioni rimuovendo il carattere di commento `#` presente all'inizio della relativa chiave e sostituendo il valore predefinito con quello desiderato. &Egrave; altres&igrave; possibile ripulire il file [`routerlogger.cfg`](src/routerlogger.cfg) rimuovendo completamente le righe ritenute inutili.
+
+Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi&agrave; viste per la configurazione di base. Le seguenti impostazioni sono tutte facoltative, salvo diversa indicazione.
 
 ##### Impostazioni generali
 
