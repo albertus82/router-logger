@@ -1,6 +1,7 @@
 package it.albertus.router.writer;
 
 import it.albertus.util.ExceptionUtils;
+import it.albertus.util.StringUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -28,7 +29,7 @@ public class CsvWriter extends Writer {
 		// Selezione del percorso e nome del file di destinazione...
 		final String logDestinationDir = configuration.getString("csv.destination.path");
 		final File logFile;
-		if (logDestinationDir != null && !"".equals(logDestinationDir.trim())) {
+		if (StringUtils.isNotBlank(logDestinationDir)) {
 			File logDestDir = new File(logDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
 				throw new RuntimeException("Invalid path: \"" + logDestDir + "\".");
