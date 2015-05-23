@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -26,6 +27,7 @@ public class ExcelWriter extends Writer {
 
 	private OutputStream outputStream = null;
 	private Workbook workbook = null;
+	private File backupLogFile = null;
 
 	@Override
 	public synchronized void saveInfo(final Map<String, String> info) {
@@ -45,6 +47,7 @@ public class ExcelWriter extends Writer {
 		else {
 			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".xls");
 		}
+		backupLogFile = new File(logFile.getPath() + ".bak");
 
 		try {
 			if (logFile.exists()) { // Se il file esiste gia'...
@@ -79,6 +82,9 @@ public class ExcelWriter extends Writer {
 			workbook.write(outputStream);
 			outputStream.flush();
 			outputStream.close();
+
+			// Backup...
+			FileUtils.copyFile(logFile, backupLogFile);
 
 			// Mantiene bloccato il file per evitare lock da altre applicazioni...
 			outputStream = new FileOutputStream(logFile, true);
@@ -117,6 +123,9 @@ public class ExcelWriter extends Writer {
 	@Override
 	public void release() {
 		closeOutputFile();
+		if (backupLogFile != null) {
+			FileUtils.deleteQuietly(backupLogFile);
+		}
 	}
 
 	private void closeOutputFile() {
