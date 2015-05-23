@@ -7,6 +7,7 @@ import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.Configuration;
 import it.albertus.util.ExceptionUtils;
+import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ public abstract class RouterLogger {
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean TELNET_SEND_CRLF = true;
 		boolean CONSOLE_ANIMATION = true;
+		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
@@ -464,12 +466,16 @@ public abstract class RouterLogger {
 		out.println("********** ADSL Modem Router Logger " + versionInfo.toString() + "**********");
 		out.println();
 		boolean lineBreak = false;
-		if (getDeviceModel() != null && !"".equals(getDeviceModel().trim())) {
+		if (StringUtils.isNotBlank(getDeviceModel())) {
 			out.println("Device model: " + getDeviceModel().trim() + '.');
 			lineBreak = true;
 		}
 		if (!thresholds.isEmpty()) {
 			out.println("Thresholds: " + thresholds.toString());
+			lineBreak = true;
+		}
+		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
+			out.println("Settings: " + configuration.toString());
 			lineBreak = true;
 		}
 		if (lineBreak) {

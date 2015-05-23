@@ -3,6 +3,8 @@ package it.albertus.router.writer;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +27,7 @@ public class ExcelWriter extends Writer {
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 
 	private OutputStream outputStream = null;
+	private Workbook workbook = null;
 
 	@Override
 	public void saveInfo(final Map<String, String> info) {
@@ -46,15 +49,19 @@ public class ExcelWriter extends Writer {
 		}
 
 		try {
-			Workbook workbook;
-			if (logFile.exists()) {
-				// Caricamento dati preesistenti....
-				InputStream is = new FileInputStream(logFile);
-				workbook = new HSSFWorkbook(is);
-				is.close();
+			if (logFile.exists()) { // Se il file esiste gia'...
+				if (workbook == null) { // Se non l'ho ancora caricato...
+					// Caricamento dati preesistenti...
+					InputStream is = new BufferedInputStream(new FileInputStream(logFile));
+					workbook = new HSSFWorkbook(is);
+					is.close();
+					out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				}
 			}
 			else {
 				// Creazione nuovo file XLS...
+				closeOutputFile();
+				out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 				workbook = new HSSFWorkbook();
 				workbook.createSheet(DATE_FORMAT_FILE_NAME.format(new Date()));
 				buildXlsHeader(workbook, info);
@@ -66,10 +73,7 @@ public class ExcelWriter extends Writer {
 			if (outputStream != null) {
 				outputStream.close();
 			}
-			else {
-				out.println("Logging to: " + logFile.getAbsolutePath() + "...");
-			}
-			outputStream = new FileOutputStream(logFile);
+			outputStream = new BufferedOutputStream(new FileOutputStream(logFile));
 			workbook.write(outputStream);
 			outputStream.flush();
 			outputStream.close();
