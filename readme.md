@@ -151,6 +151,8 @@ All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce il nome della classe in esecuzione (senza package).
 
+Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `logger.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
+
 ##### Modalit&agrave; di salvataggio alternative
 
 Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o database SQL, si pu&ograve; estendere la classe astratta [**`Writer`**](src/it/albertus/router/writer/Writer.java) e sar&agrave; ovviamente necessario implementare i due metodi seguenti:
