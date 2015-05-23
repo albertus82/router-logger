@@ -12,7 +12,7 @@ public class DummyLogger extends RouterLogger {
 		for (int i = 1; i <= 10; i++) {
 			StringBuilder field = new StringBuilder();
 			for (int j = 1; j <= 10; j++) {
-				field.append((char) (32 + Math.random() * 94));
+				field.append((char) (97 + Math.random() * 25));
 			}
 			map.put("Column " + i, field.toString());
 		}
