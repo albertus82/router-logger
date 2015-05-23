@@ -16,18 +16,17 @@ RouterLogger
 
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
-In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, passando come parametro il nome della classe che implementa il RouterLogger desiderato. Esempio:
+In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`**, banalmente:
 
 ```
-routerlogger TPLinkTDW8970V1
+routerlogger
 ```
 
 In ambienti diversi (es. Linux) occorre richiamare `java` specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
 * la classe da eseguire, che &egrave; sempre: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
-* il nome della classe che implementa il RouterLogger desiderato, ad es.: [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java).
 
-> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; specificare come parametro in riga di comando, il nome **completo** (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna. Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
+> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; configurare nel [`routerlogger.cfg`](src/routerlogger.cfg) la propriet&agrave; **`logger.class.name`** assegnandole come valore il nome **completo** (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna. Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
@@ -56,6 +55,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 ##### Impostazioni generali
 
+* **`logger.class.name`**= nome della classe che implementa il RouterLogger desiderato (default [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 * **`logger.iterations`**= numero di iterazioni da effettuare. Normalmente l'applicazione registra l'attivit&agrave; del modem per un tempo indefinito, ossia finch&eacute; non viene chiusa dall'utente, ma &egrave; possibile indicare un numero di iterazioni massimo dopo il quale l'applicazione si chiuder&agrave; automaticamente. Valori minori o uguali a zero equivalgono a infinito (default: `-1`).
 * **`logger.interval.normal.ms`**= intervallo tra le richieste di informazioni al modem in condizioni normali, in millisecondi (default: `5000` ms). Valori inferiori a `1000` potrebbero creare problemi di funzionamento del dispositivo o blocco dell'applicazione a causa dell'elevato numero di richieste.
 * **`logger.interval.fast.ms`**= intervallo tra le richieste di informazioni al modem in caso di raggiungimento di una o pi&ugrave; soglie (cfr. par. *soglie*), in millisecondi (default: `1000` ms). Valori inferiori a `1000` potrebbero creare problemi di funzionamento del dispositivo o blocco dell'applicazione a causa dell'elevato numero di richieste.
