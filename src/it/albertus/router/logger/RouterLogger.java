@@ -40,9 +40,8 @@ public abstract class RouterLogger {
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
+		Class<? extends RouterLogger> LOGGER_CLASS = TPLinkTDW8970V1.class;
 	}
-
-	private static final String COMMAND_LINE_HELP = "Usage: routerlogger logger.class.Name";
 
 	private static final String THRESHOLD_PREFIX = "threshold";
 	private static final String THRESHOLD_SUFFIX_KEY = "key";
@@ -58,25 +57,23 @@ public abstract class RouterLogger {
 	protected final Writer writer;
 
 	public static final void main(final String... args) {
-		if (args.length != 1) {
-			out.println(COMMAND_LINE_HELP);
+		final String configurationKey = "logger.class.name";
+		String className = configuration.getString(configurationKey, Defaults.LOGGER_CLASS.getName());
+		try {
+			Class.forName(className);
 		}
-		else {
-			String className = args[0];
-			try {
-				Class.forName(className);
-			}
-			catch (ClassNotFoundException e) {
-				className = RouterLogger.class.getPackage().getName() + '.' + className;
-			}
+		catch (ClassNotFoundException e) {
+			className = RouterLogger.class.getPackage().getName() + '.' + className;
+		}
 
-			try {
-				((RouterLogger) Class.forName(className).newInstance()).run();
-			}
-			catch (Exception e) {
-				out.println(ExceptionUtils.getStackTrace(e));
-				out.println(COMMAND_LINE_HELP);
-			}
+		try {
+			((RouterLogger) Class.forName(className).newInstance()).run();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
 		}
 	}
 
