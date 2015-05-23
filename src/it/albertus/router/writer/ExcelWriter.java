@@ -3,13 +3,10 @@ package it.albertus.router.writer;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +17,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class ExcelWriter extends Writer {
 
@@ -52,9 +50,15 @@ public class ExcelWriter extends Writer {
 			if (logFile.exists()) { // Se il file esiste gia'...
 				if (workbook == null) { // Se non l'ho ancora caricato...
 					// Caricamento dati preesistenti...
-					InputStream is = new BufferedInputStream(new FileInputStream(logFile));
-					workbook = new HSSFWorkbook(is);
-					is.close();
+					try {
+						workbook = WorkbookFactory.create(logFile);
+					}
+					catch (Exception e) {
+						// Se il documento esistente non e' valido...
+						out.print(ExceptionUtils.getStackTrace(e));
+						closeOutputFile();
+						createNewFile(info);
+					}
 					out.println("Logging to: " + logFile.getAbsolutePath() + "...");
 				}
 			}
@@ -62,9 +66,7 @@ public class ExcelWriter extends Writer {
 				// Creazione nuovo file XLS...
 				closeOutputFile();
 				out.println("Logging to: " + logFile.getAbsolutePath() + "...");
-				workbook = new HSSFWorkbook();
-				workbook.createSheet(DATE_FORMAT_FILE_NAME.format(new Date()));
-				buildXlsHeader(workbook, info);
+				createNewFile(info);
 			}
 
 			// Creazione riga file XLS...
@@ -85,6 +87,12 @@ public class ExcelWriter extends Writer {
 			out.print(ExceptionUtils.getStackTrace(ioe));
 			closeOutputFile();
 		}
+	}
+
+	private void createNewFile(final Map<String, String> info) {
+		workbook = new HSSFWorkbook();
+		workbook.createSheet(DATE_FORMAT_FILE_NAME.format(new Date()));
+		buildXlsHeader(workbook, info);
 	}
 
 	private void buildXlsHeader(final Workbook workbook, final Map<String, String> info) {
