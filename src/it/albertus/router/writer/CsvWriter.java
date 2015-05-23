@@ -25,7 +25,7 @@ public class CsvWriter extends Writer {
 	private FileWriter logFileWriter = null;
 
 	@Override
-	public void saveInfo(final Map<String, String> info) {
+	public synchronized void saveInfo(final Map<String, String> info) {
 		// Selezione del percorso e nome del file di destinazione...
 		final String logDestinationDir = configuration.getString("csv.destination.path");
 		final File logFile;

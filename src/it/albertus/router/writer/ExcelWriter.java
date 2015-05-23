@@ -30,7 +30,7 @@ public class ExcelWriter extends Writer {
 	private Workbook workbook = null;
 
 	@Override
-	public void saveInfo(final Map<String, String> info) {
+	public synchronized void saveInfo(final Map<String, String> info) {
 		// Selezione del percorso e nome del file di destinazione...
 		final String logDestinationDir = configuration.getString("xls.destination.path");
 		final File logFile;

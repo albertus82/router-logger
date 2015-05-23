@@ -35,6 +35,7 @@ public abstract class RouterLogger {
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean TELNET_SEND_CRLF = true;
+		boolean WRITER_THREAD = false;
 		boolean CONSOLE_ANIMATION = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
@@ -298,7 +299,7 @@ public abstract class RouterLogger {
 		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = readInfo();
-			writer.saveInfo(info);
+			saveInfo(info);
 			// Fine implementazioni specifiche.
 
 			// Scrittura indice dell'iterazione in console...
@@ -365,6 +366,20 @@ public abstract class RouterLogger {
 				}
 				Thread.sleep(waitTimeInMillis);
 			}
+		}
+	}
+
+	private void saveInfo(final Map<String, String> info) {
+		if (configuration.getBoolean("logger.writer.thread", Defaults.WRITER_THREAD)) {
+			new Thread() {
+				@Override
+				public void run() {
+					writer.saveInfo(info);
+				}
+			}.start();
+		}
+		else {
+			writer.saveInfo(info);
 		}
 	}
 	

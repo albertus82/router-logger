@@ -45,7 +45,7 @@ public class DatabaseWriter extends Writer {
 	}
 
 	@Override
-	public void saveInfo(final Map<String, String> info) {
+	public synchronized void saveInfo(final Map<String, String> info) {
 		// Connessione al database...
 		try {
 			if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
