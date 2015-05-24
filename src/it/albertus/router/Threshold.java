@@ -37,8 +37,9 @@ public class Threshold implements Comparable<Threshold> {
 
 		public static Type getEnum(String abbreviation) {
 			if (abbreviation != null) {
+				abbreviation = abbreviation.trim().toLowerCase();
 				for (Type type : Type.values()) {
-					if (type.name().equalsIgnoreCase(abbreviation.trim()) || type.abbreviations.contains(abbreviation.trim().toLowerCase())) {
+					if (type.name().equalsIgnoreCase(abbreviation) || type.abbreviations.contains(abbreviation)) {
 						return type;
 					}
 				}

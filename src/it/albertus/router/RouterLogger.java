@@ -88,7 +88,7 @@ public class RouterLogger {
 	}
 
 	private Reader initReader() {
-		final String configurationKey = "logger.reader.class.name";
+		final String configurationKey = "reader.class.name";
 		String readerClassName = configuration.getString(configurationKey, Defaults.READER_CLASS.getName()).trim();
 
 		try {
@@ -112,7 +112,7 @@ public class RouterLogger {
 	}
 
 	private Writer initWriter() {
-		final String configurationKey = "logger.writer.class.name";
+		final String configurationKey = "writer.class.name";
 		String writerClassName = configuration.getString(configurationKey, Defaults.WRITER_CLASS.getName()).trim();
 
 		try {
