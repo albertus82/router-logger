@@ -10,6 +10,7 @@ public class AsusDslN12EReader extends Reader {
 
 	private interface Defaults {
 		String COMMAND_INFO_ADSL = "show wan adsl";
+		String COMMAND_INFO_WAN = "show wan interface";
 	}
 
 	private static final String DEVICE_MODEL = "ASUS DSL-N12E";
@@ -59,20 +60,22 @@ public class AsusDslN12EReader extends Reader {
 		
 		reader.close();
 
-/*
+
 		// Informazioni sulla connessione ad Internet...
-		final String commandInfoWan = configuration.getString("tplink.8970.command.info.wan");
-		if (StringUtils.isNotBlank(commandInfoWan)) {
-			writeToTelnet(commandInfoWan);
-			readFromTelnet("{", true);
-			reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
-			while ((line = reader.readLine()) != null) {
-				info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
-			}
-			reader.close();
-			readFromTelnet(COMMAND_PROMPT, true);
-		}
-*/
+		final String commandInfoWan = configuration.getString("asus.dsln12e.command.info.wan", Defaults.COMMAND_INFO_WAN);
+		writeToTelnet(commandInfoWan);
+		readFromTelnet("Status", true);
+		String InfoIP = readFromTelnet("$", false).trim();
+		String[] arrayInfo = InfoIP.split("  ");
+		info.put("Interface", arrayInfo[0].trim());
+		info.put("VPI/VCI", arrayInfo[1].trim());
+		info.put("Encap", arrayInfo[2].trim());
+		info.put("Droute", arrayInfo[3].trim());
+		info.put("Protocol", arrayInfo[4].trim());
+		info.put("IP Addres", arrayInfo[5].trim());
+		info.put("Gateway", arrayInfo[6].trim());
+		info.put("Status", arrayInfo[7].trim());
+	
 		return info;
 	}
 
