@@ -58,7 +58,6 @@ public class AsusDslN12EReader extends Reader {
 				}
 			}
 		}
-
 		reader.close();
 
 		// Informazioni sulla connessione ad Internet...
