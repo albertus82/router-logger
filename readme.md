@@ -1,14 +1,15 @@
 RouterLogger
 ============
 
-**RouterLogger** &egrave; una semplice applicazione Java in riga di comando per la registrazione dello stato della connessione ADSL, che include un'implementazione specifica per il router **TP-Link TD-W8970 V1**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem/router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
+**RouterLogger** &egrave; una semplice applicazione Java in riga di comando per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem/router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 
 
 ### Installazione e configurazione di base
 
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
-3. modificare il file [**`routerlogger.cfg`**](src/routerlogger.cfg) configurando le seguenti propriet&agrave;:
+3. modificare il file [**`routerlogger.cfg`**](src/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
+  * **`reader.class.name`**= `TpLink8970Reader` (default) o `AsusDslN12EReader`, a seconda del modello di dispositivo posseduto.
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
   * **`router.port`**= porta Telnet del router, default: `23`.
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
@@ -52,7 +53,8 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`logger.interval.fast.ms`**= intervallo tra le richieste di informazioni al modem in caso di raggiungimento di una o pi&ugrave; soglie (cfr. par. *soglie*), in millisecondi (default: `1000` ms). Valori inferiori a `1000` potrebbero creare problemi di funzionamento del dispositivo o blocco dell'applicazione a causa dell'elevato numero di richieste.
 * **`logger.hysteresis.ms`**= intervallo di tempo durante il quale l'applicazione continua a registrare a frequenza accelerata (`logger.interval.fast.ms`) anche dopo che un valore, che precedentemente aveva raggiunto una soglia, &egrave; rientrato nella norma, in millisecondi (default: `10000` ms).
 * **`logger.retry.count`**= numero di tentativi di riavvio del ciclo da effettuare in caso di errore durante l'esecuzione (default: `3`). Il contatore si azzera se il ciclo riparte con successo. Utile, ad esempio, in caso di riavvio del modem.
-* **`logger.retry.interval.ms`**= intervallo tra i tentativi di riavvio, in millisecondi (default: `30000` ms). 
+* **`logger.retry.interval.ms`**= intervallo tra i tentativi di riavvio, in millisecondi (default: `30000` ms).
+* **`logger.writer.thread`**= specifica se eseguire il processo di salvataggio dei dati in un thread separato (default: `false`).
 
 ##### Rete
 
@@ -66,6 +68,7 @@ Volendo utilizzare quest'applicazione per registrare il funzionamento di un disp
 
 * **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem/router le informazioni sullo stato della connessione tramite Telnet, e pu&ograve; assumere i valori seguenti:
   * [**`TpLink8970Reader`**](src/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router TP-Link TD-W8970 V1 (default).
+  * [**`AsusDslN12EReader`**](src/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router ASUS DSL-N12E.
   * [**`DummyReader`**](src/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
   * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
@@ -73,6 +76,11 @@ Volendo utilizzare quest'applicazione per registrare il funzionamento di un disp
 
 * **`tplink.8970.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `adsl show info`).
 * **`tplink.8970.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: non valorizzato, di conseguenza non vengono estratte queste informazioni).
+
+##### ASUS DSL-N12E
+
+* **`asus.dsln12e.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `show wan adsl`).
+* **`asus.dsln12e.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: `show wan interface`).
 
 #### Destinazione (file, database, ...)
 
@@ -147,7 +155,7 @@ threshold.snr.down.value=100
 
 ##### Supporto di altri modelli di router
 
-&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java), la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server Telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
+&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java).
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server Telnet comunicando le credenziali di accesso.
@@ -156,13 +164,19 @@ I metodi da implementare tassativamente sono i seguenti:
 All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/it/albertus/router/reader/Reader.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce il nome della classe in esecuzione (senza package).
+* **`release`**: libera risorse eventualmente allocate dal Reader, ad esempio file o connessioni a database. Normalmente, comunque, non occorre accedere a risorse esterne per implementare un Reader.
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
+
+>La classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java) dispone di alcuni metodi di utilit&agrave; che permettono di interagire agevolmente con il server Telnet e che possono essere quindi utilizzati, oltre che sovrascritti, in caso di necessit&agrave;; in particolare:
+* **`readFromTelnet(...)`**: legge l'output del server Telnet e lo restituisce come stringa.
+* **`writeToTelnet(...)`**: invia comandi al server Telnet.
+Per maggiori informazioni &egrave; possibile consultare la documentazione Javadoc inclusa nel codice sorgente.
 
 ##### Modalit&agrave; di salvataggio alternative
 
 Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o database SQL, si pu&ograve; estendere la classe astratta [**`Writer`**](src/it/albertus/router/writer/Writer.java) e sar&agrave; ovviamente necessario implementare i due metodi seguenti:
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute con le modalit&agrave; desiderate.
-* **`release`**: libera risorse eventualmente allocate dal programma, ad esempio file o connessioni a database.
+* **`release`**: libera risorse eventualmente allocate dal [`Writer`](src/it/albertus/router/writer/Writer.java), ad esempio file o connessioni a database.
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
