@@ -82,6 +82,12 @@ public class AsusDslN12EReader extends Reader {
 	}
 
 	@Override
+	public void logout() throws IOException {
+		out.println("Logging out...");
+		writeToTelnet("exit");
+	}
+
+	@Override
 	public String getDeviceModel() {
 		return DEVICE_MODEL;
 	}
