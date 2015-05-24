@@ -67,8 +67,7 @@ public class RouterLogger {
 		for (Object objectKey : configuration.getProperties().keySet()) {
 			String key = (String) objectKey;
 			if (key != null && key.startsWith(THRESHOLD_PREFIX + '.')) {
-				if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.')))
-						|| (!key.endsWith(THRESHOLD_SUFFIX_KEY) && !key.endsWith(THRESHOLD_SUFFIX_TYPE) && !key.endsWith(THRESHOLD_SUFFIX_VALUE))) {
+				if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(THRESHOLD_SUFFIX_KEY) && !key.endsWith(THRESHOLD_SUFFIX_TYPE) && !key.endsWith(THRESHOLD_SUFFIX_VALUE))) {
 					throw new IllegalArgumentException("Thresholds misconfigured. Review your " + configuration.getFileName() + " file.");
 				}
 				final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
