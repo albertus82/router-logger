@@ -164,14 +164,15 @@ I metodi da implementare tassativamente sono i seguenti:
 All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/it/albertus/router/reader/Reader.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce il nome della classe in esecuzione (senza package).
-* **`release`**: libera risorse eventualmente allocate dal Reader, ad esempio file o connessioni a database. Normalmente, comunque, non occorre accedere a risorse esterne per implementare un Reader.
+* **`release`**: libera risorse eventualmente allocate dal [`Reader`](src/it/albertus/router/reader/Reader.java), ad esempio file o connessioni a database. Normalmente non necessario.
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
 
 >La classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java) dispone di alcuni metodi di utilit&agrave; che permettono di interagire agevolmente con il server Telnet e che possono essere quindi utilizzati, oltre che sovrascritti, in caso di necessit&agrave;; in particolare:
 * **`readFromTelnet(...)`**: legge l'output del server Telnet e lo restituisce come stringa.
 * **`writeToTelnet(...)`**: invia comandi al server Telnet.
-Per maggiori informazioni &egrave; possibile consultare la documentazione Javadoc inclusa nel codice sorgente.
+
+>Per maggiori informazioni &egrave; possibile consultare la documentazione Javadoc inclusa nel codice sorgente.
 
 ##### Modalit&agrave; di salvataggio alternative
 
