@@ -6,7 +6,7 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class AsusDSLN12EReader extends Reader {
+public class AsusDslN12EReader extends Reader {
 
 	private interface Defaults {
 		String COMMAND_INFO_ADSL = "show wan adsl";
