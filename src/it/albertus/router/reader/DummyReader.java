@@ -6,16 +6,8 @@ import java.util.Map;
 public class DummyReader extends Reader {
 
 	@Override
-	public Map<String, String> readInfo() {
-		Map<String, String> map = new LinkedHashMap<String, String>();
-		for (int i = 1; i <= 10; i++) {
-			StringBuilder field = new StringBuilder();
-			for (int j = 1; j <= 10; j++) {
-				field.append((char) (97 + Math.random() * 25));
-			}
-			map.put("Column " + i, field.toString());
-		}
-		return map;
+	public boolean connect() {
+		return true;
 	}
 
 	@Override
@@ -31,5 +23,21 @@ public class DummyReader extends Reader {
 		out.println(separator);
 		return true;
 	}
+
+	@Override
+	public Map<String, String> readInfo() {
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		for (int i = 1; i <= 10; i++) {
+			StringBuilder field = new StringBuilder();
+			for (int j = 1; j <= 10; j++) {
+				field.append((char) (97 + Math.random() * 25));
+			}
+			map.put("Column " + i, field.toString());
+		}
+		return map;
+	}
+
+	@Override
+	public void disconnect() {}
 
 }

@@ -33,7 +33,7 @@ public abstract class Reader {
 	 * @return <tt>true</tt> se la connessione &egrave; riuscita, <tt>false</tt>
 	 *         altrimenti.
 	 */
-	public final boolean connect() {
+	public boolean connect() {
 		final String routerAddress = configuration.getString("router.address", Defaults.ROUTER_ADDRESS).trim();
 		final int routerPort = configuration.getInt("router.port", Defaults.ROUTER_PORT);
 		final int connectionTimeoutInMillis = configuration.getInt("connection.timeout.ms", Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
@@ -84,7 +84,7 @@ public abstract class Reader {
 	 * {@link #logout()} per inviare al server telnet gli opportuni comandi di
 	 * chiusura della sessione (ad esempio <tt>logout</tt>).
 	 */
-	public final void disconnect() {
+	public void disconnect() {
 		out.println("Disconnecting...");
 		try {
 			telnet.disconnect();
