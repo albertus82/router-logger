@@ -71,8 +71,8 @@ Volendo utilizzare quest'applicazione per registrare il funzionamento di un disp
 
 ##### TP-Link TD-W8970 V1
 
-* [**`tplink.8970.command.info.adsl`**]: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `adsl show info`).
-* [**`tplink.8970.command.info.wan`**]: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: non valorizzato, di conseguenza non vengono estratte queste informazioni).
+* **`tplink.8970.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `adsl show info`).
+* **`tplink.8970.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: non valorizzato, di conseguenza non vengono estratte queste informazioni).
 
 #### Destinazione (file, database, ...)
 
