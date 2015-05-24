@@ -3,7 +3,9 @@ package it.albertus.router.reader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AsusDslN12EReader extends Reader {
@@ -40,7 +42,6 @@ public class AsusDslN12EReader extends Reader {
 		final Map<String, String> info = new LinkedHashMap<String, String>();
 		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
 		String line;
-		
 		while ((line = reader.readLine()) != null) {
 			if (line.trim().length() > 2) {
 				int splitIndex = -1;
@@ -57,25 +58,28 @@ public class AsusDslN12EReader extends Reader {
 				}
 			}
 		}
-		
-		reader.close();
 
+		reader.close();
 
 		// Informazioni sulla connessione ad Internet...
 		final String commandInfoWan = configuration.getString("asus.dsln12e.command.info.wan", Defaults.COMMAND_INFO_WAN);
 		writeToTelnet(commandInfoWan);
 		readFromTelnet("Status", true);
-		String InfoIP = readFromTelnet("$", false).trim();
-		String[] arrayInfo = InfoIP.split("  ");
-		info.put("Interface", arrayInfo[0].trim());
-		info.put("VPI/VCI", arrayInfo[1].trim());
-		info.put("Encap", arrayInfo[2].trim());
-		info.put("Droute", arrayInfo[3].trim());
-		info.put("Protocol", arrayInfo[4].trim());
-		info.put("IP Addres", arrayInfo[5].trim());
-		info.put("Gateway", arrayInfo[6].trim());
-		info.put("Status", arrayInfo[7].trim());
-	
+		List<String> values = new ArrayList<String>(8);
+		for (String field : readFromTelnet("$", false).trim().split("  ")) {
+			if (field != null && field.trim().length() > 0) {
+				values.add(field.trim());
+			}
+		}
+		info.put("Interface", values.get(0));
+		info.put("VPI/VCI", values.get(1));
+		info.put("Encap", values.get(2));
+		info.put("Droute", values.get(3));
+		info.put("Protocol", values.get(4));
+		info.put("IP Addres", values.get(5));
+		info.put("Gateway", values.get(6));
+		info.put("Status", values.get(7));
+
 		return info;
 	}
 
