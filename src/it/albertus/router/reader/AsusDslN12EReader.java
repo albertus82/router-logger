@@ -34,7 +34,7 @@ public class AsusDslN12EReader extends Reader {
 	@Override
 	public Map<String, String> readInfo() throws IOException {
 		// Informazioni sulla portante ADSL...
-		writeToTelnet(configuration.getString("ASUSdsln12e.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
+		writeToTelnet(configuration.getString("asus.dsln12e.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("wan adsl", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 		final Map<String, String> info = new LinkedHashMap<String, String>();
 		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
