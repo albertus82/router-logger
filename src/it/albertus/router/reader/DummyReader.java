@@ -1,13 +1,12 @@
-package it.albertus.router.logger;
+package it.albertus.router.reader;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DummyLogger extends RouterLogger {
+public class DummyReader extends Reader {
 
 	@Override
-	protected Map<String, String> readInfo() {
+	public Map<String, String> readInfo() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		for (int i = 1; i <= 10; i++) {
 			StringBuilder field = new StringBuilder();
@@ -20,7 +19,7 @@ public class DummyLogger extends RouterLogger {
 	}
 
 	@Override
-	protected boolean login() throws IOException {
+	public boolean login() {
 		final String className = getClass().getSimpleName();
 		final String message = " - Only for test purposes!";
 		final StringBuilder separator = new StringBuilder();

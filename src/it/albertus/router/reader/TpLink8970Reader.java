@@ -1,4 +1,4 @@
-package it.albertus.router.logger;
+package it.albertus.router.reader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,14 +6,14 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TPLinkTDW8970V1 extends RouterLogger {
+public class TpLink8970Reader extends Reader {
 
 	private static final String DEVICE_MODEL = "TP-Link TD-W8970 V1";
 	private static final String COMMAND_PROMPT = "#";
 	private static final String LOGIN_PROMPT = ":";
 
 	@Override
-	protected boolean login() throws IOException {
+	public boolean login() throws IOException {
 		// Username...
 		out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(configuration.getString("router.username"));
@@ -29,7 +29,7 @@ public class TPLinkTDW8970V1 extends RouterLogger {
 	}
 
 	@Override
-	protected Map<String, String> readInfo() throws IOException {
+	public Map<String, String> readInfo() throws IOException {
 		writeToTelnet("adsl show info");
 		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 
@@ -49,7 +49,7 @@ public class TPLinkTDW8970V1 extends RouterLogger {
 	}
 
 	@Override
-	protected String getDeviceModel() {
+	public String getDeviceModel() {
 		return DEVICE_MODEL;
 	}
 

@@ -7,7 +7,7 @@
 
 	<property file="src/version.properties" />
 
-	<property name="main.class" value="it.albertus.router.logger.RouterLogger" />
+	<property name="main.class" value="it.albertus.router.RouterLogger" />
 
 	<scriptdef language="javascript" name="lower">
 		<attribute name="string" />
