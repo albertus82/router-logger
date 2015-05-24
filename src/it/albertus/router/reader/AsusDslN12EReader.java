@@ -72,7 +72,7 @@ public class AsusDslN12EReader extends Reader {
 			}
 		}
 		info.put("Interface", values.get(0));
-		info.put("VPI/VCI", values.get(1));
+		info.put("VPI/VCI", "\""+values.get(1)+"\"");
 		info.put("Encap", values.get(2));
 		info.put("Droute", values.get(3));
 		info.put("Protocol", values.get(4));
