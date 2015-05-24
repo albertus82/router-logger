@@ -100,6 +100,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 ##### Console
 
 * **`console.animation`**= specifica se si desidera visualizzare una piccola animazione in console che segnala il funzionamento dell'applicazione (default: `true`).
+* **`console.show.configuration`**= specifica se si desidera visualizzare l'elenco delle propriet&agrave; attive del routerlogger.cfg all'avvio dell'applicazione (default: `false`).
 * **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto). Un eccessivo numero di chiavi da visualizzare provocher&agrave; lo scorrimento verticale della console, un effetto collaterale probabilmente indesiderato.
 * **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 
