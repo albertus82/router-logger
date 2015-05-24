@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class TpLink8970Reader extends Reader {
 
+	private interface Defaults {
+		String COMMAND_INFO_ADSL = "adsl show info";
+	}
+
 	private static final String DEVICE_MODEL = "TP-Link TD-W8970 V1";
 	private static final String COMMAND_PROMPT = "#";
 	private static final String LOGIN_PROMPT = ":";
@@ -30,19 +34,26 @@ public class TpLink8970Reader extends Reader {
 
 	@Override
 	public Map<String, String> readInfo() throws IOException {
-		writeToTelnet("adsl show info");
+		// Informazioni sulla portante ADSL...
+		writeToTelnet(configuration.getString("tplink.8970.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
-
-		// Inizio estrazione dati...
 		final Map<String, String> info = new LinkedHashMap<String, String>();
-		final BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
+		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
 		}
 		reader.close();
-		// Fine estrazione dati.
+		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
 
+		// Informazioni sulla connessione ad Internet...
+		writeToTelnet(configuration.getString("tplink.8970.command.info.wan"));
+		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
+		reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
+		while ((line = reader.readLine()) != null) {
+			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+		}
+		reader.close();
 		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
 
 		return info;
