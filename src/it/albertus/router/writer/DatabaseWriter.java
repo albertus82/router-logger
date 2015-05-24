@@ -14,9 +14,11 @@ import java.util.Map;
 public class DatabaseWriter extends Writer {
 
 	private interface Defaults {
-		String TABLE_NAME = "ROUTER_LOG";
-		String COLUMN_TYPE = "VARCHAR";
-		String COLUMN_LENGTH = "250";
+		String TABLE_NAME = "router_log";
+		String COLUMN_NAME_PREFIX = "rl_";
+		String TIMESTAMP_COLUMN_TYPE = "TIMESTAMP";
+		String INFO_COLUMN_TYPE = "VARCHAR(250)";
+		int COLUMN_NAME_MAX_LENGTH = 30;
 		int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
 	}
 
@@ -24,8 +26,6 @@ public class DatabaseWriter extends Writer {
 	private static final String CONFIGURATION_KEY_DATABASE_USERNAME = "database.username";
 	private static final String CONFIGURATION_KEY_DATABASE_URL = "database.url";
 	private static final String CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME = "database.driver.class.name";
-
-	private static final String TIMESTAMP_COLUMN_NAME = "log_timestamp";
 
 	private Connection connection = null;
 	private boolean showMessage = true;
@@ -58,7 +58,7 @@ public class DatabaseWriter extends Writer {
 		}
 
 		// Verifica esistenza tabella ed eventuale creazione...
-		final String tableName = configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
+		final String tableName = getTableName();
 		if (!tableExists(tableName)) {
 			out.println("Creating database table: " + tableName + "...");
 			createTable(tableName, info);
@@ -70,12 +70,14 @@ public class DatabaseWriter extends Writer {
 			showMessage = false;
 		}
 
+		final String timestampColumnName = getColumnName("timestamp");
 		Map<Integer, String> columns = new HashMap<Integer, String>();
-		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(TIMESTAMP_COLUMN_NAME);
+		
+		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(timestampColumnName);
 		int index = 2;
 		for (String key : info.keySet()) {
 			columns.put(index++, key);
-			dml.append(", ").append(cleanColumnName(key));
+			dml.append(", ").append(getColumnName(key));
 		}
 		dml.append(") VALUES (?");
 		for (int i = 0; i < info.size(); i++) {
@@ -124,12 +126,16 @@ public class DatabaseWriter extends Writer {
 	}
 
 	private void createTable(final String tableName, final Map<String, String> info) {
+		final String timestampColumnName = getColumnName("timestamp");
+		final String timestampColumnType = configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE);
+		final String infoColumnType = configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE);
+
 		// Creazione tabella...
-		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(TIMESTAMP_COLUMN_NAME).append(" TIMESTAMP");
+		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(timestampColumnName).append(' ').append(timestampColumnType);
 		for (String key : info.keySet()) {
-			ddl.append(", ").append(cleanColumnName(key)).append(' ').append(configuration.getString("database.column.type", Defaults.COLUMN_TYPE)).append('(').append(configuration.getString("database.column.length", Defaults.COLUMN_LENGTH)).append(')');
+			ddl.append(", ").append(getColumnName(key)).append(' ').append(infoColumnType);
 		}
-		ddl.append(", CONSTRAINT pk_routerlogger PRIMARY KEY (").append(TIMESTAMP_COLUMN_NAME).append("))");
+		ddl.append(", CONSTRAINT pk_routerlogger PRIMARY KEY (").append(timestampColumnName).append("))");
 
 		PreparedStatement createTable = null;
 		try {
@@ -146,9 +152,19 @@ public class DatabaseWriter extends Writer {
 			catch (Exception e) {}
 		}
 	}
+	
+	private String getTableName() {
+		return configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
+	}
 
-	private String cleanColumnName(String key) {
-		return key.replaceAll("[^A-Za-z0-9_]+", "");
+	private String getColumnName(String name) {
+		name = configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name; 
+		name = name.replaceAll("[^A-Za-z0-9_]+", "");
+		final int maxLength = configuration.getInt("database.column.name.max.length", Defaults.COLUMN_NAME_MAX_LENGTH);
+		if (name.length() > maxLength) {
+			name = name.substring(0, maxLength);
+		}
+		return name;
 	}
 
 	@Override
