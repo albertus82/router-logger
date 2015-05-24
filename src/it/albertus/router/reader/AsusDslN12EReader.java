@@ -64,7 +64,7 @@ public class AsusDslN12EReader extends Reader {
 		writeToTelnet(configuration.getString("asus.dsln12e.command.info.wan", Defaults.COMMAND_INFO_WAN));
 		readFromTelnet("Status", true);
 		List<String> values = new ArrayList<String>(8);
-		for (String field : readFromTelnet("$", false).trim().split("(\\s\\s)+")) {
+		for (String field : readFromTelnet(COMMAND_PROMPT, false).trim().split("(\\s\\s)+")) {
 			if (field != null && field.trim().length() != 0) {
 				values.add(field.trim());
 			}
