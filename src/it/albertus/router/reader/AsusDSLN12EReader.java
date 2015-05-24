@@ -46,6 +46,7 @@ public class AsusDSLN12EReader extends Reader {
 				for (int i = 1; i < line.length(); i++) {
 					if (line.charAt(i) == ' ' && line.charAt(i - 1) == ' ') {
 						splitIndex = i;
+						break;
 					}
 				}
 				if (splitIndex != -1) {
