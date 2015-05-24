@@ -18,9 +18,9 @@ Per avviare l'applicazione &egrave; richiesta la presenza della variabile di amb
 
 In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`** senza specificare altro, mentre in ambienti diversi (es. Linux) occorre richiamare `java` specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
-* la classe da eseguire, che &egrave; sempre: [`it.albertus.router.logger.RouterLogger`](src/it/albertus/router/logger/RouterLogger.java)
+* la classe da eseguire, che &egrave; sempre: [`it.albertus.router.RouterLogger`](src/it/albertus/router/RouterLogger.java)
 
-> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; configurare nel [`routerlogger.cfg`](src/routerlogger.cfg) la propriet&agrave; **`logger.class.name`** assegnandole come valore il nome **completo** (inclusi tutti i package separati da `.`) della classe concreta che estende [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna. Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
+> Volendo eseguire implementazioni di [`RouterLogger`](src/it/albertus/router/RouterLogger.java) personalizzate o comunque esterne al progetto, occorrer&agrave; configurare nel [`routerlogger.cfg`](src/routerlogger.cfg) la propriet&agrave; **`reader.class.name`** assegnandole come valore il nome **completo** (inclusi tutti i package separati da `.`) della classe concreta che estende [`Reader`](src/it/albertus/router/reader/Reader.java). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna. Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
@@ -32,7 +32,7 @@ Di norma i file generati vengono salvati all'interno della cartella del programm
 ##### Database
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
 Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi abilitare una serie di propriet&agrave; nel file [`routerlogger.cfg`](src/routerlogger.cfg) (rimuovendo `#`) e assegnare ad esse il valore desiderato:
-* **`logger.writer.class.name`**=[**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java)
+* **`writer.class.name`**=[**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java)
 * **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.driver.OracleDriver`).
 * **`database.url`**= URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
 * **`database.username`**= nome utente per accedere al database.
@@ -49,7 +49,6 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 ##### Impostazioni generali
 
-* **`logger.class.name`**= nome della classe che implementa il RouterLogger desiderato (default [`TPLinkTDW8970V1`](src/it/albertus/router/logger/TPLinkTDW8970V1.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 * **`logger.iterations`**= numero di iterazioni da effettuare. Normalmente l'applicazione registra l'attivit&agrave; del modem per un tempo indefinito, ossia finch&eacute; non viene chiusa dall'utente, ma &egrave; possibile indicare un numero di iterazioni massimo dopo il quale l'applicazione si chiuder&agrave; automaticamente. Valori minori o uguali a zero equivalgono a infinito (default: `-1`).
 * **`logger.interval.normal.ms`**= intervallo tra le richieste di informazioni al modem in condizioni normali, in millisecondi (default: `5000` ms). Valori inferiori a `1000` potrebbero creare problemi di funzionamento del dispositivo o blocco dell'applicazione a causa dell'elevato numero di richieste.
 * **`logger.interval.fast.ms`**= intervallo tra le richieste di informazioni al modem in caso di raggiungimento di una o pi&ugrave; soglie (cfr. par. *soglie*), in millisecondi (default: `1000` ms). Valori inferiori a `1000` potrebbero creare problemi di funzionamento del dispositivo o blocco dell'applicazione a causa dell'elevato numero di richieste.
@@ -63,16 +62,14 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: `20000` ms).
 * **`telnet.send.crlf`**= specifica come inviare il comando di ritorno a capo al server: se impostato a `true`, sar&agrave; inviata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece inviato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
 
-##### Console
+#### Sorgente (Router)
 
-* **`console.animation`**= specifica se si desidera visualizzare una piccola animazione in console che segnala il funzionamento dell'applicazione (default: `true`).
-* **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto). Un eccessivo numero di chiavi da visualizzare provocher&agrave; lo scorrimento verticale della console, un effetto collaterale probabilmente indesiderato.
-* **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
+* **`reader.class.name`**= nome della classe che implementa il Reader desiderato (default [`TpLink8970Reader`](src/it/albertus/router/reader/TpLink8970Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
 #### Destinazione
 
 La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la seguente propriet&agrave;:
-* **`logger.writer.class.name`**: identifica la classe che si occupa del salvataggio delle informazioni, e pu&ograve; assumere i valori seguenti:
+* **`writer.class.name`**: identifica la classe che si occupa del salvataggio delle informazioni, e pu&ograve; assumere i valori seguenti:
   * [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV (default).
   * [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
   * [**`DummyWriter`**](src/it/albertus/router/writer/DummyWriter.java): nessuna scrittura.
@@ -91,6 +88,12 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 * **`database.connection.validation.timeout.ms`**= tempo di attesa massimo su richiesta di verifica della validit&agrave; della connessione al database, in millisecondi (default: `2000` ms).
 * **`database.column.type`**= tipo di dato utilizzato per le colonne in fase di creazione della tabella (default: `VARCHAR`).
 * **`database.column.length`**= lunghezza delle colonne utilizzata in fase di creazione della tabella (default: `250`).
+
+##### Console
+
+* **`console.animation`**= specifica se si desidera visualizzare una piccola animazione in console che segnala il funzionamento dell'applicazione (default: `true`).
+* **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto). Un eccessivo numero di chiavi da visualizzare provocher&agrave; lo scorrimento verticale della console, un effetto collaterale probabilmente indesiderato.
+* **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 
 #### Soglie
 
@@ -135,17 +138,17 @@ threshold.snr.down.value=100
 
 ##### Supporto di altri modelli di router
 
-&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`RouterLogger`**](src/it/albertus/router/logger/RouterLogger.java), la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
+&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java), la quale dispone di diversi metodi di utilit&agrave; che permettono di interagire agevolmente con il server telnet e che possono comunque essere sovrascritti in caso di necessit&agrave;.
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server telnet comunicando le credenziali di accesso.
 * **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di mappa chiave-valore.
 
-All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`RouterLogger`](src/it/albertus/router/logger/RouterLogger.java):
+All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/it/albertus/router/reader/Reader.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamento sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce il nome della classe in esecuzione (senza package).
 
-Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `logger.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
+Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
 
 ##### Modalit&agrave; di salvataggio alternative
 
@@ -153,4 +156,4 @@ Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute con le modalit&agrave; desiderate.
 * **`release`**: libera risorse eventualmente allocate dal programma, ad esempio file o connessioni a database.
 
-Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `logger.writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
+Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
