@@ -65,7 +65,7 @@ public class AsusDslN12EReader extends Reader {
 		writeToTelnet(commandInfoWan);
 		readFromTelnet("Status", true);
 		List<String> values = new ArrayList<String>(8);
-		for (String field : readFromTelnet("$", false).trim().split("  ")) {
+		for (String field : readFromTelnet("$", false).trim().split("(\\s\\s)+")) {
 			if (field != null && field.trim().length() > 0) {
 				values.add(field.trim());
 			}
