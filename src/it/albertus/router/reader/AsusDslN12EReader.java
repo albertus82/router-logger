@@ -76,7 +76,7 @@ public class AsusDslN12EReader extends Reader {
 		info.put("Encap", values.get(2));
 		info.put("Droute", values.get(3));
 		info.put("Protocol", values.get(4));
-		info.put("IP Addres", values.get(5));
+		info.put("IP Address", values.get(5));
 		info.put("Gateway", values.get(6));
 		info.put("Status", values.get(7));
 
