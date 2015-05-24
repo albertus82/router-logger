@@ -1,5 +1,7 @@
 package it.albertus.router.reader;
 
+import it.albertus.util.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -47,14 +49,17 @@ public class TpLink8970Reader extends Reader {
 		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
 
 		// Informazioni sulla connessione ad Internet...
-		writeToTelnet(configuration.getString("tplink.8970.command.info.wan"));
-		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
-		reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
-		while ((line = reader.readLine()) != null) {
-			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+		final String commandInfoWan = configuration.getString("tplink.8970.command.info.wan");
+		if (StringUtils.isNotBlank(commandInfoWan)) {
+			writeToTelnet(commandInfoWan);
+			readFromTelnet("{", true);
+			reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
+			while ((line = reader.readLine()) != null) {
+				info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+			}
+			reader.close();
+			readFromTelnet(COMMAND_PROMPT, true);
 		}
-		reader.close();
-		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
 
 		return info;
 	}
