@@ -29,6 +29,7 @@ public abstract class Reader {
 
 	/**
 	 * Effettua la connessione al server telnet, ma non l'autenticazione.
+	 * <b>Normalmente non occorre sovrascrivere questo metodo</b>.
 	 * 
 	 * @return <tt>true</tt> se la connessione &egrave; riuscita, <tt>false</tt>
 	 *         altrimenti.
@@ -81,7 +82,8 @@ public abstract class Reader {
 	 * Effettua la disconnessione dal server telnet, ma non invia alcun comando
 	 * di logout. &Egrave; buona norma richiamare prima il metodo
 	 * {@link #logout()} per inviare al server telnet gli opportuni comandi di
-	 * chiusura della sessione (ad esempio <tt>logout</tt>).
+	 * chiusura della sessione (ad esempio <tt>logout</tt>). <b>Normalmente non
+	 * occorre sovrascrivere questo metodo</b>.
 	 */
 	public void disconnect() {
 		out.println("Disconnecting...");
