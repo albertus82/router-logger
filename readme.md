@@ -62,7 +62,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 #### Sorgente (modello di router)
 
-Volendo utilizzare quest'applicazione per registrare il funzionamento di un dispositivo diverso dal TP-Link TD-W8970 V1, occorrer&agrave; attivare e configurare nel [`routerlogger.cfg`](src/routerlogger.cfg) la seguente propriet&agrave:
+Volendo utilizzare quest'applicazione per registrare il funzionamento di un dispositivo diverso dal TP-Link TD-W8970 V1, occorrer&agrave; attivare e configurare nel [`routerlogger.cfg`](src/routerlogger.cfg) la seguente propriet&agrave;:
 
 * **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem/router le informazioni sullo stato della connessione dal router tramite Telnet, e pu&ograve; assumere i valori seguenti:
   * [**`TpLink8970Reader`**](src/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router TP-Link TD-W8970 V1
