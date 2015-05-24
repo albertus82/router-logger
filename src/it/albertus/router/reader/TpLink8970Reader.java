@@ -1,7 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.util.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -50,7 +48,7 @@ public class TpLink8970Reader extends Reader {
 
 		// Informazioni sulla connessione ad Internet...
 		final String commandInfoWan = configuration.getString("tplink.8970.command.info.wan");
-		if (StringUtils.isNotBlank(commandInfoWan)) {
+		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
 			writeToTelnet(commandInfoWan);
 			readFromTelnet("{", true);
 			reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
