@@ -70,8 +70,7 @@ public abstract class Reader {
 	 * diversi comandi che debbano essere eseguiti in fase di logout. <b>Questo
 	 * metodo non effettua esplicitamente la disconnessione dal server</b>.
 	 * 
-	 * @throws IOException
-	 *             in caso di errore nella comunicazione con il server.
+	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	public void logout() throws IOException {
 		out.println("Logging out...");
@@ -151,13 +150,10 @@ public abstract class Reader {
 	 * <tt>\r</tt>, questa viene troncata alla prima occorrenza di uno di questi
 	 * caratteri.
 	 * 
-	 * @param command
-	 *            il comando da inviare al server telnet.
+	 * @param command  il comando da inviare al server telnet.
 	 * @return l'eco del testo inviato al server telnet.
-	 * @throws IOException
-	 *             in caso di errore nella comunicazione con il server.
-	 * @throws NullPointerException
-	 *             se il comando fornito &egrave; null.
+	 * @throws IOException in caso di errore nella comunicazione con il server.
+	 * @throws NullPointerException se il comando fornito &egrave; null.
 	 */
 	protected String writeToTelnet(final String command) throws IOException {
 		final OutputStream out = telnet.getOutputStream();
