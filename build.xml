@@ -54,7 +54,11 @@
 		<echo file="${build.dir}/dist/${project.name.lowercase}.bat">@"%JAVA_HOME%\bin\java.exe" -Xms4m -Xmx8m -classpath "%~dp0${project.name.lowercase}.jar;%~dp0lib/*" ${main.class}</echo>
 	</target>
 
-	<target name="jar" depends="compile, copy, batch">
+	<target name="shell">
+		<echo file="${build.dir}/dist/${project.name.lowercase}.sh">"$JAVA_HOME/bin/java" -Xms4m -Xmx8m -classpath "${project.name.lowercase}.jar:lib/*" ${main.class}</echo>
+	</target>
+
+	<target name="jar" depends="compile, copy, batch, shell">
 		<jar destfile="${build.dir}/dist/${project.name.lowercase}.jar" basedir="${build.dir}/classes" level="9" />
 	</target>
 
