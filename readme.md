@@ -17,7 +17,8 @@ RouterLogger
 
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
-In ambiente Windows &egrave; sufficiente richiamare il file batch **`routerlogger.bat`** senza specificare altro, mentre in ambienti diversi (es. Linux) occorre richiamare `java` specificando:
+In ambiente **Windows** &egrave; sufficiente richiamare il file batch **`routerlogger.bat`** senza specificare altro; analogamente su **Linux** basta richiamare lo script shell **`routerlogger.sh`** (avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger.sh`).
+In ambienti diversi occorre invece richiamare manualmente `java` specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
 * la classe da eseguire, che &egrave; sempre: [`it.albertus.router.RouterLogger`](src/it/albertus/router/RouterLogger.java)
 
