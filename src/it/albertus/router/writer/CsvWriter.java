@@ -45,16 +45,21 @@ public class CsvWriter extends Writer {
 
 		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
+			final boolean thread = configuration.getBoolean("logger.writer.thread", false);
 			if (!logFile.exists()) {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
-				out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				if (!thread) {
+					out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				}
 				logFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
-				out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				if (!thread) {
+					out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+				}
 			}
 			logFileWriter.append(buildCsvRow(info));
 			logFileWriter.flush();
