@@ -61,7 +61,7 @@ public class RouterLogger {
 		// Inizializzazione del Writer...
 		writer = initWriter();
 	}
-	
+
 	private void loadThresholds() {
 		final Set<String> thresholdsAdded = new HashSet<String>();
 		for (Object objectKey : configuration.getProperties().keySet()) {
