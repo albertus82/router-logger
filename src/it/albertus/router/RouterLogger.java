@@ -142,12 +142,13 @@ public class RouterLogger {
 		final int retries = configuration.getInt("logger.retry.count", Defaults.RETRIES);
 
 		// Gestione chiusura console (CTRL+C)...
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		final Thread hook = new Thread() {
 			public void run() {
 				reader.disconnect();
 				release();
 			}
-		});
+		};
+		Runtime.getRuntime().addShutdownHook(hook);
 
 		for (int index = 0; index <= retries && !exit; index++) {
 			// Gestione riconnessione in caso di errore...
@@ -204,6 +205,9 @@ public class RouterLogger {
 				}
 			}
 		}
+
+		Runtime.getRuntime().removeShutdownHook(hook);
+
 		release();
 		out.println("Bye!");
 	}
