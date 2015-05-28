@@ -1,7 +1,7 @@
 RouterLogger
 ============
 
-**RouterLogger** &egrave; una semplice applicazione in riga di comando per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem/router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
+**RouterLogger** &egrave; una semplice applicazione in riga di comando per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 
 
 ### Installazione e configurazione di base
@@ -22,7 +22,7 @@ In ambienti diversi occorre invece richiamare manualmente `java` specificando:
 * un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
 * la classe da eseguire, che &egrave; sempre: [`it.albertus.router.RouterLogger`](src/it/albertus/router/RouterLogger.java)
 
-Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem/router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
+Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
 ##### CSV
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file. Per attivare questo tipo di salvataggio non occorre configurare nulla: questa &egrave; la modalit&agrave; predefinita.
@@ -65,9 +65,9 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 #### Sorgente (modello di router)
 
-Volendo utilizzare quest'applicazione per registrare il funzionamento di un dispositivo diverso dal TP-Link TD-W8970 V1, occorrer&agrave; attivare e configurare nel [`routerlogger.cfg`](src/routerlogger.cfg) la seguente propriet&agrave;:
+La selezione del modello di modem router da interrogare si effettua configurando nel [`routerlogger.cfg`](src/routerlogger.cfg) la seguente propriet&agrave;:
 
-* **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem/router le informazioni sullo stato della connessione tramite Telnet, e pu&ograve; assumere i valori seguenti:
+* **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem router le informazioni sullo stato della connessione tramite Telnet, e pu&ograve; assumere i valori seguenti:
   * [**`TpLink8970Reader`**](src/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router TP-Link TD-W8970 V1 (default).
   * [**`AsusDslN12EReader`**](src/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router ASUS DSL-N12E.
   * [**`DummyReader`**](src/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
@@ -158,7 +158,7 @@ threshold.snr.down.value=100
 
 ##### Supporto di altri modelli di router
 
-&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java).
+&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java).
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server Telnet comunicando le credenziali di accesso.
