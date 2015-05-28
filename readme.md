@@ -1,7 +1,7 @@
 RouterLogger
 ============
 
-**RouterLogger** &egrave; una semplice applicazione Java in riga di comando per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem/router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
+**RouterLogger** &egrave; una semplice applicazione in riga di comando per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem/router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem/router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 
 
 ### Installazione e configurazione di base
