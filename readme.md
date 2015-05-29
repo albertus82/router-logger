@@ -63,6 +63,13 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: `20000` ms).
 * **`telnet.send.crlf`**= specifica come inviare il comando di ritorno a capo al server: se impostato a `true`, sar&agrave; inviata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece inviato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
 
+##### Console
+
+* **`console.animation`**= specifica se si desidera visualizzare una piccola animazione in console che segnala il funzionamento dell'applicazione (default: `true`).
+* **`console.show.configuration`**= specifica se si desidera visualizzare l'elenco delle propriet&agrave; attive del routerlogger.cfg all'avvio dell'applicazione (default: `false`).
+* **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto). Un eccessivo numero di chiavi da visualizzare provocher&agrave; lo scorrimento verticale della console, un effetto collaterale probabilmente indesiderato.
+* **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
+
 #### Sorgente (modello di router)
 
 La selezione del modello di modem router da interrogare si effettua configurando nel [`routerlogger.cfg`](src/routerlogger.cfg) la seguente propriet&agrave;:
@@ -73,12 +80,12 @@ La selezione del modello di modem router da interrogare si effettua configurando
   * [**`DummyReader`**](src/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
   * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
-##### TP-Link TD-W8970 V1
+###### TP-Link TD-W8970 V1
 
 * **`tplink.8970.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `adsl show info`).
 * **`tplink.8970.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: non valorizzato, di conseguenza non vengono estratte queste informazioni).
 
-##### ASUS DSL-N12E
+###### ASUS DSL-N12E
 
 * **`asus.dsln12e.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `show wan adsl`).
 * **`asus.dsln12e.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: `show wan interface`).
@@ -92,14 +99,14 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
   * [**`DummyWriter`**](src/it/albertus/router/writer/DummyWriter.java): nessuna scrittura.
   * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
 
-##### CSV
+###### CSV
 
 * **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
 * **`csv.record.separator.crlf`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati; se impostato a `true`, sar&agrave; utilizzata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece utilizzato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
 * **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
 
-##### Database
+###### Database
 
 * **`database.table.name`**= nome della tabella in cui saranno inseriti i dati (default: `router_log`).
 * **`database.connection.validation.timeout.ms`**= tempo di attesa massimo su richiesta di verifica della validit&agrave; della connessione al database, in millisecondi (default: `2000` ms).
@@ -107,13 +114,6 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 * **`database.info.column.type`**= tipo di dato utilizzato per tutte le altre colonne in fase di creazione della tabella (default: `VARCHAR(250)`).
 * **`database.column.name.prefix`**= prefisso per i nomi delle colonne della tabella (default: `rl_`).
 * **`database.column.name.max.length`**= lunghezza massima dei nomi delle colonne, superata la quale il nome viene troncato (default: `30`).
-
-##### Console
-
-* **`console.animation`**= specifica se si desidera visualizzare una piccola animazione in console che segnala il funzionamento dell'applicazione (default: `true`).
-* **`console.show.configuration`**= specifica se si desidera visualizzare l'elenco delle propriet&agrave; attive del routerlogger.cfg all'avvio dell'applicazione (default: `false`).
-* **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto). Un eccessivo numero di chiavi da visualizzare provocher&agrave; lo scorrimento verticale della console, un effetto collaterale probabilmente indesiderato.
-* **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 
 #### Soglie
 
