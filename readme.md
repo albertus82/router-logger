@@ -105,7 +105,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 ###### CSV
 
 * **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
-* **`csv.newline.characters`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati, pu&ograve; assumere uno tra i seguenti valori:
+* **`csv.newline.characters`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati; pu&ograve; assumere uno tra i seguenti valori:
   * **`CRLF`** (default): scrive la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
   * **`LF`**: scrive il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix).
   * **`CR`**: scrive il solo carattere `CR` (`0x0D`) (`\r`, stile Macintosh).
