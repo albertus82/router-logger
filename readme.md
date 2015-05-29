@@ -61,7 +61,10 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 * **`socket.timeout.ms`**= timeout del socket in millisecondi, ossia il tempo di inattivita massimo durante la comunicazione con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: `30000` ms). Questo valore deve essere sempre maggiore dell'intervallo tra le richieste (`logger.interval.normal.ms`).
 * **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: `20000` ms).
-* **`telnet.send.crlf`**= specifica come inviare il comando di ritorno a capo al server: se impostato a `true`, sar&agrave; inviata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece inviato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
+* **`telnet.newline.characters`**= specifica come inviare il comando di ritorno a capo al server:
+  * **`CRLF`** (default): invia la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
+  * **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix).
+  * **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`, stile Macintosh).
 
 ##### Console
 
@@ -102,7 +105,10 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 ###### CSV
 
 * **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
-* **`csv.record.separator.crlf`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati; se impostato a `true`, sar&agrave; utilizzata la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows); se impostato a `false` sar&agrave; invece utilizzato il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix); (default: `true`).
+* **`csv.newline.characters`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati:
+  * **`CRLF`** (default): scrive la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
+  * **`LF`**: scrive il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Posix).
+  * **`CR`**: scrive il solo carattere `CR` (`0x0D`) (`\r`, stile Macintosh).
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
 * **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
 
