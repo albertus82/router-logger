@@ -1,6 +1,7 @@
 package it.albertus.router.writer;
 
 import it.albertus.util.ExceptionUtils;
+import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
 import java.io.File;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class CsvWriter extends Writer {
 
 	private interface Defaults {
-		boolean RECORD_SEPARATOR_CRLF = true;
+		String NEWLINE_CHARACTERS = NewLine.CRLF.name();
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
@@ -82,7 +83,7 @@ public class CsvWriter extends Writer {
 		for (String field : info.keySet()) {
 			header.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
-		header.replace(header.length() - 1, header.length(), getRecordSeparator());
+		header.replace(header.length() - fieldSeparator.length(), header.length(), getRecordSeparator());
 		return header.toString();
 	}
 
@@ -93,7 +94,7 @@ public class CsvWriter extends Writer {
 		for (String field : info.values()) {
 			row.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
-		row.replace(row.length() - 1, row.length(), getRecordSeparator());
+		row.replace(row.length() - fieldSeparator.length(), row.length(), getRecordSeparator());
 		return row.toString();
 	}
 
@@ -106,7 +107,7 @@ public class CsvWriter extends Writer {
 	}
 
 	private String getRecordSeparator() {
-		return configuration.getBoolean("csv.record.separator.crlf", Defaults.RECORD_SEPARATOR_CRLF) ? "\r\n" : "\n";
+		return NewLine.getEnum(configuration.getString("csv.newline.characters", Defaults.NEWLINE_CHARACTERS)).getString();
 	}
 
 	private void closeOutputFile() {

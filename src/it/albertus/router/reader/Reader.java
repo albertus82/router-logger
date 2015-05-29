@@ -3,6 +3,7 @@ package it.albertus.router.reader;
 import it.albertus.router.RouterLoggerConfiguration;
 import it.albertus.util.Configuration;
 import it.albertus.util.ExceptionUtils;
+import it.albertus.util.NewLine;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +20,7 @@ public abstract class Reader {
 		int ROUTER_PORT = 23;
 		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
 		int CONNECTION_TIMEOUT_IN_MILLIS = 20000;
-		boolean TELNET_SEND_CRLF = true;
+		String TELNET_NEWLINE_CHARACTERS = NewLine.CRLF.name();
 	}
 
 	protected static final Configuration configuration = RouterLoggerConfiguration.getInstance();
@@ -160,7 +161,7 @@ public abstract class Reader {
 	protected String writeToTelnet(final String command) throws IOException {
 		final OutputStream out = telnet.getOutputStream();
 		final StringBuilder echo = new StringBuilder();
-		for (char character : command.toCharArray()) {
+		for (final char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
 				break;
 			}
@@ -169,12 +170,10 @@ public abstract class Reader {
 		}
 		out.flush();
 		// Thread.sleep(50);
-		if (configuration.getBoolean("telnet.send.crlf", Defaults.TELNET_SEND_CRLF)) {
-			out.write('\r');
-			echo.append('\r');
+		for (final char character : NewLine.getEnum(configuration.getString("telnet.newline.characters", Defaults.TELNET_NEWLINE_CHARACTERS)).getCharacters()) {
+			out.write(character);
+			echo.append(character);
 		}
-		out.write('\n');
-		echo.append('\n');
 		out.flush();
 		return echo.toString();
 	}
