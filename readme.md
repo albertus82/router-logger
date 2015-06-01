@@ -179,7 +179,7 @@ All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi
 * **`readFromTelnet(...)`**: legge l'output del server Telnet e lo restituisce come stringa.
 * **`writeToTelnet(...)`**: invia comandi al server Telnet.
 
->&Egrave; inoltre possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata protected nella classe [`Reader`](src/it/albertus/router/reader/Reader.java).
+>&Egrave; inoltre possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Reader`](src/it/albertus/router/reader/Reader.java).
 
 >Per maggiori informazioni &egrave; possibile consultare la documentazione Javadoc inclusa nel codice sorgente.
 
@@ -191,6 +191,6 @@ Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute con le modalit&agrave; desiderate.
 * **`release`**: libera risorse eventualmente allocate dal [`Writer`](src/it/albertus/router/writer/Writer.java), ad esempio file o connessioni a database.
 
->&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata protected nella classe [`Writer`](src/it/albertus/router/writer/Writer.java).
+>&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Writer`](src/it/albertus/router/writer/Writer.java).
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
