@@ -78,8 +78,8 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 La selezione del modello di modem router da interrogare si effettua configurando nel [`routerlogger.cfg`](src/routerlogger.cfg) la seguente propriet&agrave;:
 
 * **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem router le informazioni sullo stato della connessione tramite Telnet, e pu&ograve; assumere i valori seguenti:
-  * [**`TpLink8970Reader`**](src/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router *TP-Link TD-W8970 V1* (default).
-  * [**`AsusDslN12EReader`**](src/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router *ASUS DSL-N12E*.
+  * [**`TpLink8970Reader`**](src/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router **TP-Link TD-W8970 V1** (default).
+  * [**`AsusDslN12EReader`**](src/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router **ASUS DSL-N12E**.
   * [**`DummyReader`**](src/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
   * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
@@ -97,9 +97,9 @@ La selezione del modello di modem router da interrogare si effettua configurando
 
 La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la seguente propriet&agrave;:
 * **`writer.class.name`**: identifica la classe che si occupa del salvataggio delle informazioni, e pu&ograve; assumere i valori seguenti:
-  * [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file CSV (default).
-  * [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su database.
-  * [**`DummyWriter`**](src/it/albertus/router/writer/DummyWriter.java): nessuna scrittura.
+  * [**`CsvWriter`**](src/it/albertus/router/writer/CsvWriter.java): scrittura su file **CSV** (default).
+  * [**`DatabaseWriter`**](src/it/albertus/router/writer/DatabaseWriter.java): scrittura su **database**.
+  * [**`DummyWriter`**](src/it/albertus/router/writer/DummyWriter.java): nessuna scrittura (utile a scopo di test).
   * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
 
 ###### CSV
