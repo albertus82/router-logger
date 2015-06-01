@@ -175,18 +175,22 @@ All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce il nome della classe in esecuzione (senza package).
 * **`release`**: libera risorse eventualmente allocate dal [`Reader`](src/it/albertus/router/reader/Reader.java), ad esempio file o connessioni a database. Normalmente non necessario.
 
-Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
-
 >La classe astratta [**`Reader`**](src/it/albertus/router/reader/Reader.java) dispone di alcuni metodi di utilit&agrave; che permettono di interagire agevolmente con il server Telnet e che possono essere quindi utilizzati, oltre che sovrascritti, in caso di necessit&agrave;; in particolare:
 * **`readFromTelnet(...)`**: legge l'output del server Telnet e lo restituisce come stringa.
 * **`writeToTelnet(...)`**: invia comandi al server Telnet.
 
+>&Egrave; inoltre possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata protected nella classe [`Reader`](src/it/albertus/router/reader/Reader.java).
+
 >Per maggiori informazioni &egrave; possibile consultare la documentazione Javadoc inclusa nel codice sorgente.
+
+Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
 
 ##### Modalit&agrave; di salvataggio alternative
 
 Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o database SQL, si pu&ograve; estendere la classe astratta [**`Writer`**](src/it/albertus/router/writer/Writer.java) e sar&agrave; ovviamente necessario implementare i due metodi seguenti:
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute con le modalit&agrave; desiderate.
 * **`release`**: libera risorse eventualmente allocate dal [`Writer`](src/it/albertus/router/writer/Writer.java), ad esempio file o connessioni a database.
+
+>&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata protected nella classe [`Writer`](src/it/albertus/router/writer/Writer.java).
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
