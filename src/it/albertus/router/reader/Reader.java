@@ -170,7 +170,7 @@ public abstract class Reader {
 		}
 		out.flush();
 		// Thread.sleep(50);
-		for (final char character : NewLine.getEnum(configuration.getString("telnet.newline.characters", Defaults.TELNET_NEWLINE_CHARACTERS)).getCharacters()) {
+		for (final char character : NewLine.getEnum(configuration.getString("telnet.newline.characters", Defaults.TELNET_NEWLINE_CHARACTERS)).toCharArray()) {
 			out.write(character);
 			echo.append(character);
 		}

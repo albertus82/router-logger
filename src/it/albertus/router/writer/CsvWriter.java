@@ -14,8 +14,10 @@ import java.util.Map;
 
 public class CsvWriter extends Writer {
 
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
 	private interface Defaults {
-		String NEWLINE_CHARACTERS = NewLine.CRLF.name();
+		String NEWLINE_CHARACTERS = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR).name() : NewLine.CRLF.name();
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
@@ -107,7 +109,7 @@ public class CsvWriter extends Writer {
 	}
 
 	private String getRecordSeparator() {
-		return NewLine.getEnum(configuration.getString("csv.newline.characters", Defaults.NEWLINE_CHARACTERS)).getString();
+		return NewLine.getEnum(configuration.getString("csv.newline.characters", Defaults.NEWLINE_CHARACTERS)).toString();
 	}
 
 	private void closeOutputFile() {
