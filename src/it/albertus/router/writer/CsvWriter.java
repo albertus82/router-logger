@@ -17,7 +17,7 @@ public class CsvWriter extends Writer {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	private interface Defaults {
-		String NEWLINE_CHARACTERS = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR).name() : NewLine.CRLF.name();
+		NewLine NEW_LINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
@@ -109,7 +109,20 @@ public class CsvWriter extends Writer {
 	}
 
 	private String getRecordSeparator() {
-		return NewLine.getEnum(configuration.getString("csv.newline.characters", Defaults.NEWLINE_CHARACTERS)).toString();
+		final String cfgKey = "csv.newline.characters";
+		final String cfg = configuration.getString(cfgKey);
+		if (cfg == null || cfg.length() == 0) {
+			return Defaults.NEW_LINE.toString();
+		}
+		else {
+			final NewLine newLine = NewLine.getEnum(cfg);
+			if (newLine != null) {
+				return newLine.toString();
+			}
+			else {
+				throw new RuntimeException("Invalid \"" + cfgKey + "\" property. Review your " + configuration.getFileName() + " file.");
+			}
+		}
 	}
 
 	private void closeOutputFile() {
@@ -124,5 +137,5 @@ public class CsvWriter extends Writer {
 			}
 		}
 	}
-	
+
 }
