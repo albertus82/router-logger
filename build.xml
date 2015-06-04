@@ -2,68 +2,63 @@
 <!DOCTYPE project>
 <project name="RouterLogger" default="jar">
 
-	<property file="build.properties" />
-	<property file="build.properties.default" />
-
-	<property file="src/version.properties" />
-
-	<property name="main.class" value="it.albertus.router.RouterLogger" />
-
-	<scriptdef language="javascript" name="lower">
-		<attribute name="string" />
-		<attribute name="to" />
-		project.setProperty(attributes.get("to"), attributes.get("string").toLowerCase());
-	</scriptdef>
-
-	<lower string="${ant.project.name}" to="project.name.lowercase" />
+	<property file="src/main/resources/version.properties" />
 
 	<target name="clean">
-		<delete dir="${build.dir}" />
+		<delete dir="target" />
 	</target>
 
 	<target name="compile" depends="clean">
-		<mkdir dir="${build.dir}/classes" />
-		<javac srcdir="src" destdir="${build.dir}/classes" source="1.6" target="1.6">
+		<mkdir dir="target/classes" />
+		<javac srcdir="src/main/java" destdir="target/classes" source="1.6" target="1.6">
 			<classpath>
 				<fileset dir="lib">
-					<include name="**/*.jar"/>
+					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
 	</target>
 
-	<target name="copy">
-		<copy todir="${build.dir}/classes">
-			<fileset dir="src">
-				<exclude name="**/*.java" />
-				<exclude name="**/routerlogger.cfg" />
-			</fileset>
+	<target name="resources">
+		<copy todir="target/classes">
+			<fileset dir="src/main/resources" />
 		</copy>
-		<copy todir="${build.dir}/dist/lib" >
+	</target>
+
+	<target name="lib">
+		<copy todir="target/dist/lib">
 			<fileset dir="lib">
 				<include name="*.jar" />
 				<include name="license/*.txt" />
 			</fileset>
 		</copy>
-		<copy todir="${build.dir}/dist" file="src/license.txt" />
-		<copy todir="${build.dir}/dist" file="readme.md" />
-		<copy todir="${build.dir}/dist" file="src/routerlogger.cfg" />
 	</target>
 
-	<target name="batch">
-		<echo file="${build.dir}/dist/${project.name.lowercase}.bat">@"%JAVA_HOME%\bin\java.exe" -Xms4m -Xmx8m -classpath "%~dp0${project.name.lowercase}.jar;%~dp0lib/*" ${main.class}</echo>
+	<target name="config">
+		<copy file="src/main/config/routerlogger.cfg" todir="target/dist" />
 	</target>
 
-	<target name="shell">
-		<echo file="${build.dir}/dist/${project.name.lowercase}.sh">"$JAVA_HOME/bin/java" -Xms4m -Xmx8m -classpath "${project.name.lowercase}.jar:lib/*" ${main.class}</echo>
+	<target name="scripts">
+		<copy file="src/main/scripts/routerlogger.bat" todir="target/dist" />
+		<copy file="src/main/scripts/routerlogger.sh" todir="target/dist" />
 	</target>
 
-	<target name="jar" depends="compile, copy, batch, shell">
-		<jar destfile="${build.dir}/dist/${project.name.lowercase}.jar" basedir="${build.dir}/classes" level="9" />
+	<target name="docs">
+		<copy todir="target/dist">
+			<fileset dir="">
+				<include name="README*" />
+				<include name="LICENSE*" />
+				<include name="NOTICE*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="jar" depends="compile, resources, config, scripts, docs, lib">
+		<jar destfile="target/dist/routerlogger.jar" basedir="target/classes" level="9" />
 	</target>
 
 	<target name="zip" depends="jar">
-		<zip destfile="${build.dir}/release/${project.name.lowercase}-${version.number}-bin.zip" basedir="${build.dir}/dist" level="9" />
+		<zip destfile="target/release/routerlogger-${version.number}-bin.zip" basedir="target/dist" level="9" />
 	</target>
 
 </project>
