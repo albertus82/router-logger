@@ -2,17 +2,19 @@
 <!DOCTYPE project>
 <project name="RouterLogger" default="jar">
 
-	<property file="src/main/resources/version.properties" />
+	<property file="build.properties" />
+
+	<property file="${src.dir}/main/resources/version.properties" />
 
 	<target name="clean">
-		<delete dir="target" />
+		<delete dir="${target.dir}" />
 	</target>
 
 	<target name="compile" depends="clean">
-		<mkdir dir="target/classes" />
-		<javac srcdir="src/main/java" destdir="target/classes" source="1.6" target="1.6">
+		<mkdir dir="${target.dir}/classes" />
+		<javac srcdir="${src.dir}/main/java" destdir="${target.dir}/classes" source="1.6" target="1.6">
 			<classpath>
-				<fileset dir="lib">
+				<fileset dir="${lib.dir}">
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
@@ -20,14 +22,14 @@
 	</target>
 
 	<target name="resources">
-		<copy todir="target/classes">
-			<fileset dir="src/main/resources" />
+		<copy todir="${target.dir}/classes">
+			<fileset dir="${src.dir}/main/resources" />
 		</copy>
 	</target>
 
 	<target name="lib">
-		<copy todir="target/dist/lib">
-			<fileset dir="lib">
+		<copy todir="${target.dir}/dist/lib">
+			<fileset dir="${lib.dir}">
 				<include name="*.jar" />
 				<include name="license/*.txt" />
 			</fileset>
@@ -35,16 +37,16 @@
 	</target>
 
 	<target name="config">
-		<copy file="src/main/config/routerlogger.cfg" todir="target/dist" />
+		<copy file="${src.dir}/main/config/routerlogger.cfg" todir="${target.dir}/dist" />
 	</target>
 
 	<target name="scripts">
-		<copy file="src/main/scripts/routerlogger.bat" todir="target/dist" />
-		<copy file="src/main/scripts/routerlogger.sh" todir="target/dist" />
+		<copy file="${src.dir}/main/scripts/routerlogger.bat" todir="${target.dir}/dist" />
+		<copy file="${src.dir}/main/scripts/routerlogger.sh" todir="${target.dir}/dist" />
 	</target>
 
 	<target name="docs">
-		<copy todir="target/dist">
+		<copy todir="${target.dir}/dist">
 			<fileset dir="">
 				<include name="README*" />
 				<include name="LICENSE*" />
@@ -54,11 +56,11 @@
 	</target>
 
 	<target name="jar" depends="compile, resources, config, scripts, docs, lib">
-		<jar destfile="target/dist/routerlogger.jar" basedir="target/classes" level="9" />
+		<jar destfile="${target.dir}/dist/routerlogger.jar" basedir="${target.dir}/classes" level="9" />
 	</target>
 
 	<target name="zip" depends="jar">
-		<zip destfile="target/release/routerlogger-${version.number}-bin.zip" basedir="target/dist" level="9" />
+		<zip destfile="${target.dir}/release/routerlogger-${version.number}-bin.zip" basedir="${target.dir}/dist" level="9" />
 	</target>
 
 </project>
