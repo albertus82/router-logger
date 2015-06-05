@@ -4,17 +4,17 @@
 
 	<property file="build.properties" />
 
-	<property file="${src.dir}/main/resources/version.properties" />
+	<property file="${build.resourcesDirectory}/version.properties" />
 
 	<target name="clean">
-		<delete dir="${target.dir}" />
+		<delete dir="${build.directory}" />
 	</target>
 
 	<target name="compile" depends="clean">
-		<mkdir dir="${target.dir}/classes" />
-		<javac srcdir="${src.dir}/main/java" destdir="${target.dir}/classes" source="1.6" target="1.6">
+		<mkdir dir="${build.outputDirectory}" />
+		<javac srcdir="${build.sourceDirectory}" destdir="${build.outputDirectory}" source="1.6" target="1.6">
 			<classpath>
-				<fileset dir="${lib.dir}">
+				<fileset dir="${dependencies.directory}">
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
@@ -22,14 +22,14 @@
 	</target>
 
 	<target name="resources">
-		<copy todir="${target.dir}/classes">
-			<fileset dir="${src.dir}/main/resources" />
+		<copy todir="${build.outputDirectory}">
+			<fileset dir="${build.resourcesDirectory}" />
 		</copy>
 	</target>
 
 	<target name="lib">
-		<copy todir="${target.dir}/dist/lib">
-			<fileset dir="${lib.dir}">
+		<copy todir="${build.directory}/dist/lib">
+			<fileset dir="${dependencies.directory}">
 				<include name="*.jar" />
 				<include name="license/*.txt" />
 			</fileset>
@@ -37,16 +37,16 @@
 	</target>
 
 	<target name="config">
-		<copy file="${src.dir}/main/config/routerlogger.cfg" todir="${target.dir}/dist" />
+		<copy file="${build.configDirectory}/routerlogger.cfg" todir="${build.directory}/dist" />
 	</target>
 
 	<target name="scripts">
-		<copy file="${src.dir}/main/scripts/routerlogger.bat" todir="${target.dir}/dist" />
-		<copy file="${src.dir}/main/scripts/routerlogger.sh" todir="${target.dir}/dist" />
+		<copy file="${build.scriptSourceDirectory}/routerlogger.bat" todir="${build.directory}/dist" />
+		<copy file="${build.scriptSourceDirectory}/routerlogger.sh" todir="${build.directory}/dist" />
 	</target>
 
 	<target name="docs">
-		<copy todir="${target.dir}/dist">
+		<copy todir="${build.directory}/dist">
 			<fileset dir="">
 				<include name="README*" />
 				<include name="LICENSE*" />
@@ -56,11 +56,11 @@
 	</target>
 
 	<target name="jar" depends="compile, resources, config, scripts, docs, lib">
-		<jar destfile="${target.dir}/dist/routerlogger.jar" basedir="${target.dir}/classes" level="9" />
+		<jar destfile="${build.directory}/dist/routerlogger.jar" basedir="${build.outputDirectory}" level="9" />
 	</target>
 
 	<target name="zip" depends="jar">
-		<zip destfile="${target.dir}/release/routerlogger-${version.number}-bin.zip" basedir="${target.dir}/dist" level="9" />
+		<zip destfile="${build.directory}/release/routerlogger-${version.number}-bin.zip" basedir="${build.directory}/dist" level="9" />
 	</target>
 
 </project>
