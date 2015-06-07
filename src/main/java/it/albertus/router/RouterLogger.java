@@ -6,12 +6,12 @@ import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.Configuration;
+import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +20,7 @@ import java.util.TreeSet;
 public class RouterLogger {
 
 	private interface Defaults {
+		boolean DEBUG = false;
 		int ITERATIONS = -1;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
@@ -41,7 +42,7 @@ public class RouterLogger {
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
 	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	private static final PrintStream out = System.out;
+	private static final Console out = Console.getInstance();
 
 	private final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	private final Reader reader;
@@ -154,7 +155,7 @@ public class RouterLogger {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
-				out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
+				out.printOnNewLine("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
 				try {
 					Thread.sleep(retryIntervalInMillis);
 				}
@@ -173,7 +174,7 @@ public class RouterLogger {
 					loggedIn = reader.login();
 				}
 				catch (Exception e) {
-					out.print(ExceptionUtils.getStackTrace(e));
+					printLog(e);
 				}
 
 				// Loop...
@@ -184,16 +185,15 @@ public class RouterLogger {
 						exit = true; // Se non si sono verificati errori.
 					}
 					catch (Exception e) {
-						out.print(ExceptionUtils.getStackTrace(e));
+						printLog(e);
 					}
 					finally {
 						// In ogni caso, si esegue la disconnessione dal server...
-						out.println();
 						try {
 							reader.logout();
 						}
 						catch (Exception e) {
-							out.print(ExceptionUtils.getStackTrace(e));
+							printLog(e);
 						}
 						reader.disconnect();
 					}
@@ -209,7 +209,16 @@ public class RouterLogger {
 		Runtime.getRuntime().removeShutdownHook(hook);
 
 		release();
-		out.println("Bye!");
+		out.printlnOnNewLine("Bye!");
+	}
+
+	private void printLog(Throwable throwable) {
+		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
+			out.printOnNewLine(ExceptionUtils.getStackTrace(throwable));
+		}
+		else {
+			out.printOnNewLine(ExceptionUtils.getLogMessage(throwable));
+		}
 	}
 
 	private void welcome() {

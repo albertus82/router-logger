@@ -18,9 +18,9 @@ public class DummyReader extends Reader {
 		for (int c = 0; c < className.length() + message.length(); c++) {
 			separator.append('-');
 		}
-		out.println(separator);
-		out.println(className + message);
-		out.println(separator);
+		out.printOnNewLine(separator.toString());
+		out.printOnNewLine(className + message);
+		out.printlnOnNewLine(separator.toString());
 		return true;
 	}
 

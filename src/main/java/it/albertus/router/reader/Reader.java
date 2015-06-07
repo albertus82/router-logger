@@ -2,13 +2,13 @@ package it.albertus.router.reader;
 
 import it.albertus.router.RouterLoggerConfiguration;
 import it.albertus.util.Configuration;
+import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.NewLine;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Map;
 
 import org.apache.commons.net.telnet.TelnetClient;
@@ -16,6 +16,7 @@ import org.apache.commons.net.telnet.TelnetClient;
 public abstract class Reader {
 
 	private interface Defaults {
+		boolean DEBUG = false;
 		String ROUTER_ADDRESS = "192.168.1.1";
 		int ROUTER_PORT = 23;
 		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
@@ -24,7 +25,7 @@ public abstract class Reader {
 	}
 
 	protected static final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	protected static final PrintStream out = System.out;
+	protected static final Console out = Console.getInstance();
 
 	protected final TelnetClient telnet = new TelnetClient();
 
@@ -42,7 +43,7 @@ public abstract class Reader {
 		final int socketTimeoutInMillis = configuration.getInt("socket.timeout.ms", Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		out.println("Connecting to: " + routerAddress + ':' + routerPort + "...");
+		out.printOnNewLine("Connecting to: " + routerAddress + ':' + routerPort + "...");
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
@@ -50,7 +51,7 @@ public abstract class Reader {
 			telnet.setSoTimeout(socketTimeoutInMillis);
 		}
 		catch (Exception e) {
-			out.print(ExceptionUtils.getStackTrace(e));
+			printLog(e);
 		}
 		return connected;
 	}
@@ -75,7 +76,7 @@ public abstract class Reader {
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	public void logout() throws IOException {
-		out.println("Logging out...");
+		out.printOnNewLine("Logging out...");
 		writeToTelnet("logout");
 	}
 
@@ -87,12 +88,12 @@ public abstract class Reader {
 	 * occorre sovrascrivere questo metodo</b>.
 	 */
 	public void disconnect() {
-		out.println("Disconnecting...");
+		out.printOnNewLine("Disconnecting...");
 		try {
 			telnet.disconnect();
 		}
 		catch (Exception e) {
-			out.print(ExceptionUtils.getStackTrace(e));
+			printLog(e);
 		}
 	}
 
@@ -179,5 +180,14 @@ public abstract class Reader {
 	}
 
 	public void release() {}
+	
+	protected void printLog(Throwable throwable) {
+		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
+			out.printOnNewLine(ExceptionUtils.getStackTrace(throwable));
+		}
+		else {
+			out.printOnNewLine(ExceptionUtils.getLogMessage(throwable));
+		}
+	}
 
 }

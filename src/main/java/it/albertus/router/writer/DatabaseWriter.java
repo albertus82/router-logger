@@ -1,7 +1,5 @@
 package it.albertus.router.writer;
 
-import it.albertus.util.ExceptionUtils;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -60,13 +58,13 @@ public class DatabaseWriter extends Writer {
 		// Verifica esistenza tabella ed eventuale creazione...
 		final String tableName = getTableName();
 		if (!tableExists(tableName)) {
-			out.println("Creating database table: " + tableName + "...");
+			out.printOnNewLine("Creating database table: " + tableName + "...");
 			createTable(tableName, info);
 		}
 
 		// Inserimento dati...
 		if (showMessage) {
-			out.println("Logging into database table: " + tableName + "...");
+			out.printOnNewLine("Logging into database table: " + tableName + "...");
 			showMessage = false;
 		}
 
@@ -95,7 +93,7 @@ public class DatabaseWriter extends Writer {
 			insert.executeUpdate();
 		}
 		catch (SQLException se) {
-			out.print(ExceptionUtils.getStackTrace(se));
+			printLog(se);
 		}
 		finally {
 			try {
@@ -176,13 +174,13 @@ public class DatabaseWriter extends Writer {
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
-					out.println("Closing database connection.");
+					out.printOnNewLine("Closing database connection.");
 					connection.close();
 					connection = null;
 				}
 			}
 			catch (SQLException se) {
-				out.print(ExceptionUtils.getStackTrace(se));
+				printLog(se);
 			}
 		}
 	}

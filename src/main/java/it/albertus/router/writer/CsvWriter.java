@@ -1,6 +1,5 @@
 package it.albertus.router.writer;
 
-import it.albertus.util.ExceptionUtils;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
@@ -53,7 +52,7 @@ public class CsvWriter extends Writer {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
 				if (!thread) {
-					out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+					out.printlnOnNewLine("Logging to: " + logFile.getAbsolutePath() + "...");
 				}
 				logFileWriter.append(buildCsvHeader(info));
 			}
@@ -61,14 +60,14 @@ public class CsvWriter extends Writer {
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
 				if (!thread) {
-					out.println("Logging to: " + logFile.getAbsolutePath() + "...");
+					out.printlnOnNewLine("Logging to: " + logFile.getAbsolutePath() + "...");
 				}
 			}
 			logFileWriter.append(buildCsvRow(info));
 			logFileWriter.flush();
 		}
 		catch (IOException ioe) {
-			out.print(ExceptionUtils.getStackTrace(ioe));
+			printLog(ioe);
 			closeOutputFile();
 		}
 	}
@@ -128,12 +127,12 @@ public class CsvWriter extends Writer {
 	private void closeOutputFile() {
 		if (logFileWriter != null) {
 			try {
-				out.println("Closing output file.");
+				out.printlnOnNewLine("Closing output file.");
 				logFileWriter.close();
 				logFileWriter = null;
 			}
 			catch (IOException ioe) {
-				out.print(ExceptionUtils.getStackTrace(ioe));
+				printLog(ioe);
 			}
 		}
 	}
