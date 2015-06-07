@@ -273,7 +273,7 @@ public class RouterLogger {
 			// Scrittura indice dell'iterazione in console...
 			final StringBuilder clean = new StringBuilder();
 			while (lastLogLength-- > 0) {
-				clean.append('\b');
+				clean.append('\b').append(' ').append('\b');
 			}
 			final StringBuilder log = new StringBuilder();
 			final boolean animate = configuration.getBoolean("console.animation", Defaults.CONSOLE_ANIMATION);
