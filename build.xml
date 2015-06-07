@@ -28,7 +28,7 @@
 	</target>
 
 	<target name="lib">
-		<copy todir="${build.directory}/dist/lib">
+		<copy todir="${build.distDirectory}/lib">
 			<fileset dir="${dependencies.directory}">
 				<include name="*.jar" />
 				<include name="license/*.txt" />
@@ -37,16 +37,19 @@
 	</target>
 
 	<target name="config">
-		<copy file="${build.configDirectory}/routerlogger.cfg" todir="${build.directory}/dist" />
+		<copy todir="${build.distDirectory}">
+			<fileset dir="${build.configDirectory}" />
+		</copy>
 	</target>
 
 	<target name="scripts">
-		<copy file="${build.scriptSourceDirectory}/routerlogger.bat" todir="${build.directory}/dist" />
-		<copy file="${build.scriptSourceDirectory}/routerlogger.sh" todir="${build.directory}/dist" />
+		<copy todir="${build.distDirectory}">
+			<fileset dir="${build.scriptSourceDirectory}" />
+		</copy>
 	</target>
 
 	<target name="docs">
-		<copy todir="${build.directory}/dist">
+		<copy todir="${build.distDirectory}">
 			<fileset dir="">
 				<include name="README*" />
 				<include name="LICENSE*" />
@@ -56,11 +59,11 @@
 	</target>
 
 	<target name="jar" depends="compile, resources, config, scripts, docs, lib">
-		<jar destfile="${build.directory}/dist/routerlogger.jar" basedir="${build.outputDirectory}" level="9" />
+		<jar destfile="${build.distDirectory}/routerlogger.jar" basedir="${build.outputDirectory}" level="9" />
 	</target>
 
 	<target name="zip" depends="jar">
-		<zip destfile="${build.directory}/release/routerlogger-${version.number}-bin.zip" basedir="${build.directory}/dist" level="9" />
+		<zip destfile="${build.releaseDirectory}/routerlogger-${version.number}-bin.zip" basedir="${build.distDirectory}" level="9" />
 	</target>
 
 </project>
