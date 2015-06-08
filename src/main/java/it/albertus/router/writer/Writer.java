@@ -32,10 +32,10 @@ public abstract class Writer {
 
 	protected void printLog(Throwable throwable) {
 		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
-			out.printOnNewLine(ExceptionUtils.getStackTrace(throwable));
+			out.print(ExceptionUtils.getStackTrace(throwable), true);
 		}
 		else {
-			out.printOnNewLine(ExceptionUtils.getLogMessage(throwable));
+			out.println(ExceptionUtils.getLogMessage(throwable), true);
 		}
 	}
 

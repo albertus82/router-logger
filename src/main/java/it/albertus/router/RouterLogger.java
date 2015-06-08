@@ -155,7 +155,7 @@ public class RouterLogger {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
-				out.printOnNewLine("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...");
+				out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...", true);
 				try {
 					Thread.sleep(retryIntervalInMillis);
 				}
@@ -209,15 +209,15 @@ public class RouterLogger {
 		Runtime.getRuntime().removeShutdownHook(hook);
 
 		release();
-		out.printlnOnNewLine("Bye!");
+		out.println("Bye!", true);
 	}
 
 	private void printLog(Throwable throwable) {
 		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
-			out.printOnNewLine(ExceptionUtils.getStackTrace(throwable));
+			out.print(ExceptionUtils.getStackTrace(throwable), true);
 		}
 		else {
-			out.printOnNewLine(ExceptionUtils.getLogMessage(throwable));
+			out.println(ExceptionUtils.getLogMessage(throwable), true);
 		}
 	}
 

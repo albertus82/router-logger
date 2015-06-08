@@ -52,7 +52,7 @@ public class CsvWriter extends Writer {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
 				if (!thread) {
-					out.printlnOnNewLine("Logging to: " + logFile.getAbsolutePath() + "...");
+					out.println("Logging to: " + logFile.getAbsolutePath() + "...", true);
 				}
 				logFileWriter.append(buildCsvHeader(info));
 			}
@@ -60,7 +60,7 @@ public class CsvWriter extends Writer {
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
 				if (!thread) {
-					out.printlnOnNewLine("Logging to: " + logFile.getAbsolutePath() + "...");
+					out.println("Logging to: " + logFile.getAbsolutePath() + "...", true);
 				}
 			}
 			logFileWriter.append(buildCsvRow(info));
@@ -127,7 +127,7 @@ public class CsvWriter extends Writer {
 	private void closeOutputFile() {
 		if (logFileWriter != null) {
 			try {
-				out.printlnOnNewLine("Closing output file.");
+				out.println("Closing output file.", true);
 				logFileWriter.close();
 				logFileWriter = null;
 			}

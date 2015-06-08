@@ -43,7 +43,7 @@ public abstract class Reader {
 		final int socketTimeoutInMillis = configuration.getInt("socket.timeout.ms", Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		out.printOnNewLine("Connecting to: " + routerAddress + ':' + routerPort + "...");
+		out.println("Connecting to: " + routerAddress + ':' + routerPort + "...", true);
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
@@ -76,7 +76,7 @@ public abstract class Reader {
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	public void logout() throws IOException {
-		out.printOnNewLine("Logging out...");
+		out.println("Logging out...", true);
 		writeToTelnet("logout");
 	}
 
@@ -88,7 +88,7 @@ public abstract class Reader {
 	 * occorre sovrascrivere questo metodo</b>.
 	 */
 	public void disconnect() {
-		out.printOnNewLine("Disconnecting...");
+		out.println("Disconnecting...", true);
 		try {
 			telnet.disconnect();
 		}
@@ -183,10 +183,10 @@ public abstract class Reader {
 	
 	protected void printLog(Throwable throwable) {
 		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
-			out.printOnNewLine(ExceptionUtils.getStackTrace(throwable));
+			out.print(ExceptionUtils.getStackTrace(throwable), true);
 		}
 		else {
-			out.printOnNewLine(ExceptionUtils.getLogMessage(throwable));
+			out.println(ExceptionUtils.getLogMessage(throwable), true);
 		}
 	}
 
