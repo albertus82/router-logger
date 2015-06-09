@@ -56,6 +56,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`logger.retry.count`**= numero di tentativi di riavvio del ciclo da effettuare in caso di errore durante l'esecuzione (default: `3`). Il contatore si azzera se il ciclo riparte con successo. Utile, ad esempio, in caso di riavvio del modem.
 * **`logger.retry.interval.ms`**= intervallo tra i tentativi di riavvio, in millisecondi (default: `30000` ms).
 * **`logger.writer.thread`**= specifica se eseguire il processo di salvataggio dei dati in un thread separato (default: `false`).
+* **`logger.debug`**= in caso di errore, stampa messaggi dettagliati (default: `false`).
 
 ##### Rete
 
