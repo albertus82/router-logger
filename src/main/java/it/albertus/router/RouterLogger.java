@@ -3,11 +3,11 @@ package it.albertus.router;
 import it.albertus.router.Threshold.Type;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
+import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
-import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
 
@@ -20,7 +20,6 @@ import java.util.TreeSet;
 public class RouterLogger {
 
 	private interface Defaults {
-		boolean DEBUG = false;
 		int ITERATIONS = -1;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
@@ -43,6 +42,7 @@ public class RouterLogger {
 
 	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private static final Console out = Console.getInstance();
+	private static final Logger logger = Logger.getInstance();
 
 	private final Set<Threshold> thresholds = new TreeSet<Threshold>();
 	private final Reader reader;
@@ -174,7 +174,7 @@ public class RouterLogger {
 					loggedIn = reader.login();
 				}
 				catch (Exception e) {
-					printLog(e);
+					logger.log(e);
 				}
 
 				// Loop...
@@ -185,7 +185,7 @@ public class RouterLogger {
 						exit = true; // Se non si sono verificati errori.
 					}
 					catch (Exception e) {
-						printLog(e);
+						logger.log(e);
 					}
 					finally {
 						// In ogni caso, si esegue la disconnessione dal server...
@@ -193,7 +193,7 @@ public class RouterLogger {
 							reader.logout();
 						}
 						catch (Exception e) {
-							printLog(e);
+							logger.log(e);
 						}
 						reader.disconnect();
 					}
@@ -210,15 +210,6 @@ public class RouterLogger {
 
 		release();
 		out.println("Bye!", true);
-	}
-
-	private void printLog(Throwable throwable) {
-		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
-			out.print(ExceptionUtils.getStackTrace(throwable), true);
-		}
-		else {
-			out.println(ExceptionUtils.getLogMessage(throwable), true);
-		}
 	}
 
 	private void welcome() {

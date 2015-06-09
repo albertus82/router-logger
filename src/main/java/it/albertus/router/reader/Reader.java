@@ -1,9 +1,9 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.RouterLoggerConfiguration;
+import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
-import it.albertus.util.ExceptionUtils;
 import it.albertus.util.NewLine;
 
 import java.io.IOException;
@@ -16,7 +16,6 @@ import org.apache.commons.net.telnet.TelnetClient;
 public abstract class Reader {
 
 	private interface Defaults {
-		boolean DEBUG = false;
 		String ROUTER_ADDRESS = "192.168.1.1";
 		int ROUTER_PORT = 23;
 		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
@@ -26,6 +25,7 @@ public abstract class Reader {
 
 	protected static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected static final Console out = Console.getInstance();
+	protected static final Logger logger = Logger.getInstance();
 
 	protected final TelnetClient telnet = new TelnetClient();
 
@@ -51,7 +51,7 @@ public abstract class Reader {
 			telnet.setSoTimeout(socketTimeoutInMillis);
 		}
 		catch (Exception e) {
-			printLog(e);
+			logger.log(e);
 		}
 		return connected;
 	}
@@ -93,7 +93,7 @@ public abstract class Reader {
 			telnet.disconnect();
 		}
 		catch (Exception e) {
-			printLog(e);
+			logger.log(e);
 		}
 	}
 
@@ -180,14 +180,5 @@ public abstract class Reader {
 	}
 
 	public void release() {}
-	
-	protected void printLog(Throwable throwable) {
-		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
-			out.print(ExceptionUtils.getStackTrace(throwable), true);
-		}
-		else {
-			out.println(ExceptionUtils.getLogMessage(throwable), true);
-		}
-	}
 
 }

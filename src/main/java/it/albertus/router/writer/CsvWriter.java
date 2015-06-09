@@ -67,7 +67,7 @@ public class CsvWriter extends Writer {
 			logFileWriter.flush();
 		}
 		catch (IOException ioe) {
-			printLog(ioe);
+			logger.log(ioe);
 			closeOutputFile();
 		}
 	}
@@ -132,7 +132,7 @@ public class CsvWriter extends Writer {
 				logFileWriter = null;
 			}
 			catch (IOException ioe) {
-				printLog(ioe);
+				logger.log(ioe);
 			}
 		}
 	}

@@ -93,7 +93,7 @@ public class DatabaseWriter extends Writer {
 			insert.executeUpdate();
 		}
 		catch (SQLException se) {
-			printLog(se);
+			logger.log(se);
 		}
 		finally {
 			try {
@@ -180,7 +180,7 @@ public class DatabaseWriter extends Writer {
 				}
 			}
 			catch (SQLException se) {
-				printLog(se);
+				logger.log(se);
 			}
 		}
 	}

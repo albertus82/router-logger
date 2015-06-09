@@ -1,19 +1,16 @@
 package it.albertus.router.writer;
 
 import it.albertus.router.RouterLoggerConfiguration;
+import it.albertus.router.util.Logger;
 import it.albertus.util.Console;
-import it.albertus.util.ExceptionUtils;
 
 import java.util.Map;
 
 public abstract class Writer {
 
-	private interface Defaults {
-		boolean DEBUG = false;
-	}
-
 	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected static final Console out = Console.getInstance();
+	protected static final Logger logger = Logger.getInstance();
 
 	/**
 	 * Salva le informazioni di interesse, precedentemente estratte tramite
@@ -29,14 +26,5 @@ public abstract class Writer {
 	 * ecc.).
 	 */
 	public abstract void release();
-
-	protected void printLog(Throwable throwable) {
-		if (configuration.getBoolean("logger.debug", Defaults.DEBUG)) {
-			out.print(ExceptionUtils.getStackTrace(throwable), true);
-		}
-		else {
-			out.println(ExceptionUtils.getLogMessage(throwable), true);
-		}
-	}
 
 }
