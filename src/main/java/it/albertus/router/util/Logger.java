@@ -19,7 +19,8 @@ import java.util.Set;
 public class Logger {
 
 	public enum Destination {
-		CONSOLE, FILE;
+		CONSOLE,
+		FILE;
 	}
 
 	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
