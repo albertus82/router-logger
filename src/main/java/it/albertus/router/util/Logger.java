@@ -25,6 +25,7 @@ public class Logger {
 
 	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
+	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
 
 	private interface Defaults {
@@ -55,7 +56,7 @@ public class Logger {
 		Set<Destination> dest = getDestinations(destinations);
 
 		if (dest.contains(Destination.CONSOLE)) {
-			logToConsole(new Date().toString() + " - " + text);
+			logToConsole(text);
 		}
 
 		if (dest.contains(Destination.FILE)) {
@@ -82,10 +83,8 @@ public class Logger {
 	public void log(final Throwable throwable, Destination... destinations) {
 		Set<Destination> dest = getDestinations(destinations);
 
-		String base = new Date().toString() + " - ";
-
-		String shortLog = base += ExceptionUtils.getLogMessage(throwable);
-		String longLog = base += ExceptionUtils.getStackTrace(throwable);
+		String shortLog = ExceptionUtils.getLogMessage(throwable);
+		String longLog = ExceptionUtils.getStackTrace(throwable);
 
 		if (dest.contains(Destination.CONSOLE)) {
 			if (debug) {
@@ -107,7 +106,8 @@ public class Logger {
 	}
 
 	private void logToConsole(final String text) {
-		out.println(text, true);
+		final String base = DATE_FORMAT_LOG.format(new Date()) + ' ';
+		out.println(base + text, true);
 	}
 
 	private void logToFile(final String text) throws IOException {
@@ -127,7 +127,8 @@ public class Logger {
 			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
 		}
 		final FileWriter logFileWriter = new FileWriter(logFile, true);
-		logFileWriter.write(text);
+		final String base = new Date().toString() + " - ";
+		logFileWriter.write(base + text);
 		logFileWriter.flush();
 		logFileWriter.close();
 	}
