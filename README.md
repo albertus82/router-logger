@@ -56,7 +56,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`logger.retry.count`**= numero di tentativi di riavvio del ciclo da effettuare in caso di errore durante l'esecuzione (default: `3`). Il contatore si azzera se il ciclo riparte con successo. Utile, ad esempio, in caso di riavvio del modem.
 * **`logger.retry.interval.ms`**= intervallo tra i tentativi di riavvio, in millisecondi (default: `30000` ms).
 * **`logger.writer.thread`**= specifica se eseguire il processo di salvataggio dei dati in un thread separato (default: `false`).
-* **`logger.debug`**= in caso di errore, stampa messaggi dettagliati (default: `false`).
+* **`logger.error.log.destination.path`**= percorso in cui saranno salvati eventuali file registro (`.log`) contenenti i dettagli degli errori occorsi durante l'esecuzione del programma (default: stessa cartella del programma).
 
 ##### Rete
 
@@ -73,6 +73,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`console.show.configuration`**= specifica se si desidera visualizzare l'elenco delle propriet&agrave; attive del routerlogger.cfg all'avvio dell'applicazione (default: `false`).
 * **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto). Un eccessivo numero di chiavi da visualizzare provocher&agrave; lo scorrimento verticale della console, un effetto collaterale probabilmente indesiderato.
 * **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
+* **`console.debug`**= in caso di errore, stampa messaggi dettagliati (default: `false`).
 
 #### Sorgente (modello di router)
 

@@ -34,7 +34,7 @@ public class Logger {
 
 	// Lazy initialization...
 	private static class Singleton {
-		private static final Logger logger = new Logger(configuration.getBoolean("logger.debug", Defaults.DEBUG));
+		private static final Logger logger = new Logger(configuration.getBoolean("console.debug", Defaults.DEBUG));
 	}
 
 	public static Logger getInstance() {
@@ -111,7 +111,7 @@ public class Logger {
 	}
 
 	private void logToFile(final String text) throws IOException {
-		final String logDestinationDir = configuration.getString("log.destination.path");
+		final String logDestinationDir = configuration.getString("logger.error.log.destination.path");
 		final File logFile;
 		if (StringUtils.isNotBlank(logDestinationDir)) {
 			File logDestDir = new File(logDestinationDir.trim());
