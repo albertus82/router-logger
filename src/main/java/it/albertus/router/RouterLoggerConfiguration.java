@@ -32,10 +32,10 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	public class Thresholds {
 
-		private static final String THRESHOLD_PREFIX = "threshold";
-		private static final String THRESHOLD_SUFFIX_KEY = "key";
-		private static final String THRESHOLD_SUFFIX_TYPE = "type";
-		private static final String THRESHOLD_SUFFIX_VALUE = "value";
+		private static final String CFG_PREFIX = "threshold";
+		private static final String CFG_SUFFIX_KEY = "key";
+		private static final String CFG_SUFFIX_TYPE = "type";
+		private static final String CFG_SUFFIX_VALUE = "value";
 
 		private final Set<Threshold> thresholds = new TreeSet<Threshold>();
 
@@ -43,17 +43,17 @@ public class RouterLoggerConfiguration extends Configuration {
 			final Set<String> thresholdsAdded = new HashSet<String>();
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
-				if (key != null && key.startsWith(THRESHOLD_PREFIX + '.')) {
-					if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(THRESHOLD_SUFFIX_KEY) && !key.endsWith(THRESHOLD_SUFFIX_TYPE) && !key.endsWith(THRESHOLD_SUFFIX_VALUE))) {
+				if (key != null && key.startsWith(CFG_PREFIX + '.')) {
+					if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(CFG_SUFFIX_KEY) && !key.endsWith(CFG_SUFFIX_TYPE) && !key.endsWith(CFG_SUFFIX_VALUE))) {
 						throw new IllegalArgumentException("Thresholds misconfigured. Review your " + configuration.getFileName() + " file.");
 					}
 					final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 					if (thresholdsAdded.contains(thresholdName)) {
 						continue;
 					}
-					final String thresholdKey = configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
-					final Type thresholdType = Type.getEnum(configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
-					final String thresholdValue = configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE);
+					final String thresholdKey = configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_KEY);
+					final Type thresholdType = Type.getEnum(configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_TYPE));
+					final String thresholdValue = configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_VALUE);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
 						throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\". Review your " + configuration.getFileName() + " file.");
 					}
