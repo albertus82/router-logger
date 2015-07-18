@@ -1,21 +1,17 @@
 package it.albertus.router;
 
-import it.albertus.router.Threshold.Type;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
-import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class RouterLogger {
 
@@ -34,17 +30,13 @@ public class RouterLogger {
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
 	}
 
-	private static final String THRESHOLD_PREFIX = "threshold";
-	private static final String THRESHOLD_SUFFIX_KEY = "key";
-	private static final String THRESHOLD_SUFFIX_TYPE = "type";
-	private static final String THRESHOLD_SUFFIX_VALUE = "value";
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
-	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private static final Console out = Console.getInstance();
 	private static final Logger logger = Logger.getInstance();
 
-	private final Set<Threshold> thresholds = new TreeSet<Threshold>();
+	private final Set<Threshold> thresholds = configuration.getThresholds();
 	private final Reader reader;
 	private final Writer writer;
 
@@ -53,38 +45,11 @@ public class RouterLogger {
 	}
 
 	private RouterLogger() {
-		// Valorizzazione delle soglie...
-		loadThresholds();
-
 		// Inizializzazione del Reader...
 		reader = initReader();
 
 		// Inizializzazione del Writer...
 		writer = initWriter();
-	}
-
-	private void loadThresholds() {
-		final Set<String> thresholdsAdded = new HashSet<String>();
-		for (Object objectKey : configuration.getProperties().keySet()) {
-			String key = (String) objectKey;
-			if (key != null && key.startsWith(THRESHOLD_PREFIX + '.')) {
-				if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(THRESHOLD_SUFFIX_KEY) && !key.endsWith(THRESHOLD_SUFFIX_TYPE) && !key.endsWith(THRESHOLD_SUFFIX_VALUE))) {
-					throw new IllegalArgumentException("Thresholds misconfigured. Review your " + configuration.getFileName() + " file.");
-				}
-				final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
-				if (thresholdsAdded.contains(thresholdName)) {
-					continue;
-				}
-				final String thresholdKey = configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_KEY);
-				final Type thresholdType = Type.getEnum(configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_TYPE));
-				final String thresholdValue = configuration.getString(THRESHOLD_PREFIX + '.' + thresholdName + '.' + THRESHOLD_SUFFIX_VALUE);
-				if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-					throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\". Review your " + configuration.getFileName() + " file.");
-				}
-				thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
-				thresholdsAdded.add(thresholdName);
-			}
-		}
 	}
 
 	private Reader initReader() {
