@@ -2,7 +2,6 @@ package it.albertus.router;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
@@ -36,7 +35,6 @@ public class RouterLogger {
 	private static final Console out = Console.getInstance();
 	private static final Logger logger = Logger.getInstance();
 
-	private final Set<Threshold> thresholds = configuration.getThresholds();
 	private final Reader reader;
 	private final Writer writer;
 
@@ -197,8 +195,8 @@ public class RouterLogger {
 			out.println("Device model: " + reader.getDeviceModel().trim() + '.');
 			lineBreak = true;
 		}
-		if (!thresholds.isEmpty()) {
-			out.println("Thresholds: " + thresholds.toString());
+		if (!configuration.getThresholds().isEmpty()) {
+			out.println("Thresholds: " + configuration.getThresholds().toString());
 			lineBreak = true;
 		}
 		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
@@ -278,7 +276,7 @@ public class RouterLogger {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
 				final long waitTimeInMillis;
-				final boolean thresholdReached = isTresholdReached(info);
+				final boolean thresholdReached = configuration.getThresholds().isReached(info);
 				if (thresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 					if (thresholdReached) {
@@ -305,22 +303,6 @@ public class RouterLogger {
 		else {
 			writer.saveInfo(info);
 		}
-	}
-
-	private boolean isTresholdReached(final Map<String, String> info) {
-		// Gestione delle soglie...
-		if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
-			for (final String key : info.keySet()) {
-				if (key != null && key.trim().length() != 0) {
-					for (final Threshold threshold : thresholds) {
-						if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	/**
