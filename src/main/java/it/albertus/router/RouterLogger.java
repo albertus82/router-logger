@@ -1,8 +1,5 @@
 package it.albertus.router;
 
-import java.io.IOException;
-import java.util.Map;
-
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
@@ -12,7 +9,27 @@ import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
 
-public class RouterLogger {
+import java.io.IOException;
+import java.util.Map;
+
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+
+public class RouterLogger extends ApplicationWindow {
 
 	private interface Defaults {
 		int ITERATIONS = -1;
@@ -38,17 +55,11 @@ public class RouterLogger {
 	private final Reader reader;
 	private final Writer writer;
 
-	public static final void main(final String... args) {
-		new RouterLogger().run();
-	}
+	protected boolean tablePacked;
 
-	private RouterLogger() {
-		// Inizializzazione del Reader...
-		reader = initReader();
-
-		// Inizializzazione del Writer...
-		writer = initWriter();
-	}
+//	public static final void main(final String... args) {
+//		new RouterLogger().run();
+//	}
 
 	private Reader initReader() {
 		final String configurationKey = "reader.class.name";
@@ -272,6 +283,40 @@ public class RouterLogger {
 
 			lastLogLength = log.length();
 			out.print(clean.toString() + log.toString());
+			Display.getDefault().syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					// rl.addRow(info);
+					if (info != null && !info.isEmpty() && table != null) {
+						if (!tableInitialized) {
+							for (String key : info.keySet()) {
+								TableColumn column = new TableColumn(table, SWT.NONE);
+								column.setText(key);
+							}
+							tableInitialized = true;
+						}
+
+						int i = 0;
+						TableItem item = new TableItem(table, SWT.NONE);
+						for (String key : info.keySet()) {
+							item.setText(i++, info.get(key));
+						}
+
+						if (!tablePacked) {
+							for (i = 0; i < info.keySet().size(); i++) {
+								table.getColumn(i).pack();
+							}
+							tablePacked = true;
+						}
+
+						// table.setSize(table.computeSize(SWT.DEFAULT, 200));
+
+						table.redraw();
+					}
+				}
+			});
+
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -318,6 +363,140 @@ public class RouterLogger {
 			writer.release();
 		}
 		catch (Exception e) {}
+	}
+	
+	public Table table;
+	private boolean tableInitialized = false;
+
+	/**
+	 * Create the application window.
+	 */
+	public RouterLogger() {
+		super(null);
+		createActions();
+		addToolBar(SWT.FLAT | SWT.WRAP);
+		addMenuBar();
+		addStatusLine();
+		// Inizializzazione del Reader...
+		reader = initReader();
+
+		// Inizializzazione del Writer...
+		writer = initWriter();
+	}
+
+	/**
+	 * Create contents of the application window.
+	 * @param parent
+	 */
+	@Override
+	protected Control createContents(Composite parent) {
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(4, true);
+		container.setLayout(layout);
+
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+			label.setText("1");
+		}
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setText("2");
+		}
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setText("3");
+		}
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setText("4");
+		}
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setText("5");
+		}
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setText("6");
+		}
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setText("7");
+		}
+		{
+			Label label = new Label(container, SWT.NONE);
+			label.setText("8");
+		}
+		{
+			table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+			table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
+			table.setHeaderVisible(true);
+			table.setLinesVisible(true);
+		}
+
+		return container;
+	}
+
+	private void createActions() {
+		// Create the actions
+	}
+
+	@Override
+	protected MenuManager createMenuManager() {
+		MenuManager menuManager = new MenuManager("menu");
+		return menuManager;
+	}
+
+	@Override
+	protected ToolBarManager createToolBarManager(int style) {
+		ToolBarManager toolBarManager = new ToolBarManager(style);
+		return toolBarManager;
+	}
+
+	@Override
+	protected StatusLineManager createStatusLineManager() {
+		StatusLineManager statusLineManager = new StatusLineManager();
+		return statusLineManager;
+	}
+
+	public static void main(String args[]) {
+		try {
+			final RouterLogger window = new RouterLogger();
+
+			window.setBlockOnOpen(true);
+
+			Thread updateThread = new Thread() {
+		        public void run() {
+		        	try {
+						Thread.sleep(2000);
+					}
+					catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        	window.run();
+		        }
+		    };
+		    // background thread
+		    updateThread.setDaemon(true);
+		    updateThread.start();
+			window.open();
+
+			Display.getCurrent().dispose();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Router Logger");
+	}
+
+	protected Point getInitialSize() {
+		return new Point(750, 550);
 	}
 
 }
