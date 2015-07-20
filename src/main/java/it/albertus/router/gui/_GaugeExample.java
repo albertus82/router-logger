@@ -17,7 +17,7 @@ package it.albertus.router.gui;
 	 * @author Xihui Chen
 	 *
 	 */
-	public class GaugeExample {
+	public class _GaugeExample {
 		private static int counter = 0;
 		public static void main(String[] args) {
 			final Shell shell = new Shell();

@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-public class TableLogger implements Runnable {
+public class GuiTableLogger implements Runnable {
 
 	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
@@ -21,7 +21,7 @@ public class TableLogger implements Runnable {
 	private final Map<String, String> info;
 	private final int iteration;
 
-	public TableLogger(Table table, Map<String, String> info, int iteration) {
+	public GuiTableLogger(Table table, Map<String, String> info, int iteration) {
 		this.table = table;
 		this.info = info;
 		this.iteration = iteration;

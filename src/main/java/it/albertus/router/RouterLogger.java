@@ -1,7 +1,7 @@
 package it.albertus.router;
 
 import it.albertus.router.gui.GuiConsole;
-import it.albertus.router.gui.TableLogger;
+import it.albertus.router.gui.GuiTableLogger;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
@@ -281,7 +281,7 @@ public class RouterLogger extends ApplicationWindow {
 			lastLogLength = log.length();
 			out.print(clean.toString() + log.toString());
 			*/
-			Display.getDefault().syncExec(new TableLogger(table, info, iteration));
+			Display.getDefault().syncExec(new GuiTableLogger(table, info, iteration));
 
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
