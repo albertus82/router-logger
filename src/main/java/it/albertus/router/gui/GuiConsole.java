@@ -37,7 +37,7 @@ public class GuiConsole extends Console {
 	}
 
 	private StyledText createStyledText(final Composite container) {
-		StyledText styledText = new StyledText(container, SWT.BORDER);
+		StyledText styledText = new StyledText(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 		if (!fontRegistry.hasValueFor("console")) {
@@ -45,6 +45,7 @@ public class GuiConsole extends Console {
 			fontRegistry.put("console", new FontData[] { new FontData(terminalFont.getFontData()[0].getName(), 10, SWT.NORMAL) });
 		}
 		styledText.setFont(fontRegistry.get("console"));
+		styledText.setEditable(false);
 		return styledText;
 	}
 

@@ -5,8 +5,10 @@ import it.albertus.router.gui.GuiTable;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.ConsoleFactory;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
+import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
 import it.albertus.util.ThreadUtils;
 import it.albertus.util.Version;
@@ -33,17 +35,18 @@ public class RouterLogger extends ApplicationWindow {
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean WRITER_THREAD = false;
-		// boolean CONSOLE_ANIMATION = true;
+		boolean CONSOLE_ANIMATION = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
-		// String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
+		boolean GUI_ACTIVE = true;
+		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
 	}
 
-	// private static final char[] ANIMATION = { '-', '\\', '|', '/' };
+	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
 	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private static final GuiConsole out = GuiConsole.getInstance();
+	private static final Console out = ConsoleFactory.getConsole();
 	private static final GuiTable table = GuiTable.getInstance();
 	private static final Logger logger = Logger.getInstance();
 
@@ -219,63 +222,65 @@ public class RouterLogger extends ApplicationWindow {
 		long hysteresis = 0;
 
 		// Iterazione...
-		for (int iteration = 1/* , lastLogLength = 0 */; iteration <= iterations; iteration++) {
+		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
-			// Scrittura indice dell'iterazione in console...
-			/*
-			final StringBuilder clean = new StringBuilder();
-			while (lastLogLength-- > 0) {
-				clean.append('\b').append(' ').append('\b');
+			if (configuration.getBoolean("gui.active", Defaults.GUI_ACTIVE)) {
+				table.addRow(info, iteration);
 			}
-			final StringBuilder log = new StringBuilder();
-			final boolean animate = configuration.getBoolean("console.animation", Defaults.CONSOLE_ANIMATION);
-			if (animate) {
-				log.append(ANIMATION[iteration & 3]).append(' ');
-			}
-			log.append(iteration);
-			if (iterations != Integer.MAX_VALUE) {
-				log.append('/').append(iterations);
-			}
-			log.append(' ');
-			if (animate) {
-				log.append(ANIMATION[iteration & 3]).append(' ');
-			}
-			// Fine scrittura indice.
+			else {
+				// Scrittura indice dell'iterazione in console...
+				final StringBuilder clean = new StringBuilder();
+				while (lastLogLength-- > 0) {
+					clean.append('\b').append(' ').append('\b');
+				}
+				final StringBuilder log = new StringBuilder();
+				final boolean animate = configuration.getBoolean("console.animation", Defaults.CONSOLE_ANIMATION);
+				if (animate) {
+					log.append(ANIMATION[iteration & 3]).append(' ');
+				}
+				log.append(iteration);
+				if (iterations != Integer.MAX_VALUE) {
+					log.append('/').append(iterations);
+				}
+				log.append(' ');
+				if (animate) {
+					log.append(ANIMATION[iteration & 3]).append(' ');
+				}
+				// Fine scrittura indice.
 
-			// Scrittura informazioni aggiuntive richieste...
-			if (info != null && !info.isEmpty()) {
-				final StringBuilder infoToShow = new StringBuilder();
-				for (String keyToShow : configuration.getString("console.show.keys", "").split(configuration.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
-					if (keyToShow != null && !"".equals(keyToShow.trim())) {
-						keyToShow = keyToShow.trim();
-						for (final String key : info.keySet()) {
-							if (key != null && key.trim().equals(keyToShow)) {
-								if (infoToShow.length() == 0) {
-									infoToShow.append('[');
+				// Scrittura informazioni aggiuntive richieste...
+				if (info != null && !info.isEmpty()) {
+					final StringBuilder infoToShow = new StringBuilder();
+					for (String keyToShow : configuration.getString("console.show.keys", "").split(configuration.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
+						if (keyToShow != null && !"".equals(keyToShow.trim())) {
+							keyToShow = keyToShow.trim();
+							for (final String key : info.keySet()) {
+								if (key != null && key.trim().equals(keyToShow)) {
+									if (infoToShow.length() == 0) {
+										infoToShow.append('[');
+									}
+									else {
+										infoToShow.append(", ");
+									}
+									infoToShow.append(keyToShow + ": " + info.get(key));
 								}
-								else {
-									infoToShow.append(", ");
-								}
-								infoToShow.append(keyToShow + ": " + info.get(key));
 							}
 						}
 					}
+					if (infoToShow.length() != 0) {
+						infoToShow.append("] ");
+					}
+					log.append(infoToShow);
 				}
-				if (infoToShow.length() != 0) {
-					infoToShow.append("] ");
-				}
-				log.append(infoToShow);
-			}
-			// Fine scrittura informazioni aggiuntive.
+				// Fine scrittura informazioni aggiuntive.
 
-			lastLogLength = log.length();
-			out.print(clean.toString() + log.toString());
-			*/
-			table.addRow(info, iteration);
+				lastLogLength = log.length();
+				out.print(clean.toString() + log.toString());
+			}
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -354,7 +359,7 @@ public class RouterLogger extends ApplicationWindow {
 		table.init(container);
 
 		// Console
-		out.init(container);
+		((GuiConsole)out).init(container);
 
 		return container;
 	}
@@ -382,30 +387,36 @@ public class RouterLogger extends ApplicationWindow {
 	// }
 
 	public static void main(String args[]) {
-		try {
-			final RouterLogger window = new RouterLogger();
+		if (configuration.getBoolean("gui.active", Defaults.GUI_ACTIVE)) {
+			// GUI...
+			try {
+				final RouterLogger window = new RouterLogger();
 
-			window.setBlockOnOpen(true);
+				window.setBlockOnOpen(true);
 
-			Thread updateThread = new Thread() {
-				@Override
-				public void run() {
-					// Per evitare che l'aggiornamento della tabella avvenga
-					// prima che essa sia stata creata.
-					ThreadUtils.sleep(1000);
+				Thread updateThread = new Thread() {
+					@Override
+					public void run() {
+						// Per evitare che l'aggiornamento della tabella avvenga prima che essa sia stata creata.
+						ThreadUtils.sleep(1000);
 
-					window.run();
-				}
-			};
+						window.run();
+					}
+				};
 
-			updateThread.setDaemon(true);
-			updateThread.start();
-			window.open();
+				updateThread.setDaemon(true);
+				updateThread.start();
+				window.open();
 
-			Display.getCurrent().dispose();
+				Display.getCurrent().dispose();
+			}
+			catch (Exception e) {
+				logger.log(e);
+			}
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		else {
+			// Console...
+			new RouterLogger().run();
 		}
 	}
 
@@ -456,4 +467,5 @@ public class RouterLogger extends ApplicationWindow {
 	//
 	// return true;
 	// }
+
 }

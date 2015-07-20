@@ -1,8 +1,8 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.RouterLoggerConfiguration;
-import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.ConsoleFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
@@ -25,7 +25,7 @@ public abstract class Reader {
 	}
 
 	protected static final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	protected static final Console out = GuiConsole.getInstance();
+	protected static final Console out = ConsoleFactory.getConsole();
 	protected static final Logger logger = Logger.getInstance();
 
 	protected final TelnetClient telnet = new TelnetClient();

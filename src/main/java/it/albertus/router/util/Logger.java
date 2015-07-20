@@ -1,9 +1,7 @@
 package it.albertus.router.util;
 
 import it.albertus.router.RouterLoggerConfiguration;
-import it.albertus.router.gui.GuiConsole;
 import it.albertus.util.Configuration;
-import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
 
@@ -42,7 +40,6 @@ public class Logger {
 		return Singleton.logger;
 	}
 
-	private final Console out = GuiConsole.getInstance();
 	private final boolean debug;
 
 	private Logger(boolean debug) {
@@ -108,7 +105,7 @@ public class Logger {
 
 	private void logToConsole(final String text) {
 		final String base = DATE_FORMAT_LOG.format(new Date()) + ' ';
-		out.println(base + text, true);
+		ConsoleFactory.getConsole().println(base + text, true);
 	}
 
 	private void logToFile(final String text) throws IOException {
