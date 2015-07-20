@@ -38,6 +38,7 @@ public class RouterLogger {
 		boolean CONSOLE_ANIMATION = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		boolean GUI_ACTIVE = true;
+		boolean GUI_MINIMIZE_TRAY = true;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
@@ -366,32 +367,10 @@ public class RouterLogger {
 		table.init(container);
 
 		// Console
-		((GuiConsole)out).init(container);
+		((GuiConsole) out).init(container);
 
 		return container;
 	}
-
-	// private void createActions() {
-	// // Create the actions
-	// }
-	//
-	// @Override
-	// protected MenuManager createMenuManager() {
-	// MenuManager menuManager = new MenuManager("menu");
-	// return menuManager;
-	// }
-	//
-	// @Override
-	// protected ToolBarManager createToolBarManager(int style) {
-	// ToolBarManager toolBarManager = new ToolBarManager(style);
-	// return toolBarManager;
-	// }
-	//
-	// @Override
-	// protected StatusLineManager createStatusLineManager() {
-	// StatusLineManager statusLineManager = new StatusLineManager();
-	// return statusLineManager;
-	// }
 
 	public static void main(String args[]) {
 		if (configuration.getBoolean("gui.active", Defaults.GUI_ACTIVE)) {
@@ -410,7 +389,6 @@ public class RouterLogger {
 						routerLogger.run();
 					}
 				};
-				updateThread.setDaemon(true);
 				updateThread.start();
 
 				while (!shell.isDisposed()) {
@@ -437,9 +415,11 @@ public class RouterLogger {
 	}
 
 	private void configureShell(final Shell shell) {
-		shell.setText("Router Logger");
+		shell.setText(this.getClass().getSimpleName());
 		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
-		new GuiTray(shell);
+		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
+			new GuiTray(shell);
+		}
 	}
 
 	protected Point getInitialSize() {

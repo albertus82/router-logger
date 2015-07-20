@@ -1,5 +1,7 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.RouterLogger;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -23,13 +25,14 @@ public class GuiTray {
 		});
 	}
 
-	public void iconify(final Shell shell) {
+	private void iconify(final Shell shell) {
 		Display display = Display.getCurrent();
 		Tray tray = display.getSystemTray();
 		if (tray != null) {
 			shell.setVisible(false);
 			final TrayItem trayItem = new TrayItem(tray, SWT.NONE);
 			trayItem.setImage(GuiImages.ICONS[12]);
+			trayItem.setToolTipText(RouterLogger.class.getSimpleName());
 			final Menu menu = new Menu(shell, SWT.POP_UP);
 			MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
 			menuItem.setText("Open");
@@ -70,6 +73,7 @@ public class GuiTray {
 					trayItem.setVisible(false);
 				}
 			});
+
 		}
 	}
 
