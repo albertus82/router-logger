@@ -5,13 +5,17 @@ import it.albertus.util.NewLine;
 
 import java.util.Locale;
 
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 public class GuiConsole extends Console {
-
-	private StyledText styledText;
-	private boolean initialized = false;
 
 	private static class Singleton {
 		private static final GuiConsole console = new GuiConsole();
@@ -23,17 +27,30 @@ public class GuiConsole extends Console {
 
 	private GuiConsole() {}
 
-	public void init(StyledText styledText) {
-		if (!initialized) {
-			this.styledText = styledText;
-			initialized = true;
+	public void init(final Composite container) {
+		if (this.styledText == null) {
+			this.styledText = createStyledText(container);
 		}
 		else {
 			throw new IllegalStateException(this.getClass().getSimpleName() + " already initialized.");
 		}
 	}
 
+	private StyledText createStyledText(final Composite container) {
+		StyledText styledText = new StyledText(container, SWT.BORDER);
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		FontRegistry fontRegistry = JFaceResources.getFontRegistry();
+		if (!fontRegistry.hasValueFor("console")) {
+			Font terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
+			fontRegistry.put("console", new FontData[] { new FontData(terminalFont.getFontData()[0].getName(), 10, SWT.NORMAL) });
+		}
+		styledText.setFont(fontRegistry.get("console"));
+		return styledText;
+	}
+
 	private static final String NEWLINE = NewLine.CRLF.toString();
+	
+	private StyledText styledText = null;
 
 	public void print(String value) {
 		final String toPrint;
@@ -46,7 +63,7 @@ public class GuiConsole extends Console {
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				if (!styledText.isDisposed()) {
+				if (styledText != null && !styledText.isDisposed()) {
 					styledText.setText(styledText.getText() + toPrint);
 				}
 			}
