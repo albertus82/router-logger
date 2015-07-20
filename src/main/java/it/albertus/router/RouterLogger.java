@@ -1,7 +1,9 @@
 package it.albertus.router;
 
 import it.albertus.router.gui.GuiConsole;
+import it.albertus.router.gui.GuiImages;
 import it.albertus.router.gui.GuiTable;
+import it.albertus.router.gui.GuiTray;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.ConsoleFactory;
@@ -15,6 +17,9 @@ import it.albertus.util.Version;
 import java.io.IOException;
 import java.util.Map;
 
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -415,13 +420,16 @@ public class RouterLogger {
 						display.sleep();
 				}
 
-				// Rilascio risorse prima della chiusura...
+				// Rilascio risorse in fase di chiusura...
 				routerLogger.reader.disconnect();
 				routerLogger.release();
 				display.dispose();
 			}
 			catch (Exception e) {
 				logger.log(e);
+			}
+			finally {
+				System.exit(0);
 			}
 		}
 		else {
@@ -430,49 +438,19 @@ public class RouterLogger {
 		}
 	}
 
-	private void configureShell(Shell newShell) {
-		newShell.setText("Router Logger");
+	private void configureShell(final Shell shell) {
+		shell.setText("Router Logger");
+		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
+		shell.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellIconified(ShellEvent e) {
+				new GuiTray(shell).iconify();
+			}
+		});
 	}
 
 	protected Point getInitialSize() {
 		return new Point(750, 550);
 	}
-//
-//	@Override
-//	public boolean close() {
-//		reader.disconnect();
-//		release();
-//		return super.close();
-//	}
-
-	// public boolean close() {
-	//
-	// final Shell grandShell = this.getShell();
-	// grandShell.setVisible(false);
-	//
-	// Display display = Display.getCurrent();
-	//
-	// Tray tray = display.getSystemTray();
-	// if(tray != null) {
-	// TrayItem item = new TrayItem(tray, SWT.NONE);
-	// // item.setImage(ArecaImages.ICO_SMALL);
-	// final Menu menu = new Menu(getShell(), SWT.POP_UP);
-	// MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-	// menuItem.setText("Areca");
-	// menuItem.addListener (SWT.Selection, new Listener () {
-	// public void handleEvent (Event event) {
-	// grandShell.setVisible(true);
-	// }
-	// });
-	// item.addListener (SWT.MenuDetect, new Listener () {
-	// public void handleEvent (Event event) {
-	// menu.setVisible (true);
-	// }
-	// });
-	//
-	// }
-	//
-	// return true;
-	// }
 
 }
