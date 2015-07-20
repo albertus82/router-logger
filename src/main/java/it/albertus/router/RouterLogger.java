@@ -1,6 +1,7 @@
 package it.albertus.router;
 
 import it.albertus.router.gui.GuiConsole;
+import it.albertus.router.gui.TableLogger;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
@@ -11,9 +12,6 @@ import it.albertus.util.ThreadUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 import org.eclipse.jface.resource.FontRegistry;
@@ -31,8 +29,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
 public class RouterLogger extends ApplicationWindow {
 
@@ -44,16 +40,15 @@ public class RouterLogger extends ApplicationWindow {
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean WRITER_THREAD = false;
-		boolean CONSOLE_ANIMATION = true;
+//		boolean CONSOLE_ANIMATION = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
-		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
+//		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
 	}
 
-	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
+//	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 	
-	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private static final GuiConsole out = GuiConsole.getInstance();
@@ -230,13 +225,14 @@ public class RouterLogger extends ApplicationWindow {
 		long hysteresis = 0;
 
 		// Iterazione...
-		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
+		for (int iteration = 1/*, lastLogLength = 0*/; iteration <= iterations; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
 			// Scrittura indice dell'iterazione in console...
+			/*
 			final StringBuilder clean = new StringBuilder();
 			while (lastLogLength-- > 0) {
 				clean.append('\b').append(' ').append('\b');
@@ -284,42 +280,8 @@ public class RouterLogger extends ApplicationWindow {
 
 			lastLogLength = log.length();
 			out.print(clean.toString() + log.toString());
-			Display.getDefault().syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					// rl.addRow(info);
-					if (info != null && !info.isEmpty() && table != null) {
-						if (!tableInitialized) {
-							TableColumn column = new TableColumn(table, SWT.NONE);
-							column.setText("Timestamp");
-							for (String key : info.keySet()) {
-								column = new TableColumn(table, SWT.NONE);
-								column.setText(key);
-							}
-							tableInitialized = true;
-						}
-
-						int i = 0;
-						TableItem item = new TableItem(table, SWT.NONE);
-						item.setText(i++, DATE_FORMAT_TABLE_GUI.format(new Date()));
-						for (String key : info.keySet()) {
-							item.setText(i++, info.get(key));
-						}
-
-						if (!tablePacked) {
-							for (i = 0; i < info.keySet().size(); i++) {
-								table.getColumn(i).pack();
-							}
-							tablePacked = true;
-						}
-
-						// table.setSize(table.computeSize(SWT.DEFAULT, 200));
-
-						table.redraw();
-					}
-				}
-			});
+			*/
+			Display.getDefault().syncExec(new TableLogger(table, info, iteration));
 
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
@@ -370,10 +332,7 @@ public class RouterLogger extends ApplicationWindow {
 	}
 	
 	private Table table;
-	private boolean tableInitialized = false;
-	private boolean tablePacked = false;
-
-	private StyledText styledText;
+//	private StyledText styledText;
 
 
 	public RouterLogger() {
@@ -436,7 +395,7 @@ public class RouterLogger extends ApplicationWindow {
 		table.setLinesVisible(true);
 
 		// Console
-		styledText = new StyledText(container, SWT.BORDER);
+		StyledText styledText = new StyledText(container, SWT.BORDER);
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 		if (!fontRegistry.hasValueFor("console")) {
@@ -444,8 +403,8 @@ public class RouterLogger extends ApplicationWindow {
 			fontRegistry.put("console", new FontData[] { new FontData(terminalFont.getFontData()[0].getName(), 10, SWT.NORMAL) });
 		}
 		styledText.setFont(fontRegistry.get("console"));
-		out.init(styledText);
-
+		out.init(styledText); // Aggancio la console alla casella di testo della GUI.
+		
 		return container;
 	}
 
