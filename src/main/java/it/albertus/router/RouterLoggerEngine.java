@@ -24,7 +24,6 @@ public abstract class RouterLoggerEngine {
 		boolean WRITER_THREAD = false;
 		boolean CONSOLE_ANIMATION = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
-		boolean GUI_MINIMIZE_TRAY = true;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;

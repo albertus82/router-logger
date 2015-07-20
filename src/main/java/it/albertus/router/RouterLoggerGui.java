@@ -18,6 +18,10 @@ import org.eclipse.swt.widgets.Shell;
 
 public class RouterLoggerGui extends RouterLoggerEngine {
 	
+	protected interface Defaults extends RouterLoggerEngine.Defaults {
+		boolean GUI_MINIMIZE_TRAY = true;
+	}
+	
 	private static final GuiTable table = GuiTable.getInstance();
 
 	public static void main(String args[]) {
