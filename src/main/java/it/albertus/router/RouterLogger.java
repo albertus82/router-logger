@@ -17,8 +17,6 @@ import it.albertus.util.Version;
 import java.io.IOException;
 import java.util.Map;
 
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
@@ -441,12 +439,7 @@ public class RouterLogger {
 	private void configureShell(final Shell shell) {
 		shell.setText("Router Logger");
 		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
-		shell.addShellListener(new ShellAdapter() {
-			@Override
-			public void shellIconified(ShellEvent e) {
-				new GuiTray(shell).iconify();
-			}
-		});
+		new GuiTray(shell);
 	}
 
 	protected Point getInitialSize() {

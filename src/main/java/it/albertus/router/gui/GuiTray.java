@@ -1,6 +1,8 @@
 package it.albertus.router.gui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -12,13 +14,16 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class GuiTray {
 
-	private final Shell shell;
-
-	public GuiTray(Shell shell) {
-		this.shell = shell;
+	public GuiTray(final Shell shell) {
+		shell.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellIconified(ShellEvent e) {
+				iconify(shell);
+			}
+		});
 	}
 
-	public void iconify() {
+	public void iconify(final Shell shell) {
 		Display display = Display.getCurrent();
 		Tray tray = display.getSystemTray();
 		if (tray != null) {
@@ -67,4 +72,5 @@ public class GuiTray {
 			});
 		}
 	}
+
 }
