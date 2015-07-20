@@ -42,7 +42,10 @@ public class GuiTable {
 
 	private Table createTable(final Composite container) {
 		Table table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gridData.minimumHeight = 250;
+		gridData.heightHint = 250;
+		table.setLayoutData(gridData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		return table;

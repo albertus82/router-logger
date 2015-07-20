@@ -38,7 +38,10 @@ public class GuiConsole extends Console {
 
 	private StyledText createStyledText(final Composite container) {
 		StyledText styledText = new StyledText(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gridData.minimumHeight = 250;
+		gridData.heightHint = 250;
+		styledText.setLayoutData(gridData);
 		FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 		if (!fontRegistry.hasValueFor("console")) {
 			Font terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
