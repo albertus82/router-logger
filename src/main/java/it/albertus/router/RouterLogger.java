@@ -163,8 +163,7 @@ public class RouterLogger extends ApplicationWindow {
 					}
 				}
 				else {
-					// In caso di autenticazione fallita, si esce subito per
-					// evitare il blocco dell'account.
+					// In caso di autenticazione fallita, si esce subito per evitare il blocco dell'account.
 					exit = true;
 					reader.disconnect();
 				}

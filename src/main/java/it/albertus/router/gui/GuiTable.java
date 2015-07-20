@@ -1,5 +1,7 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.RouterLoggerConfiguration;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +17,10 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class GuiTable {
 
+	private interface Defaults {
+		int MAX_ITEMS = 10000;
+	}
+
 	private static class Singleton {
 		private static final GuiTable table = new GuiTable();
 	}
@@ -22,7 +28,7 @@ public class GuiTable {
 	public static GuiTable getInstance() {
 		return Singleton.table;
 	}
-	
+
 	private GuiTable() {}
 
 	public void init(final Composite container) {
@@ -54,6 +60,8 @@ public class GuiTable {
 			@Override
 			public void run() {
 				if (info != null && !info.isEmpty() && table != null && !table.isDisposed()) {
+
+					// Header (una tantum)...
 					if (!tableInitialized) {
 						TableColumn column = new TableColumn(table, SWT.NONE);
 						column.setText("#");
@@ -66,14 +74,16 @@ public class GuiTable {
 						tableInitialized = true;
 					}
 
+					// Dati...
 					int i = 0;
 					TableItem item = new TableItem(table, SWT.NONE, 0);
-					item.setText(i++, String.valueOf(iteration));
+					item.setText(i++, Integer.toString(iteration));
 					item.setText(i++, timestamp);
 					for (String key : info.keySet()) {
 						item.setText(i++, info.get(key));
 					}
 
+					// Dimesionamento delle colonne (una tantum)...
 					if (!tablePacked) {
 						while (i > 0) {
 							table.getColumn(--i).pack();
@@ -82,6 +92,13 @@ public class GuiTable {
 						tablePacked = true;
 					}
 
+					// Limitatore righe in tabella...
+					final int maxItems = RouterLoggerConfiguration.getInstance().getInt("gui.table.items.max", Defaults.MAX_ITEMS);
+					if (table.getItemCount() > maxItems) {
+						table.remove(maxItems);
+					}
+
+					// Forza ridisegno tabella ad ogni aggiornamento...
 					table.redraw();
 				}
 			}
