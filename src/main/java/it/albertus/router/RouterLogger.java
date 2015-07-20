@@ -10,14 +10,11 @@ import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
-import it.albertus.util.ThreadUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
 import java.util.Map;
 
-import org.eclipse.jface.window.ApplicationWindow;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class RouterLogger extends ApplicationWindow {
+public class RouterLogger {
 
 	private interface Defaults {
 		int ITERATIONS = -1;
@@ -332,7 +329,7 @@ public class RouterLogger extends ApplicationWindow {
 	}
 
 	public RouterLogger() {
-		super(null);
+		// super(null);
 		// createActions();
 		// addToolBar(SWT.FLAT | SWT.WRAP);
 		// addMenuBar();
@@ -345,9 +342,16 @@ public class RouterLogger extends ApplicationWindow {
 		writer = initWriter();
 	}
 
-	@Override
-	protected Control createContents(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
+	private Shell createShell(Display display) {
+		final Shell shell = new Shell(display);
+		configureShell(shell);
+		shell.setSize(getInitialSize());
+		createContents(shell);
+		return shell;
+	}
+
+	private Control createContents(Composite parent) {
+		Composite container = parent;// new Composite(parent, SWT.NONE);
 
 		// Variare il numero per aumentare o diminuire le colonne del layout.
 		// Modificare conseguentemente anche lo span della tabella e della
@@ -390,25 +394,31 @@ public class RouterLogger extends ApplicationWindow {
 		if (configuration.getBoolean("gui.active", Defaults.GUI_ACTIVE)) {
 			// GUI...
 			try {
-				final RouterLogger window = new RouterLogger();
+				// Creazione finestra applicazione...
+				final Display display = new Display();
+				final RouterLogger routerLogger = new RouterLogger();
+				final Shell shell = routerLogger.createShell(display);
+				shell.open();
 
-				window.setBlockOnOpen(true);
-
-				Thread updateThread = new Thread() {
+				// Avvio thread di interrogazione router...
+				final Thread updateThread = new Thread() {
 					@Override
 					public void run() {
-						// Per evitare che l'aggiornamento della tabella avvenga prima che essa sia stata creata.
-						ThreadUtils.sleep(1000);
-
-						window.run();
+						routerLogger.run();
 					}
 				};
-
 				updateThread.setDaemon(true);
 				updateThread.start();
-				window.open();
 
-				Display.getCurrent().dispose();
+				while (!shell.isDisposed()) {
+					if (!display.readAndDispatch())
+						display.sleep();
+				}
+
+				// Rilascio risorse prima della chiusura...
+				routerLogger.reader.disconnect();
+				routerLogger.release();
+				display.dispose();
 			}
 			catch (Exception e) {
 				logger.log(e);
@@ -420,23 +430,20 @@ public class RouterLogger extends ApplicationWindow {
 		}
 	}
 
-	@Override
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
+	private void configureShell(Shell newShell) {
 		newShell.setText("Router Logger");
 	}
 
-	@Override
 	protected Point getInitialSize() {
 		return new Point(750, 550);
 	}
-
-	@Override
-	public boolean close() {
-		reader.disconnect();
-		release();
-		return super.close();
-	}
+//
+//	@Override
+//	public boolean close() {
+//		reader.disconnect();
+//		release();
+//		return super.close();
+//	}
 
 	// public boolean close() {
 	//
