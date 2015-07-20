@@ -2,7 +2,6 @@ package it.albertus.router.writer;
 
 import it.albertus.router.RouterLoggerConfiguration;
 import it.albertus.router.util.Logger;
-import it.albertus.router.util.ConsoleFactory;
 import it.albertus.util.Console;
 
 import java.util.Map;
@@ -10,8 +9,13 @@ import java.util.Map;
 public abstract class Writer {
 
 	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	protected static final Console out = ConsoleFactory.getConsole();
 	protected static final Logger logger = Logger.getInstance();
+
+	protected Console out;
+
+	public void init(Console console) {
+		this.out = console;
+	}
 
 	/**
 	 * Salva le informazioni di interesse, precedentemente estratte tramite

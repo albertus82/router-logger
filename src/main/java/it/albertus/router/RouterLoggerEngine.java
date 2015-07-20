@@ -1,12 +1,7 @@
 package it.albertus.router;
 
-import it.albertus.router.gui.GuiConsole;
-import it.albertus.router.gui.GuiImages;
-import it.albertus.router.gui.GuiTable;
-import it.albertus.router.gui.GuiTray;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
-import it.albertus.router.util.ConsoleFactory;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
@@ -17,17 +12,9 @@ import it.albertus.util.Version;
 import java.io.IOException;
 import java.util.Map;
 
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+public abstract class RouterLoggerEngine {
 
-public class RouterLogger {
-
-	private interface Defaults {
+	protected interface Defaults {
 		int ITERATIONS = -1;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
@@ -37,22 +24,18 @@ public class RouterLogger {
 		boolean WRITER_THREAD = false;
 		boolean CONSOLE_ANIMATION = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
-		boolean GUI_ACTIVE = true;
 		boolean GUI_MINIMIZE_TRAY = true;
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
 	}
 
-	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
+	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected static final Logger logger = Logger.getInstance();
 
-	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private static final Console out = ConsoleFactory.getConsole();
-	private static final GuiTable table = GuiTable.getInstance();
-	private static final Logger logger = Logger.getInstance();
-
-	private final Reader reader;
-	private final Writer writer;
+	protected final Console out;
+	protected final Reader reader;
+	protected final Writer writer;
 
 	private Reader initReader() {
 		final String configurationKey = "reader.class.name";
@@ -75,6 +58,7 @@ public class RouterLogger {
 		catch (Exception e) {
 			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
 		}
+		reader.init(getConsole());
 		return reader;
 	}
 
@@ -99,10 +83,11 @@ public class RouterLogger {
 		catch (Exception e) {
 			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
 		}
+		writer.init(getConsole());
 		return writer;
 	}
-
-	private void run() {
+	
+	protected void run() {
 		welcome();
 
 		boolean exit = false;
@@ -229,59 +214,7 @@ public class RouterLogger {
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
-			if (configuration.getBoolean("gui.active", Defaults.GUI_ACTIVE)) {
-				table.addRow(info, iteration);
-			}
-			else {
-				// Scrittura indice dell'iterazione in console...
-				final StringBuilder clean = new StringBuilder();
-				while (lastLogLength-- > 0) {
-					clean.append('\b').append(' ').append('\b');
-				}
-				final StringBuilder log = new StringBuilder();
-				final boolean animate = configuration.getBoolean("console.animation", Defaults.CONSOLE_ANIMATION);
-				if (animate) {
-					log.append(ANIMATION[iteration & 3]).append(' ');
-				}
-				log.append(iteration);
-				if (iterations != Integer.MAX_VALUE) {
-					log.append('/').append(iterations);
-				}
-				log.append(' ');
-				if (animate) {
-					log.append(ANIMATION[iteration & 3]).append(' ');
-				}
-				// Fine scrittura indice.
-
-				// Scrittura informazioni aggiuntive richieste...
-				if (info != null && !info.isEmpty()) {
-					final StringBuilder infoToShow = new StringBuilder();
-					for (String keyToShow : configuration.getString("console.show.keys", "").split(configuration.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
-						if (keyToShow != null && !"".equals(keyToShow.trim())) {
-							keyToShow = keyToShow.trim();
-							for (final String key : info.keySet()) {
-								if (key != null && key.trim().equals(keyToShow)) {
-									if (infoToShow.length() == 0) {
-										infoToShow.append('[');
-									}
-									else {
-										infoToShow.append(", ");
-									}
-									infoToShow.append(keyToShow + ": " + info.get(key));
-								}
-							}
-						}
-					}
-					if (infoToShow.length() != 0) {
-						infoToShow.append("] ");
-					}
-					log.append(infoToShow);
-				}
-				// Fine scrittura informazioni aggiuntive.
-
-				lastLogLength = log.length();
-				out.print(clean.toString() + log.toString());
-			}
+			log(info, iteration, lastLogLength, iterations);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -300,6 +233,8 @@ public class RouterLogger {
 			}
 		}
 	}
+	
+	protected abstract void log(Map<String, String> info, int iteration, int lastLogLength, int iterations);
 
 	private void saveInfo(final Map<String, String> info) {
 		if (configuration.getBoolean("logger.writer.thread", Defaults.WRITER_THREAD)) {
@@ -319,7 +254,7 @@ public class RouterLogger {
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,
 	 * ecc.).
 	 */
-	private void release() {
+	protected void release() {
 		try {
 			reader.release();
 		}
@@ -332,12 +267,11 @@ public class RouterLogger {
 		}
 	}
 
-	public RouterLogger() {
-		// super(null);
-		// createActions();
-		// addToolBar(SWT.FLAT | SWT.WRAP);
-		// addMenuBar();
-		// addStatusLine();
+	public RouterLoggerEngine() {
+		out = getConsole();
+		
+		// Inizializzazione del Logger...
+		logger.init(out);
 		
 		// Inizializzazione del Reader...
 		reader = initReader();
@@ -346,84 +280,6 @@ public class RouterLogger {
 		writer = initWriter();
 	}
 
-	private Shell createShell(Display display) {
-		final Shell shell = new Shell(display);
-		configureShell(shell);
-		shell.setSize(getInitialSize());
-		createContents(shell);
-		return shell;
-	}
-
-	private Control createContents(Composite parent) {
-		Composite container = parent;// new Composite(parent, SWT.NONE);
-
-		// Variare il numero per aumentare o diminuire le colonne del layout.
-		// Modificare conseguentemente anche lo span della tabella e della
-		// console!
-		GridLayout layout = new GridLayout(1, true);
-		container.setLayout(layout);
-
-		// Tabella
-		table.init(container);
-
-		// Console
-		((GuiConsole) out).init(container);
-
-		return container;
-	}
-
-	public static void main(String args[]) {
-		if (configuration.getBoolean("gui.active", Defaults.GUI_ACTIVE)) {
-			// GUI...
-			try {
-				// Creazione finestra applicazione...
-				final Display display = new Display();
-				final RouterLogger routerLogger = new RouterLogger();
-				final Shell shell = routerLogger.createShell(display);
-				shell.open();
-
-				// Avvio thread di interrogazione router...
-				final Thread updateThread = new Thread() {
-					@Override
-					public void run() {
-						routerLogger.run();
-					}
-				};
-				updateThread.start();
-
-				while (!shell.isDisposed()) {
-					if (!display.readAndDispatch())
-						display.sleep();
-				}
-
-				// Rilascio risorse in fase di chiusura...
-				routerLogger.reader.disconnect();
-				routerLogger.release();
-				display.dispose();
-			}
-			catch (Exception e) {
-				logger.log(e);
-			}
-			finally {
-				System.exit(0);
-			}
-		}
-		else {
-			// Console...
-			new RouterLogger().run();
-		}
-	}
-
-	private void configureShell(final Shell shell) {
-		shell.setText(this.getClass().getSimpleName());
-		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
-		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
-			new GuiTray(shell);
-		}
-	}
-
-	protected Point getInitialSize() {
-		return new Point(750, 550);
-	}
+	protected abstract Console getConsole();
 
 }
