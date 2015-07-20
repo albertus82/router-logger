@@ -1,6 +1,7 @@
 package it.albertus.router.util;
 
 import it.albertus.router.RouterLoggerConfiguration;
+import it.albertus.router.gui.GuiConsole;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
@@ -41,7 +42,7 @@ public class Logger {
 		return Singleton.logger;
 	}
 
-	private final Console out = Console.getInstance();
+	private final Console out = GuiConsole.getInstance();
 	private final boolean debug;
 
 	private Logger(boolean debug) {

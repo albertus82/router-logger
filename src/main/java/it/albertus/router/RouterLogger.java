@@ -1,29 +1,34 @@
 package it.albertus.router;
 
+import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
-import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
+import it.albertus.util.ThreadUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -47,19 +52,15 @@ public class RouterLogger extends ApplicationWindow {
 	}
 
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
+	
+	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private static final Console out = Console.getInstance();
+	private static final GuiConsole out = GuiConsole.getInstance();
 	private static final Logger logger = Logger.getInstance();
 
 	private final Reader reader;
 	private final Writer writer;
-
-	protected boolean tablePacked;
-
-//	public static final void main(final String... args) {
-//		new RouterLogger().run();
-//	}
 
 	private Reader initReader() {
 		final String configurationKey = "reader.class.name";
@@ -290,8 +291,10 @@ public class RouterLogger extends ApplicationWindow {
 					// rl.addRow(info);
 					if (info != null && !info.isEmpty() && table != null) {
 						if (!tableInitialized) {
+							TableColumn column = new TableColumn(table, SWT.NONE);
+							column.setText("Timestamp");
 							for (String key : info.keySet()) {
-								TableColumn column = new TableColumn(table, SWT.NONE);
+								column = new TableColumn(table, SWT.NONE);
 								column.setText(key);
 							}
 							tableInitialized = true;
@@ -299,6 +302,7 @@ public class RouterLogger extends ApplicationWindow {
 
 						int i = 0;
 						TableItem item = new TableItem(table, SWT.NONE);
+						item.setText(i++, DATE_FORMAT_TABLE_GUI.format(new Date()));
 						for (String key : info.keySet()) {
 							item.setText(i++, info.get(key));
 						}
@@ -365,18 +369,19 @@ public class RouterLogger extends ApplicationWindow {
 		catch (Exception e) {}
 	}
 	
-	public Table table;
+	private Table table;
 	private boolean tableInitialized = false;
+	private boolean tablePacked = false;
 
-	/**
-	 * Create the application window.
-	 */
+	private StyledText styledText;
+
+
 	public RouterLogger() {
 		super(null);
-		createActions();
-		addToolBar(SWT.FLAT | SWT.WRAP);
-		addMenuBar();
-		addStatusLine();
+//		createActions();
+//		addToolBar(SWT.FLAT | SWT.WRAP);
+//		addMenuBar();
+//		addStatusLine();
 		// Inizializzazione del Reader...
 		reader = initReader();
 
@@ -384,80 +389,87 @@ public class RouterLogger extends ApplicationWindow {
 		writer = initWriter();
 	}
 
-	/**
-	 * Create contents of the application window.
-	 * @param parent
-	 */
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(4, true);
 		container.setLayout(layout);
+//
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+//			label.setText("1");
+//		}
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setText("2");
+//		}
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setText("3");
+//		}
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setText("4");
+//		}
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setText("5");
+//		}
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setText("6");
+//		}
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setText("7");
+//		}
+//		{
+//			Label label = new Label(container, SWT.NONE);
+//			label.setText("8");
+//		}
 
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-			label.setText("1");
+		// Tabella
+		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+
+		// Console
+		styledText = new StyledText(container, SWT.BORDER);
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
+		FontRegistry fontRegistry = JFaceResources.getFontRegistry();
+		if (!fontRegistry.hasValueFor("console")) {
+			Font terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
+			fontRegistry.put("console", new FontData[] { new FontData(terminalFont.getFontData()[0].getName(), 10, SWT.NORMAL) });
 		}
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setText("2");
-		}
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setText("3");
-		}
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setText("4");
-		}
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setText("5");
-		}
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setText("6");
-		}
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setText("7");
-		}
-		{
-			Label label = new Label(container, SWT.NONE);
-			label.setText("8");
-		}
-		{
-			table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
-			table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
-			table.setHeaderVisible(true);
-			table.setLinesVisible(true);
-		}
+		styledText.setFont(fontRegistry.get("console"));
+		out.init(styledText);
 
 		return container;
 	}
 
-	private void createActions() {
-		// Create the actions
-	}
-
-	@Override
-	protected MenuManager createMenuManager() {
-		MenuManager menuManager = new MenuManager("menu");
-		return menuManager;
-	}
-
-	@Override
-	protected ToolBarManager createToolBarManager(int style) {
-		ToolBarManager toolBarManager = new ToolBarManager(style);
-		return toolBarManager;
-	}
-
-	@Override
-	protected StatusLineManager createStatusLineManager() {
-		StatusLineManager statusLineManager = new StatusLineManager();
-		return statusLineManager;
-	}
+//	private void createActions() {
+//		// Create the actions
+//	}
+//
+//	@Override
+//	protected MenuManager createMenuManager() {
+//		MenuManager menuManager = new MenuManager("menu");
+//		return menuManager;
+//	}
+//
+//	@Override
+//	protected ToolBarManager createToolBarManager(int style) {
+//		ToolBarManager toolBarManager = new ToolBarManager(style);
+//		return toolBarManager;
+//	}
+//
+//	@Override
+//	protected StatusLineManager createStatusLineManager() {
+//		StatusLineManager statusLineManager = new StatusLineManager();
+//		return statusLineManager;
+//	}
 
 	public static void main(String args[]) {
 		try {
@@ -466,18 +478,15 @@ public class RouterLogger extends ApplicationWindow {
 			window.setBlockOnOpen(true);
 
 			Thread updateThread = new Thread() {
+				@Override
 		        public void run() {
-		        	try {
-						Thread.sleep(2000);
-					}
-					catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		        	// Per evitare che l'aggiornamento della tabella avvenga prima che essa sia stata creata.
+					ThreadUtils.sleep(1000);
+					
 		        	window.run();
 		        }
 		    };
-		    // background thread
+
 		    updateThread.setDaemon(true);
 		    updateThread.start();
 			window.open();
@@ -495,8 +504,38 @@ public class RouterLogger extends ApplicationWindow {
 		newShell.setText("Router Logger");
 	}
 
+	@Override
 	protected Point getInitialSize() {
 		return new Point(750, 550);
 	}
-
+	
+//	public boolean close() {
+//
+//	    final Shell grandShell = this.getShell();
+//	    grandShell.setVisible(false);
+//
+//	    Display display = Display.getCurrent();
+//
+//	    Tray tray = display.getSystemTray();
+//	    if(tray != null) {
+//	        TrayItem item = new TrayItem(tray, SWT.NONE);
+////	        item.setImage(ArecaImages.ICO_SMALL);
+//	        final Menu menu = new Menu(getShell(), SWT.POP_UP);
+//	        MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+//	        menuItem.setText("Areca");
+//	        menuItem.addListener (SWT.Selection, new Listener () {
+//	            public void handleEvent (Event event) {
+//	                grandShell.setVisible(true);
+//	            }
+//	        });
+//	        item.addListener (SWT.MenuDetect, new Listener () {
+//	            public void handleEvent (Event event) {
+//	                menu.setVisible (true);
+//	            }
+//	        });
+//
+//	    }
+//
+//	    return true;
+//	}
 }

@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="src/main/config"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-net-3.3.jar" sourcepath="lib/src/commons-net-3.3-src.zip"/>
-	<classpathentry kind="lib" path="lib/albertus-utils-1.1.1.jar" sourcepath="lib/src/albertus-utils-1.1.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/albertus-utils-2.0.0.jar" sourcepath="lib/src/albertus-utils-2.0.0-sources.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.nebula.visualization.widgets_1.0.0.201507082315.jar" sourcepath="lib/src/org.eclipse.nebula.visualization.widgets.source_1.0.0.201507082315.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.nebula.visualization.xygraph_1.0.0.201507082315.jar" sourcepath="lib/src/org.eclipse.nebula.visualization.xygraph.source_1.0.0.201507082315.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.draw2d_3.9.101.201408150207.jar"/>
