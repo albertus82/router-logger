@@ -37,10 +37,10 @@ public class GuiConsole extends Console {
 	}
 
 	private StyledText createStyledText(final Composite container) {
-		StyledText styledText = new StyledText(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		final StyledText styledText = new StyledText(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gridData.minimumHeight = 250;
-		gridData.heightHint = 250;
+		gridData.minimumHeight = 200;
+		gridData.heightHint = 200;
 		styledText.setLayoutData(gridData);
 		FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 		if (!fontRegistry.hasValueFor("console")) {
@@ -53,7 +53,7 @@ public class GuiConsole extends Console {
 	}
 
 	private static final String NEWLINE = NewLine.CRLF.toString();
-	
+
 	private StyledText styledText = null;
 
 	public void print(String value) {
@@ -68,7 +68,8 @@ public class GuiConsole extends Console {
 			@Override
 			public void run() {
 				if (styledText != null && !styledText.isDisposed()) {
-					styledText.setText(styledText.getText() + toPrint);
+					styledText.append(toPrint);
+					styledText.setTopIndex(styledText.getLineCount() - 1);
 				}
 			}
 		});
