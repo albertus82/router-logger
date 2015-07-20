@@ -420,6 +420,13 @@ public class RouterLogger extends ApplicationWindow {
 		return new Point(750, 550);
 	}
 
+	@Override
+	public boolean close() {
+		reader.disconnect();
+		release();
+		return super.close();
+	}
+
 	// public boolean close() {
 	//
 	// final Shell grandShell = this.getShell();
