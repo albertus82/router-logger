@@ -18,7 +18,7 @@ RouterLogger
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
 In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger-gui.bat`**](src/main/scripts/routerlogger-gui.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger-gui.sh`**](src/main/scripts/routerlogger-gui.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger-gui.sh`.
->&Egrave; disponibile anche una versione alternativa dell'applicazione che funziona da riga di comando; per eseguirla, utilizzare i file [**`routerlogger-con.bat`**](src/main/scripts/routerlogger-con.bat) (Windows) e [**`routerlogger-con.sh`**](src/main/scripts/routerlogger-con.sh) (Linux).
+>&Egrave; disponibile anche una versione alternativa dell'applicazione che funziona da riga di comando; per eseguirla, utilizzare il file [**`routerlogger-con.bat`**](src/main/scripts/routerlogger-con.bat) (Windows) o [**`routerlogger-con.sh`**](src/main/scripts/routerlogger-con.sh) (Linux).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
