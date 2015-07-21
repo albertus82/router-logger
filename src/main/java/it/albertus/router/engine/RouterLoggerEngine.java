@@ -207,13 +207,13 @@ public abstract class RouterLoggerEngine {
 		long hysteresis = 0;
 
 		// Iterazione...
-		for (int iteration = 1, lastLogLength = 0; iteration <= iterations && !exit; iteration++) {
+		for (int iteration = 1; iteration <= iterations && !exit; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
-			lastLogLength = log(info, iteration, lastLogLength, iterations);
+			log(info, iteration, iterations);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -232,8 +232,8 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 	}
-	
-	protected abstract int log(Map<String, String> info, int iteration, int lastLogLength, int iterations);
+
+	protected abstract void log(Map<String, String> info, int iteration, int iterations);
 
 	private void saveInfo(final Map<String, String> info) {
 		if (configuration.getBoolean("logger.writer.thread", Defaults.WRITER_THREAD)) {

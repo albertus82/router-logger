@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
-<project name="RouterLogger" default="jar">
+<project name="RouterLogger" default="zip">
 
 	<property file="build.properties" />
 

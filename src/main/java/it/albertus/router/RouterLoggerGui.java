@@ -101,9 +101,8 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected int log(Map<String, String> info, int iteration, int lastLogLength, int iterations) {
+	protected void log(Map<String, String> info, int iteration, int iterations) {
 		table.addRow(info, iteration);
-		return 0;
 	}
 
 	@Override

@@ -13,8 +13,10 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 		new RouterLoggerCon().run();
 	}
 
+	private int lastLogLength = 0;
+
 	@Override
-	protected int log(Map<String, String> info, int iteration, int lastLogLength, int iterations) {
+	protected void log(Map<String, String> info, int iteration, int iterations) {
 		// Scrittura indice dell'iterazione in console...
 		final StringBuilder clean = new StringBuilder();
 		while (lastLogLength-- > 0) {
@@ -63,7 +65,6 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 
 		lastLogLength = log.length();
 		out.print(clean.toString() + log.toString());
-		return lastLogLength;
 	}
 
 	@Override
