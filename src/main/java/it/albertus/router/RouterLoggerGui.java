@@ -20,6 +20,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_MINIMIZE_TRAY = true;
+		boolean GUI_START_MINIMIZED = false;
 	}
 
 	private static final GuiTable table = GuiTable.getInstance();
@@ -64,7 +65,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		shell.setText("RouterLogger");
 		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
-			new GuiTray(shell);
+			GuiTray.getInstance().init(shell);
 		}
 	}
 
@@ -74,8 +75,9 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	private Shell createShell(Display display) {
 		final Shell shell = new Shell(display);
-		configureShell(shell);
 		shell.setSize(getInitialSize());
+		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
+		configureShell(shell);
 		createContents(shell);
 		return shell;
 	}

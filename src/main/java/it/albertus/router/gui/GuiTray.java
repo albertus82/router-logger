@@ -14,13 +14,31 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class GuiTray {
 
-	public GuiTray(final Shell shell) {
-		shell.addShellListener(new ShellAdapter() {
-			@Override
-			public void shellIconified(ShellEvent e) {
-				iconify(shell);
-			}
-		});
+	private static class Singleton {
+		private static final GuiTray tray = new GuiTray();
+	}
+
+	public static GuiTray getInstance() {
+		return Singleton.tray;
+	}
+
+	private GuiTray() {}
+	
+	private TrayItem trayItem = null;
+	private Menu menu = null;
+
+	public void init(final Shell shell) {
+		if (this.trayItem == null && menu == null) {
+			shell.addShellListener(new ShellAdapter() {
+				@Override
+				public void shellIconified(ShellEvent e) {
+					iconify(shell);
+				}
+			});
+		}
+		else {
+			throw new IllegalStateException(this.getClass().getSimpleName() + " already initialized.");
+		}
 	}
 
 	private void iconify(final Shell shell) {
@@ -28,49 +46,61 @@ public class GuiTray {
 		Tray tray = display.getSystemTray();
 		if (tray != null) {
 			shell.setVisible(false);
-			final TrayItem trayItem = new TrayItem(tray, SWT.NONE);
-			trayItem.setImage(GuiImages.ICONS[12]);
-			trayItem.setToolTipText("RouterLogger");
-			final Menu menu = new Menu(shell, SWT.POP_UP);
-			MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-			menuItem.setText("Open");
+			boolean addListeners = false;
+			if (trayItem == null) {
+				trayItem = new TrayItem(tray, SWT.NONE);
+				trayItem.setImage(GuiImages.ICONS[12]);
+				trayItem.setToolTipText("RouterLogger");
+				addListeners = true;
+			}
+			else {
+				trayItem.setVisible(true);
+			}
 
-			menuItem.addListener(SWT.Selection, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					shell.setVisible(true);
-					shell.setMinimized(false);
-					trayItem.setVisible(false);
-				}
-			});
+			if (menu == null) {
+				menu = new Menu(shell, SWT.POP_UP);
+				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+				menuItem.setText("Open");
 
-			menuItem = new MenuItem(menu, SWT.SEPARATOR);
+				menuItem.addListener(SWT.Selection, new Listener() {
+					@Override
+					public void handleEvent(Event event) {
+						shell.setVisible(true);
+						shell.setMinimized(false);
+						trayItem.setVisible(false);
+					}
+				});
 
-			menuItem = new MenuItem(menu, SWT.PUSH);
-			menuItem.setText("Exit");
+				menuItem = new MenuItem(menu, SWT.SEPARATOR);
 
-			menuItem.addListener(SWT.Selection, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					shell.dispose();
-				}
-			});
+				// Tasto "Exit"...
+				menuItem = new MenuItem(menu, SWT.PUSH);
+				menuItem.setText("Exit");
+				menuItem.addListener(SWT.Selection, new Listener() {
+					@Override
+					public void handleEvent(Event event) {
+						shell.dispose();
+					}
+				});
+			}
 
-			trayItem.addListener(SWT.MenuDetect, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					menu.setVisible(true);
-				}
-			});
+			if (addListeners) {
+				trayItem.addListener(SWT.MenuDetect, new Listener() {
+					@Override
+					public void handleEvent(Event event) {
+						menu.setVisible(true);
+					}
+				});
 
-			trayItem.addListener(SWT.DefaultSelection, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					shell.setVisible(true);
-					shell.setMinimized(false);
-					trayItem.setVisible(false);
-				}
-			});
+				trayItem.addListener(SWT.DefaultSelection, new Listener() {
+					@Override
+					public void handleEvent(Event event) {
+						shell.setVisible(true);
+						shell.setMinimized(false);
+						trayItem.setVisible(false);
+					}
+				});
+			}
 
 		}
 	}
