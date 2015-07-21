@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class DummyReader extends Reader {
 
+	private static final int COLUMNS = 30;
+
 	@Override
 	public boolean connect() {
 		return true;
@@ -27,7 +29,7 @@ public class DummyReader extends Reader {
 	@Override
 	public Map<String, String> readInfo() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 1; i <= COLUMNS; i++) {
 			StringBuilder field = new StringBuilder();
 			for (int j = 1; j <= 10; j++) {
 				field.append((char) (97 + Math.random() * 25));
