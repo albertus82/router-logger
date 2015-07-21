@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -57,23 +58,26 @@ public class GuiConsole extends Console {
 	private StyledText styledText = null;
 
 	public void print(String value) {
-		final String toPrint;
-		if (value == null) {
-			toPrint = String.valueOf(value);
-		}
-		else {
-			toPrint = value;
-		}
-		Display.getDefault().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				if (styledText != null && !styledText.isDisposed()) {
-					styledText.append(toPrint);
-					styledText.setTopIndex(styledText.getLineCount() - 1);
-				}
+		if (styledText != null && !styledText.isDisposed()) {
+			final String toPrint;
+			if (value == null) {
+				toPrint = String.valueOf(value);
 			}
-		});
-		updatePosition(value);
+			else {
+				toPrint = value;
+			}
+			Display.getDefault().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						styledText.append(toPrint);
+						styledText.setTopIndex(styledText.getLineCount() - 1);
+					}
+					catch (SWTException se) {}
+				}
+			});
+			updatePosition(value);
+		}
 	}
 
 	public void print(Object value) {

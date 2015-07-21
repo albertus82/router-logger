@@ -38,6 +38,13 @@ public class DummyReader extends Reader {
 	}
 
 	@Override
-	public void disconnect() {}
+	public void logout() {
+		out.println("Dummy logout...", true);
+	}
+
+	@Override
+	public void disconnect() {
+		out.println("Dummy disconnect...", true);
+	}
 
 }

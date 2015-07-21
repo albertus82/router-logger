@@ -4,7 +4,6 @@ import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.gui.GuiImages;
 import it.albertus.router.gui.GuiTable;
 import it.albertus.router.gui.GuiTray;
-import it.albertus.util.Console;
 
 import java.util.Map;
 
@@ -17,11 +16,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class RouterLoggerGui extends RouterLoggerEngine {
-	
+
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_MINIMIZE_TRAY = true;
 	}
-	
+
 	private static final GuiTable table = GuiTable.getInstance();
 
 	public static void main(String args[]) {
@@ -46,16 +45,19 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 					display.sleep();
 			}
 
-			// Rilascio risorse in fase di chiusura...
-			routerLogger.reader.disconnect();
-			routerLogger.release();
+			// Segnala al thread che deve terminare il loop...
+			routerLogger.exit = true;
+
+			// Distrugge la GUI...
 			display.dispose();
+			
+			// Attende che il thread abbia completato il rilascio risorse...
+			while (!routerLogger.close) {
+				Thread.sleep(500);
+			}
 		}
 		catch (Exception e) {
 			logger.log(e);
-		}
-		finally {
-			System.exit(0);
 		}
 	}
 
@@ -92,7 +94,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		table.init(container);
 
 		// Console
-		((GuiConsole) out).init(container);
+		getConsole().init(container);
 
 		return container;
 	}
@@ -103,7 +105,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected Console getConsole() {
+	protected GuiConsole getConsole() {
 		return GuiConsole.getInstance();
 	}
 

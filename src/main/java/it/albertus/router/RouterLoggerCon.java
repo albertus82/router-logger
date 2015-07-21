@@ -1,6 +1,5 @@
 package it.albertus.router;
 
-import it.albertus.util.Console;
 import it.albertus.util.TerminalConsole;
 
 import java.util.Map;
@@ -8,7 +7,7 @@ import java.util.Map;
 public class RouterLoggerCon extends RouterLoggerEngine {
 
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
-	
+
 	public static void main(String args[]) {
 		new RouterLoggerCon().run();
 	}
@@ -66,7 +65,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected Console getConsole() {
+	protected TerminalConsole getConsole() {
 		return TerminalConsole.getInstance();
 	}
 

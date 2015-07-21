@@ -32,9 +32,12 @@ public abstract class RouterLoggerEngine {
 	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected static final Logger logger = Logger.getInstance();
 
-	protected final Console out;
+	protected final Console out = getConsole();
 	protected final Reader reader;
 	protected final Writer writer;
+
+	protected volatile boolean exit = false;
+	protected volatile boolean close = false;
 
 	private Reader initReader() {
 		final String configurationKey = "reader.class.name";
@@ -57,7 +60,7 @@ public abstract class RouterLoggerEngine {
 		catch (Exception e) {
 			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
 		}
-		reader.init(getConsole());
+		reader.init(out);
 		return reader;
 	}
 
@@ -82,14 +85,12 @@ public abstract class RouterLoggerEngine {
 		catch (Exception e) {
 			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
 		}
-		writer.init(getConsole());
+		writer.init(out);
 		return writer;
 	}
 	
 	protected void run() {
 		welcome();
-
-		boolean exit = false;
 
 		final int retries = configuration.getInt("logger.retry.count", Defaults.RETRIES);
 
@@ -162,6 +163,8 @@ public abstract class RouterLoggerEngine {
 
 		release();
 		out.println("Bye!", true);
+		
+		close = true;
 	}
 
 	private void welcome() {
@@ -207,7 +210,7 @@ public abstract class RouterLoggerEngine {
 		long hysteresis = 0;
 
 		// Iterazione...
-		for (int iteration = 1, lastLogLength = 0; iteration <= iterations; iteration++) {
+		for (int iteration = 1, lastLogLength = 0; iteration <= iterations && !exit; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);
@@ -257,18 +260,14 @@ public abstract class RouterLoggerEngine {
 		try {
 			reader.release();
 		}
-		catch (Exception e) {
-		}
+		catch (Exception e) {}
 		try {
 			writer.release();
 		}
-		catch (Exception e) {
-		}
+		catch (Exception e) {}
 	}
 
 	public RouterLoggerEngine() {
-		out = getConsole();
-		
 		// Inizializzazione del Logger...
 		logger.init(out);
 		
