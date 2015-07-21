@@ -23,7 +23,7 @@ public class GuiTray {
 	}
 
 	private GuiTray() {}
-	
+
 	private TrayItem trayItem = null;
 	private Menu menu = null;
 
@@ -101,7 +101,6 @@ public class GuiTray {
 					}
 				});
 			}
-
 		}
 	}
 

@@ -108,7 +108,6 @@ public class GuiTable {
 					catch (IllegalArgumentException iae) {}
 					catch (SWTException se) {}
 				}
-
 			});
 		}
 	}
