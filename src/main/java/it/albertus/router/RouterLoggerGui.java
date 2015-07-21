@@ -1,5 +1,6 @@
 package it.albertus.router;
 
+import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.gui.GuiImages;
 import it.albertus.router.gui.GuiTable;

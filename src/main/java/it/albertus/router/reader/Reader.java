@@ -1,6 +1,6 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;

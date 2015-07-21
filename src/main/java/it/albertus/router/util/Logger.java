@@ -1,6 +1,6 @@
 package it.albertus.router.util;
 
-import it.albertus.router.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;

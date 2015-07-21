@@ -1,6 +1,6 @@
 package it.albertus.router.gui;
 
-import it.albertus.router.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

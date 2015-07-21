@@ -1,11 +1,11 @@
-package it.albertus.router;
+package it.albertus.router.engine;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import it.albertus.router.Threshold.Type;
+import it.albertus.router.engine.Threshold.Type;
 import it.albertus.util.Configuration;
 
 public class RouterLoggerConfiguration extends Configuration {
