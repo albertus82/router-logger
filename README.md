@@ -1,7 +1,7 @@
 RouterLogger
 ============
 
-**RouterLogger** &egrave; una semplice applicazione in riga di comando per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
+**RouterLogger** &egrave; una semplice applicazione per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 
 
 ### Installazione e configurazione di base
@@ -17,10 +17,8 @@ RouterLogger
 
 Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
-In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger.sh`.
-In ambienti diversi occorre invece richiamare manualmente `java` specificando:
-* un *classpath* che includa `routerlogger.jar` e `lib/*.jar`
-* la classe da eseguire, che &egrave; sempre: [`it.albertus.router.RouterLogger`](src/main/java/it/albertus/router/RouterLogger.java)
+In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger-gui.bat`**](src/main/scripts/routerlogger-gui.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger-gui.sh`**](src/main/scripts/routerlogger-gui.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger-gui.sh`.
+>&Egrave; disponibile anche una versione alternativa dell'applicazione che funziona da riga di comando; per eseguirla, utilizzare i file [**`routerlogger-con.bat`**](src/main/scripts/routerlogger-con.bat) (Windows) e [**`routerlogger-con.sh`**](src/main/scripts/routerlogger-con.sh) (Linux).
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
