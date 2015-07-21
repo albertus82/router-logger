@@ -213,7 +213,7 @@ public abstract class RouterLoggerEngine {
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
-			log(info, iteration, lastLogLength, iterations);
+			lastLogLength = log(info, iteration, lastLogLength, iterations);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -233,7 +233,7 @@ public abstract class RouterLoggerEngine {
 		}
 	}
 	
-	protected abstract void log(Map<String, String> info, int iteration, int lastLogLength, int iterations);
+	protected abstract int log(Map<String, String> info, int iteration, int lastLogLength, int iterations);
 
 	private void saveInfo(final Map<String, String> info) {
 		if (configuration.getBoolean("logger.writer.thread", Defaults.WRITER_THREAD)) {
