@@ -57,15 +57,19 @@ public class GuiConsole extends Console {
 
 	private StyledText styledText = null;
 
-	public void print(String value) {
+	private void failSafePrint(final String toPrint) {
+		System.out.print(toPrint);
+	}
+
+	public void print(final String value) {
+		final String toPrint;
+		if (value == null) {
+			toPrint = String.valueOf(value);
+		}
+		else {
+			toPrint = value;
+		}
 		if (styledText != null && !styledText.isDisposed()) {
-			final String toPrint;
-			if (value == null) {
-				toPrint = String.valueOf(value);
-			}
-			else {
-				toPrint = value;
-			}
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
@@ -73,10 +77,15 @@ public class GuiConsole extends Console {
 						styledText.append(toPrint);
 						styledText.setTopIndex(styledText.getLineCount() - 1);
 					}
-					catch (SWTException se) {}
+					catch (SWTException se) {
+						failSafePrint(toPrint);
+					}
 				}
 			});
 			updatePosition(value);
+		}
+		else {
+			failSafePrint(toPrint);
 		}
 	}
 

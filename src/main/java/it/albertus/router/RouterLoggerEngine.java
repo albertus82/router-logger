@@ -37,7 +37,6 @@ public abstract class RouterLoggerEngine {
 	protected final Writer writer;
 
 	protected volatile boolean exit = false;
-	protected volatile boolean close = false;
 
 	private Reader initReader() {
 		final String configurationKey = "reader.class.name";
@@ -88,7 +87,7 @@ public abstract class RouterLoggerEngine {
 		writer.init(out);
 		return writer;
 	}
-	
+
 	protected void run() {
 		welcome();
 
@@ -163,8 +162,6 @@ public abstract class RouterLoggerEngine {
 
 		release();
 		out.println("Bye!", true);
-		
-		close = true;
 	}
 
 	private void welcome() {

@@ -50,11 +50,9 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 			// Distrugge la GUI...
 			display.dispose();
-			
+
 			// Attende che il thread abbia completato il rilascio risorse...
-			while (!routerLogger.close) {
-				Thread.sleep(500);
-			}
+			updateThread.join();
 		}
 		catch (Exception e) {
 			logger.log(e);
