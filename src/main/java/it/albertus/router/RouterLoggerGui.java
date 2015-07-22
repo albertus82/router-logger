@@ -49,6 +49,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 			// Segnala al thread che deve terminare il loop...
 			routerLogger.exit = true;
+			updateThread.interrupt();
 
 			// Distrugge la GUI...
 			display.dispose();

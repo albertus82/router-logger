@@ -135,6 +135,9 @@ public abstract class RouterLoggerEngine {
 						loop();
 						exit = true; // Se non si sono verificati errori.
 					}
+					catch (InterruptedException ie) {
+						out.println("Loop interrupted!", true);
+					}
 					catch (Exception e) {
 						logger.log(e);
 					}
