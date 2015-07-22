@@ -210,8 +210,8 @@ public abstract class RouterLoggerEngine {
 		long hysteresis = 0;
 
 		// Iterazione...
-		int iteration = 1;
-		while (!exit) {
+		int iteration = 0;
+		while (!exit && iteration++ < iterations) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);
@@ -233,10 +233,6 @@ public abstract class RouterLoggerEngine {
 					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
 				}
 				Thread.sleep(waitTimeInMillis);
-				iteration++;
-			}
-			else {
-				break;
 			}
 		}
 	}
