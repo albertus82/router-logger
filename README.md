@@ -70,7 +70,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 * **`gui.table.items.max`**= numero massimo di righe contenute nella tabella a video; al raggiungimento del limite, le righe pi&ugrave; vecchie vengono cancellate. Questa impostazione non influisce in alcun modo sul salvataggio delle informazioni ma ha effetto unicamente sull'interfaccia grafica dell'applicazione (default: `5000`, valori maggiori comportano una maggiore occupazione di memoria).
 * **`gui.minimize.tray`**= specifica se l'applicazione deve essere ridotta a icona nell'area di notifica invece che nella barra delle applicazioni (default: `true`).
-* **`gui.start.minimized`**= specifica se l'applicazione deve avviata ridotta a icona (default: `false`).
+* **`gui.start.minimized`**= specifica se l'applicazione deve essere avviata gi&agrave; ridotta a icona (default: `false`).
 
 ##### Console
 
