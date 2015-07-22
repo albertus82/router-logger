@@ -1,1 +1,1 @@
-@start /BELOWNORMAL /AFFINITY 0x1 "" "%JAVA_HOME%\bin\javaw.exe" -Xms8m -Xmx32m -classpath "%~dp0routerlogger.jar;%~dp0lib/*" it.albertus.router.RouterLoggerGui ""
+@START /BELOWNORMAL /AFFINITY 0x1 "" "%JAVA_HOME%\bin\javaw.exe" -Xms8m -Xmx32m -classpath "%~dp0routerlogger.jar;%~dp0lib/*" it.albertus.router.RouterLoggerGui ""
