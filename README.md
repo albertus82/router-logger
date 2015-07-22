@@ -66,6 +66,12 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
   * **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Linux).
   * **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`, stile Macintosh).
 
+##### Interfaccia grafica (GUI)
+
+* **`gui.table.items.max`**= numero massimo di righe contenute nella tabella a video; al raggiungimento del limite, le righe pi&ugrave; vecchie vengono cancellate. Questa impostazione non influisce in alcun modo sul salvataggio delle informazioni ma ha effetto unicamente sull'interfaccia grafica dell'applicazione (default: `5000`, valori maggiori comportano una maggiore occupazione di memoria).
+* **`gui.minimize.tray`**= specifica se l'applicazione deve essere ridotta a icona nell'area di notifica invece che nella barra delle applicazioni (default: `true`).
+* **`gui.start.minimized`**= specifica se l'applicazione deve avviata ridotta a icona (default: `false`).
+
 ##### Console
 
 * **`console.animation`**= specifica se si desidera visualizzare una piccola animazione in console che segnala il funzionamento dell'applicazione (default: `true`).
