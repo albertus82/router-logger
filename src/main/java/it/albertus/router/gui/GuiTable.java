@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.TableItem;
 public class GuiTable {
 
 	private interface Defaults {
-		int MAX_ITEMS = 10000;
+		int MAX_ITEMS = 5000;
 	}
 
 	private static class Singleton {
