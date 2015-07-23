@@ -16,7 +16,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 	private int lastLogLength = 0;
 
 	@Override
-	protected void log(Map<String, String> info, int iteration, int iterations) {
+	protected void showInfo(Map<String, String> info) {
 		// Scrittura indice dell'iterazione in console...
 		final StringBuilder clean = new StringBuilder();
 		while (lastLogLength-- > 0) {

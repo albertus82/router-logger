@@ -36,6 +36,9 @@ public abstract class RouterLoggerEngine {
 	protected final Reader reader;
 	protected final Writer writer;
 
+	protected int iteration = 1;
+	protected final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
+
 	protected volatile boolean exit = false;
 
 	private Reader initReader() {
@@ -95,6 +98,7 @@ public abstract class RouterLoggerEngine {
 
 		// Gestione chiusura console (CTRL+C)...
 		final Thread hook = new Thread() {
+			@Override
 			public void run() {
 				reader.disconnect();
 				release();
@@ -200,20 +204,17 @@ public abstract class RouterLoggerEngine {
 		}
 	}
 
-	private final void loop() throws IOException, InterruptedException {
-		// Determinazione numero di iterazioni...
-		final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
-
+	private void loop() throws IOException, InterruptedException {
 		long hysteresis = 0;
 
 		// Iterazione...
-		for (int iteration = 1; (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
+		for (; (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
-			log(info, iteration, iterations);
+			showInfo(info);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -233,7 +234,7 @@ public abstract class RouterLoggerEngine {
 		}
 	}
 
-	protected abstract void log(Map<String, String> info, int iteration, int iterations);
+	protected abstract void showInfo(Map<String, String> info);
 
 	private void saveInfo(final Map<String, String> info) {
 		if (configuration.getBoolean("logger.writer.thread", Defaults.WRITER_THREAD)) {

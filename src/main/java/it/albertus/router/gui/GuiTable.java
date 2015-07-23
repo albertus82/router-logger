@@ -89,8 +89,8 @@ public class GuiTable {
 
 						// Dimesionamento delle colonne (una tantum)...
 						if (!tablePacked) {
-							while (i > 0) {
-								table.getColumn(--i).pack();
+							for (int j = 0; j < i; j++) {
+								table.getColumn(j).pack();
 							}
 							table.getColumn(0).setWidth((int) (table.getColumn(0).getWidth() * 1.3));
 							tablePacked = true;
@@ -101,9 +101,6 @@ public class GuiTable {
 						if (table.getItemCount() > maxItems) {
 							table.remove(maxItems);
 						}
-
-						// Forza ridisegno tabella ad ogni aggiornamento...
-						table.redraw();
 					}
 					catch (IllegalArgumentException iae) {}
 					catch (SWTException se) {}
