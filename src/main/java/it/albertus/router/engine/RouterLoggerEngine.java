@@ -202,16 +202,12 @@ public abstract class RouterLoggerEngine {
 
 	private final void loop() throws IOException, InterruptedException {
 		// Determinazione numero di iterazioni...
-		int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
-		if (iterations <= 0) {
-			iterations = Integer.MAX_VALUE;
-		}
+		final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
 
 		long hysteresis = 0;
 
 		// Iterazione...
-		int iteration = 0;
-		while (!exit && iteration++ < iterations) {
+		for (int iteration = 1; (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);

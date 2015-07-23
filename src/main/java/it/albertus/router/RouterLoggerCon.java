@@ -28,7 +28,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 			log.append(ANIMATION[iteration & 3]).append(' ');
 		}
 		log.append(iteration);
-		if (iterations != Integer.MAX_VALUE) {
+		if (iterations > 0) {
 			log.append('/').append(iterations);
 		}
 		log.append(' ');
