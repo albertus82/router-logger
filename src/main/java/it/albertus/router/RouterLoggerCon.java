@@ -7,6 +7,11 @@ import java.util.Map;
 
 public class RouterLoggerCon extends RouterLoggerEngine {
 
+	protected interface Defaults extends RouterLoggerEngine.Defaults {
+		boolean CONSOLE_ANIMATION = true;
+		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
+	}
+
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
 	public static void main(String args[]) {

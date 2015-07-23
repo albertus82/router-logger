@@ -22,9 +22,7 @@ public abstract class RouterLoggerEngine {
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean WRITER_THREAD = false;
-		boolean CONSOLE_ANIMATION = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
-		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
 	}
