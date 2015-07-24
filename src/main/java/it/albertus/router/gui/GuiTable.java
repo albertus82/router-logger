@@ -30,7 +30,7 @@ public class GuiTable {
 
 	private interface Defaults {
 		int MAX_ITEMS = 5000;
-		String GUI_BOLD_KEYS_SEPARATOR = ",";
+		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 	}
 
 	private static class Singleton {
@@ -48,18 +48,24 @@ public class GuiTable {
 			this.table = createTable(container);
 
 			// Creazione colore da associare a valori oltre soglia...
-			thresholdColor = new Color(Display.getDefault(), 0xFF, 0, 0);
+			thresholdColor = new Color(table.getDisplay(), 0xFF, 0, 0);
+
+			// Creazione colore da associare alle colonne definite importanti..
+			importantColor = new Color(table.getDisplay(), 0xFF, 0xFF, 0);
+
+			// Listener per liberare le risorse del sistema operativo...
 			table.addDisposeListener(new DisposeListener() {
 				@Override
 				public void widgetDisposed(DisposeEvent e) {
 					thresholdColor.dispose();
+					importantColor.dispose();
 				}
 			});
 
-			// Caricamento chiavi da mostrare in grassetto...
-			for (String boldKey : configuration.getString("gui.bold.keys", "").split(configuration.getString("gui.bold.keys.separator", Defaults.GUI_BOLD_KEYS_SEPARATOR).trim())) {
-				if (StringUtils.isNotBlank(boldKey)) {
-					boldColumns.add(boldKey.trim());
+			// Caricamento chiavi importanti da evidenziare...
+			for (String importantKey : configuration.getString("gui.important.keys", "").split(configuration.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
+				if (StringUtils.isNotBlank(importantKey)) {
+					importantKeys.add(importantKey.trim());
 				}
 			}
 		}
@@ -70,7 +76,7 @@ public class GuiTable {
 
 	private Table createTable(final Composite container) {
 		final Table table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gridData.minimumHeight = 200;
 		gridData.heightHint = 200;
 		table.setLayoutData(gridData);
@@ -85,9 +91,10 @@ public class GuiTable {
 
 	private Table table = null;
 	private Color thresholdColor = null;
+	private Color importantColor = null;
 	private boolean tableInitialized = false;
 	private boolean tablePacked = false;
-	private final Set<String> boldColumns = new HashSet<String>();
+	private final Set<String> importantKeys = new HashSet<String>();
 
 	public void addRow(final Map<String, String> info, final int iteration) {
 		if (table != null && !table.isDisposed() && info != null && !info.isEmpty()) {
@@ -117,7 +124,7 @@ public class GuiTable {
 
 						for (String key : info.keySet()) {
 							// Grassetto...
-							if (key != null && boldColumns.contains(key.trim())) {
+							if (key != null && importantKeys.contains(key.trim())) {
 								FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 								if (!fontRegistry.hasValueFor("tableBold")) {
 									final Font tableFont = item.getFont();
@@ -125,6 +132,7 @@ public class GuiTable {
 									fontRegistry.put("tableBold", new FontData[] { new FontData(oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD) });
 								}
 								item.setFont(i, fontRegistry.get("tableBold"));
+								item.setBackground(i, importantColor); // Evidenzia cella.
 							}
 
 							// Colore per i valori oltre soglia...
