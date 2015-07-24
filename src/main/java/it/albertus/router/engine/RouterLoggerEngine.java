@@ -217,7 +217,7 @@ public abstract class RouterLoggerEngine {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
 				final long waitTimeInMillis;
-				final boolean thresholdReached = configuration.getThresholds().isReached(info);
+				final boolean thresholdReached = !configuration.getThresholds().getReachedKeys(info).isEmpty();
 				if (thresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 					if (thresholdReached) {

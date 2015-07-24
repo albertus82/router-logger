@@ -14,6 +14,9 @@ import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -44,6 +47,15 @@ public class GuiTable {
 		if (this.table == null) {
 			this.table = createTable(container);
 
+			// Creazione colore da associare a valori oltre soglia...
+			thresholdColor = new Color(Display.getDefault(), 0xFF, 0, 0);
+			table.addDisposeListener(new DisposeListener() {
+				@Override
+				public void widgetDisposed(DisposeEvent e) {
+					thresholdColor.dispose();
+				}
+			});
+
 			// Caricamento chiavi da mostrare in grassetto...
 			for (String boldKey : configuration.getString("gui.bold.keys", "").split(configuration.getString("gui.bold.keys.separator", Defaults.GUI_BOLD_KEYS_SEPARATOR).trim())) {
 				if (StringUtils.isNotBlank(boldKey)) {
@@ -72,6 +84,7 @@ public class GuiTable {
 	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	private Table table = null;
+	private Color thresholdColor = null;
 	private boolean tableInitialized = false;
 	private boolean tablePacked = false;
 	private final Set<String> boldColumns = new HashSet<String>();
@@ -112,6 +125,11 @@ public class GuiTable {
 									fontRegistry.put("tableBold", new FontData[] { new FontData(oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD) });
 								}
 								item.setFont(i, fontRegistry.get("tableBold"));
+							}
+
+							// Colore per i valori oltre soglia...
+							if (configuration.getThresholds().getReachedKeys(info).contains(key)) {
+								item.setForeground(i, thresholdColor);
 							}
 
 							item.setText(i++, info.get(key));

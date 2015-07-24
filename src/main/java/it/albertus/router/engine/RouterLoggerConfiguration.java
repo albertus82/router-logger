@@ -72,20 +72,22 @@ public class RouterLoggerConfiguration extends Configuration {
 			return thresholds.toString();
 		}
 
-		public boolean isReached(final Map<String, String> info) {
+		public Set<String> getReachedKeys(final Map<String, String> info) {
+			final Set<String> keys = new HashSet<String>();
+
 			// Gestione delle soglie...
 			if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
 				for (final String key : info.keySet()) {
 					if (key != null && key.trim().length() != 0) {
 						for (final Threshold threshold : thresholds) {
 							if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-								return true;
+								keys.add(key);
 							}
 						}
 					}
 				}
 			}
-			return false;
+			return keys;
 		}
 
 	}
