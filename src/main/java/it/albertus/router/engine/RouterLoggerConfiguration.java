@@ -1,12 +1,12 @@
 package it.albertus.router.engine;
 
+import it.albertus.router.engine.Threshold.Type;
+import it.albertus.util.Configuration;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import it.albertus.router.engine.Threshold.Type;
-import it.albertus.util.Configuration;
 
 public class RouterLoggerConfiguration extends Configuration {
 
@@ -27,7 +27,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		super("routerlogger.cfg");
 
 		// Valorizzazione delle soglie...
-		thresholds = new Thresholds(this);
+		thresholds = new Thresholds();
 	}
 
 	public class Thresholds {
@@ -39,7 +39,8 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		private final Set<Threshold> thresholds = new TreeSet<Threshold>();
 
-		public Thresholds(Configuration configuration) {
+		private Thresholds() {
+			final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.this;
 			final Set<String> thresholdsAdded = new HashSet<String>();
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
