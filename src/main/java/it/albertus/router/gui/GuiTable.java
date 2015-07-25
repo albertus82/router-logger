@@ -87,6 +87,8 @@ public class GuiTable {
 		return table;
 	}
 
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final char FIELD_SEPARATOR = '\t';
 	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
@@ -180,14 +182,24 @@ public class GuiTable {
 	}
 
 	private void copySelection() {
-		StringBuilder data = new StringBuilder();
-		for (TableItem item : table.getSelection()) {
-			for (int i = 0; i < table.getColumnCount(); i++) {
-				data.append(item.getText(i)).append('\t');
-			}
-			data.replace(data.length() - 1, data.length(), System.getProperty("line.separator"));
+		final StringBuilder data = new StringBuilder();
+
+		// Testata...
+		for (final TableColumn column : table.getColumns()) {
+			data.append(column.getText()).append(FIELD_SEPARATOR);
 		}
-		Clipboard clipboard = new Clipboard(Display.getDefault());
+		data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
+
+		// Dati selezionati (ogni TableItem rappresenta una riga)...
+		for (final TableItem item : table.getSelection()) {
+			for (int i = 0; i < table.getColumnCount(); i++) {
+				data.append(item.getText(i)).append(FIELD_SEPARATOR);
+			}
+			data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
+		}
+
+		// Inserimento dati negli appunti...
+		final Clipboard clipboard = new Clipboard(table.getDisplay());
 		clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
 		clipboard.dispose();
 	}
