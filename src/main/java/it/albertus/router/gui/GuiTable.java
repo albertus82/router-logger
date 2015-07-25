@@ -1,6 +1,7 @@
 package it.albertus.router.gui;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
 import java.text.DateFormat;
@@ -136,14 +137,14 @@ public class GuiTable {
 			for (final TableColumn column : table.getColumns()) {
 				data.append(column.getText()).append(FIELD_SEPARATOR);
 			}
-			data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
+			data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
 
 			// Dati selezionati (ogni TableItem rappresenta una riga)...
 			for (final TableItem item : table.getSelection()) {
 				for (int i = 0; i < table.getColumnCount(); i++) {
 					data.append(item.getText(i)).append(FIELD_SEPARATOR);
 				}
-				data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
+				data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
 			}
 
 			// Inserimento dati negli appunti...
@@ -153,7 +154,6 @@ public class GuiTable {
 		}
 	}
 
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final char FIELD_SEPARATOR = '\t';
 	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 

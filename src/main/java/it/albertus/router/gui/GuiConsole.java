@@ -108,7 +108,7 @@ public class GuiConsole extends Console {
 		return menu;
 	}
 
-	private static final String NEWLINE = NewLine.CRLF.toString();
+	private static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	private StyledText styledText = null;
 
