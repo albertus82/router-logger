@@ -14,6 +14,10 @@ import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -45,6 +49,21 @@ public class GuiTable {
 		if (this.table == null) {
 			this.table = createTable(container);
 
+			this.table.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					// Supporto CTRL+C per "Copia"...
+					if (e.stateMask == SWT.CTRL && e.keyCode == 'c' && table.getSelection() != null && table.getSelection().length != 0) {
+						copySelection();
+					}
+
+					// Supporto CTRL+A per "Seleziona tutto"...
+					if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+						table.selectAll();
+					}
+				}
+			});
+
 			// Caricamento chiavi importanti da evidenziare...
 			for (String importantKey : configuration.getString("gui.important.keys", "").split(configuration.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
 				if (StringUtils.isNotBlank(importantKey)) {
@@ -58,7 +77,7 @@ public class GuiTable {
 	}
 
 	private Table createTable(final Composite container) {
-		final Table table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+		final Table table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gridData.minimumHeight = 200;
 		gridData.heightHint = 200;
@@ -158,6 +177,19 @@ public class GuiTable {
 				}
 			});
 		}
+	}
+
+	private void copySelection() {
+		StringBuilder data = new StringBuilder();
+		for (TableItem item : table.getSelection()) {
+			for (int i = 0; i < table.getColumnCount(); i++) {
+				data.append(item.getText(i)).append('\t');
+			}
+			data.replace(data.length() - 1, data.length(), System.getProperty("line.separator"));
+		}
+		Clipboard clipboard = new Clipboard(Display.getDefault());
+		clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
+		clipboard.dispose();
 	}
 
 }

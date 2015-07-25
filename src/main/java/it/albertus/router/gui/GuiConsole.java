@@ -29,10 +29,10 @@ public class GuiConsole extends Console {
 		if (this.styledText == null) {
 			this.styledText = createStyledText(container);
 
-			// Supporto CTRL+A per "Seleziona tutto"...
 			this.styledText.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
+					// Supporto CTRL+A per "Seleziona tutto"...
 					if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
 						styledText.selectAll();
 					}
