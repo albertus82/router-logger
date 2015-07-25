@@ -89,6 +89,7 @@ public class GuiTable {
 						if (!tableInitialized) {
 							TableColumn column = new TableColumn(table, SWT.NONE);
 							column.setText("#");
+							column.setToolTipText("Iteration");
 							column = new TableColumn(table, SWT.NONE);
 							column.setText("Timestamp");
 							column.setToolTipText("Timestamp");

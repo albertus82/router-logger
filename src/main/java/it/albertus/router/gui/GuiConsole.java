@@ -5,13 +5,10 @@ import it.albertus.util.NewLine;
 
 import java.util.Locale;
 
-import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -43,12 +40,7 @@ public class GuiConsole extends Console {
 		gridData.minimumHeight = 200;
 		gridData.heightHint = 200;
 		styledText.setLayoutData(gridData);
-		FontRegistry fontRegistry = JFaceResources.getFontRegistry();
-		if (!fontRegistry.hasValueFor("console")) {
-			Font terminalFont = JFaceResources.getFont(JFaceResources.TEXT_FONT);
-			fontRegistry.put("console", new FontData[] { new FontData(terminalFont.getFontData()[0].getName(), 10, SWT.NORMAL) });
-		}
-		styledText.setFont(fontRegistry.get("console"));
+		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 		styledText.setEditable(false);
 		return styledText;
 	}
