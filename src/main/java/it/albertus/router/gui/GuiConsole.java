@@ -9,6 +9,8 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -28,6 +30,16 @@ public class GuiConsole extends Console {
 	public void init(final Composite container) {
 		if (this.styledText == null) {
 			this.styledText = createStyledText(container);
+
+			// Supporto CTRL+A per "Seleziona tutto"...
+			this.styledText.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+						styledText.selectAll();
+					}
+				}
+			});
 		}
 		else {
 			throw new IllegalStateException(this.getClass().getSimpleName() + " already initialized.");
