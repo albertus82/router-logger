@@ -9,7 +9,7 @@ RouterLogger
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
-  * **`reader.class.name`**= `TpLink8970Reader` (default) o `AsusDslN12EReader`, a seconda del modello di dispositivo posseduto.
+  * **`reader.class.name`**= [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java) (default) o [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java), a seconda del modello di dispositivo posseduto.
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
   * **`router.port`**= porta Telnet del router, default: `23`.
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
@@ -69,10 +69,11 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 ##### Interfaccia grafica (GUI)
 
 * **`gui.table.items.max`**= numero massimo di righe contenute nella tabella a video; al raggiungimento del limite, le righe pi&ugrave; vecchie vengono cancellate. Questa impostazione non influisce in alcun modo sul salvataggio delle informazioni ma ha effetto unicamente sull'interfaccia grafica dell'applicazione (default: `5000`, valori maggiori comportano una maggiore occupazione di memoria).
+* **`gui.table.columns.pack`**= riduce al minimo la larghezza delle colonne della tabella a video adattandola ai valori e ignorando la larghezza dei nomi delle chiavi in intestazione (default: `false`).
 * **`gui.minimize.tray`**= specifica se l'applicazione deve essere ridotta a icona nell'area di notifica invece che nella barra delle applicazioni (default: `true`).
 * **`gui.start.minimized`**= specifica se l'applicazione deve essere avviata gi&agrave; ridotta a icona (default: `false`).
-* **`gui.bold.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno visualizzati in grassetto nella tabella (default: vuoto).
-* **`gui.bold.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.bold.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
+* **`gui.important.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno evidenziati nella tabella (default: vuoto).
+* **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.bold.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 
 ##### Console
 
