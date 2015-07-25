@@ -14,9 +14,6 @@ import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -47,21 +44,6 @@ public class GuiTable {
 		if (this.table == null) {
 			this.table = createTable(container);
 
-			// Creazione colore da associare a valori oltre soglia...
-			thresholdColor = new Color(table.getDisplay(), 0xFF, 0, 0);
-
-			// Creazione colore da associare alle colonne definite importanti..
-			importantColor = new Color(table.getDisplay(), 0xFF, 0xFF, 0);
-
-			// Listener per liberare le risorse del sistema operativo...
-			table.addDisposeListener(new DisposeListener() {
-				@Override
-				public void widgetDisposed(DisposeEvent e) {
-					thresholdColor.dispose();
-					importantColor.dispose();
-				}
-			});
-
 			// Caricamento chiavi importanti da evidenziare...
 			for (String importantKey : configuration.getString("gui.important.keys", "").split(configuration.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
 				if (StringUtils.isNotBlank(importantKey)) {
@@ -90,8 +72,6 @@ public class GuiTable {
 	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	private Table table = null;
-	private Color thresholdColor = null;
-	private Color importantColor = null;
 	private boolean tableInitialized = false;
 	private boolean tablePacked = false;
 	private final Set<String> importantKeys = new HashSet<String>();
@@ -109,9 +89,11 @@ public class GuiTable {
 							column.setText("#");
 							column = new TableColumn(table, SWT.NONE);
 							column.setText("Timestamp");
+							column.setToolTipText("Timestamp");
 							for (String key : info.keySet()) {
 								column = new TableColumn(table, SWT.NONE);
 								column.setText(key);
+								column.setToolTipText(key);
 							}
 							tableInitialized = true;
 						}
@@ -132,12 +114,14 @@ public class GuiTable {
 									fontRegistry.put("tableBold", new FontData[] { new FontData(oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD) });
 								}
 								item.setFont(i, fontRegistry.get("tableBold"));
-								item.setBackground(i, importantColor); // Evidenzia cella.
+
+								// Evidenzia cella...
+								item.setBackground(i, item.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
 							}
 
 							// Colore per i valori oltre soglia...
 							if (configuration.getThresholds().getReachedKeys(info).contains(key)) {
-								item.setForeground(i, thresholdColor);
+								item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
 							}
 
 							item.setText(i++, info.get(key));
