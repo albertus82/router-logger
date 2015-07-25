@@ -74,7 +74,8 @@ public class GuiTable {
 
 	private Table table = null;
 	private boolean tableInitialized = false;
-	private boolean tablePacked = false;
+	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
+	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.MAX_ITEMS);
 	private final Set<String> importantKeys = new HashSet<String>();
 
 	public void addRow(final Map<String, String> info, final int iteration) {
@@ -86,7 +87,6 @@ public class GuiTable {
 					try {
 						// Header (una tantum)...
 						if (!tableInitialized) {
-							final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 							TableColumn column = new TableColumn(table, SWT.NONE);
 							column.setText("#");
 							column = new TableColumn(table, SWT.NONE);
@@ -97,14 +97,11 @@ public class GuiTable {
 								column.setText(packColumns ? " " : key);
 								column.setToolTipText(key);
 							}
-							if (!packColumns) {
-								tableInitialized = true;
-							}
 						}
 
 						// Dati...
 						int i = 0;
-						TableItem item = new TableItem(table, SWT.NONE, 0);
+						final TableItem item = new TableItem(table, SWT.NONE, 0);
 						item.setText(i++, Integer.toString(iteration));
 						item.setText(i++, timestamp);
 
@@ -132,27 +129,25 @@ public class GuiTable {
 						}
 
 						// Dimesionamento delle colonne (una tantum)...
-						if (!tablePacked) {
-							for (int j = 0; j < i; j++) {
+						if (!tableInitialized) {
+							for (int j = 0; j < table.getColumns().length; j++) {
 								table.getColumn(j).pack();
 							}
 							table.getColumn(0).setWidth((int) (table.getColumn(0).getWidth() * 1.3));
-							tablePacked = true;
-						}
 
-						if (!tableInitialized) {
-							final String[] stringArray = new String[0];
-							final TableColumn[] columns = table.getColumns();
-							final int startIndex = 2;
-							for (int k = startIndex; k < columns.length; k++) {
-								final TableColumn column = columns[k];
-								column.setText(info.keySet().toArray(stringArray)[k - startIndex]);
+							if (packColumns) {
+								final String[] stringArray = new String[info.keySet().size()];
+								final TableColumn[] columns = table.getColumns();
+								final int startIndex = 2;
+								for (int k = startIndex; k < columns.length; k++) {
+									final TableColumn column = columns[k];
+									column.setText(info.keySet().toArray(stringArray)[k - startIndex]);
+								}
 							}
 							tableInitialized = true;
 						}
 
 						// Limitatore righe in tabella...
-						final int maxItems = configuration.getInt("gui.table.items.max", Defaults.MAX_ITEMS);
 						if (table.getItemCount() > maxItems) {
 							table.remove(maxItems);
 						}
