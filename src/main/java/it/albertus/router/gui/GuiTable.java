@@ -23,6 +23,10 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -48,21 +52,7 @@ public class GuiTable {
 	public void init(final Composite container) {
 		if (this.table == null) {
 			this.table = createTable(container);
-
-			this.table.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					// Supporto CTRL+C per "Copia"...
-					if (e.stateMask == SWT.CTRL && e.keyCode == 'c' && table.getSelection() != null && table.getSelection().length != 0) {
-						copySelection();
-					}
-
-					// Supporto CTRL+A per "Seleziona tutto"...
-					if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
-						table.selectAll();
-					}
-				}
-			});
+			createContextMenu();
 
 			// Caricamento chiavi importanti da evidenziare...
 			for (String importantKey : configuration.getString("gui.important.keys", "").split(configuration.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
@@ -84,7 +74,83 @@ public class GuiTable {
 		table.setLayoutData(gridData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+
+		table.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// Supporto CTRL+C per "Copia"...
+				if (e.stateMask == SWT.CTRL && e.keyCode == 'c' && table.getSelection() != null && table.getSelection().length != 0) {
+					copySelection();
+				}
+
+				// Supporto CTRL+A per "Seleziona tutto"...
+				if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+					table.selectAll();
+				}
+			}
+		});
+
 		return table;
+	}
+
+	private Menu createContextMenu() {
+		final Menu menu = new Menu(table);
+
+		// Copia...
+		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+		menuItem.setText("Copy");
+		menuItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				copySelection();
+			}
+		});
+
+		menuItem = new MenuItem(menu, SWT.SEPARATOR);
+
+		// Seleziona tutto...
+		menuItem = new MenuItem(menu, SWT.PUSH);
+		menuItem.setText("Select All");
+		menuItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				table.selectAll();
+			}
+		});
+
+		table.addListener(SWT.MenuDetect, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				menu.setVisible(true);
+			}
+		});
+
+		return menu;
+	}
+
+	private void copySelection() {
+		if (table.getColumns() != null && table.getColumns().length != 0) {
+			final StringBuilder data = new StringBuilder();
+
+			// Testata...
+			for (final TableColumn column : table.getColumns()) {
+				data.append(column.getText()).append(FIELD_SEPARATOR);
+			}
+			data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
+
+			// Dati selezionati (ogni TableItem rappresenta una riga)...
+			for (final TableItem item : table.getSelection()) {
+				for (int i = 0; i < table.getColumnCount(); i++) {
+					data.append(item.getText(i)).append(FIELD_SEPARATOR);
+				}
+				data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
+			}
+
+			// Inserimento dati negli appunti...
+			final Clipboard clipboard = new Clipboard(table.getDisplay());
+			clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
+			clipboard.dispose();
+		}
 	}
 
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -179,29 +245,6 @@ public class GuiTable {
 				}
 			});
 		}
-	}
-
-	private void copySelection() {
-		final StringBuilder data = new StringBuilder();
-
-		// Testata...
-		for (final TableColumn column : table.getColumns()) {
-			data.append(column.getText()).append(FIELD_SEPARATOR);
-		}
-		data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
-
-		// Dati selezionati (ogni TableItem rappresenta una riga)...
-		for (final TableItem item : table.getSelection()) {
-			for (int i = 0; i < table.getColumnCount(); i++) {
-				data.append(item.getText(i)).append(FIELD_SEPARATOR);
-			}
-			data.replace(data.length() - 1, data.length(), LINE_SEPARATOR);
-		}
-
-		// Inserimento dati negli appunti...
-		final Clipboard clipboard = new Clipboard(table.getDisplay());
-		clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
-		clipboard.dispose();
 	}
 
 }

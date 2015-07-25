@@ -12,6 +12,10 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class GuiConsole extends Console {
 
@@ -28,16 +32,7 @@ public class GuiConsole extends Console {
 	public void init(final Composite container) {
 		if (this.styledText == null) {
 			this.styledText = createStyledText(container);
-
-			this.styledText.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					// Supporto CTRL+A per "Seleziona tutto"...
-					if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
-						styledText.selectAll();
-					}
-				}
-			});
+			createContextMenu();
 		}
 		else {
 			throw new IllegalStateException(this.getClass().getSimpleName() + " already initialized.");
@@ -52,7 +47,65 @@ public class GuiConsole extends Console {
 		styledText.setLayoutData(gridData);
 		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 		styledText.setEditable(false);
+
+		styledText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// Supporto CTRL+A per "Seleziona tutto"...
+				if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+					styledText.selectAll();
+				}
+			}
+		});
+
 		return styledText;
+	}
+
+	private Menu createContextMenu() {
+		final Menu menu = new Menu(styledText);
+
+		// Copia...
+		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+		menuItem.setText("Copy");
+		menuItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				styledText.copy();
+			}
+		});
+
+		menuItem = new MenuItem(menu, SWT.SEPARATOR);
+
+		// Azzera...
+		menuItem = new MenuItem(menu, SWT.PUSH);
+		menuItem.setText("Clear");
+		menuItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				styledText.setText("");
+			}
+		});
+
+		menuItem = new MenuItem(menu, SWT.SEPARATOR);
+
+		// Seleziona tutto...
+		menuItem = new MenuItem(menu, SWT.PUSH);
+		menuItem.setText("Select All");
+		menuItem.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				styledText.selectAll();
+			}
+		});
+
+		styledText.addListener(SWT.MenuDetect, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				menu.setVisible(true);
+			}
+		});
+
+		return menu;
 	}
 
 	private static final String NEWLINE = NewLine.CRLF.toString();
