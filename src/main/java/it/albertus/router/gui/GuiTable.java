@@ -28,6 +28,7 @@ public class GuiTable {
 	private interface Defaults {
 		int MAX_ITEMS = 5000;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
+		boolean GUI_TABLE_COLUMNS_PACK = false;
 	}
 
 	private static class Singleton {
@@ -85,6 +86,7 @@ public class GuiTable {
 					try {
 						// Header (una tantum)...
 						if (!tableInitialized) {
+							final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 							TableColumn column = new TableColumn(table, SWT.NONE);
 							column.setText("#");
 							column = new TableColumn(table, SWT.NONE);
@@ -92,10 +94,12 @@ public class GuiTable {
 							column.setToolTipText("Timestamp");
 							for (String key : info.keySet()) {
 								column = new TableColumn(table, SWT.NONE);
-								column.setText(key);
+								column.setText(packColumns ? " " : key);
 								column.setToolTipText(key);
 							}
-							tableInitialized = true;
+							if (!packColumns) {
+								tableInitialized = true;
+							}
 						}
 
 						// Dati...
@@ -134,6 +138,17 @@ public class GuiTable {
 							}
 							table.getColumn(0).setWidth((int) (table.getColumn(0).getWidth() * 1.3));
 							tablePacked = true;
+						}
+
+						if (!tableInitialized) {
+							final String[] stringArray = new String[0];
+							final TableColumn[] columns = table.getColumns();
+							final int startIndex = 2;
+							for (int k = startIndex; k < columns.length; k++) {
+								final TableColumn column = columns[k];
+								column.setText(info.keySet().toArray(stringArray)[k - startIndex]);
+							}
+							tableInitialized = true;
 						}
 
 						// Limitatore righe in tabella...
