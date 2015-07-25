@@ -27,9 +27,10 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	public static void main(String args[]) {
 		try {
+			final RouterLoggerGui routerLogger = new RouterLoggerGui();
+
 			// Creazione finestra applicazione...
 			final Display display = new Display();
-			final RouterLoggerGui routerLogger = new RouterLoggerGui();
 			final Shell shell = routerLogger.createShell(display);
 			shell.open();
 
@@ -47,14 +48,14 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 					display.sleep();
 			}
 
-			// Segnala al thread che deve terminare il loop...
+			// Segnala al thread che deve terminare il loop immediatamente...
 			routerLogger.exit = true;
 			updateThread.interrupt();
 
 			// Distrugge la GUI...
 			display.dispose();
 
-			// Attende che il thread abbia completato il rilascio risorse...
+			// Attende che il thread completi il rilascio risorse...
 			updateThread.join();
 		}
 		catch (Exception e) {
@@ -86,9 +87,11 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	private Control createContents(Composite parent) {
 		Composite container = parent;// new Composite(parent, SWT.NONE);
 
-		// Variare il numero per aumentare o diminuire le colonne del layout.
-		// Modificare conseguentemente anche lo span della tabella e della
-		// console!
+		/*
+		 * Variare il numero per aumentare o diminuire le colonne del layout.
+		 * Modificare conseguentemente anche lo span della tabella e della
+		 * console!
+		 */
 		GridLayout layout = new GridLayout(1, true);
 		container.setLayout(layout);
 
