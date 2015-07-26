@@ -2,6 +2,7 @@ package it.albertus.router.engine;
 
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
+import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
@@ -175,14 +176,14 @@ public abstract class RouterLoggerEngine {
 		final StringBuilder versionInfo = new StringBuilder();
 		final String versionNumber = version.getNumber();
 		if (versionNumber != null && !"".equals(versionNumber.trim())) {
-			versionInfo.append('v').append(versionNumber.trim()).append(' ');
+			versionInfo.append(versionNumber.trim()).append(' ');
 		}
 		String versionDate = version.getDate();
 		if (versionDate != null && !"".equals(versionDate.trim())) {
 			versionInfo.append('(').append(versionDate.trim()).append(") ");
 		}
 
-		out.println("********** ADSL Modem Router Logger " + versionInfo.toString() + "**********");
+		out.println(Resources.get("msg.welcome", versionInfo));
 		out.println();
 		boolean lineBreak = false;
 		if (StringUtils.isNotBlank(reader.getDeviceModel())) {
