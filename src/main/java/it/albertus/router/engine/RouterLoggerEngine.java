@@ -29,8 +29,8 @@ public abstract class RouterLoggerEngine {
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
 	}
 
-	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	protected static final Logger logger = Logger.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final Logger logger = Logger.getInstance();
 
 	protected final Console out = getConsole();
 	protected final Reader reader;

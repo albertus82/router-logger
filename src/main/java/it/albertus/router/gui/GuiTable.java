@@ -158,8 +158,7 @@ public class GuiTable {
 	private static final char FIELD_SEPARATOR = '\t';
 	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
-	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-
+	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private Table table = null;
 	private boolean tableInitialized = false;
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);

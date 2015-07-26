@@ -23,8 +23,8 @@ public abstract class Reader {
 		String TELNET_NEWLINE_CHARACTERS = NewLine.CRLF.name();
 	}
 
-	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	protected static final Logger logger = Logger.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final Logger logger = Logger.getInstance();
 
 	protected Console out;
 

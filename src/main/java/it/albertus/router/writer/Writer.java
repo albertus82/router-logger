@@ -8,8 +8,8 @@ import java.util.Map;
 
 public abstract class Writer {
 
-	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	protected static final Logger logger = Logger.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final Logger logger = Logger.getInstance();
 
 	protected Console out;
 

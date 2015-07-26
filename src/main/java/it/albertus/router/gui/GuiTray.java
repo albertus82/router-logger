@@ -62,7 +62,7 @@ public class GuiTray {
 			if (menu == null) {
 				menu = new Menu(shell, SWT.POP_UP);
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText(Resources.get("lbl.open"));
+				menuItem.setText(Resources.get("lbl.tray.show"));
 
 				menuItem.addListener(SWT.Selection, new Listener() {
 					@Override
@@ -77,7 +77,7 @@ public class GuiTray {
 
 				// Tasto "Exit"...
 				menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText(Resources.get("lbl.exit"));
+				menuItem.setText(Resources.get("lbl.tray.close"));
 				menuItem.addListener(SWT.Selection, new Listener() {
 					@Override
 					public void handleEvent(Event event) {

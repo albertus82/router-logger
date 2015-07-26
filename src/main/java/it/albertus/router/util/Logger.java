@@ -24,10 +24,11 @@ public class Logger {
 		FILE;
 	}
 
-	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
+
+	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	private interface Defaults {
 		boolean DEBUG = false;
@@ -35,7 +36,7 @@ public class Logger {
 
 	// Lazy initialization...
 	private static class Singleton {
-		private static final Logger logger = new Logger(configuration.getBoolean("console.debug", Defaults.DEBUG));
+		private static final Logger logger = new Logger();
 	}
 
 	public static Logger getInstance() {
@@ -47,11 +48,11 @@ public class Logger {
 	}
 
 	private final boolean debug;
-	
+
 	private Console out;
 
-	private Logger(boolean debug) {
-		this.debug = debug;
+	private Logger() {
+		this.debug = configuration.getBoolean("console.debug", Defaults.DEBUG);
 	}
 
 	public boolean isDebug() {

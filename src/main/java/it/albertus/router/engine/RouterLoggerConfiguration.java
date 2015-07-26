@@ -11,10 +11,12 @@ import java.util.TreeSet;
 
 public class RouterLoggerConfiguration extends Configuration {
 
-	private static final RouterLoggerConfiguration configuration = new RouterLoggerConfiguration();
+	private static class Singleton {
+		private static final RouterLoggerConfiguration configuration = new RouterLoggerConfiguration();
+	}
 
 	public static RouterLoggerConfiguration getInstance() {
-		return configuration;
+		return Singleton.configuration;
 	}
 
 	private final Thresholds thresholds;

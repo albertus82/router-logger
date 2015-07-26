@@ -6,18 +6,22 @@ import it.albertus.router.gui.GuiImages;
 import it.albertus.router.gui.GuiTable;
 import it.albertus.router.gui.GuiTray;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.util.ExceptionUtils;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 public class RouterLoggerGui extends RouterLoggerEngine {
@@ -27,11 +31,11 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		boolean GUI_START_MINIMIZED = false;
 	}
 
-	private static final GuiTable table = GuiTable.getInstance();
+	private final GuiTable table = GuiTable.getInstance();
 
 	public static void main(String args[]) {
 		try {
-			final RouterLoggerGui routerLogger = new RouterLoggerGui();
+			final RouterLoggerGui routerLogger = newInstance();
 
 			// Creazione finestra applicazione...
 			final Display display = new Display();
@@ -48,8 +52,9 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 			updateThread.start();
 
 			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch())
+				if (!display.readAndDispatch()) {
 					display.sleep();
+				}
 			}
 
 			// Segnala al thread che deve terminare il loop immediatamente...
@@ -63,8 +68,28 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 			updateThread.join();
 		}
 		catch (Exception e) {
-			logger.log(e);
+			Logger.getInstance().log(e);
 		}
+	}
+
+	private static RouterLoggerGui newInstance() {
+		RouterLoggerGui instance = null;
+		try {
+			instance = new RouterLoggerGui();
+		}
+		catch (ExceptionInInitializerError e) {
+			int style = SWT.ICON_ERROR;
+			final Display display = new Display();
+			final Shell shell = new Shell(display);
+			MessageBox messageBox = new MessageBox(shell, style);
+			messageBox.setText(Resources.get("lbl.error"));
+			messageBox.setMessage(ExceptionUtils.getUIMessage(e.getCause() != null ? e.getCause() : e));
+			messageBox.open();
+			shell.dispose();
+			display.dispose();
+			System.exit(1);
+		}
+		return instance;
 	}
 
 	private void configureShell(final Shell shell) {
