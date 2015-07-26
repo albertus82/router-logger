@@ -17,11 +17,11 @@ import org.eclipse.swt.widgets.TrayItem;
 public class GuiTray {
 
 	private static class Singleton {
-		private static final GuiTray tray = new GuiTray();
+		private static final GuiTray TRAY = new GuiTray();
 	}
 
 	public static GuiTray getInstance() {
-		return Singleton.tray;
+		return Singleton.TRAY;
 	}
 
 	private GuiTray() {}

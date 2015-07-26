@@ -42,11 +42,11 @@ public class GuiTable {
 	}
 
 	private static class Singleton {
-		private static final GuiTable table = new GuiTable();
+		private static final GuiTable TABLE = new GuiTable();
 	}
 
 	public static GuiTable getInstance() {
-		return Singleton.table;
+		return Singleton.TABLE;
 	}
 
 	private GuiTable() {}

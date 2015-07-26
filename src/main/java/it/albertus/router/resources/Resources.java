@@ -7,14 +7,14 @@ import java.util.ResourceBundle;
 
 public class Resources {
 
-	private static final ResourceBundle resources = ResourceBundle.getBundle(Resources.class.getName().toLowerCase());
+	private static final ResourceBundle RESOURCES = ResourceBundle.getBundle(Resources.class.getName().toLowerCase());
 
 	public static String get(final String key, final Object... params) {
 		final List<String> stringParams = new ArrayList<String>(params.length);
 		for (Object param : params) {
 			stringParams.add(param != null ? param.toString() : "");
 		}
-		final String message = MessageFormat.format(resources.getString(key), stringParams.toArray());
+		final String message = MessageFormat.format(RESOURCES.getString(key), stringParams.toArray());
 		return message != null ? message.trim() : "";
 	}
 

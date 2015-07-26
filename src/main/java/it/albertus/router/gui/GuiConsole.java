@@ -21,11 +21,11 @@ import org.eclipse.swt.widgets.MenuItem;
 public class GuiConsole extends Console {
 
 	private static class Singleton {
-		private static final GuiConsole console = new GuiConsole();
+		private static final GuiConsole CONSOLE = new GuiConsole();
 	}
 
 	public static GuiConsole getInstance() {
-		return Singleton.console;
+		return Singleton.CONSOLE;
 	}
 
 	private GuiConsole() {}

@@ -36,11 +36,11 @@ public class Logger {
 
 	// Lazy initialization...
 	private static class Singleton {
-		private static final Logger logger = new Logger();
+		private static final Logger LOGGER = new Logger();
 	}
 
 	public static Logger getInstance() {
-		return Singleton.logger;
+		return Singleton.LOGGER;
 	}
 	
 	public void init(final Console console) {
