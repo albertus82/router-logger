@@ -7,6 +7,7 @@ import it.albertus.util.Configuration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class RouterLoggerConfiguration extends Configuration {
@@ -76,8 +77,8 @@ public class RouterLoggerConfiguration extends Configuration {
 			return thresholds.toString();
 		}
 
-		public Set<String> getReachedKeys(final Map<String, String> info) {
-			final Set<String> keys = new HashSet<String>();
+		public Map<String, String> getReached(final Map<String, String> info) {
+			final Map<String, String> reached = new TreeMap<String, String>();
 
 			// Gestione delle soglie...
 			if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
@@ -85,13 +86,13 @@ public class RouterLoggerConfiguration extends Configuration {
 					if (key != null && key.trim().length() != 0) {
 						for (final Threshold threshold : thresholds) {
 							if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-								keys.add(key);
+								reached.put(key, info.get(key));
 							}
 						}
 					}
 				}
 			}
-			return keys;
+			return reached;
 		}
 
 	}

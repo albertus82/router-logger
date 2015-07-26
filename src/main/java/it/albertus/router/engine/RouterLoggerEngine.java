@@ -12,7 +12,6 @@ import it.albertus.util.Version;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 
 public abstract class RouterLoggerEngine {
 
@@ -33,6 +32,7 @@ public abstract class RouterLoggerEngine {
 	protected final Logger logger = Logger.getInstance();
 
 	protected final Console out = getConsole();
+
 	protected final Reader reader;
 	protected final Writer writer;
 
@@ -219,12 +219,12 @@ public abstract class RouterLoggerEngine {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
 				final long waitTimeInMillis;
-				final Set<String> thresholdsReached = configuration.getThresholds().getReachedKeys(info);
+				final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
 				if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 					if (!thresholdsReached.isEmpty()) {
 						hysteresis = System.currentTimeMillis();
-						showThresholdsReached(info, thresholdsReached);
+						showThresholdsReached(thresholdsReached);
 					}
 				}
 				else {
@@ -235,7 +235,7 @@ public abstract class RouterLoggerEngine {
 		}
 	}
 
-	protected void showThresholdsReached(Map<String, String> info, Set<String> thresholdsReached) {}
+	protected void showThresholdsReached(Map<String, String> thresholdsReached) {}
 
 	protected abstract void showInfo(Map<String, String> info);
 

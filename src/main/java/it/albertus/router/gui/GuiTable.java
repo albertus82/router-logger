@@ -209,7 +209,7 @@ public class GuiTable {
 							}
 
 							// Colore per i valori oltre soglia...
-							if (configuration.getThresholds().getReachedKeys(info).contains(key)) {
+							if (configuration.getThresholds().getReached(info).containsKey(key)) {
 								item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
 							}
 
