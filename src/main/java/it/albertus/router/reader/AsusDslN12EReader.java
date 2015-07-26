@@ -1,5 +1,7 @@
 package it.albertus.router.reader;
 
+import it.albertus.router.resources.Resources;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -83,7 +85,7 @@ public class AsusDslN12EReader extends Reader {
 
 	@Override
 	public void logout() throws IOException {
-		out.println("Logging out...", true);
+		out.println(Resources.get("msg.logging.out"), true);
 		writeToTelnet("exit");
 	}
 

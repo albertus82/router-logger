@@ -1,6 +1,7 @@
 package it.albertus.router.gui;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
@@ -63,7 +64,7 @@ public class GuiTable {
 			}
 		}
 		else {
-			throw new IllegalStateException(this.getClass().getSimpleName() + " already initialized.");
+			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
 		}
 	}
 
@@ -99,7 +100,7 @@ public class GuiTable {
 
 		// Copia...
 		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText("Copy");
+		menuItem.setText(Resources.get("lbl.copy"));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -111,7 +112,7 @@ public class GuiTable {
 
 		// Seleziona tutto...
 		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText("Select All");
+		menuItem.setText(Resources.get("lbl.select.all"));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -175,11 +176,11 @@ public class GuiTable {
 						// Header (una tantum)...
 						if (!tableInitialized) {
 							TableColumn column = new TableColumn(table, SWT.NONE);
-							column.setText("#");
-							column.setToolTipText("Iteration");
+							column.setText(Resources.get("lbl.column.iteration.text"));
+							column.setToolTipText(Resources.get("lbl.column.iteration.tooltip"));
 							column = new TableColumn(table, SWT.NONE);
-							column.setText("Timestamp");
-							column.setToolTipText("Timestamp");
+							column.setText(Resources.get("lbl.column.timestamp.text"));
+							column.setToolTipText(Resources.get("lbl.column.timestamp.tooltip"));
 							for (String key : info.keySet()) {
 								column = new TableColumn(table, SWT.NONE);
 								column.setText(packColumns ? " " : key);

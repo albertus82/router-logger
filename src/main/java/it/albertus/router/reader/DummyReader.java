@@ -1,5 +1,7 @@
 package it.albertus.router.reader;
 
+import it.albertus.router.resources.Resources;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class DummyReader extends Reader {
 	@Override
 	public boolean login() {
 		final String className = getClass().getSimpleName();
-		final String message = " - Only for test purposes!";
+		final String message = " - " + Resources.get("msg.test.purposes.only");
 		final StringBuilder separator = new StringBuilder();
 		for (int c = 0; c < className.length() + message.length(); c++) {
 			separator.append('-');
@@ -34,19 +36,19 @@ public class DummyReader extends Reader {
 			for (int j = 1; j <= 10; j++) {
 				field.append((char) (97 + Math.random() * 25));
 			}
-			map.put("Column " + i, field.toString());
+			map.put(Resources.get("lbl.column.number", i), field.toString());
 		}
 		return map;
 	}
 
 	@Override
 	public void logout() {
-		out.println("Dummy logout...", true);
+		out.println(Resources.get("msg.dummy.logout"), true);
 	}
 
 	@Override
 	public void disconnect() {
-		out.println("Dummy disconnect...", true);
+		out.println(Resources.get("msg.dummy.disconnect"), true);
 	}
 
 }

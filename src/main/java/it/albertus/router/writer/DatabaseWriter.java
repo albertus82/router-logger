@@ -1,5 +1,7 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.resources.Resources;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,24 +22,24 @@ public class DatabaseWriter extends Writer {
 		int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
 	}
 
-	private static final String CONFIGURATION_KEY_DATABASE_PASSWORD = "database.password";
-	private static final String CONFIGURATION_KEY_DATABASE_USERNAME = "database.username";
-	private static final String CONFIGURATION_KEY_DATABASE_URL = "database.url";
-	private static final String CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME = "database.driver.class.name";
+	private static final String CFG_KEY_DB_PASSWORD = "database.password";
+	private static final String CFG_KEY_DB_USERNAME = "database.username";
+	private static final String CFG_KEY_DB_URL = "database.url";
+	private static final String CFG_KEY_DB_DRIVER_CLASS_NAME = "database.driver.class.name";
 
 	private Connection connection = null;
 	private boolean showMessage = true;
 	private final int connectionValidationTimeoutInMillis;
 
 	public DatabaseWriter() {
-		if (!configuration.contains(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) || !configuration.contains(CONFIGURATION_KEY_DATABASE_URL) || !configuration.contains(CONFIGURATION_KEY_DATABASE_USERNAME) || !configuration.contains(CONFIGURATION_KEY_DATABASE_PASSWORD)) {
-			throw new RuntimeException("Database configuration error. Review your " + configuration.getFileName() + " file.");
+		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME) || !configuration.contains(CFG_KEY_DB_URL) || !configuration.contains(CFG_KEY_DB_USERNAME) || !configuration.contains(CFG_KEY_DB_PASSWORD)) {
+			throw new RuntimeException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 		}
 		try {
-			Class.forName(configuration.getString(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME));
+			Class.forName(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME));
 		}
 		catch (ClassNotFoundException e) {
-			throw new RuntimeException("Missing database driver library (JAR) or misspelled class name \"" + configuration.getString(CONFIGURATION_KEY_DATABASE_DRIVER_CLASS_NAME) + "\" in your " + configuration.getFileName() + " file.", e);
+			throw new RuntimeException(Resources.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e);
 		}
 		connectionValidationTimeoutInMillis = configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS);
 	}
@@ -47,7 +49,7 @@ public class DatabaseWriter extends Writer {
 		// Connessione al database...
 		try {
 			if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
-				connection = DriverManager.getConnection(configuration.getString(CONFIGURATION_KEY_DATABASE_URL), configuration.getString(CONFIGURATION_KEY_DATABASE_USERNAME), configuration.getString(CONFIGURATION_KEY_DATABASE_PASSWORD));
+				connection = DriverManager.getConnection(configuration.getString(CFG_KEY_DB_URL), configuration.getString(CFG_KEY_DB_USERNAME), configuration.getString(CFG_KEY_DB_PASSWORD));
 				connection.setAutoCommit(true);
 			}
 		}
@@ -58,13 +60,13 @@ public class DatabaseWriter extends Writer {
 		// Verifica esistenza tabella ed eventuale creazione...
 		final String tableName = getTableName();
 		if (!tableExists(tableName)) {
-			out.println("Creating database table: " + tableName + "...", true);
+			out.println(Resources.get("msg.creating.database.table", tableName), true);
 			createTable(tableName, info);
 		}
 
 		// Inserimento dati...
 		if (showMessage) {
-			out.println("Logging into database table: " + tableName + "...", true);
+			out.println(Resources.get("msg.logging.into.database", tableName), true);
 			showMessage = false;
 		}
 
@@ -174,7 +176,7 @@ public class DatabaseWriter extends Writer {
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
-					out.println("Closing database connection.", true);
+					out.println(Resources.get("msg.closing.database.connection"), true);
 					connection.close();
 					connection = null;
 				}

@@ -1,6 +1,7 @@
 package it.albertus.router.engine;
 
 import it.albertus.router.engine.Threshold.Type;
+import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
 
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class RouterLoggerConfiguration extends Configuration {
 				String key = (String) objectKey;
 				if (key != null && key.startsWith(CFG_PREFIX + '.')) {
 					if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(CFG_SUFFIX_KEY) && !key.endsWith(CFG_SUFFIX_TYPE) && !key.endsWith(CFG_SUFFIX_VALUE))) {
-						throw new IllegalArgumentException("Thresholds misconfigured. Review your " + configuration.getFileName() + " file.");
+						throw new IllegalArgumentException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
 					final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 					if (thresholdsAdded.contains(thresholdName)) {
@@ -56,7 +57,7 @@ public class RouterLoggerConfiguration extends Configuration {
 					final Type thresholdType = Type.getEnum(configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_TYPE));
 					final String thresholdValue = configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_VALUE);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-						throw new IllegalArgumentException("Threshold misconfigured: \"" + thresholdName + "\". Review your " + configuration.getFileName() + " file.");
+						throw new IllegalArgumentException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
 					thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
 					thresholdsAdded.add(thresholdName);

@@ -1,6 +1,7 @@
 package it.albertus.router.util;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
@@ -121,7 +122,7 @@ public class Logger {
 		if (StringUtils.isNotBlank(logDestinationDir)) {
 			File logDestDir = new File(logDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException("Invalid path: \"" + logDestDir + "\".");
+				throw new RuntimeException(Resources.get("err.invalid.path", logDestDir));
 			}
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();

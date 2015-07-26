@@ -12,6 +12,7 @@ import it.albertus.util.Version;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class RouterLoggerEngine {
 
@@ -59,7 +60,7 @@ public abstract class RouterLoggerEngine {
 			throw re;
 		}
 		catch (Exception e) {
-			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
+			throw new RuntimeException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), e);
 		}
 		reader.init(out);
 		return reader;
@@ -84,7 +85,7 @@ public abstract class RouterLoggerEngine {
 			throw re;
 		}
 		catch (Exception e) {
-			throw new RuntimeException("Invalid \"" + configurationKey + "\" property. Review your " + configuration.getFileName() + " file.", e);
+			throw new RuntimeException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), e);
 		}
 		writer.init(out);
 		return writer;
@@ -109,7 +110,7 @@ public abstract class RouterLoggerEngine {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
-				out.println("Waiting for reconnection " + index + '/' + retries + " (" + retryIntervalInMillis + " ms)...", true);
+				out.println(Resources.get("msg.wait.reconnection", index, retries, retryIntervalInMillis), true);
 				try {
 					Thread.sleep(retryIntervalInMillis);
 				}
@@ -139,7 +140,7 @@ public abstract class RouterLoggerEngine {
 						exit = true; // Se non si sono verificati errori.
 					}
 					catch (InterruptedException ie) {
-						out.println("Loop interrupted!", true);
+						out.println(Resources.get("msg.loop.interrupted"), true);
 					}
 					catch (Exception e) {
 						logger.log(e);
@@ -167,7 +168,7 @@ public abstract class RouterLoggerEngine {
 		Runtime.getRuntime().removeShutdownHook(hook);
 
 		release();
-		out.println("Bye!", true);
+		out.println(Resources.get("msg.bye"), true);
 	}
 
 	private void welcome() {
@@ -187,15 +188,15 @@ public abstract class RouterLoggerEngine {
 		out.println();
 		boolean lineBreak = false;
 		if (StringUtils.isNotBlank(reader.getDeviceModel())) {
-			out.println("Device model: " + reader.getDeviceModel().trim() + '.');
+			out.println(Resources.get("msg.device.model", reader.getDeviceModel().trim()));
 			lineBreak = true;
 		}
 		if (!configuration.getThresholds().isEmpty()) {
-			out.println("Thresholds: " + configuration.getThresholds().toString());
+			out.println(Resources.get("msg.thresholds", configuration.getThresholds()));
 			lineBreak = true;
 		}
 		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
-			out.println("Settings: " + configuration.toString());
+			out.println(Resources.get("msg.settings", configuration));
 			lineBreak = true;
 		}
 		if (lineBreak) {
@@ -218,11 +219,12 @@ public abstract class RouterLoggerEngine {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
 				final long waitTimeInMillis;
-				final boolean thresholdReached = !configuration.getThresholds().getReachedKeys(info).isEmpty();
-				if (thresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
+				final Set<String> thresholdsReached = configuration.getThresholds().getReachedKeys(info);
+				if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
-					if (thresholdReached) {
+					if (!thresholdsReached.isEmpty()) {
 						hysteresis = System.currentTimeMillis();
+						showThresholdsReached(info, thresholdsReached);
 					}
 				}
 				else {
@@ -232,6 +234,8 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 	}
+
+	protected void showThresholdsReached(Map<String, String> info, Set<String> thresholdsReached) {}
 
 	protected abstract void showInfo(Map<String, String> info);
 

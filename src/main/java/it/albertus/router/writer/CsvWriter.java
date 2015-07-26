@@ -1,5 +1,6 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class CsvWriter extends Writer {
 
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	private interface Defaults {
 		NewLine NEW_LINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
@@ -34,7 +35,7 @@ public class CsvWriter extends Writer {
 		if (StringUtils.isNotBlank(logDestinationDir)) {
 			File logDestDir = new File(logDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException("Invalid path: \"" + logDestDir + "\".");
+				throw new RuntimeException(Resources.get("err.invalid.path", logDestDir));
 			}
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
@@ -52,7 +53,7 @@ public class CsvWriter extends Writer {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
 				if (!thread) {
-					out.println("Logging to: " + logFile.getAbsolutePath() + "...", true);
+					out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
 				}
 				logFileWriter.append(buildCsvHeader(info));
 			}
@@ -60,7 +61,7 @@ public class CsvWriter extends Writer {
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
 				if (!thread) {
-					out.println("Logging to: " + logFile.getAbsolutePath() + "...", true);
+					out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
 				}
 			}
 			logFileWriter.append(buildCsvRow(info));
@@ -119,7 +120,7 @@ public class CsvWriter extends Writer {
 				return newLine.toString();
 			}
 			else {
-				throw new RuntimeException("Invalid \"" + cfgKey + "\" property. Review your " + configuration.getFileName() + " file.");
+				throw new RuntimeException(Resources.get("err.invalid.cfg", cfgKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 			}
 		}
 	}
@@ -127,7 +128,7 @@ public class CsvWriter extends Writer {
 	private void closeOutputFile() {
 		if (logFileWriter != null) {
 			try {
-				out.println("Closing output file.", true);
+				out.println(Resources.get("msg.closing.output.file"), true);
 				logFileWriter.close();
 				logFileWriter = null;
 			}

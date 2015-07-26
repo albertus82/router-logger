@@ -5,8 +5,12 @@ import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.gui.GuiImages;
 import it.albertus.router.gui.GuiTable;
 import it.albertus.router.gui.GuiTray;
+import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger.Destination;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -64,7 +68,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	private void configureShell(final Shell shell) {
-		shell.setText("RouterLogger");
+		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
 			GuiTray.getInstance().init(shell);
@@ -107,6 +111,17 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	@Override
 	protected void showInfo(Map<String, String> info) {
 		table.addRow(info, iteration);
+	}
+
+	@Override
+	protected void showThresholdsReached(final Map<String, String> info, final Set<String> thresholdsReached) {
+		if (info != null && thresholdsReached != null) {
+			Map<String, String> values = new TreeMap<String, String>();
+			for (String key : thresholdsReached) {
+				values.put(key, info.get(key));
+			}
+			logger.log(Resources.get("msg.thresholds.reached", values), Destination.CONSOLE);
+		}
 	}
 
 	@Override

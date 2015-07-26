@@ -1,5 +1,6 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.resources.Resources;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 
@@ -35,7 +36,7 @@ public class GuiConsole extends Console {
 			createContextMenu();
 		}
 		else {
-			throw new IllegalStateException(this.getClass().getSimpleName() + " already initialized.");
+			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
 		}
 	}
 
@@ -66,7 +67,7 @@ public class GuiConsole extends Console {
 
 		// Copia...
 		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText("Copy");
+		menuItem.setText(Resources.get("lbl.copy"));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -78,7 +79,7 @@ public class GuiConsole extends Console {
 
 		// Azzera...
 		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText("Clear");
+		menuItem.setText(Resources.get("lbl.clear"));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -90,7 +91,7 @@ public class GuiConsole extends Console {
 
 		// Seleziona tutto...
 		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText("Select All");
+		menuItem.setText(Resources.get("lbl.select.all"));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {

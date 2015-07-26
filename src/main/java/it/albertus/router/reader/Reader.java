@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
@@ -47,7 +48,7 @@ public abstract class Reader {
 		final int socketTimeoutInMillis = configuration.getInt("socket.timeout.ms", Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		out.println("Connecting to: " + routerAddress + ':' + routerPort + "...", true);
+		out.println(Resources.get("msg.connecting", routerAddress, routerPort), true);
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
@@ -80,7 +81,7 @@ public abstract class Reader {
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	public void logout() throws IOException {
-		out.println("Logging out...", true);
+		out.println(Resources.get("msg.logging.out"), true);
 		writeToTelnet("logout");
 	}
 
@@ -92,7 +93,7 @@ public abstract class Reader {
 	 * occorre sovrascrivere questo metodo</b>.
 	 */
 	public void disconnect() {
-		out.println("Disconnecting...", true);
+		out.println(Resources.get("msg.disconnecting"), true);
 		try {
 			telnet.disconnect();
 		}

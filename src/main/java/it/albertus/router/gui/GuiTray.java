@@ -1,5 +1,7 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.resources.Resources;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -37,7 +39,7 @@ public class GuiTray {
 			});
 		}
 		else {
-			throw new IllegalStateException(this.getClass().getSimpleName() + " already initialized.");
+			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
 		}
 	}
 
@@ -50,7 +52,7 @@ public class GuiTray {
 			if (trayItem == null) {
 				trayItem = new TrayItem(tray, SWT.NONE);
 				trayItem.setImage(GuiImages.ICONS[12]);
-				trayItem.setToolTipText("RouterLogger");
+				trayItem.setToolTipText(Resources.get("lbl.tray.tooltip"));
 				addListeners = true;
 			}
 			else {
@@ -60,7 +62,7 @@ public class GuiTray {
 			if (menu == null) {
 				menu = new Menu(shell, SWT.POP_UP);
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText("Open");
+				menuItem.setText(Resources.get("lbl.open"));
 
 				menuItem.addListener(SWT.Selection, new Listener() {
 					@Override
@@ -75,7 +77,7 @@ public class GuiTray {
 
 				// Tasto "Exit"...
 				menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText("Exit");
+				menuItem.setText(Resources.get("lbl.exit"));
 				menuItem.addListener(SWT.Selection, new Listener() {
 					@Override
 					public void handleEvent(Event event) {
