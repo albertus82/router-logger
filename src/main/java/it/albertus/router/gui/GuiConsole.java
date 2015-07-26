@@ -41,13 +41,12 @@ public class GuiConsole extends Console {
 	}
 
 	private StyledText createStyledText(final Composite container) {
-		final StyledText styledText = new StyledText(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		final StyledText styledText = new StyledText(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gridData.minimumHeight = 200;
 		gridData.heightHint = 200;
 		styledText.setLayoutData(gridData);
 		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
-		styledText.setEditable(false);
 
 		styledText.addKeyListener(new KeyAdapter() {
 			@Override
