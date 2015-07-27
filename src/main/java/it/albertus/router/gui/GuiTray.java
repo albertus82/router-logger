@@ -5,7 +5,6 @@ import it.albertus.router.resources.Resources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -44,8 +43,7 @@ public class GuiTray {
 	}
 
 	private void iconify(final Shell shell) {
-		Display display = Display.getCurrent();
-		Tray tray = display.getSystemTray();
+		Tray tray = shell.getDisplay().getSystemTray();
 		if (tray != null) {
 			shell.setVisible(false);
 			boolean addListeners = false;
