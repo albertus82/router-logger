@@ -81,12 +81,12 @@ public class GuiTable {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// Supporto CTRL+C per "Copia"...
-				if (e.stateMask == SWT.CTRL && e.keyCode == 'c' && table.getSelection() != null && table.getSelection().length != 0) {
+				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_COPY && table.getSelection() != null && table.getSelection().length != 0) {
 					copySelection();
 				}
 
 				// Supporto CTRL+A per "Seleziona tutto"...
-				if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_SELECT_ALL) {
 					table.selectAll();
 				}
 			}
@@ -100,7 +100,7 @@ public class GuiTable {
 
 		// Copia...
 		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.copy"));
+		menuItem.setText(Resources.get("lbl.copy") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_COPY));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -112,7 +112,7 @@ public class GuiTable {
 
 		// Seleziona tutto...
 		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.select.all"));
+		menuItem.setText(Resources.get("lbl.select.all") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
