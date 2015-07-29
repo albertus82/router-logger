@@ -1,5 +1,6 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
@@ -21,7 +22,7 @@ import org.eclipse.swt.widgets.MenuItem;
 public class GuiConsole extends Console {
 
 	private interface Defaults {
-		int CONSOLE_MAX_CHARS = 50000;
+		int GUI_CONSOLE_MAX_CHARS = 50000;
 	}
 
 	private static class Singleton {
@@ -114,6 +115,8 @@ public class GuiConsole extends Console {
 
 	private static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
 
+	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+
 	private StyledText styledText = null;
 
 	private void failSafePrint(final String toPrint) {
@@ -134,7 +137,7 @@ public class GuiConsole extends Console {
 				@Override
 				public void run() {
 					try {
-						if (styledText.getCharCount() < Defaults.CONSOLE_MAX_CHARS) {
+						if (styledText.getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS) ) {
 							styledText.append(toPrint);
 						}
 						else {
