@@ -33,7 +33,9 @@ public class GuiTray {
 			shell.addShellListener(new ShellAdapter() {
 				@Override
 				public void shellIconified(ShellEvent e) {
+					e.doit = false;
 					iconify(shell);
+					shell.setMinimized(false);
 				}
 			});
 		}
@@ -102,7 +104,7 @@ public class GuiTray {
 		@Override
 		public void handleEvent(Event event) {
 			shell.setVisible(true);
-			shell.setMinimized(false);
+//			shell.setMinimized(false);
 			trayItem.setVisible(false);
 		}
 	}
