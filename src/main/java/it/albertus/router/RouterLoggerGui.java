@@ -1,6 +1,7 @@
 package it.albertus.router;
 
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.gui.GuiCloseMessageBox;
 import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.gui.GuiImages;
 import it.albertus.router.gui.GuiTable;
@@ -19,6 +20,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -76,10 +79,9 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 			instance = new RouterLoggerGui();
 		}
 		catch (ExceptionInInitializerError e) {
-			int style = SWT.ICON_ERROR;
 			final Display display = new Display();
 			final Shell shell = new Shell(display);
-			MessageBox messageBox = new MessageBox(shell, style);
+			final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 			messageBox.setText(Resources.get("lbl.error"));
 			messageBox.setMessage(ExceptionUtils.getUIMessage(e.getCause() != null ? e.getCause() : e));
 			messageBox.open();
@@ -95,6 +97,15 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
 			GuiTray.getInstance().init(shell);
+		}
+
+		// Listener sul pulsante di chiusura dell'applicazione...
+		if (GuiCloseMessageBox.show()) {
+			shell.addListener(SWT.Close, new Listener() {
+				public void handleEvent(Event event) {
+					event.doit = GuiCloseMessageBox.newInstance(shell).open() == SWT.YES;
+				}
+			});
 		}
 	}
 

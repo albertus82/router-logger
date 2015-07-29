@@ -62,14 +62,7 @@ public class GuiTray {
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
 				menuItem.setText(Resources.get("lbl.tray.show"));
 
-				menuItem.addListener(SWT.Selection, new Listener() {
-					@Override
-					public void handleEvent(Event event) {
-						shell.setVisible(true);
-						shell.setMinimized(false);
-						trayItem.setVisible(false);
-					}
-				});
+				menuItem.addListener(SWT.Selection, new RestoreListener(shell));
 
 				menuItem = new MenuItem(menu, SWT.SEPARATOR);
 
@@ -79,7 +72,9 @@ public class GuiTray {
 				menuItem.addListener(SWT.Selection, new Listener() {
 					@Override
 					public void handleEvent(Event event) {
-						shell.dispose();
+						if (!GuiCloseMessageBox.show() || GuiCloseMessageBox.newInstance(shell).open() == SWT.YES) {
+							shell.dispose();
+						}
 					}
 				});
 			}
@@ -92,15 +87,23 @@ public class GuiTray {
 					}
 				});
 
-				trayItem.addListener(SWT.DefaultSelection, new Listener() {
-					@Override
-					public void handleEvent(Event event) {
-						shell.setVisible(true);
-						shell.setMinimized(false);
-						trayItem.setVisible(false);
-					}
-				});
+				trayItem.addListener(SWT.DefaultSelection, new RestoreListener(shell));
 			}
+		}
+	}
+
+	private final class RestoreListener implements Listener {
+		private final Shell shell;
+
+		private RestoreListener(Shell shell) {
+			this.shell = shell;
+		}
+
+		@Override
+		public void handleEvent(Event event) {
+			shell.setVisible(true);
+			shell.setMinimized(false);
+			trayItem.setVisible(false);
 		}
 	}
 

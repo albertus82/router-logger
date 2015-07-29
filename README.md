@@ -72,6 +72,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`gui.table.columns.pack`**= riduce al minimo la larghezza delle colonne della tabella a video adattandola ai valori e ignorando la larghezza dei nomi delle chiavi in intestazione (default: `false`).
 * **`gui.minimize.tray`**= specifica se l'applicazione deve essere ridotta a icona nell'area di notifica invece che nella barra delle applicazioni (default: `true`).
 * **`gui.start.minimized`**= specifica se l'applicazione deve essere avviata gi&agrave; ridotta a icona (default: `false`).
+* **`gui.confirm.close`**= specifica se deve essere mostrato un messaggio di conferma quando si tenta di chiudere l'applicazione (default: `false`).
 * **`gui.important.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno evidenziati nella tabella (default: vuoto).
 * **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.bold.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 
