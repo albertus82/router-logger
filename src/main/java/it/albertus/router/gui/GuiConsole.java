@@ -20,6 +20,10 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class GuiConsole extends Console {
 
+	private interface Defaults {
+		int CONSOLE_MAX_CHARS = 50000;
+	}
+
 	private static class Singleton {
 		private static final GuiConsole CONSOLE = new GuiConsole();
 	}
@@ -130,7 +134,12 @@ public class GuiConsole extends Console {
 				@Override
 				public void run() {
 					try {
-						styledText.append(toPrint);
+						if (styledText.getCharCount() < Defaults.CONSOLE_MAX_CHARS) {
+							styledText.append(toPrint);
+						}
+						else {
+							styledText.setText(toPrint.startsWith(NEWLINE) ? toPrint.substring(NEWLINE.length()) : toPrint);
+						}
 						styledText.setTopIndex(styledText.getLineCount() - 1);
 					}
 					catch (SWTException se) {
