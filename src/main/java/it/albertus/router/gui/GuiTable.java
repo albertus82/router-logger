@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.TableItem;
 public class GuiTable {
 
 	private interface Defaults {
-		int MAX_ITEMS = 5000;
+		int GUI_TABLE_MAX_ITEMS = 5000;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		boolean GUI_TABLE_COLUMNS_PACK = false;
 	}
@@ -162,7 +162,7 @@ public class GuiTable {
 	private Table table = null;
 	private boolean tableInitialized = false;
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
-	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.MAX_ITEMS);
+	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 	private final Set<String> importantKeys = new HashSet<String>();
 
 	public void addRow(final Map<String, String> info, final int iteration) {

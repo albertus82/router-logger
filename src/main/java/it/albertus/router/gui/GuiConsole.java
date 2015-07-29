@@ -137,7 +137,7 @@ public class GuiConsole extends Console {
 				@Override
 				public void run() {
 					try {
-						if (styledText.getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS) ) {
+						if (styledText.getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
 							styledText.append(toPrint);
 						}
 						else {
