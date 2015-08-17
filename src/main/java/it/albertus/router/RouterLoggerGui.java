@@ -1,5 +1,6 @@
 package it.albertus.router;
 
+import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.GuiCloseMessageBox;
 import it.albertus.router.gui.GuiConsole;
@@ -143,7 +144,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected void showInfo(Map<String, String> info) {
+	protected void showInfo(final RouterData info) {
 		table.addRow(info, iteration);
 	}
 

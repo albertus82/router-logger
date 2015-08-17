@@ -1,5 +1,6 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
@@ -7,7 +8,6 @@ import it.albertus.util.StringUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -165,9 +165,10 @@ public class GuiTable {
 	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 	private final Set<String> importantKeys = new HashSet<String>();
 
-	public void addRow(final Map<String, String> info, final int iteration) {
-		if (table != null && !table.isDisposed() && info != null && !info.isEmpty()) {
-			final String timestamp = DATE_FORMAT_TABLE_GUI.format(new Date());
+	public void addRow(final RouterData data, final int iteration) {
+		if (table != null && !table.isDisposed() && data != null && data.getData() != null && !data.getData().isEmpty()) {
+			final Map<String, String> info = data.getData();
+			final String timestamp = DATE_FORMAT_TABLE_GUI.format(data.getTimestamp());
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
@@ -209,7 +210,7 @@ public class GuiTable {
 							}
 
 							// Colore per i valori oltre soglia...
-							if (configuration.getThresholds().getReached(info).containsKey(key)) {
+							if (configuration.getThresholds().getReached(data).containsKey(key)) {
 								item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
 							}
 
