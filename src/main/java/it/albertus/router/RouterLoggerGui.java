@@ -31,6 +31,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_MINIMIZE_TRAY = true;
 		boolean GUI_START_MINIMIZED = false;
+		boolean GUI_SHOW_INFO_THREAD = false;
 	}
 
 	private final GuiTable table = GuiTable.getInstance();
@@ -145,7 +146,17 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	@Override
 	protected void showInfo(final RouterData info) {
-		table.addRow(info, iteration);
+		if (configuration.getBoolean("gui.show.info.thread", Defaults.GUI_SHOW_INFO_THREAD)) {
+			new Thread() {
+				@Override
+				public void run() {
+					table.addRow(info, iteration);
+				}
+			}.start();
+		}
+		else {
+			table.addRow(info, iteration);
+		}
 	}
 
 	@Override
