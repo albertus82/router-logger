@@ -210,7 +210,7 @@ public abstract class RouterLoggerEngine {
 		// Iterazione...
 		for (; (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			// Chiamata alle implementazioni specifiche...
-			final RouterData info = reader.readInfo();
+			final Map<String, String> info = reader.readInfo();
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
@@ -237,9 +237,9 @@ public abstract class RouterLoggerEngine {
 
 	protected void showThresholdsReached(Map<String, String> thresholdsReached) {}
 
-	protected abstract void showInfo(RouterData info);
+	protected abstract void showInfo(Map<String, String> info);
 
-	private void saveInfo(final RouterData info) {
+	private void saveInfo(final Map<String, String> info) {
 		if (configuration.getBoolean("logger.writer.thread", Defaults.WRITER_THREAD)) {
 			new Thread() {
 				@Override
@@ -271,7 +271,7 @@ public abstract class RouterLoggerEngine {
 	public RouterLoggerEngine() {
 		// Inizializzazione del Logger...
 		logger.init(out);
-
+		
 		// Inizializzazione del Reader...
 		reader = initReader();
 

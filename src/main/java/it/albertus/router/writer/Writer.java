@@ -1,9 +1,10 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Console;
+
+import java.util.Map;
 
 public abstract class Writer {
 
@@ -23,7 +24,7 @@ public abstract class Writer {
 	 * 
 	 * @param info  le informazioni da salvare.
 	 */
-	public abstract void saveInfo(RouterData info);
+	public abstract void saveInfo(Map<String, String> info);
 
 	/**
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,

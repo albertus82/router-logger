@@ -1,6 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -10,6 +9,7 @@ import it.albertus.util.NewLine;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
@@ -110,7 +110,7 @@ public abstract class Reader {
 	 * @return la mappa contenente le informazioni estratte.
 	 * @throws IOException in caso di errore nella lettura dei dati.
 	 */
-	public abstract RouterData readInfo() throws IOException;
+	public abstract Map<String, String> readInfo() throws IOException;
 
 	/**
 	 * Restituisce una stringa contenente marca e modello del router relativo

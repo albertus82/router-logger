@@ -1,6 +1,5 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 
 import java.sql.Connection;
@@ -8,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,9 +45,7 @@ public class DatabaseWriter extends Writer {
 	}
 
 	@Override
-	public synchronized void saveInfo(final RouterData data) {
-		final Map<String, String> info = data.getData();
-
+	public synchronized void saveInfo(final Map<String, String> info) {
 		// Connessione al database...
 		try {
 			if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
@@ -90,7 +88,7 @@ public class DatabaseWriter extends Writer {
 		PreparedStatement insert = null;
 		try {
 			insert = connection.prepareStatement(dml.toString());
-			insert.setTimestamp(1, new Timestamp(data.getTimestamp().getTime()));
+			insert.setTimestamp(1, new Timestamp(new Date().getTime()));
 			for (int parameterIndex : columns.keySet()) {
 				insert.setString(parameterIndex, info.get(columns.get(parameterIndex)));
 			}

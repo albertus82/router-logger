@@ -1,6 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 
 import java.util.LinkedHashMap;
@@ -30,7 +29,7 @@ public class DummyReader extends Reader {
 	}
 
 	@Override
-	public RouterData readInfo() {
+	public Map<String, String> readInfo() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		for (int i = 1; i <= COLUMNS; i++) {
 			StringBuilder field = new StringBuilder();
@@ -39,7 +38,7 @@ public class DummyReader extends Reader {
 			}
 			map.put(Resources.get("lbl.column.number", i), field.toString());
 		}
-		return new RouterData(map);
+		return map;
 	}
 
 	@Override

@@ -1,11 +1,11 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.engine.RouterData;
+import java.util.Map;
 
 public class DummyWriter extends Writer {
 
 	@Override
-	public void saveInfo(RouterData info) {}
+	public void saveInfo(Map<String, String> info) {}
 
 	@Override
 	public void release() {}

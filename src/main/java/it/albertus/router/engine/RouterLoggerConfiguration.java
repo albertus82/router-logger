@@ -77,8 +77,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return thresholds.toString();
 		}
 
-		public Map<String, String> getReached(final RouterData data) {
-			final Map<String, String> info = data.getData();
+		public Map<String, String> getReached(final Map<String, String> info) {
 			final Map<String, String> reached = new TreeMap<String, String>();
 
 			// Gestione delle soglie...
