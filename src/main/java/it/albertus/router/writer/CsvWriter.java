@@ -1,5 +1,6 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 public class CsvWriter extends Writer {
 
@@ -28,7 +28,7 @@ public class CsvWriter extends Writer {
 	private FileWriter logFileWriter = null;
 
 	@Override
-	public synchronized void saveInfo(final Map<String, String> info) {
+	public synchronized void saveInfo(final RouterData info) {
 		// Selezione del percorso e nome del file di destinazione...
 		final String logDestinationDir = configuration.getString("csv.destination.path");
 		final File logFile;
@@ -78,22 +78,22 @@ public class CsvWriter extends Writer {
 		closeOutputFile();
 	}
 
-	private String buildCsvHeader(final Map<String, String> info) {
+	private String buildCsvHeader(final RouterData info) {
 		final String fieldSeparator = getFieldSeparator();
 
 		final StringBuilder header = new StringBuilder("Timestamp").append(fieldSeparator);
-		for (String field : info.keySet()) {
+		for (String field : info.getData().keySet()) {
 			header.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
 		header.replace(header.length() - fieldSeparator.length(), header.length(), getRecordSeparator());
 		return header.toString();
 	}
 
-	private String buildCsvRow(final Map<String, String> info) {
+	private String buildCsvRow(final RouterData info) {
 		final String fieldSeparator = getFieldSeparator();
 
-		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(new Date())).append(fieldSeparator);
-		for (String field : info.values()) {
+		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(info.getTimestamp())).append(fieldSeparator);
+		for (String field : info.getData().values()) {
 			row.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
 		row.replace(row.length() - fieldSeparator.length(), row.length(), getRecordSeparator());

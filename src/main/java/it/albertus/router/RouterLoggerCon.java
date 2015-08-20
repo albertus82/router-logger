@@ -1,9 +1,8 @@
 package it.albertus.router;
 
+import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.util.TerminalConsole;
-
-import java.util.Map;
 
 public class RouterLoggerCon extends RouterLoggerEngine {
 
@@ -21,7 +20,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 	private int lastLogLength = 0;
 
 	@Override
-	protected void showInfo(Map<String, String> info) {
+	protected void showInfo(final RouterData info) {
 		// Scrittura indice dell'iterazione in console...
 		final StringBuilder clean = new StringBuilder();
 		while (lastLogLength-- > 0) {
@@ -43,12 +42,12 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 		// Fine scrittura indice.
 
 		// Scrittura informazioni aggiuntive richieste...
-		if (info != null && !info.isEmpty()) {
+		if (info != null && info.getData() != null && !info.getData().isEmpty()) {
 			final StringBuilder infoToShow = new StringBuilder();
 			for (String keyToShow : configuration.getString("console.show.keys", "").split(configuration.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
 				if (keyToShow != null && !"".equals(keyToShow.trim())) {
 					keyToShow = keyToShow.trim();
-					for (final String key : info.keySet()) {
+					for (final String key : info.getData().keySet()) {
 						if (key != null && key.trim().equals(keyToShow)) {
 							if (infoToShow.length() == 0) {
 								infoToShow.append('[');
@@ -56,7 +55,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 							else {
 								infoToShow.append(", ");
 							}
-							infoToShow.append(keyToShow + ": " + info.get(key));
+							infoToShow.append(keyToShow + ": " + info.getData().get(key));
 						}
 					}
 				}
