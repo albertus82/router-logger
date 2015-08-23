@@ -8,20 +8,17 @@ import it.albertus.util.NewLine;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Scrollable;
+import org.eclipse.swt.widgets.Text;
 
 public class GuiConsole extends Console {
 
-	private interface Defaults {
+	protected interface Defaults {
 		int GUI_CONSOLE_MAX_CHARS = 50000;
 	}
 
@@ -33,93 +30,46 @@ public class GuiConsole extends Console {
 		return Singleton.CONSOLE;
 	}
 
-	private GuiConsole() {}
+	protected GuiConsole() {}
 
 	public void init(final Composite container) {
-		if (this.styledText == null) {
-			this.styledText = createStyledText(container);
-			createContextMenu();
+		if (this.text == null) {
+			this.text = (Text) createText(container);
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
 		}
 	}
 
-	private StyledText createStyledText(final Composite container) {
-		final StyledText styledText = new StyledText(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	protected Scrollable createText(final Composite container) {
+		final Text text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gridData.minimumHeight = 200;
 		gridData.heightHint = 200;
-		styledText.setLayoutData(gridData);
-		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+		text.setLayoutData(gridData);
+		text.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+		text.setBackground(container.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 
-		styledText.addKeyListener(new KeyAdapter() {
+		text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// Supporto CTRL+A per "Seleziona tutto"...
 				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_SELECT_ALL) {
-					styledText.selectAll();
+					text.selectAll();
 				}
 			}
 		});
 
-		return styledText;
+		return text;
 	}
 
-	private Menu createContextMenu() {
-		final Menu menu = new Menu(styledText);
+	protected static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
 
-		// Copia...
-		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.copy") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_COPY));
-		menuItem.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				styledText.copy();
-			}
-		});
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-		menuItem = new MenuItem(menu, SWT.SEPARATOR);
+	private Text text = null;
 
-		// Azzera...
-		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.clear"));
-		menuItem.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				styledText.setText("");
-			}
-		});
-
-		menuItem = new MenuItem(menu, SWT.SEPARATOR);
-
-		// Seleziona tutto...
-		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.select.all") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
-		menuItem.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				styledText.selectAll();
-			}
-		});
-
-		styledText.addListener(SWT.MenuDetect, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				menu.setVisible(true);
-			}
-		});
-
-		return menu;
-	}
-
-	private static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
-
-	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-
-	private StyledText styledText = null;
-
-	private void failSafePrint(final String toPrint) {
+	protected void failSafePrint(final String toPrint) {
 		System.out.print(toPrint);
 	}
 
@@ -132,18 +82,18 @@ public class GuiConsole extends Console {
 		else {
 			toPrint = value;
 		}
-		if (styledText != null && !styledText.isDisposed()) {
+		if (text != null && !text.isDisposed()) {
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						if (styledText.getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
-							styledText.append(toPrint);
+						if (text.getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
+							text.append(toPrint);
 						}
 						else {
-							styledText.setText(toPrint.startsWith(NEWLINE) ? toPrint.substring(NEWLINE.length()) : toPrint);
+							text.setText(toPrint.startsWith(NEWLINE) ? toPrint.substring(NEWLINE.length()) : toPrint);
 						}
-						styledText.setTopIndex(styledText.getLineCount() - 1);
+						text.setTopIndex(text.getLineCount() - 1);
 					}
 					catch (SWTException se) {
 						failSafePrint(toPrint);
