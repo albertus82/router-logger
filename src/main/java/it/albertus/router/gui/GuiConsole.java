@@ -34,43 +34,58 @@ public class GuiConsole extends Console {
 
 	public void init(final Composite container) {
 		if (this.text == null) {
-			this.text = (Text) createText(container);
+			createText(container);
+			configureText();
+			addSelectAllKeyListener();
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
 		}
 	}
 
-	protected Scrollable createText(final Composite container) {
-		final Text text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gridData.minimumHeight = 200;
-		gridData.heightHint = 200;
-		text.setLayoutData(gridData);
-		text.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
-		text.setBackground(container.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+	protected void createText(final Composite container) {
+		text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	}
 
+	protected void addSelectAllKeyListener() {
 		text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// Supporto CTRL+A per "Seleziona tutto"...
 				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_SELECT_ALL) {
-					text.selectAll();
+					getText().selectAll();
 				}
 			}
 		});
+	}
 
-		return text;
+	protected void configureText() {
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gridData.minimumHeight = 200;
+		gridData.heightHint = 200;
+		text.setLayoutData(gridData);
+		text.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+		text.setBackground(text.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 	}
 
 	protected static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-	private Text text = null;
+	protected Scrollable text = null;
 
 	protected void failSafePrint(final String toPrint) {
 		System.out.print(toPrint);
+	}
+
+	protected void doPrint(final String toPrint) {
+		if (getText().getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
+			getText().append(toPrint);
+		}
+		else {
+			getText().setText(toPrint.startsWith(NEWLINE) ? toPrint.substring(NEWLINE.length()) : toPrint);
+		}
+		getText().setTopIndex(getText().getLineCount() - 1);
 	}
 
 	@Override
@@ -87,13 +102,7 @@ public class GuiConsole extends Console {
 				@Override
 				public void run() {
 					try {
-						if (text.getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
-							text.append(toPrint);
-						}
-						else {
-							text.setText(toPrint.startsWith(NEWLINE) ? toPrint.substring(NEWLINE.length()) : toPrint);
-						}
-						text.setTopIndex(text.getLineCount() - 1);
+						doPrint(toPrint);
 					}
 					catch (SWTException se) {
 						failSafePrint(toPrint);
@@ -179,6 +188,10 @@ public class GuiConsole extends Console {
 		print(array);
 		print(NEWLINE);
 		newLine();
+	}
+
+	private Text getText() {
+		return (Text) text;
 	}
 
 }

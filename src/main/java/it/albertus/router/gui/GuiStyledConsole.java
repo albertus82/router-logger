@@ -2,15 +2,11 @@ package it.albertus.router.gui;
 
 import it.albertus.router.resources.Resources;
 
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -30,35 +26,26 @@ public class GuiStyledConsole extends GuiConsole {
 
 	@Override
 	public void init(final Composite container) {
-		if (this.text == null) {
-			this.text = (StyledText) createText(container);
-			createContextMenu();
-		}
-		else {
-			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
-		}
+		super.init(container);
+		createContextMenu();
 	}
 
 	@Override
-	protected StyledText createText(final Composite container) {
-		final StyledText styledText = new StyledText(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gridData.minimumHeight = 200;
-		gridData.heightHint = 200;
-		styledText.setLayoutData(gridData);
-		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+	protected void createText(final Composite container) {
+		text = new StyledText(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	}
 
-		styledText.addKeyListener(new KeyAdapter() {
+	@Override
+	protected void addSelectAllKeyListener() {
+		text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// Supporto CTRL+A per "Seleziona tutto"...
 				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_SELECT_ALL) {
-					styledText.selectAll();
+					getStyledText().selectAll();
 				}
 			}
 		});
-
-		return styledText;
 	}
 
 	private Menu createContextMenu() {
@@ -70,7 +57,7 @@ public class GuiStyledConsole extends GuiConsole {
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				text.copy();
+				getStyledText().copy();
 			}
 		});
 
@@ -82,7 +69,7 @@ public class GuiStyledConsole extends GuiConsole {
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				text.setText("");
+				getStyledText().setText("");
 			}
 		});
 
@@ -94,7 +81,7 @@ public class GuiStyledConsole extends GuiConsole {
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				text.selectAll();
+				getStyledText().selectAll();
 			}
 		});
 
@@ -108,40 +95,19 @@ public class GuiStyledConsole extends GuiConsole {
 		return menu;
 	}
 
-	private StyledText text = null;
+	private StyledText getStyledText() {
+		return (StyledText) text;
+	}
 
 	@Override
-	public void print(final String value) {
-		final String toPrint;
-		if (value == null) {
-			toPrint = String.valueOf(value);
+	protected void doPrint(final String toPrint) {
+		if (getStyledText().getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
+			getStyledText().append(toPrint);
 		}
 		else {
-			toPrint = value;
+			getStyledText().setText(toPrint.startsWith(NEWLINE) ? toPrint.substring(NEWLINE.length()) : toPrint);
 		}
-		if (text != null && !text.isDisposed()) {
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						if (text.getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
-							text.append(toPrint);
-						}
-						else {
-							text.setText(toPrint.startsWith(NEWLINE) ? toPrint.substring(NEWLINE.length()) : toPrint);
-						}
-						text.setTopIndex(text.getLineCount() - 1);
-					}
-					catch (SWTException se) {
-						failSafePrint(toPrint);
-					}
-				}
-			});
-			updatePosition(value);
-		}
-		else {
-			failSafePrint(toPrint);
-		}
+		getStyledText().setTopIndex(getStyledText().getLineCount() - 1);
 	}
 
 }
