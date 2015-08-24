@@ -132,7 +132,9 @@ public class GuiTable {
 
 	private void copySelection() {
 		if (table.getColumns() != null && table.getColumns().length != 0) {
-			System.gc(); // La copia negli appunti puo' richiedere molta memoria!
+			if (table.getSelectionCount() > 1) {
+				System.gc(); // La copia negli appunti puo' richiedere molta memoria!
+			}
 			final StringBuilder data = new StringBuilder();
 
 			// Testata...
