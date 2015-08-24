@@ -181,7 +181,7 @@ threshold.snr.down.value=100
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server Telnet comunicando le credenziali di accesso.
-* **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di mappa chiave-valore.
+* **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di oggetto [**`RouterData`**](src/main/java/it/albertus/router/engine/RouterData.java) che &egrave; costituito fondamentalmente da una mappa chiave-valore.
 
 All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/main/java/it/albertus/router/reader/Reader.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamente sovrascritto.
