@@ -146,8 +146,7 @@ public abstract class RouterLoggerEngine {
 						logger.log(e);
 					}
 					finally {
-						// In ogni caso, si esegue la disconnessione dal
-						// server...
+						// In ogni caso si esegue la disconnessione dal server...
 						try {
 							reader.logout();
 						}
