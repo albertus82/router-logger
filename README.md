@@ -5,6 +5,7 @@ RouterLogger
 * **TP-Link TD-W8970 V1** 
 * **ASUS DSL-N12E**
 * **D-Link DSL-2750B**
+
 Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 
 
