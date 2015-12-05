@@ -14,7 +14,7 @@ public class DLinkDsl2750Reader extends Reader {
 	}
 
 	private static final String DEVICE_MODEL = "D-Link DSL-2750B";
-	private static final String COMMAND_PROMPT = ">>";
+	private static final String COMMAND_PROMPT = "TBS>>";
 	private static final String LOGIN_PROMPT = ":";
 
 	@Override
@@ -27,7 +27,7 @@ public class DLinkDsl2750Reader extends Reader {
 		out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(configuration.getString("router.password"));
 
-		// Welcome! (salto caratteri speciali (clear screen, ecc.)...
+		// Avanzamento fino al prompt...
 		readFromTelnet(COMMAND_PROMPT, true);
 		return true;
 	}
@@ -39,11 +39,11 @@ public class DLinkDsl2750Reader extends Reader {
 		// Informazioni sulla portante ADSL...
 		writeToTelnet(configuration.getString("dlink.2750.command.info.adsl.status", Defaults.COMMAND_INFO_ADSL_STATUS));
 		readFromTelnet("-----\r", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
-		info.put("ADSL status", readFromTelnet("TBS" + COMMAND_PROMPT, false).trim());
+		info.put("ADSL status", readFromTelnet(COMMAND_PROMPT, false).trim());
 
 		writeToTelnet(configuration.getString("dlink.2750.command.info.adsl.snr", Defaults.COMMAND_INFO_ADSL_SNR));
 		readFromTelnet("Upstream", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
-		String[] snrs = readFromTelnet("TBS" + COMMAND_PROMPT, false).trim().split("(\\s\\s)+");
+		String[] snrs = readFromTelnet(COMMAND_PROMPT, false).trim().split("(\\s\\s)+");
 		info.put("ADSL SNR Downstream", snrs[0]);
 		info.put("ADSL SNR Upstream", snrs[1]);
 

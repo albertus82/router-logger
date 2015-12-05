@@ -1,7 +1,11 @@
 RouterLogger
 ============
 
-**RouterLogger** &egrave; una semplice applicazione per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i router **TP-Link TD-W8970 V1** e **ASUS DSL-N12E**. Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
+**RouterLogger** &egrave; una semplice applicazione per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i seguenti router:
+* **TP-Link TD-W8970 V1** 
+* **ASUS DSL-N12E**
+* **D-Link DSL-2750B**
+Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 
 
 ### Installazione e configurazione di base
@@ -9,7 +13,7 @@ RouterLogger
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
-  * **`reader.class.name`**= [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java) (default) o [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java), a seconda del modello di dispositivo posseduto.
+  * **`reader.class.name`**= [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java) (default) o [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java) o [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo posseduto.
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
   * **`router.port`**= porta Telnet del router, default: `23`.
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
@@ -105,6 +109,12 @@ La selezione del modello di modem router da interrogare si effettua configurando
 
 * **`asus.dsln12e.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `show wan adsl`).
 * **`asus.dsln12e.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: `show wan interface`).
+
+###### D-Link DSL-2750B
+
+* **`dlink.2750.command.info.adsl.status`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (Up/Down) (default: `adsl status`).
+* **`dlink.2750.command.info.adsl.snr`**: comando da inviare al router per ottenere informazioni sul rapporto segnale/rumore della linea ADSL (default: `adsl snr`).
+
 
 #### Destinazione (file, database, ...)
 
