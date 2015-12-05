@@ -2,17 +2,15 @@ package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DLinkDsl2750Reader extends Reader {
 
 	private interface Defaults {
-		String COMMAND_INFO_ADSL_STATUS = "adsl show info";
-		String COMMAND_INFO_ADSL_SNR = "adsl show info";
+		String COMMAND_INFO_ADSL_STATUS = "adsl status";
+		String COMMAND_INFO_ADSL_SNR = "adsl snr";
 	}
 
 	private static final String DEVICE_MODEL = "D-Link DSL-2750B";
@@ -36,30 +34,18 @@ public class DLinkDsl2750Reader extends Reader {
 
 	@Override
 	public RouterData readInfo() throws IOException {
-		// Informazioni sulla portante ADSL...
-		writeToTelnet(configuration.getString("dlink.2750.command.info.adsl.", Defaults.COMMAND_INFO_ADSL));
-		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 		final Map<String, String> info = new LinkedHashMap<String, String>();
-		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
-		}
-		reader.close();
-		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
 
-		// Informazioni sulla connessione ad Internet...
-		final String commandInfoWan = configuration.getString("tplink.8970.command.info.wan");
-		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
-			writeToTelnet(commandInfoWan);
-			readFromTelnet("{", true);
-			reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
-			while ((line = reader.readLine()) != null) {
-				info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
-			}
-			reader.close();
-			readFromTelnet(COMMAND_PROMPT, true);
-		}
+		// Informazioni sulla portante ADSL...
+		writeToTelnet(configuration.getString("dlink.2750.command.info.adsl.status", Defaults.COMMAND_INFO_ADSL_STATUS));
+		readFromTelnet("-----\r", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
+		info.put("ADSL status", readFromTelnet("TBS" + COMMAND_PROMPT, false).trim());
+
+		writeToTelnet(configuration.getString("dlink.2750.command.info.adsl.snr", Defaults.COMMAND_INFO_ADSL_SNR));
+		readFromTelnet("Upstream", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
+		String[] snrs = readFromTelnet("TBS" + COMMAND_PROMPT, false).trim().split("(\\s\\s)+");
+		info.put("ADSL SNR Downstream", snrs[0]);
+		info.put("ADSL SNR Upstream", snrs[1]);
 
 		return new RouterData(info);
 	}
