@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Resources;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -48,6 +49,12 @@ public class DLinkDsl2750Reader extends Reader {
 		info.put("ADSL SNR Upstream", snrs[1]);
 
 		return new RouterData(info);
+	}
+
+	@Override
+	public void logout() throws IOException {
+		out.println(Resources.get("msg.logging.out"), true);
+		writeToTelnet("exit");
 	}
 
 	@Override

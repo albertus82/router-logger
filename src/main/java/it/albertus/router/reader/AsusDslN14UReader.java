@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,6 +71,12 @@ public class AsusDslN14UReader extends Reader {
 		}
 
 		return new RouterData(info);
+	}
+
+	@Override
+	public void logout() throws IOException {
+		out.println(Resources.get("msg.logging.out"), true);
+		writeToTelnet("exit");
 	}
 
 	@Override
