@@ -30,7 +30,7 @@ public class AsusDslN14UReader extends Reader {
 		out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(configuration.getString("router.password"));
 
-		// Welcome! (salto caratteri speciali (clear screen, ecc.)...
+		// Avanzamento fino al prompt...
 		out.print(readFromTelnet(COMMAND_PROMPT, true).trim());
 		return true;
 	}
