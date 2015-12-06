@@ -15,7 +15,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
-  * **`reader.class.name`**= [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java) (default) o [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java) o [`AsusDslN14UReader`](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java) o [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare.
+  * **`reader.class.name`**= Uno tra [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java) (default), [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java), [`AsusDslN14UReader`](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java) e [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare.
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
   * **`router.port`**= porta Telnet del router, default: `23`.
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
