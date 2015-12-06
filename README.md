@@ -4,6 +4,7 @@ RouterLogger
 **RouterLogger** &egrave; una semplice applicazione per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i seguenti router:
 * **TP-Link TD-W8970 V1** 
 * **ASUS DSL-N12E**
+* **ASUS DSL-N14U**
 * **D-Link DSL-2750B**
 
 Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
@@ -14,7 +15,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP, possibilmente la pi&ugrave; recente;
 2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. modificare il file [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
-  * **`reader.class.name`**= [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java) (default) o [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java) o [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare.
+  * **`reader.class.name`**= [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java) (default) o [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java) o [`AsusDslN14UReader`](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java) o [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare.
   * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
   * **`router.port`**= porta Telnet del router, default: `23`.
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
@@ -98,7 +99,8 @@ La selezione del modello di modem router da interrogare si effettua configurando
 * **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem router le informazioni sullo stato della connessione tramite Telnet, e pu&ograve; assumere i valori seguenti:
   * [**`TpLink8970Reader`**](src/main/java/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router **TP-Link TD-W8970 V1** (default).
   * [**`AsusDslN12EReader`**](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router **ASUS DSL-N12E**.
-  * [**`DLinkDsl2750Reader`**](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java): lettura informazioni dal router **D-Link DSL-2750B**. 
+  * [**`AsusDslN14UReader`**](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java): lettura informazioni dal router **ASUS DSL-N14U**.
+  * [**`DLinkDsl2750Reader`**](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java): lettura informazioni dal router **D-Link DSL-2750B**.
   * [**`DummyReader`**](src/main/java/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
   * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
@@ -111,6 +113,11 @@ La selezione del modello di modem router da interrogare si effettua configurando
 
 * **`asus.dsln12e.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `show wan adsl`).
 * **`asus.dsln12e.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: `show wan interface`).
+
+###### ASUS DSL-N14U
+
+* **`asus.dsln14u.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `tcapi show Info_Adsl`).
+* **`asus.dsln14u.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: `tcapi show Wan`).
 
 ###### D-Link DSL-2750B
 

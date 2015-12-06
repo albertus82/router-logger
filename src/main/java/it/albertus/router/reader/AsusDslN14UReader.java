@@ -37,7 +37,7 @@ public class AsusDslN14UReader extends Reader {
 	@Override
 	public RouterData readInfo() throws IOException {
 		final Map<String, String> info = new LinkedHashMap<String, String>();
-		
+
 		// Informazioni sulla portante ADSL...
 		final String commandInfoAdsl = configuration.getString("asus.dsln14u.command.info.adsl", Defaults.COMMAND_INFO_ADSL);
 		writeToTelnet(commandInfoAdsl);
@@ -49,26 +49,26 @@ public class AsusDslN14UReader extends Reader {
 		}
 		reader.close();
 
-		// Informazioni sulla connessione ad Internet... 
-		String nodeName = "";
-		
+		// Informazioni sulla connessione ad Internet...
 		final String commandInfoWan = configuration.getString("asus.dsln14u.command.info.wan", Defaults.COMMAND_INFO_WAN);
 		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
 			writeToTelnet(commandInfoWan);
 			readFromTelnet(commandInfoWan, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
 			reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
+			String prefix = "";
 			while ((line = reader.readLine()) != null) {
-				if (line != null && line.trim().length() != 0) {
+				if (line.trim().length() != 0) {
 					if (line.startsWith("Node:")) {
-						nodeName = line.replace(':', '_');
-						continue;
+						prefix = line.replace(':', '_').trim() + '_';
 					}
-					info.put(nodeName + '_' + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+					else if (line.indexOf('=') != -1) {
+						info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+					}
 				}
 			}
 			reader.close();
 		}
-		
+
 		return new RouterData(info);
 	}
 
