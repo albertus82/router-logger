@@ -1,7 +1,6 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,11 +8,19 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * <b>ASUS DSL-N14U</b>. Comandi Telnet disponibili (case sensitive):
+ * <ul>
+ * <li><tt><b>tcapi show Info</b></tt> (sconsigliato)</li>
+ * <li><tt><b>tcapi show Info_<i>Node</i></b></tt> (si consiglia: <tt><b>tcapi show Info_Adsl</b></tt>)</li>
+ * <li><tt><b>tcapi show Wan</b></tt> (sconsigliato, verboso)</li>
+ * <li><tt><b>tcapi show Wan_<i>Node</i></b></tt> (si consiglia: <tt><b>tcapi show Wan_PVC0</b></tt>)</li>
+ * </ul>
+ */
 public class AsusDslN14UReader extends Reader {
 
 	private interface Defaults {
 		String COMMAND_INFO_ADSL = "tcapi show Info_Adsl";
-		String COMMAND_INFO_WAN = "tcapi show Wan";
 	}
 
 	private static final String DEVICE_MODEL = "ASUS DSL-N14U";
@@ -51,7 +58,7 @@ public class AsusDslN14UReader extends Reader {
 		reader.close();
 
 		// Informazioni sulla connessione ad Internet...
-		final String commandInfoWan = configuration.getString("asus.dsln14u.command.info.wan", Defaults.COMMAND_INFO_WAN);
+		final String commandInfoWan = configuration.getString("asus.dsln14u.command.info.wan");
 		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
 			writeToTelnet(commandInfoWan);
 			readFromTelnet(commandInfoWan, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
@@ -71,12 +78,6 @@ public class AsusDslN14UReader extends Reader {
 		}
 
 		return new RouterData(info);
-	}
-
-	@Override
-	public void logout() throws IOException {
-		out.println(Resources.get("msg.logging.out"), true);
-		writeToTelnet("exit");
 	}
 
 	@Override

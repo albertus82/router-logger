@@ -118,7 +118,7 @@ La selezione del modello di modem router da interrogare si effettua configurando
 ###### ASUS DSL-N14U
 
 * **`asus.dsln14u.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `tcapi show Info_Adsl`).
-* **`asus.dsln14u.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: `tcapi show Wan`).
+* **`asus.dsln14u.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: non valorizzato, di conseguenza non vengono estratte queste informazioni).
 
 ###### D-Link DSL-2750B
 
@@ -204,7 +204,7 @@ I metodi da implementare tassativamente sono i seguenti:
 * **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di oggetto [**`RouterData`**](src/main/java/it/albertus/router/engine/RouterData.java) che &egrave; costituito fondamentalmente da una mappa chiave-valore.
 
 All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/main/java/it/albertus/router/reader/Reader.java):
-* **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `logout`, ma alcuni router possono richiedere un comando diverso, ad esempio `exit`, pertanto in questi casi il metodo deve essere opportunamente sovrascritto.
+* **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `exit`, ma alcuni router possono richiedere un comando diverso, ad esempio `logout`, pertanto in questi casi il metodo deve essere opportunamente sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce il nome della classe in esecuzione (senza package).
 * **`release`**: libera risorse eventualmente allocate dal [`Reader`](src/main/java/it/albertus/router/reader/Reader.java), ad esempio file o connessioni a database. Normalmente non necessario.
 

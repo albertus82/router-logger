@@ -1,7 +1,6 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +10,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <b>ASUS DSL-N12E</b>. Comandi Telnet disponibili (case sensitive):
+ * <ul>
+ * <li><tt><b>show wan adsl</b></tt></li>
+ * <li><tt><b>show wan interface</b></tt></li>
+ * </ul>
+ */
 public class AsusDslN12EReader extends Reader {
 
 	private interface Defaults {
@@ -82,12 +88,6 @@ public class AsusDslN12EReader extends Reader {
 		info.put("Status", values.get(7));
 
 		return new RouterData(info);
-	}
-
-	@Override
-	public void logout() throws IOException {
-		out.println(Resources.get("msg.logging.out"), true);
-		writeToTelnet("exit");
 	}
 
 	@Override

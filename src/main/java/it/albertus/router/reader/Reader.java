@@ -73,7 +73,7 @@ public abstract class Reader {
 	public abstract boolean login() throws IOException;
 
 	/**
-	 * Effettua il logout dal server telnet inviando il comando <tt>logout</tt>.
+	 * Effettua il logout dal server telnet inviando il comando <tt>exit</tt>.
 	 * &Egrave; possibile sovrascrivere questo metodo per aggiungere altri o
 	 * diversi comandi che debbano essere eseguiti in fase di logout. <b>Questo
 	 * metodo non effettua esplicitamente la disconnessione dal server</b>.
@@ -82,7 +82,7 @@ public abstract class Reader {
 	 */
 	public void logout() throws IOException {
 		out.println(Resources.get("msg.logging.out"), true);
-		writeToTelnet("logout");
+		writeToTelnet("exit");
 	}
 
 	/**

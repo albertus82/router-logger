@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +9,14 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * <b>TP-Link TD-W8970 V1</b>. Comandi Telnet disponibili (case sensitive):
+ * <ul>
+ * <li><tt><b>adsl show info</b></tt></li>
+ * <li><tt><b>wan show connection info</b></tt> (sconsigliato, verboso)</li>
+ * <li><tt><b>wan show connection info <i>name</i></b></tt></li>
+ * </ul>
+ */
 public class TpLink8970Reader extends Reader {
 
 	private interface Defaults {
@@ -62,6 +71,12 @@ public class TpLink8970Reader extends Reader {
 		}
 
 		return new RouterData(info);
+	}
+
+	@Override
+	public void logout() throws IOException {
+		out.println(Resources.get("msg.logging.out"), true);
+		writeToTelnet("logout");
 	}
 
 	@Override
