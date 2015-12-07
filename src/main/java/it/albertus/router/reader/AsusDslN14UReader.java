@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * <b>ASUS DSL-N14U</b>. Comandi Telnet disponibili (case sensitive):
  * <ul>
- * <li><tt><b>tcapi show Info</b></tt> (sconsigliato)</li>
+ * <li><tt><b>tcapi show Info</b></tt></li>
  * <li><tt><b>tcapi show Info_<i>Node</i></b></tt> (si consiglia: <tt><b>tcapi show Info_Adsl</b></tt>)</li>
  * <li><tt><b>tcapi show Wan</b></tt> (sconsigliato, verboso)</li>
  * <li><tt><b>tcapi show Wan_<i>Node</i></b></tt> (si consiglia: <tt><b>tcapi show Wan_PVC0</b></tt>)</li>
@@ -52,8 +52,16 @@ public class AsusDslN14UReader extends Reader {
 		readFromTelnet(commandInfoAdsl, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
 		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
 		String line;
+		String prefix = "";
 		while ((line = reader.readLine()) != null) {
-			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+			if (line.trim().length() != 0) {
+				if (line.startsWith("Node:")) {
+					prefix = line.substring(5).trim() + '_';
+				}
+				else if (line.indexOf('=') != -1) {
+					info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+				}
+			}
 		}
 		reader.close();
 
@@ -63,11 +71,11 @@ public class AsusDslN14UReader extends Reader {
 			writeToTelnet(commandInfoWan);
 			readFromTelnet(commandInfoWan, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
 			reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
-			String prefix = "";
+			prefix = "";
 			while ((line = reader.readLine()) != null) {
 				if (line.trim().length() != 0) {
 					if (line.startsWith("Node:")) {
-						prefix = line.replace(':', '_').trim() + '_';
+						prefix = line.substring(5).trim() + '_';
 					}
 					else if (line.indexOf('=') != -1) {
 						info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
