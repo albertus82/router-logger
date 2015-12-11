@@ -98,7 +98,7 @@ public class GuiConsole extends Console {
 			toPrint = value;
 		}
 		if (text != null && !text.isDisposed()) {
-			Display.getDefault().syncExec(new Runnable() {
+			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -107,12 +107,15 @@ public class GuiConsole extends Console {
 					catch (SWTException se) {
 						failSafePrint(toPrint);
 					}
+					finally {
+						updatePosition(value);
+					}
 				}
 			});
-			updatePosition(value);
 		}
 		else {
 			failSafePrint(toPrint);
+			updatePosition(value);
 		}
 	}
 
