@@ -26,6 +26,7 @@ public class AsusDslN14UReader extends Reader {
 	private static final String DEVICE_MODEL = "ASUS DSL-N14U";
 	private static final String COMMAND_PROMPT = "# ";
 	private static final String LOGIN_PROMPT = ": ";
+	private static final String NODE_PREFIX = "Node:";
 
 	@Override
 	public boolean login() throws IOException {
@@ -55,8 +56,8 @@ public class AsusDslN14UReader extends Reader {
 		String prefix = "";
 		while ((line = reader.readLine()) != null) {
 			if (line.trim().length() != 0) {
-				if (line.startsWith("Node:")) {
-					prefix = line.substring(5).trim() + '_';
+				if (line.startsWith(NODE_PREFIX)) {
+					prefix = line.substring(NODE_PREFIX.length()).trim() + '_';
 				}
 				else if (line.indexOf('=') != -1) {
 					info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
@@ -74,8 +75,8 @@ public class AsusDslN14UReader extends Reader {
 			prefix = "";
 			while ((line = reader.readLine()) != null) {
 				if (line.trim().length() != 0) {
-					if (line.startsWith("Node:")) {
-						prefix = line.substring(5).trim() + '_';
+					if (line.startsWith(NODE_PREFIX)) {
+						prefix = line.substring(NODE_PREFIX.length()).trim() + '_';
 					}
 					else if (line.indexOf('=') != -1) {
 						info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
