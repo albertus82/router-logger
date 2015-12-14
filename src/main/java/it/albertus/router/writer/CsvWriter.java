@@ -48,21 +48,21 @@ public class CsvWriter extends Writer {
 
 		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
-			final boolean thread = configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD);
+//			final boolean thread = configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD);
 			if (!logFile.exists()) {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
-				if (!thread) {
+//				if (!thread) {
 					out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
-				}
+//				}
 				logFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
-				if (!thread) {
+//				if (!thread) {
 					out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
-				}
+//				}
 			}
 			logFileWriter.append(buildCsvRow(info));
 			logFileWriter.flush();

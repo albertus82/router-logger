@@ -210,7 +210,7 @@ public abstract class RouterLoggerEngine {
 			// Chiamata alle implementazioni specifiche...
 			final RouterData info = reader.readInfo();
 
-			final long afterRead = System.currentTimeMillis();
+			final long timeAfterRead = System.currentTimeMillis();
 
 			saveInfo(info);
 			// Fine implementazioni specifiche.
@@ -235,10 +235,12 @@ public abstract class RouterLoggerEngine {
 					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
 				}
 
-				// Sottraggo dal tempo di attesa quello gia' trascorso durante la scrittura dei dati...
-				waitTimeInMillis = waitTimeInMillis - (System.currentTimeMillis() - afterRead);
+				// Sottrazione dal tempo di attesa di quello trascorso durante la scrittura dei dati...
+				waitTimeInMillis = waitTimeInMillis - (System.currentTimeMillis() - timeAfterRead);
 
-				Thread.sleep(waitTimeInMillis > intervalFastInMillis ? waitTimeInMillis : intervalFastInMillis);
+				if (waitTimeInMillis > 0L) {
+					Thread.sleep(waitTimeInMillis);
+				}
 			}
 		}
 	}
@@ -248,17 +250,17 @@ public abstract class RouterLoggerEngine {
 	protected abstract void showInfo(RouterData info);
 
 	private void saveInfo(final RouterData info) {
-		if (configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD)) {
-			new Thread() {
-				@Override
-				public void run() {
-					writer.saveInfo(info);
-				}
-			}.start();
-		}
-		else {
+//		if (configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD)) {
+//			new Thread() {
+//				@Override
+//				public void run() {
+//					writer.saveInfo(info);
+//				}
+//			}.start();
+//		}
+//		else {
 			writer.saveInfo(info);
-		}
+//		}
 	}
 
 	/**
