@@ -179,12 +179,22 @@ public class GuiTable {
 						if (table != null && !table.isDisposed()) {
 							// Header (una tantum)...
 							if (!tableInitialized) {
+								// Iterazione...
 								TableColumn column = new TableColumn(table, SWT.NONE);
 								column.setText(Resources.get("lbl.column.iteration.text"));
 								column.setToolTipText(Resources.get("lbl.column.iteration.tooltip"));
+
+								// Timestamp...
 								column = new TableColumn(table, SWT.NONE);
 								column.setText(Resources.get("lbl.column.timestamp.text"));
 								column.setToolTipText(Resources.get("lbl.column.timestamp.tooltip"));
+
+								// Tempo di risposta...
+								column = new TableColumn(table, SWT.NONE);
+								column.setText(Resources.get("lbl.column.response.time.text"));
+								column.setToolTipText(Resources.get("lbl.column.response.time.tooltip"));
+
+								// Tutte le altre colonne...
 								for (String key : info.keySet()) {
 									column = new TableColumn(table, SWT.NONE);
 									column.setText(packColumns ? " " : key);
@@ -197,6 +207,7 @@ public class GuiTable {
 							final TableItem item = new TableItem(table, SWT.NONE, 0);
 							item.setText(i++, Integer.toString(iteration));
 							item.setText(i++, timestamp);
+							item.setText(i++, String.valueOf(data.getResponseTime()));
 
 							for (String key : info.keySet()) {
 								// Grassetto...
@@ -229,9 +240,10 @@ public class GuiTable {
 								table.getColumn(0).setWidth((int) (table.getColumn(0).getWidth() * 1.3));
 
 								if (packColumns) {
+									table.getColumn(2).setWidth((int) (table.getColumn(0).getWidth()));
 									final String[] stringArray = new String[info.keySet().size()];
 									final TableColumn[] columns = table.getColumns();
-									final int startIndex = 2;
+									final int startIndex = 3;
 									for (int k = startIndex; k < columns.length; k++) {
 										final TableColumn column = columns[k];
 										column.setText(info.keySet().toArray(stringArray)[k - startIndex]);

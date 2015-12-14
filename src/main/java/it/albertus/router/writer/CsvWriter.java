@@ -48,21 +48,16 @@ public class CsvWriter extends Writer {
 
 		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
-//			final boolean thread = configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD);
 			if (!logFile.exists()) {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
-//				if (!thread) {
-					out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
-//				}
+				out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
 				logFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
-//				if (!thread) {
-					out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
-//				}
+				out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
 			}
 			logFileWriter.append(buildCsvRow(info));
 			logFileWriter.flush();
@@ -81,7 +76,8 @@ public class CsvWriter extends Writer {
 	private String buildCsvHeader(final RouterData info) {
 		final String fieldSeparator = getFieldSeparator();
 
-		final StringBuilder header = new StringBuilder("Timestamp").append(fieldSeparator);
+		final StringBuilder header = new StringBuilder(Resources.get("lbl.column.timestamp.text")).append(fieldSeparator);
+		header.append(Resources.get("lbl.column.response.time.text")).append(fieldSeparator); // Tempo di risposta.
 		for (String field : info.getData().keySet()) {
 			header.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
@@ -93,6 +89,7 @@ public class CsvWriter extends Writer {
 		final String fieldSeparator = getFieldSeparator();
 
 		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(info.getTimestamp())).append(fieldSeparator);
+		row.append(info.getResponseTime()).append(fieldSeparator); // Tempo di risposta.
 		for (String field : info.getData().values()) {
 			row.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}

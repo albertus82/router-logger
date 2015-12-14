@@ -207,13 +207,12 @@ public abstract class RouterLoggerEngine {
 
 		// Iterazione...
 		for (; (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
-			// Chiamata alle implementazioni specifiche...
+			final long timeBeforeRead = System.currentTimeMillis();
 			final RouterData info = reader.readInfo();
-
 			final long timeAfterRead = System.currentTimeMillis();
+			info.setResponseTime((int) (timeAfterRead - timeBeforeRead));
 
-			saveInfo(info);
-			// Fine implementazioni specifiche.
+			writer.saveInfo(info);
 
 			showInfo(info);
 
@@ -248,20 +247,6 @@ public abstract class RouterLoggerEngine {
 	protected void showThresholdsReached(Map<String, String> thresholdsReached) {}
 
 	protected abstract void showInfo(RouterData info);
-
-	private void saveInfo(final RouterData info) {
-//		if (configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD)) {
-//			new Thread() {
-//				@Override
-//				public void run() {
-//					writer.saveInfo(info);
-//				}
-//			}.start();
-//		}
-//		else {
-			writer.saveInfo(info);
-//		}
-	}
 
 	/**
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,

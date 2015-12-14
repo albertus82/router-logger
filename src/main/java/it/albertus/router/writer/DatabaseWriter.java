@@ -17,6 +17,7 @@ public class DatabaseWriter extends Writer {
 		String TABLE_NAME = "router_log";
 		String COLUMN_NAME_PREFIX = "rl_";
 		String TIMESTAMP_COLUMN_TYPE = "TIMESTAMP";
+		String RESPONSE_TIME_COLUMN_TYPE = "INTEGER";
 		String INFO_COLUMN_TYPE = "VARCHAR(250)";
 		int COLUMN_NAME_MAX_LENGTH = 30;
 		int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
@@ -72,16 +73,16 @@ public class DatabaseWriter extends Writer {
 			showMessage = false;
 		}
 
-		final String timestampColumnName = getColumnName("timestamp");
 		Map<Integer, String> columns = new HashMap<Integer, String>();
 		
-		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(timestampColumnName);
-		int index = 2;
+		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(getTimestampColumnName());
+		dml.append(", ").append(getResponseTimeColumnName());
+		int index = 3;
 		for (String key : info.keySet()) {
 			columns.put(index++, key);
 			dml.append(", ").append(getColumnName(key));
 		}
-		dml.append(") VALUES (?");
+		dml.append(") VALUES (?, ?");
 		for (int i = 0; i < info.size(); i++) {
 			dml.append(", ?");
 		}
@@ -91,6 +92,7 @@ public class DatabaseWriter extends Writer {
 		try {
 			insert = connection.prepareStatement(dml.toString());
 			insert.setTimestamp(1, new Timestamp(data.getTimestamp().getTime()));
+			insert.setInt(2, data.getResponseTime());
 			for (int parameterIndex : columns.keySet()) {
 				insert.setString(parameterIndex, info.get(columns.get(parameterIndex)));
 			}
@@ -105,6 +107,14 @@ public class DatabaseWriter extends Writer {
 			}
 			catch (Exception e) {}
 		}
+	}
+
+	private String getResponseTimeColumnName() {
+		return getColumnName("response_time_ms");
+	}
+
+	private String getTimestampColumnName() {
+		return getColumnName("timestamp");
 	}
 
 	private boolean tableExists(final String tableName) {
@@ -128,16 +138,17 @@ public class DatabaseWriter extends Writer {
 	}
 
 	private void createTable(final String tableName, final Map<String, String> info) {
-		final String timestampColumnName = getColumnName("timestamp");
 		final String timestampColumnType = configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE);
+		final String responseTimeColumnType = configuration.getString("database.response.time.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE);
 		final String infoColumnType = configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE);
 
 		// Creazione tabella...
-		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(timestampColumnName).append(' ').append(timestampColumnType);
+		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(getTimestampColumnName()).append(' ').append(timestampColumnType);
+		ddl.append(", ").append(getResponseTimeColumnName()).append(' ').append(responseTimeColumnType); // Tempo di risposta.
 		for (String key : info.keySet()) {
 			ddl.append(", ").append(getColumnName(key)).append(' ').append(infoColumnType);
 		}
-		ddl.append(", CONSTRAINT pk_routerlogger PRIMARY KEY (").append(timestampColumnName).append("))");
+		ddl.append(", CONSTRAINT pk_routerlogger PRIMARY KEY (").append(getTimestampColumnName()).append("))");
 
 		PreparedStatement createTable = null;
 		try {
@@ -154,7 +165,7 @@ public class DatabaseWriter extends Writer {
 			catch (Exception e) {}
 		}
 	}
-	
+
 	private String getTableName() {
 		return configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
 	}
