@@ -7,6 +7,10 @@ import it.albertus.util.Console;
 
 public abstract class Writer {
 
+	public interface Defaults {
+		boolean WRITER_THREAD = true;
+	}
+
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 

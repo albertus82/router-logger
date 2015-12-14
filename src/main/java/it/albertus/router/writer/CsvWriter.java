@@ -48,7 +48,7 @@ public class CsvWriter extends Writer {
 
 		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
-			final boolean thread = configuration.getBoolean("logger.writer.thread", false);
+			final boolean thread = configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD);
 			if (!logFile.exists()) {
 				closeOutputFile();
 				logFileWriter = new FileWriter(logFile); // Crea nuovo file.

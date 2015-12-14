@@ -22,7 +22,6 @@ public abstract class RouterLoggerEngine {
 		long HYSTERESIS_IN_MILLIS = 10000L;
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
-		boolean WRITER_THREAD = true;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
@@ -239,7 +238,7 @@ public abstract class RouterLoggerEngine {
 	protected abstract void showInfo(RouterData info);
 
 	private void saveInfo(final RouterData info) {
-		if (configuration.getBoolean("logger.writer.thread", Defaults.WRITER_THREAD)) {
+		if (configuration.getBoolean("logger.writer.thread", Writer.Defaults.WRITER_THREAD)) {
 			new Thread() {
 				@Override
 				public void run() {
