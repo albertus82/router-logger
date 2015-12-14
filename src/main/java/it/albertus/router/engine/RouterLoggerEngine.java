@@ -209,6 +209,9 @@ public abstract class RouterLoggerEngine {
 		for (; (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			// Chiamata alle implementazioni specifiche...
 			final RouterData info = reader.readInfo();
+
+			final long afterRead = System.currentTimeMillis();
+
 			saveInfo(info);
 			// Fine implementazioni specifiche.
 
@@ -216,10 +219,13 @@ public abstract class RouterLoggerEngine {
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
-				final long waitTimeInMillis;
+				final long intervalFastInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
+
+				long waitTimeInMillis;
+
 				final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
 				if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
+					waitTimeInMillis = intervalFastInMillis;
 					if (!thresholdsReached.isEmpty()) {
 						hysteresis = System.currentTimeMillis();
 						showThresholdsReached(thresholdsReached);
@@ -228,7 +234,11 @@ public abstract class RouterLoggerEngine {
 				else {
 					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
 				}
-				Thread.sleep(waitTimeInMillis);
+
+				// Sottraggo dal tempo di attesa quello gia' trascorso durante la scrittura dei dati...
+				waitTimeInMillis = waitTimeInMillis - (System.currentTimeMillis() - afterRead);
+
+				Thread.sleep(waitTimeInMillis > intervalFastInMillis ? waitTimeInMillis : intervalFastInMillis);
 			}
 		}
 	}
