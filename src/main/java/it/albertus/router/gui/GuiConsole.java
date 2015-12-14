@@ -20,6 +20,28 @@ public class GuiConsole extends Console {
 
 	protected interface Defaults {
 		int GUI_CONSOLE_MAX_CHARS = 50000;
+		boolean GUI_CONSOLE_THREAD = true;
+	}
+
+	private final class PrintRunnable implements Runnable {
+		private final String value;
+
+		private PrintRunnable(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public void run() {
+			try {
+				doPrint(value);
+			}
+			catch (SWTException se) {
+				failSafePrint(value);
+			}
+			finally {
+				updatePosition(value);
+			}
+		}
 	}
 
 	private static class Singleton {
@@ -98,24 +120,17 @@ public class GuiConsole extends Console {
 			toPrint = value;
 		}
 		if (text != null && !text.isDisposed()) {
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						doPrint(toPrint);
-					}
-					catch (SWTException se) {
-						failSafePrint(toPrint);
-					}
-					finally {
-						updatePosition(value);
-					}
-				}
-			});
+			final Runnable printTask = new PrintRunnable(toPrint);
+			if (configuration.getBoolean("gui.console.thread", Defaults.GUI_CONSOLE_THREAD)) {
+				Display.getDefault().asyncExec(printTask);
+			}
+			else {
+				Display.getDefault().syncExec(printTask);
+			}
 		}
 		else {
 			failSafePrint(toPrint);
-			updatePosition(value);
+			updatePosition(toPrint);
 		}
 	}
 

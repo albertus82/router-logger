@@ -61,7 +61,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`logger.hysteresis.ms`**= intervallo di tempo durante il quale l'applicazione continua a registrare a frequenza accelerata (`logger.interval.fast.ms`) anche dopo che un valore, che precedentemente aveva raggiunto una soglia, &egrave; rientrato nella norma, in millisecondi (default: `10000` ms).
 * **`logger.retry.count`**= numero di tentativi di riavvio del ciclo da effettuare in caso di errore durante l'esecuzione (default: `3`). Il contatore si azzera se il ciclo riparte con successo. Utile, ad esempio, in caso di riavvio del modem.
 * **`logger.retry.interval.ms`**= intervallo tra i tentativi di riavvio, in millisecondi (default: `30000` ms).
-* **`logger.writer.thread`**= specifica se eseguire il processo di salvataggio dei dati in un thread separato (default: `false`).
+* **`logger.writer.thread`**= specifica se eseguire il processo di salvataggio dei dati in un thread separato (default: `true`).
 * **`logger.error.log.destination.path`**= percorso in cui saranno salvati eventuali file registro (`.log`) contenenti i dettagli degli errori occorsi durante l'esecuzione del programma (default: stessa cartella del programma).
 
 ##### Rete
@@ -83,7 +83,9 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`gui.console.max.chars`**= dimensione massima della console, in caratteri; la console viene automaticamente ripulita al raggiungimento della soglia per limitare l'utilizzo di memoria (default: `50000` caratteri).
 * **`gui.important.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno evidenziati nella tabella (default: vuoto).
 * **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.bold.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
-* **`gui.table.thread`**= specifica se eseguire l'aggiornamento della tabella a video in un thread separato (default: `false`).
+* **`gui.table.thread`**= specifica se eseguire l'aggiornamento della tabella a video in un thread separato (default: `true`).
+* **`gui.console.thread`**= specifica se eseguire l'aggiornamento della console a video in un thread separato (default: `true`).
+
 
 ##### Console
 

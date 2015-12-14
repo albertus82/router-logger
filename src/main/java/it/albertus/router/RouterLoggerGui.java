@@ -31,7 +31,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_MINIMIZE_TRAY = true;
 		boolean GUI_START_MINIMIZED = false;
-		boolean GUI_TABLE_THREAD = false;
+		boolean GUI_TABLE_THREAD = true;
 	}
 
 	private final GuiTable table = GuiTable.getInstance();
