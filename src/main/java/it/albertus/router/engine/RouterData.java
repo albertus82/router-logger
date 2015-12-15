@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class RouterData implements Serializable {
 
-	private static final long serialVersionUID = 4727815742049322549L;
+	private static final long serialVersionUID = -3312535039501430502L;
 
 	private final Date timestamp;
 	private final Map<String, String> data;
