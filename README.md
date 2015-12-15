@@ -149,6 +149,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 * **`database.table.name`**= nome della tabella in cui saranno inseriti i dati (default: `router_log`).
 * **`database.connection.validation.timeout.ms`**= tempo di attesa massimo su richiesta di verifica della validit&agrave; della connessione al database, in millisecondi (default: `2000` ms).
 * **`database.timestamp.column.type`**= tipo di dato utilizzato per la colonna del *timestamp* in fase di creazione della tabella (default: `TIMESTAMP`).
+* **`database.response.column.type`**= tipo di dato utilizzato per la colonna del *response_time_ms* in fase di creazione della tabella (default: `INTEGER`).
 * **`database.info.column.type`**= tipo di dato utilizzato per tutte le altre colonne in fase di creazione della tabella (default: `VARCHAR(250)`).
 * **`database.column.name.prefix`**= prefisso per i nomi delle colonne della tabella (default: `rl_`).
 * **`database.column.name.max.length`**= lunghezza massima dei nomi delle colonne, superata la quale il nome viene troncato (default: `30`).

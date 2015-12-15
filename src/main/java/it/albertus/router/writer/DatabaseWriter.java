@@ -139,7 +139,7 @@ public class DatabaseWriter extends Writer {
 
 	private void createTable(final String tableName, final Map<String, String> info) {
 		final String timestampColumnType = configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE);
-		final String responseTimeColumnType = configuration.getString("database.response.time.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE);
+		final String responseTimeColumnType = configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE);
 		final String infoColumnType = configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE);
 
 		// Creazione tabella...
