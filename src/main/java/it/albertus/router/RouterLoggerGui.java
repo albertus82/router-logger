@@ -79,12 +79,12 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		try {
 			instance = new RouterLoggerGui();
 		}
-		catch (ExceptionInInitializerError e) {
+		catch (Exception e) {
 			final Display display = new Display();
 			final Shell shell = new Shell(display);
 			final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 			messageBox.setText(Resources.get("lbl.error"));
-			messageBox.setMessage(ExceptionUtils.getUIMessage(e.getCause() != null ? e.getCause() : e));
+			messageBox.setMessage(ExceptionUtils.getUIMessage(e));
 			messageBox.open();
 			shell.dispose();
 			display.dispose();
