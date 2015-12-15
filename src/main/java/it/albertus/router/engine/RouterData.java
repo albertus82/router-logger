@@ -34,7 +34,7 @@ public class RouterData implements Serializable {
 		return responseTime;
 	}
 
-	public void setResponseTime(int responseTime) {
+	void setResponseTime(int responseTime) {
 		this.responseTime = responseTime;
 	}
 
