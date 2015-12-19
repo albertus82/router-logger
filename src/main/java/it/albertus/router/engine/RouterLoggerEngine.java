@@ -112,7 +112,9 @@ public abstract class RouterLoggerEngine {
 					Thread.sleep(retryIntervalInMillis);
 				}
 				catch (InterruptedException ie) {
-					throw new RuntimeException(ie);
+					/* Se si chiude il programma mentre e' in attesa di riconnessione... */
+					exit = true;
+					continue;
 				}
 			}
 

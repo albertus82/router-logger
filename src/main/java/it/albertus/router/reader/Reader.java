@@ -23,6 +23,11 @@ public abstract class Reader {
 		String TELNET_NEWLINE_CHARACTERS = NewLine.CRLF.name();
 	}
 
+	private static final String CFG_KEY_SOCKET_TIMEOUT_MS = "socket.timeout.ms";
+	private static final String CFG_KEY_CONNECTION_TIMEOUT_MS = "connection.timeout.ms";
+	private static final String CFG_KEY_ROUTER_PORT = "router.port";
+	private static final String CFG_KEY_ROUTER_ADDRESS = "router.address";
+
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 
@@ -42,11 +47,44 @@ public abstract class Reader {
 	 *         altrimenti.
 	 */
 	public boolean connect() {
-		final String routerAddress = configuration.getString("router.address", Defaults.ROUTER_ADDRESS).trim();
-		final int routerPort = configuration.getInt("router.port", Defaults.ROUTER_PORT);
-		final int connectionTimeoutInMillis = configuration.getInt("connection.timeout.ms", Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
-		final int socketTimeoutInMillis = configuration.getInt("socket.timeout.ms", Defaults.SOCKET_TIMEOUT_IN_MILLIS);
+		/* Verifica dei parametri di configurazione... */
+		final String routerAddress;
+		try {
+			routerAddress = configuration.getString(CFG_KEY_ROUTER_ADDRESS, Defaults.ROUTER_ADDRESS).trim();
+		}
+		catch (RuntimeException re) {
+			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
+			return false;
+		}
 
+		final int routerPort;
+		try {
+			routerPort = configuration.getInt(CFG_KEY_ROUTER_PORT, Defaults.ROUTER_PORT);
+		}
+		catch (RuntimeException re) {
+			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
+			return false;
+		}
+
+		final int connectionTimeoutInMillis;
+		try {
+			connectionTimeoutInMillis = configuration.getInt(CFG_KEY_CONNECTION_TIMEOUT_MS, Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
+		}
+		catch (RuntimeException re) {
+			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
+			return false;
+		}
+
+		final int socketTimeoutInMillis;
+		try {
+			socketTimeoutInMillis = configuration.getInt(CFG_KEY_SOCKET_TIMEOUT_MS, Defaults.SOCKET_TIMEOUT_IN_MILLIS);
+		}
+		catch (RuntimeException re) {
+			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
+			return false;
+		}
+
+		/* Connessione... */
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
 		out.println(Resources.get("msg.connecting", routerAddress, routerPort), true);
 		boolean connected = false;
