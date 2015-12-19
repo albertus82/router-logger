@@ -110,7 +110,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		}
 	}
 
-	protected Point getInitialSize() {
+	private Point getInitialSize() {
 		return new Point(750, 550);
 	}
 
