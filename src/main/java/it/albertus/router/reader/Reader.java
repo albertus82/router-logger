@@ -45,6 +45,8 @@ public abstract class Reader {
 	 * 
 	 * @return <tt>true</tt> se la connessione &egrave; riuscita, <tt>false</tt>
 	 *         altrimenti.
+	 * 
+	 * @throws IllegalArgumentException se i parametri di connessione non sono validi.
 	 */
 	public boolean connect() {
 		/* Verifica dei parametri di configurazione... */
@@ -53,8 +55,7 @@ public abstract class Reader {
 			routerAddress = configuration.getString(CFG_KEY_ROUTER_ADDRESS, Defaults.ROUTER_ADDRESS).trim();
 		}
 		catch (RuntimeException re) {
-			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
-			return false;
+			throw new IllegalArgumentException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re);
 		}
 
 		final int routerPort;
@@ -62,8 +63,7 @@ public abstract class Reader {
 			routerPort = configuration.getInt(CFG_KEY_ROUTER_PORT, Defaults.ROUTER_PORT);
 		}
 		catch (RuntimeException re) {
-			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
-			return false;
+			throw new IllegalArgumentException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re);
 		}
 
 		final int connectionTimeoutInMillis;
@@ -71,8 +71,7 @@ public abstract class Reader {
 			connectionTimeoutInMillis = configuration.getInt(CFG_KEY_CONNECTION_TIMEOUT_MS, Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
 		}
 		catch (RuntimeException re) {
-			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
-			return false;
+			throw new IllegalArgumentException(Resources.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re);
 		}
 
 		final int socketTimeoutInMillis;
@@ -80,8 +79,7 @@ public abstract class Reader {
 			socketTimeoutInMillis = configuration.getInt(CFG_KEY_SOCKET_TIMEOUT_MS, Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 		}
 		catch (RuntimeException re) {
-			logger.log(new RuntimeException(Resources.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re));
-			return false;
+			throw new IllegalArgumentException(Resources.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re);
 		}
 
 		/* Connessione... */

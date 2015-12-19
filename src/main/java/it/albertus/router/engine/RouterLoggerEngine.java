@@ -118,8 +118,17 @@ public abstract class RouterLoggerEngine {
 				}
 			}
 
-			// Avvio della procedura...
-			final boolean connected = reader.connect();
+			/* Avvio della procedura... */
+			final boolean connected;
+			try {
+				connected = reader.connect();
+			}
+			catch (RuntimeException re) {
+				/* Configurazione non valida */
+				logger.log(re);
+				exit = true;
+				continue;
+			}
 
 			// Log in...
 			if (connected) {
