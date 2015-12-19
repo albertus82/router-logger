@@ -1,7 +1,6 @@
 package it.albertus.router.engine;
 
 import it.albertus.router.reader.Reader;
-import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
@@ -24,7 +23,6 @@ public abstract class RouterLoggerEngine {
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
-		Class<? extends Reader> READER_CLASS = TpLink8970Reader.class;
 	}
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
@@ -42,7 +40,7 @@ public abstract class RouterLoggerEngine {
 
 	private Reader initReader() {
 		final String configurationKey = "reader.class.name";
-		String readerClassName = configuration.getString(configurationKey, Defaults.READER_CLASS.getName()).trim();
+		String readerClassName = StringUtils.trimToEmpty(configuration.getString(configurationKey));
 
 		try {
 			Class.forName(readerClassName); // Default package.
