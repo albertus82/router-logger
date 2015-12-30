@@ -10,6 +10,8 @@ import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 public abstract class RouterLoggerEngine {
@@ -193,22 +195,19 @@ public abstract class RouterLoggerEngine {
 
 		out.println(Resources.get("msg.welcome", versionInfo));
 		out.println();
-		boolean lineBreak = false;
+		out.println(Resources.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
+
 		if (StringUtils.isNotBlank(reader.getDeviceModel())) {
 			out.println(Resources.get("msg.device.model", reader.getDeviceModel().trim()));
-			lineBreak = true;
 		}
 		if (!configuration.getThresholds().isEmpty()) {
 			out.println(Resources.get("msg.thresholds", configuration.getThresholds()));
-			lineBreak = true;
 		}
 		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
 			out.println(Resources.get("msg.settings", configuration));
-			lineBreak = true;
 		}
-		if (lineBreak) {
-			out.println();
-		}
+
+		out.println();
 	}
 
 	private void loop() throws IOException, InterruptedException {
