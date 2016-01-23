@@ -80,17 +80,24 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 			instance = new RouterLoggerGui();
 		}
 		catch (Exception e) {
-			final Display display = new Display();
-			final Shell shell = new Shell(display);
-			final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-			messageBox.setText(Resources.get("lbl.error"));
-			messageBox.setMessage(ExceptionUtils.getUIMessage(e));
-			messageBox.open();
-			shell.dispose();
-			display.dispose();
-			System.exit(1);
+			fatalError(e);
 		}
+		catch (ExceptionInInitializerError e) {
+			fatalError(e.getCause() != null ? e.getCause() : e);
+		}	
 		return instance;
+	}
+
+	private static void fatalError(Throwable e) {
+		final Display display = new Display();
+		final Shell shell = new Shell(display);
+		final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+		messageBox.setText(Resources.get("lbl.error"));
+		messageBox.setMessage(ExceptionUtils.getUIMessage(e));
+		messageBox.open();
+		shell.dispose();
+		display.dispose();
+		System.exit(1);
 	}
 
 	private void configureShell(final Shell shell) {
