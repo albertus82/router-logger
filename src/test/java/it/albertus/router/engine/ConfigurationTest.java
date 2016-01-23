@@ -1,7 +1,5 @@
 package it.albertus.router.engine;
 
-import it.albertus.router.engine.RouterLoggerConfiguration;
-
 public class ConfigurationTest {
 
 	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
