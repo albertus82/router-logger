@@ -1,6 +1,7 @@
 package it.albertus.router.engine;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class Threshold implements Comparable<Threshold> {
 		}
 
 		public Set<String> getAbbreviations() {
-			return abbreviations;
+			return Collections.unmodifiableSet(abbreviations);
 		}
 
 		@Override
