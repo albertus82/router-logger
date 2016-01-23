@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.TableItem;
 public class GuiTable {
 
 	private interface Defaults {
-		int GUI_TABLE_MAX_ITEMS = 5000;
+		int GUI_TABLE_MAX_ITEMS = 2000;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		boolean GUI_TABLE_COLUMNS_PACK = false;
 	}

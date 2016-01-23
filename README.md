@@ -74,7 +74,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 ##### Interfaccia grafica (GUI)
 
-* **`gui.table.items.max`**= numero massimo di righe contenute nella tabella a video; al raggiungimento del limite, le righe pi&ugrave; vecchie vengono cancellate. Questa impostazione non influisce in alcun modo sul salvataggio delle informazioni ma ha effetto unicamente sull'interfaccia grafica dell'applicazione (default: `5000`, valori maggiori comportano una maggiore occupazione di memoria).
+* **`gui.table.items.max`**= numero massimo di righe contenute nella tabella a video; al raggiungimento del limite, le righe pi&ugrave; vecchie vengono cancellate. Questa impostazione non influisce in alcun modo sul salvataggio delle informazioni ma ha effetto unicamente sull'interfaccia grafica dell'applicazione (default: `2000`, valori maggiori comportano una maggiore occupazione di memoria).
 * **`gui.table.columns.pack`**= riduce al minimo la larghezza delle colonne della tabella a video adattandola ai valori e ignorando la larghezza dei nomi delle chiavi in intestazione (default: `false`).
 * **`gui.minimize.tray`**= specifica se l'applicazione deve essere ridotta a icona nell'area di notifica invece che nella barra delle applicazioni (default: `true`).
 * **`gui.start.minimized`**= specifica se l'applicazione deve essere avviata gi&agrave; ridotta a icona (default: `false`).
