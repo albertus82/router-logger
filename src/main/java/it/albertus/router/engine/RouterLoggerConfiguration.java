@@ -12,6 +12,10 @@ import java.util.TreeSet;
 
 public class RouterLoggerConfiguration extends Configuration {
 
+	private interface Defaults {
+		boolean THRESHOLDS_SPLIT = false;
+	}
+
 	private static class Singleton {
 		private static final RouterLoggerConfiguration CONFIGURATION = new RouterLoggerConfiguration();
 	}
@@ -27,15 +31,15 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	private RouterLoggerConfiguration() {
-		// Caricamento della configurazione...
+		/* Caricamento della configurazione... */
 		super("routerlogger.cfg");
 
-		// Valorizzazione delle soglie...
-		if (this.getBoolean("thresholds.split", false)) {
-			thresholds = new SplitThresholds();
+		/* Valorizzazione delle soglie... */
+		if (this.getBoolean("thresholds.split", Defaults.THRESHOLDS_SPLIT)) {
+			thresholds = new SplitThresholds(); /* Vecchio stile */
 		}
 		else {
-			thresholds = new ExpressionThresholds();
+			thresholds = new ExpressionThresholds(); /* Nuovo stile */
 		}
 	}
 
@@ -44,6 +48,20 @@ public class RouterLoggerConfiguration extends Configuration {
 		protected static final String CFG_PREFIX = "threshold";
 
 		protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
+
+		private Thresholds() {
+			try {
+				load();
+			}
+			catch (IllegalThresholdException ite) {
+				throw ite;
+			}
+			catch (RuntimeException re) {
+				throw new RuntimeException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", RouterLoggerConfiguration.this.getFileName()), re);
+			}
+		}
+
+		protected abstract void load();
 
 		public boolean isEmpty() {
 			return thresholds.isEmpty();
@@ -75,20 +93,22 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	}
 
+	/* Soglie vecchio stile (tre proprieta') */
 	private class SplitThresholds extends Thresholds {
 
 		private static final String CFG_SUFFIX_KEY = "key";
 		private static final String CFG_SUFFIX_TYPE = "type";
 		private static final String CFG_SUFFIX_VALUE = "value";
 
-		private SplitThresholds() {
+		@Override
+		protected void load() {
 			final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.this;
 			final Set<String> thresholdsAdded = new HashSet<String>();
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
 				if (key != null && key.startsWith(CFG_PREFIX + '.')) {
 					if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(CFG_SUFFIX_KEY) && !key.endsWith(CFG_SUFFIX_TYPE) && !key.endsWith(CFG_SUFFIX_VALUE))) {
-						throw new IllegalArgumentException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
 					final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 					if (thresholdsAdded.contains(thresholdName)) {
@@ -98,19 +118,21 @@ public class RouterLoggerConfiguration extends Configuration {
 					final Type thresholdType = Type.getEnum(configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_TYPE));
 					final String thresholdValue = configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_VALUE);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-						throw new IllegalArgumentException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
 					thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
 					thresholdsAdded.add(thresholdName);
 				}
 			}
 		}
-		
+
 	}
 
+	/* Nuove soglie con espressione */
 	private class ExpressionThresholds extends Thresholds {
 
-		private ExpressionThresholds() {
+		@Override
+		protected void load() {
 			final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.this;
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
@@ -128,16 +150,26 @@ public class RouterLoggerConfiguration extends Configuration {
 						}
 					}
 					if (thresholdType == null) {
-						throw new IllegalArgumentException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
 					final String thresholdKey = expression.substring(0, expression.indexOf(operator) - 1);
 					final String thresholdValue = expression.substring(expression.indexOf(operator) + operator.length() + 1);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null) {
-						throw new IllegalArgumentException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
 					thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
 				}
 			}
+		}
+
+	}
+
+	private class IllegalThresholdException extends RuntimeException {
+
+		private static final long serialVersionUID = 3400954135226964620L;
+
+		public IllegalThresholdException(String message) {
+			super(message);
 		}
 
 	}
