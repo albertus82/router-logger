@@ -92,7 +92,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
 		final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-		messageBox.setText(Resources.get("lbl.error"));
+		messageBox.setText(Resources.get("lbl.window.title"));
 		messageBox.setMessage(ExceptionUtils.getUIMessage(e));
 		messageBox.open();
 		shell.dispose();
