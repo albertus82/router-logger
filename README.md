@@ -164,33 +164,30 @@ Quando una soglia viene raggiunta, il periodo di registrazione passa da quello n
 
 ##### Configurazione
 
-Ogni soglia &egrave; costituita da una terna di propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`) nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg):
+Ogni soglia &egrave; costituita da una propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) definita come segue:
 
-* <code>**threshold.*identificativo.univoco.soglia*.key**</code>= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
-* <code>**threshold.*identificativo.univoco.soglia*.type**</code>= condizione di raggiungimento:
+**<code>threshold.*identificativo.univoco.soglia*</code>**= ***chiave*** ***tipologia*** ***valore***
+
+dove:
+* **chiave**: chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
+* **tipologia**: condizione di raggiungimento:
   * **`lt`**: minore di...
   * **`le`**: minore o uguale a...
   * **`eq`**: uguale a...
   * **`ge`**: maggiore o uguale a...
   * **`gt`**: maggiore di...
   * **`ne`**: diverso da...
-* <code>**threshold.*identificativo.univoco.soglia*.value**</code>= valore di soglia.
+* **valore**: valore di soglia.
 
 Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applicazione che la propriet&agrave; riguarda una soglia.
 
-L'*identificativo univoco soglia* pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere `=`) e ha l'unico scopo di raggruppare le tre propriet&agrave; `key`, `type` e `value`, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero impossibili da correlare.
-
-Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`threshold.`) sono `.key`, `.type` e `.value`.
+L'*identificativo univoco soglia* pu&ograve; essere un qualsiasi testo senza spazi n&eacute; carattere `=`.
 
 ##### Esempio
 
-Aggiungendo le seguenti tre righe al file [`routerlogger.cfg`](src/main/config/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
+Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
 
-```
-threshold.snr.down.key=downstreamNoiseMargin
-threshold.snr.down.type=lt
-threshold.snr.down.value=100
-```
+**`threshold.snr.down=downstreamNoiseMargin lt 100`**
 
 
 ### Estensione
