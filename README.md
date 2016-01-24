@@ -166,11 +166,11 @@ Quando una soglia viene raggiunta, il periodo di registrazione passa da quello n
 
 Ogni soglia &egrave; costituita da una propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) definita come segue:
 
-**<code>threshold.*identificativo.univoco.soglia*</code>**= ***chiave*** ***tipologia*** ***valore***
+**<code>threshold.*identificativo.univoco.soglia*</code>**= ***chiave*** ***operatore*** ***valore***
 
 dove:
 * **chiave**: chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
-* **tipologia**: condizione di raggiungimento:
+* **operatore**: operatore relazionale (di confronto) che determina la condizione di raggiungimento:
   * **`lt`** (oppure `<`): minore di...
   * **`le`** (oppure `<=`): minore o uguale a...
   * **`eq`** (oppure `=`, `==`): uguale a...
@@ -194,7 +194,7 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 >Se le chiavi contengono spazi e al tempo stesso elementi uguali agli operatori di confronto, potrebbero verificarsi problemi di configurazione delle soglie; in questi casi &egrave; possibile utilizzare una configurazione alternativa (l'unica presente fino alla versione 4.0.0) che prevede che ogni soglia sia costituita da una terna di propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`):
 
 >* <code>**threshold.*identificativo.univoco.soglia*.key**</code>= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
->* <code>**threshold.*identificativo.univoco.soglia*.type**</code>= condizione di raggiungimento (vedi precedente paragrafo [configurazione](#configurazione)).
+>* <code>**threshold.*identificativo.univoco.soglia*.type**</code>= operatore relazionale (di confronto) che determina la condizione di raggiungimento (vedi precedente paragrafo [configurazione](#configurazione)).
 >* <code>**threshold.*identificativo.univoco.soglia*.value**</code>= valore di soglia.
 
 >Per abilitare questa modalit&agrave; di configurazione, occorre impostare la seguente propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg):
