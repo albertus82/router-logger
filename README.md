@@ -189,10 +189,9 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 
 **`threshold.snr.down=downstreamNoiseMargin lt 100`**
 
+>##### Configurazione alternativa (vecchio stile)
 
->##### Configurazione alternativa
-
->Se le chiavi contengono spazi e anche elementi uguali agli operatori di confronto, potrebbero verificarsi problemi di configurazione delle soglie; in questi casi &egrave; possibile utilizzare una configurazione alternativa che prevede che ogni soglia sia costituita da una terna di propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`):
+>Se le chiavi contengono spazi e al tempo stesso elementi uguali agli operatori di confronto, potrebbero verificarsi problemi di configurazione delle soglie; in questi casi &egrave; possibile utilizzare una configurazione alternativa (l'unica presente fino alla versione 4.0.0) che prevede che ogni soglia sia costituita da una terna di propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`):
 
 >* <code>**threshold.*identificativo.univoco.soglia*.key**</code>= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
 >* <code>**threshold.*identificativo.univoco.soglia*.type**</code>= condizione di raggiungimento (vedi precedente paragrafo [configurazione](#configurazione)).
@@ -202,7 +201,7 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 
 >Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`threshold.`) sono `.key`, `.type` e `.value`.
 
->##### Esempio di configurazione alternativa
+>##### Esempio di configurazione alternativa (vecchio stile)
 
 >Aggiungendo le seguenti tre righe al file [`routerlogger.cfg`](src/main/config/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
 
@@ -210,9 +209,7 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 threshold.snr.down.key=downstreamNoiseMargin
 threshold.snr.down.type=lt
 threshold.snr.down.value=100
-```
-
-
+>```
 
 
 ### Estensione
