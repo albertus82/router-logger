@@ -57,7 +57,7 @@ public class RouterLoggerConfiguration extends Configuration {
 				throw ite;
 			}
 			catch (RuntimeException re) {
-				throw new RuntimeException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", RouterLoggerConfiguration.this.getFileName()), re);
+				throw new IllegalThresholdException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", RouterLoggerConfiguration.this.getFileName()), re);
 			}
 		}
 
@@ -166,10 +166,14 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	private class IllegalThresholdException extends RuntimeException {
 
-		private static final long serialVersionUID = 3400954135226964620L;
+		private static final long serialVersionUID = -8617343007639969676L;
 
-		public IllegalThresholdException(String message) {
+		private IllegalThresholdException(String message) {
 			super(message);
+		}
+
+		private IllegalThresholdException(String message, Throwable cause) {
+			super(message, cause);
 		}
 
 	}
