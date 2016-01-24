@@ -190,6 +190,31 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 **`threshold.snr.down=downstreamNoiseMargin lt 100`**
 
 
+>##### Configurazione alternativa
+
+>Se le chiavi contengono spazi e anche elementi uguali agli operatori di confronto, potrebbero verificarsi problemi di configurazione delle soglie; in questi casi &egrave; possibile utilizzare una configurazione alternativa che prevede che ogni soglia sia costituita da una terna di propriet&agrave;: *chiave* (`key`), *tipologia* (`type`) e *valore di soglia* (`value`):
+
+>* <code>**threshold.*identificativo.univoco.soglia*.key**</code>= chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
+>* <code>**threshold.*identificativo.univoco.soglia*.type**</code>= condizione di raggiungimento (vedi precedente paragrafo configurazione).
+>* <code>**threshold.*identificativo.univoco.soglia*.value**</code>= valore di soglia.
+
+>L'*identificativo univoco soglia* pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere `=`) e ha l'unico scopo di raggruppare le tre propriet&agrave; `key`, `type` e `value`, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero impossibili da correlare.
+
+>Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`threshold.`) sono `.key`, `.type` e `.value`.
+
+>##### Esempio di configurazione alternativa
+
+>Aggiungendo le seguenti tre righe al file [`routerlogger.cfg`](src/main/config/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
+
+>```
+threshold.snr.down.key=downstreamNoiseMargin
+threshold.snr.down.type=lt
+threshold.snr.down.value=100
+```
+
+
+
+
 ### Estensione
 
 ##### Supporto di altri modelli di router
