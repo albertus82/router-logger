@@ -197,6 +197,8 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 >* <code>**threshold.*identificativo.univoco.soglia*.type**</code>= condizione di raggiungimento (vedi precedente paragrafo [configurazione](#configurazione)).
 >* <code>**threshold.*identificativo.univoco.soglia*.value**</code>= valore di soglia.
 
+>Per abilitare questa modalit&agrave; di configurazione, occorre impostare la seguente propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg): **`thresholds.split=true`** (default: `false`).
+
 >L'*identificativo univoco soglia* pu&ograve; essere un testo qualsiasi (senza spazi n&eacute; carattere `=`) e ha l'unico scopo di raggruppare le tre propriet&agrave; `key`, `type` e `value`, che altrimenti, in presenza di pi&ugrave; soglie configurate, risulterebbero impossibili da correlare.
 
 >Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`threshold.`) sono `.key`, `.type` e `.value`.
