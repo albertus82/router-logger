@@ -21,8 +21,6 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class GuiTray {
 
-	private static final long MIN_UPDATE_INTERVAL_IN_MILLIS = 5000L;
-
 	private static class Singleton {
 		private static final GuiTray TRAY = new GuiTray();
 	}
@@ -36,7 +34,6 @@ public class GuiTray {
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private TrayItem trayItem = null;
 	private Menu menu = null;
-	private long lastUpdateTimestamp = -1;
 	private String toolTipText = Resources.get("lbl.tray.tooltip");
 
 	public void init(final Shell shell) {
@@ -105,9 +102,9 @@ public class GuiTray {
 	}
 
 	public void updateTrayToolTipText(final RouterData info) {
-		if (!configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && System.currentTimeMillis() - lastUpdateTimestamp > MIN_UPDATE_INTERVAL_IN_MILLIS) {
+		if (!configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && !info.getData().isEmpty()) {
 			final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
-			for (String key : configuration.getGuiImportantKeys()) {
+			for (final String key : configuration.getGuiImportantKeys()) {
 				if (info.getData().containsKey(key)) {
 					sb.append(NewLine.SYSTEM_LINE_SEPARATOR).append(key).append(": ").append(info.getData().get(key));
 				}
@@ -123,9 +120,7 @@ public class GuiTray {
 							}
 						}
 					});
-					lastUpdateTimestamp = System.currentTimeMillis();
 					toolTipText = updatedToolTipText;
-					GuiConsole.getInstance().println("Tray aggiornata", true);
 				}
 				catch (SWTException se) {
 					Logger.getInstance().log(se, Destination.CONSOLE);

@@ -34,6 +34,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	private final GuiTable table = GuiTable.getInstance();
+	private GuiTray tray = null;
 
 	public static void main(String args[]) {
 		try {
@@ -104,7 +105,8 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
-			GuiTray.getInstance().init(shell);
+			tray = GuiTray.getInstance();
+			tray.init(shell);
 		}
 
 		// Listener sul pulsante di chiusura dell'applicazione...
@@ -153,7 +155,9 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	@Override
 	protected void showInfo(final RouterData info) {
 		table.addRow(info, iteration);
-		GuiTray.getInstance().updateTrayToolTipText(info);
+		if (tray != null) {
+			tray.updateTrayToolTipText(info);
+		}
 	}
 
 	@Override
