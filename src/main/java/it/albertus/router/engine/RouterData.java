@@ -13,8 +13,7 @@ public class RouterData implements Serializable {
 	private int responseTime = -1;
 
 	public RouterData(final Map<String, String> data) {
-		this.timestamp = new Date();
-		this.data = data;
+		this(new Date(), data);
 	}
 
 	public RouterData(final Date timestamp, final Map<String, String> data) {

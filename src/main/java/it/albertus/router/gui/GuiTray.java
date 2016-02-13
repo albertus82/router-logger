@@ -3,12 +3,14 @@ package it.albertus.router.gui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.NewLine;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -35,6 +37,7 @@ public class GuiTray {
 	private TrayItem trayItem = null;
 	private Menu menu = null;
 	private long lastUpdateTimestamp = -1;
+	private String toolTipText = Resources.get("lbl.tray.tooltip");
 
 	public void init(final Shell shell) {
 		if (this.trayItem == null && menu == null) {
@@ -59,7 +62,7 @@ public class GuiTray {
 			if (trayItem == null) {
 				trayItem = new TrayItem(tray, SWT.NONE);
 				trayItem.setImage(GuiImages.ICONS[12]);
-				trayItem.setToolTipText(Resources.get("lbl.tray.tooltip"));
+				trayItem.setToolTipText(toolTipText);
 				addListeners = true;
 			}
 			else {
@@ -102,19 +105,32 @@ public class GuiTray {
 	}
 
 	public void updateTrayToolTipText(final RouterData info) {
-		if (trayItem != null && info != null && info.getData() != null && System.currentTimeMillis() - lastUpdateTimestamp > MIN_UPDATE_INTERVAL_IN_MILLIS) {
+		if (!configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && System.currentTimeMillis() - lastUpdateTimestamp > MIN_UPDATE_INTERVAL_IN_MILLIS) {
 			final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
 			for (String key : configuration.getGuiImportantKeys()) {
-				sb.append(NewLine.SYSTEM_LINE_SEPARATOR).append(key).append(": ").append(info.getData().get(key));
-			}
-			final String toolTipText = sb.toString();
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					trayItem.setToolTipText(toolTipText);
+				if (info.getData().containsKey(key)) {
+					sb.append(NewLine.SYSTEM_LINE_SEPARATOR).append(key).append(": ").append(info.getData().get(key));
 				}
-			});
-			lastUpdateTimestamp = System.currentTimeMillis();
+			}
+			final String updatedToolTipText = sb.toString();
+			if (!updatedToolTipText.equals(toolTipText)) {
+				try {
+					trayItem.getDisplay().syncExec(new Runnable() {
+						@Override
+						public void run() {
+							if (!trayItem.isDisposed()) {
+								trayItem.setToolTipText(updatedToolTipText);
+							}
+						}
+					});
+					lastUpdateTimestamp = System.currentTimeMillis();
+					toolTipText = updatedToolTipText;
+					GuiConsole.getInstance().println("Tray aggiornata", true);
+				}
+				catch (SWTException se) {
+					Logger.getInstance().log(se, Destination.CONSOLE);
+				}
+			}
 		}
 	}
 
