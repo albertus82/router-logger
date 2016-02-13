@@ -22,7 +22,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
   * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
   * **`router.password`**= password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
 
-Per avviare l'applicazione &egrave; richiesta la presenza della variabile di ambiente `JAVA_HOME` e di [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
+Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
 In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger-gui.bat`**](src/main/scripts/routerlogger-gui.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger-gui.sh`**](src/main/scripts/routerlogger-gui.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger-gui.sh`.
 
