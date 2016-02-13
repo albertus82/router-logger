@@ -153,6 +153,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	@Override
 	protected void showInfo(final RouterData info) {
 		table.addRow(info, iteration);
+		GuiTray.getInstance().updateTrayToolTipText(info);
 	}
 
 	@Override

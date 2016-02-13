@@ -1,10 +1,14 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.engine.RouterData;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
+import it.albertus.util.NewLine;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -14,6 +18,8 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
 public class GuiTray {
+
+	private static final long MIN_UPDATE_INTERVAL_IN_MILLIS = 5000L;
 
 	private static class Singleton {
 		private static final GuiTray TRAY = new GuiTray();
@@ -25,8 +31,10 @@ public class GuiTray {
 
 	private GuiTray() {}
 
+	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private TrayItem trayItem = null;
 	private Menu menu = null;
+	private long lastUpdateTimestamp = -1;
 
 	public void init(final Shell shell) {
 		if (this.trayItem == null && menu == null) {
@@ -90,6 +98,23 @@ public class GuiTray {
 
 				trayItem.addListener(SWT.DefaultSelection, new RestoreListener(shell));
 			}
+		}
+	}
+
+	public void updateTrayToolTipText(final RouterData info) {
+		if (trayItem != null && info != null && info.getData() != null && System.currentTimeMillis() - lastUpdateTimestamp > MIN_UPDATE_INTERVAL_IN_MILLIS) {
+			final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
+			for (String key : configuration.getGuiImportantKeys()) {
+				sb.append(NewLine.SYSTEM_LINE_SEPARATOR).append(key).append(": ").append(info.getData().get(key));
+			}
+			final String toolTipText = sb.toString();
+			Display.getDefault().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					trayItem.setToolTipText(toolTipText);
+				}
+			});
+			lastUpdateTimestamp = System.currentTimeMillis();
 		}
 	}
 

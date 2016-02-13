@@ -4,13 +4,10 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
-import it.albertus.util.StringUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
@@ -37,7 +34,6 @@ public class GuiTable {
 
 	private interface Defaults {
 		int GUI_TABLE_MAX_ITEMS = 2000;
-		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		boolean GUI_TABLE_COLUMNS_PACK = false;
 	}
 
@@ -55,13 +51,6 @@ public class GuiTable {
 		if (this.table == null) {
 			this.table = createTable(container);
 			createContextMenu();
-
-			// Caricamento chiavi importanti da evidenziare...
-			for (String importantKey : configuration.getString("gui.important.keys", "").split(configuration.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
-				if (StringUtils.isNotBlank(importantKey)) {
-					importantKeys.add(importantKey.trim());
-				}
-			}
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
@@ -166,7 +155,6 @@ public class GuiTable {
 	private boolean tableInitialized = false;
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
-	private final Set<String> importantKeys = new HashSet<String>();
 
 	public void addRow(final RouterData data, final int iteration) {
 		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
@@ -211,7 +199,7 @@ public class GuiTable {
 
 							for (String key : info.keySet()) {
 								// Grassetto...
-								if (key != null && importantKeys.contains(key.trim())) {
+								if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
 									FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 									if (!fontRegistry.hasValueFor("tableBold")) {
 										final Font tableFont = item.getFont();

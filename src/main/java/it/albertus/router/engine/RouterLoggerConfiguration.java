@@ -3,8 +3,10 @@ package it.albertus.router.engine;
 import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
+import it.albertus.util.StringUtils;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -14,6 +16,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	private interface Defaults {
 		boolean THRESHOLDS_SPLIT = false;
+		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 	}
 
 	private static class Singleton {
@@ -25,6 +28,11 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	private final Thresholds thresholds;
+	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
+
+	public Set<String> getGuiImportantKeys() {
+		return guiImportantKeys;
+	}
 
 	public Thresholds getThresholds() {
 		return thresholds;
@@ -33,6 +41,13 @@ public class RouterLoggerConfiguration extends Configuration {
 	private RouterLoggerConfiguration() {
 		/* Caricamento della configurazione... */
 		super("routerlogger.cfg");
+
+		/* Caricamento chiavi importanti */
+		for (String importantKey : this.getString("gui.important.keys", "").split(this.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
+			if (StringUtils.isNotBlank(importantKey)) {
+				this.guiImportantKeys.add(importantKey.trim());
+			}
+		}
 
 		/* Valorizzazione delle soglie... */
 		if (this.getBoolean("thresholds.split", Defaults.THRESHOLDS_SPLIT)) {
