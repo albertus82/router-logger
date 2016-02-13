@@ -17,6 +17,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	private interface Defaults {
 		boolean THRESHOLDS_SPLIT = false;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
+		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 	}
 
 	private static class Singleton {
@@ -29,6 +30,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	private final Thresholds thresholds;
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
+	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
 
 	public Set<String> getGuiImportantKeys() {
 		return guiImportantKeys;
@@ -38,14 +40,23 @@ public class RouterLoggerConfiguration extends Configuration {
 		return thresholds;
 	}
 
+	public Set<String> getConsoleKeysToShow() {
+		return consoleKeysToShow;
+	}
+
 	private RouterLoggerConfiguration() {
 		/* Caricamento della configurazione... */
 		super("routerlogger.cfg");
 
-		/* Caricamento chiavi importanti */
-		for (String importantKey : this.getString("gui.important.keys", "").split(this.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
+		/* Caricamento chiavi da evidenziare */
+		for (final String importantKey : this.getString("gui.important.keys", "").split(this.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
 			if (StringUtils.isNotBlank(importantKey)) {
 				this.guiImportantKeys.add(importantKey.trim());
+			}
+		}
+		for (final String keyToShow : this.getString("console.show.keys", "").split(this.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
+			if (StringUtils.isNotBlank(keyToShow)) {
+				this.consoleKeysToShow.add(keyToShow.trim());
 			}
 		}
 

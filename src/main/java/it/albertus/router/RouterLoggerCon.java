@@ -8,7 +8,6 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean CONSOLE_ANIMATION = true;
-		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
 	}
 
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
@@ -44,7 +43,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 		// Scrittura informazioni aggiuntive richieste...
 		if (info != null && info.getData() != null && !info.getData().isEmpty()) {
 			final StringBuilder infoToShow = new StringBuilder();
-			for (String keyToShow : configuration.getString("console.show.keys", "").split(configuration.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
+			for (String keyToShow : configuration.getConsoleKeysToShow()) {
 				if (keyToShow != null && !"".equals(keyToShow.trim())) {
 					keyToShow = keyToShow.trim();
 					for (final String key : info.getData().keySet()) {
