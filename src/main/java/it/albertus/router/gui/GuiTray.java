@@ -107,14 +107,20 @@ public class GuiTray {
 	}
 
 	public void updateTrayItem(final RouterData info, final boolean warning) {
-		if (configuration.getBoolean("gui.tray.dynamic", Defaults.GUI_TRAY_DYNAMIC) && !configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && !info.getData().isEmpty()) {
-			final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
-			for (final String key : configuration.getGuiImportantKeys()) {
-				if (info.getData().containsKey(key)) {
-					sb.append(NewLine.SYSTEM_LINE_SEPARATOR).append(key).append(": ").append(info.getData().get(key));
+		if (configuration.getBoolean("gui.tray.dynamic", Defaults.GUI_TRAY_DYNAMIC) && trayItem != null && !trayItem.isDisposed()) {
+			final String updatedToolTipText;
+			if (!configuration.getGuiImportantKeys().isEmpty() && info != null && info.getData() != null && !info.getData().isEmpty()) {
+				final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
+				for (final String key : configuration.getGuiImportantKeys()) {
+					if (info.getData().containsKey(key)) {
+						sb.append(NewLine.SYSTEM_LINE_SEPARATOR).append(key).append(": ").append(info.getData().get(key));
+					}
 				}
+				updatedToolTipText = sb.toString();
 			}
-			final String updatedToolTipText = sb.toString();
+			else {
+				updatedToolTipText = toolTipText;
+			}
 			if (!updatedToolTipText.equals(toolTipText) || warning != warningIcon) {
 				try {
 					trayItem.getDisplay().syncExec(new Runnable() {
