@@ -232,25 +232,28 @@ public abstract class RouterLoggerEngine {
 
 			writer.saveInfo(info);
 
+			// Impostazione stato di allerta...
+			final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
+			if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
+				warning = true;
+				if (!thresholdsReached.isEmpty()) {
+					hysteresis = System.currentTimeMillis();
+					showThresholdsReached(thresholdsReached);
+				}
+			}
+			else {
+				warning = false;
+			}
+
 			showInfo(info);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
-				final long intervalFastInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
-
 				long waitTimeInMillis;
-
-				final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
-				if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-					warning = true;
-					waitTimeInMillis = intervalFastInMillis;
-					if (!thresholdsReached.isEmpty()) {
-						hysteresis = System.currentTimeMillis();
-						showThresholdsReached(thresholdsReached);
-					}
+				if (warning) {
+					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
 				else {
-					warning = false;
 					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
 				}
 
