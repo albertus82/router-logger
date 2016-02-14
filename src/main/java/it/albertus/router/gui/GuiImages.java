@@ -13,37 +13,24 @@ import org.eclipse.swt.widgets.Display;
 
 public class GuiImages {
 
-	public static final Image[] ICONS_ROUTER = initRouterIcons();
-	public static final Image[] ICONS_WARNING = initWarningIcons();
+	public static final Image[] ICONS_ROUTER = loadIcons("router.ico");
+	public static final Image[] ICONS_WARNING = loadIcons("warning.ico");
+	public static final Image[] ICONS_ERROR = loadIcons("error.ico");
 
 	public static final Image TRAY_ICON_ROUTER_OK = GuiImages.ICONS_ROUTER[1];
 	public static final Image TRAY_ICON_ROUTER_WARNING = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.ICONS_WARNING[0]), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ROUTER_ERROR = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.ICONS_ERROR[0]), IDecoration.BOTTOM_RIGHT).createImage();
 
-	private static Image[] initRouterIcons() {
-		InputStream is = GuiImages.class.getResourceAsStream("router.ico");
-		ImageData[] images = new ImageLoader().load(is);
+	private static Image[] loadIcons(final String fileName) {
+		final InputStream is = GuiImages.class.getResourceAsStream(fileName);
+		final ImageData[] images = new ImageLoader().load(is);
 		try {
 			is.close();
 		}
 		catch (IOException ioe) {}
-		Image[] icons = new Image[images.length];
+		final Image[] icons = new Image[images.length];
 		int i = 0;
-		for (ImageData id : images) {
-			icons[i++] = new Image(Display.getCurrent(), id);
-		}
-		return icons;
-	}
-
-	private static Image[] initWarningIcons() {
-		InputStream is = GuiImages.class.getResourceAsStream("warning.ico");
-		ImageData[] images = new ImageLoader().load(is);
-		try {
-			is.close();
-		}
-		catch (IOException ioe) {}
-		Image[] icons = new Image[images.length];
-		int i = 0;
-		for (ImageData id : images) {
+		for (final ImageData id : images) {
 			icons[i++] = new Image(Display.getCurrent(), id);
 		}
 		return icons;

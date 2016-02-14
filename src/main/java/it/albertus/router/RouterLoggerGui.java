@@ -155,7 +155,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	protected void showInfo(final RouterData info, final Map<String, String> thresholdsReached) {
 		table.addRow(info, thresholdsReached, getIteration());
 		if (tray != null) {
-			tray.updateTrayItem(info, isWarning());
+			tray.updateTrayItem(info, getStatus());
 		}
 		if (thresholdsReached != null && !thresholdsReached.isEmpty()) {
 			logger.log(Resources.get("msg.thresholds.reached", thresholdsReached), Destination.CONSOLE);

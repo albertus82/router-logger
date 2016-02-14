@@ -2,6 +2,7 @@ package it.albertus.router.gui;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -11,6 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -20,6 +22,21 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
 public class GuiTray {
+
+	private enum TrayIcon {
+		OK(RouterLoggerStatus.OK, GuiImages.TRAY_ICON_ROUTER_OK),
+		INFO(RouterLoggerStatus.WARNING, GuiImages.TRAY_ICON_ROUTER_WARNING),
+		WARNING(RouterLoggerStatus.WARNING, GuiImages.TRAY_ICON_ROUTER_WARNING),
+		ERROR(RouterLoggerStatus.ERROR, GuiImages.TRAY_ICON_ROUTER_WARNING);
+
+		private final RouterLoggerStatus status;
+		private final Image icon;
+
+		private TrayIcon(final RouterLoggerStatus status, final Image icon) {
+			this.status = status;
+			this.icon = icon;
+		}
+	}
 
 	private interface Defaults {
 		boolean GUI_TRAY_DYNAMIC = true;
@@ -39,7 +56,7 @@ public class GuiTray {
 	private TrayItem trayItem = null;
 	private Menu menu = null;
 	private String toolTipText = Resources.get("lbl.tray.tooltip");
-	private boolean warningIcon = false;
+	private TrayIcon trayIcon = TrayIcon.OK;
 
 	public void init(final Shell shell) {
 		if (this.trayItem == null && menu == null) {
@@ -106,7 +123,7 @@ public class GuiTray {
 		}
 	}
 
-	public void updateTrayItem(final RouterData info, final boolean warning) {
+	public void updateTrayItem(final RouterData info, final RouterLoggerStatus status) {
 		if (configuration.getBoolean("gui.tray.dynamic", Defaults.GUI_TRAY_DYNAMIC) && trayItem != null && !trayItem.isDisposed()) {
 			final String updatedToolTipText;
 			if (!configuration.getGuiImportantKeys().isEmpty() && info != null && info.getData() != null && !info.getData().isEmpty()) {
@@ -121,7 +138,7 @@ public class GuiTray {
 			else {
 				updatedToolTipText = toolTipText;
 			}
-			if (!updatedToolTipText.equals(toolTipText) || warning != warningIcon) {
+			if (!updatedToolTipText.equals(toolTipText) || !trayIcon.status.equals(status)) {
 				try {
 					trayItem.getDisplay().syncExec(new Runnable() {
 						@Override
@@ -131,9 +148,12 @@ public class GuiTray {
 									toolTipText = updatedToolTipText;
 									trayItem.setToolTipText(toolTipText);
 								}
-								if (warning != warningIcon) {
-									warningIcon = warning;
-									trayItem.setImage(warningIcon ? GuiImages.TRAY_ICON_ROUTER_WARNING : GuiImages.TRAY_ICON_ROUTER_OK);
+								if (!trayIcon.status.equals(status)) {
+									final TrayIcon newTrayIcon = TrayIcon.valueOf(status.name());
+									if (newTrayIcon != null) {
+										trayIcon = newTrayIcon;
+										trayItem.setImage(trayIcon.icon);
+									}
 								}
 							}
 						}

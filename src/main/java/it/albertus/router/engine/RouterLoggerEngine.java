@@ -39,11 +39,11 @@ public abstract class RouterLoggerEngine {
 
 	protected volatile boolean exit = false;
 
-	private boolean warning = false;
+	private RouterLoggerStatus status = RouterLoggerStatus.OK;
 	private int iteration = 1;
 
-	protected boolean isWarning() {
-		return warning;
+	public RouterLoggerStatus getStatus() {
+		return status;
 	}
 
 	protected int getIteration() {
@@ -235,13 +235,13 @@ public abstract class RouterLoggerEngine {
 			/* Impostazione stato di allerta e gestione isteresi... */
 			final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
 			if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-				warning = true;
+				status = RouterLoggerStatus.WARNING;
 				if (!thresholdsReached.isEmpty()) {
 					hysteresis = System.currentTimeMillis();
 				}
 			}
 			else {
-				warning = false;
+				status = RouterLoggerStatus.OK;
 			}
 
 			showInfo(info, thresholdsReached);
@@ -249,7 +249,7 @@ public abstract class RouterLoggerEngine {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
 				long waitTimeInMillis;
-				if (warning) {
+				if (RouterLoggerStatus.WARNING.equals(status)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
 				else {
