@@ -21,6 +21,10 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class GuiTray {
 
+	private interface Defaults {
+		boolean GUI_TRAY_INFO = true;
+	}
+
 	private static class Singleton {
 		private static final GuiTray TRAY = new GuiTray();
 	}
@@ -102,7 +106,7 @@ public class GuiTray {
 	}
 
 	public void updateTrayToolTipText(final RouterData info) {
-		if (!configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && !info.getData().isEmpty()) {
+		if (configuration.getBoolean("gui.tray.info", Defaults.GUI_TRAY_INFO) && !configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && !info.getData().isEmpty()) {
 			final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
 			for (final String key : configuration.getGuiImportantKeys()) {
 				if (info.getData().containsKey(key)) {
