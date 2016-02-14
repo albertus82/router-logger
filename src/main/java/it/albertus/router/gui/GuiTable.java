@@ -156,7 +156,7 @@ public class GuiTable {
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 
-	public void addRow(final RouterData data, final int iteration) {
+	public void addRow(final RouterData data, final Map<String, String> thresholdsReached, final int iteration) {
 		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();
 			final String timestamp = DATE_FORMAT_TABLE_GUI.format(data.getTimestamp());
@@ -213,7 +213,7 @@ public class GuiTable {
 								}
 
 								// Colore per i valori oltre soglia...
-								if (configuration.getThresholds().getReached(data).containsKey(key)) {
+								if (thresholdsReached.containsKey(key)) {
 									item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
 								}
 

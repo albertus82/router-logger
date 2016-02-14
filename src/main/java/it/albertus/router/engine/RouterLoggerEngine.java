@@ -232,20 +232,19 @@ public abstract class RouterLoggerEngine {
 
 			writer.saveInfo(info);
 
-			// Impostazione stato di allerta...
+			/* Impostazione stato di allerta e gestione isteresi... */
 			final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
 			if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 				warning = true;
 				if (!thresholdsReached.isEmpty()) {
 					hysteresis = System.currentTimeMillis();
-					showThresholdsReached(thresholdsReached);
 				}
 			}
 			else {
 				warning = false;
 			}
 
-			showInfo(info);
+			showInfo(info, thresholdsReached);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -267,9 +266,7 @@ public abstract class RouterLoggerEngine {
 		}
 	}
 
-	protected void showThresholdsReached(Map<String, String> thresholdsReached) {}
-
-	protected abstract void showInfo(RouterData info);
+	protected abstract void showInfo(RouterData info, Map<String, String> thresholdsReached);
 
 	/**
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,

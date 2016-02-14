@@ -153,16 +153,14 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected void showInfo(final RouterData info) {
-		table.addRow(info, getIteration());
+	protected void showInfo(final RouterData info, final Map<String, String> thresholdsReached) {
+		table.addRow(info, thresholdsReached, getIteration());
 		if (tray != null) {
 			tray.updateTrayItem(info, isWarning());
 		}
-	}
-
-	@Override
-	protected void showThresholdsReached(final Map<String, String> thresholdsReached) {
-		logger.log(Resources.get("msg.thresholds.reached", thresholdsReached), Destination.CONSOLE);
+		if (thresholdsReached != null && !thresholdsReached.isEmpty()) {
+			logger.log(Resources.get("msg.thresholds.reached", thresholdsReached), Destination.CONSOLE);
+		}
 	}
 
 	@Override

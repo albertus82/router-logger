@@ -4,6 +4,8 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.util.TerminalConsole;
 
+import java.util.Map;
+
 public class RouterLoggerCon extends RouterLoggerEngine {
 
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
@@ -19,7 +21,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 	private int lastLogLength = 0;
 
 	@Override
-	protected void showInfo(final RouterData info) {
+	protected void showInfo(final RouterData info, final Map<String, String> thresholdsReached) {
 		// Scrittura indice dell'iterazione in console...
 		final StringBuilder clean = new StringBuilder();
 		while (lastLogLength-- > 0) {
