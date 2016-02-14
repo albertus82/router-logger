@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.TrayItem;
 public class GuiTray {
 
 	private interface Defaults {
-		boolean GUI_TRAY_INFO = true;
+		boolean GUI_TRAY_DYNAMIC = true;
 	}
 
 	private static class Singleton {
@@ -39,6 +39,7 @@ public class GuiTray {
 	private TrayItem trayItem = null;
 	private Menu menu = null;
 	private String toolTipText = Resources.get("lbl.tray.tooltip");
+	private boolean warningIcon = false;
 
 	public void init(final Shell shell) {
 		if (this.trayItem == null && menu == null) {
@@ -62,7 +63,7 @@ public class GuiTray {
 			boolean addListeners = false;
 			if (trayItem == null) {
 				trayItem = new TrayItem(tray, SWT.NONE);
-				trayItem.setImage(GuiImages.ICONS[12]);
+				trayItem.setImage(GuiImages.TRAY_ICON_ROUTER_OK);
 				trayItem.setToolTipText(toolTipText);
 				addListeners = true;
 			}
@@ -105,8 +106,8 @@ public class GuiTray {
 		}
 	}
 
-	public void updateTrayToolTipText(final RouterData info) {
-		if (configuration.getBoolean("gui.tray.info", Defaults.GUI_TRAY_INFO) && !configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && !info.getData().isEmpty()) {
+	public void updateTrayItem(final RouterData info, final boolean warning) {
+		if (configuration.getBoolean("gui.tray.dynamic", Defaults.GUI_TRAY_DYNAMIC) && !configuration.getGuiImportantKeys().isEmpty() && trayItem != null && !trayItem.isDisposed() && info != null && info.getData() != null && !info.getData().isEmpty()) {
 			final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
 			for (final String key : configuration.getGuiImportantKeys()) {
 				if (info.getData().containsKey(key)) {
@@ -114,17 +115,23 @@ public class GuiTray {
 				}
 			}
 			final String updatedToolTipText = sb.toString();
-			if (!updatedToolTipText.equals(toolTipText)) {
+			if (!updatedToolTipText.equals(toolTipText) || warning != warningIcon) {
 				try {
 					trayItem.getDisplay().syncExec(new Runnable() {
 						@Override
 						public void run() {
 							if (!trayItem.isDisposed()) {
-								trayItem.setToolTipText(updatedToolTipText);
+								if (!updatedToolTipText.equals(toolTipText)) {
+									toolTipText = updatedToolTipText;
+									trayItem.setToolTipText(toolTipText);
+								}
+								if (warning != warningIcon) {
+									warningIcon = warning;
+									trayItem.setImage(warningIcon ? GuiImages.TRAY_ICON_ROUTER_WARNING : GuiImages.TRAY_ICON_ROUTER_OK);
+								}
 							}
 						}
 					});
-					toolTipText = updatedToolTipText;
 				}
 				catch (SWTException se) {
 					Logger.getInstance().log(se, Destination.CONSOLE);

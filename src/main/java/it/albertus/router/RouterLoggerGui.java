@@ -103,7 +103,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	private void configureShell(final Shell shell) {
 		shell.setText(Resources.get("lbl.window.title"));
-		shell.setImages(new Image[] { GuiImages.ICONS[9], GuiImages.ICONS[10], GuiImages.ICONS[11], GuiImages.ICONS[12] });
+		shell.setImages(new Image[] { GuiImages.ICONS_ROUTER[9], GuiImages.ICONS_ROUTER[10], GuiImages.ICONS_ROUTER[11], GuiImages.ICONS_ROUTER[12] });
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
 			tray = GuiTray.getInstance();
 			tray.init(shell);
@@ -154,9 +154,9 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	@Override
 	protected void showInfo(final RouterData info) {
-		table.addRow(info, iteration);
+		table.addRow(info, getIteration());
 		if (tray != null) {
-			tray.updateTrayToolTipText(info);
+			tray.updateTrayItem(info, isWarning());
 		}
 	}
 

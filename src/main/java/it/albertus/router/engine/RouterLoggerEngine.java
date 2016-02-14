@@ -35,10 +35,20 @@ public abstract class RouterLoggerEngine {
 	protected final Reader reader;
 	protected final Writer writer;
 
-	protected int iteration = 1;
 	protected final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
 
 	protected volatile boolean exit = false;
+
+	private boolean warning = false;
+	private int iteration = 1;
+
+	protected boolean isWarning() {
+		return warning;
+	}
+
+	protected int getIteration() {
+		return iteration;
+	}
 
 	private Reader initReader() {
 		final String configurationKey = "reader.class.name";
@@ -232,6 +242,7 @@ public abstract class RouterLoggerEngine {
 
 				final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
 				if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
+					warning = true;
 					waitTimeInMillis = intervalFastInMillis;
 					if (!thresholdsReached.isEmpty()) {
 						hysteresis = System.currentTimeMillis();
@@ -239,6 +250,7 @@ public abstract class RouterLoggerEngine {
 					}
 				}
 				else {
+					warning = false;
 					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
 				}
 
