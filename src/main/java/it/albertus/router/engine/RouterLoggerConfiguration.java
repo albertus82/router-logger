@@ -18,7 +18,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		boolean THRESHOLDS_SPLIT = false;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
-//		String THRESHOLDS_EXCLUDED_KEYS_SEPARATOR = ",";
+		String THRESHOLDS_EXCLUDED_KEYS_SEPARATOR = ",";
 	}
 
 	private static class Singleton {
@@ -32,7 +32,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	private final Thresholds thresholds;
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
-//	private final Set<String> thresholdsExcludedKeys = new HashSet<String>();
+	private final Set<String> thresholdsExcludedKeys = new HashSet<String>();
 
 	public Set<String> getGuiImportantKeys() {
 		return guiImportantKeys;
@@ -46,9 +46,9 @@ public class RouterLoggerConfiguration extends Configuration {
 		return consoleKeysToShow;
 	}
 
-//	public Set<String> getThresholdsExcludedKeys() {
-//		return thresholdsExcludedKeys;
-//	}
+	public Set<String> getThresholdsExcludedKeys() {
+		return thresholdsExcludedKeys;
+	}
 
 	private RouterLoggerConfiguration() {
 		/* Caricamento della configurazione... */
@@ -73,11 +73,11 @@ public class RouterLoggerConfiguration extends Configuration {
 		else {
 			thresholds = new ExpressionThresholds(); /* Nuovo stile */
 		}
-//		for (final String excludedKey : this.getString("thresholds.excluded.keys", "").split(this.getString("thresholds.excluded.keys.separator", Defaults.THRESHOLDS_EXCLUDED_KEYS_SEPARATOR).trim())) {
-//			if (StringUtils.isNotBlank(excludedKey)) {
-//				this.thresholdsExcludedKeys.add(excludedKey.trim());
-//			}
-//		}
+		for (final String excludedKey : this.getString("thresholds.excluded.keys", "").split(this.getString("thresholds.excluded.keys.separator", Defaults.THRESHOLDS_EXCLUDED_KEYS_SEPARATOR).trim())) {
+			if (StringUtils.isNotBlank(excludedKey)) {
+				this.thresholdsExcludedKeys.add(excludedKey.trim());
+			}
+		}
 	}
 
 	public abstract class Thresholds {

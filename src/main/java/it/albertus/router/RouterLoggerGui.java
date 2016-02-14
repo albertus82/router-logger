@@ -158,7 +158,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		if (tray != null) {
 			tray.updateTrayItem(getStatus(), info);
 		}
-		if (thresholdsReached != null && !thresholdsReached.isEmpty()) {
+		if (thresholdsReached != null && !thresholdsReached.isEmpty() && !configuration.getThresholdsExcludedKeys().containsAll(thresholdsReached.keySet())) {
 			logger.log(Resources.get("msg.thresholds.reached", thresholdsReached), Destination.CONSOLE);
 		}
 	}

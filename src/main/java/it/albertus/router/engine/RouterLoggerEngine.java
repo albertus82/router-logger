@@ -12,6 +12,7 @@ import it.albertus.util.Version;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class RouterLoggerEngine {
@@ -238,18 +239,28 @@ public abstract class RouterLoggerEngine {
 			writer.saveInfo(info);
 
 			/* Impostazione stato di allerta e gestione isteresi... */
-			final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
-			if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
+			final Map<String, String> allThresholdsReached = configuration.getThresholds().getReached(info);
+			final Map<String, String> importantThresholdsReached = new HashMap<String, String>();
+			for (final String key : allThresholdsReached.keySet()) {
+				if (!configuration.getThresholdsExcludedKeys().contains(key)) {
+					importantThresholdsReached.put(key, allThresholdsReached.get(key));
+				}
+			}
+
+			if (!importantThresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 				status = RouterLoggerStatus.WARNING; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
-				if (!thresholdsReached.isEmpty()) {
+				if (!importantThresholdsReached.isEmpty()) {
 					hysteresis = System.currentTimeMillis();
 				}
+			}
+			else if (!allThresholdsReached.isEmpty()) {
+				status = RouterLoggerStatus.INFO; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
 			}
 			else {
 				status = RouterLoggerStatus.OK; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
 			}
 
-			showInfo(info, thresholdsReached); /* Aggiorna la GUI */
+			showInfo(info, allThresholdsReached); /* Aggiorna la GUI */
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
