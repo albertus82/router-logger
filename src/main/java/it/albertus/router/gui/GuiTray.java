@@ -1,8 +1,8 @@
 package it.albertus.router.gui;
 
-import it.albertus.router.RouterLoggerGui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -53,12 +53,12 @@ public class GuiTray {
 		}
 	}
 
-	public void init(final Shell shell, final RouterLoggerGui gui) {
+	public void init(final Shell shell, final RouterLoggerEngine engine) {
 		if (this.trayItem == null && menu == null) {
 			shell.addShellListener(new ShellAdapter() {
 				@Override
 				public void shellIconified(ShellEvent e) {
-					iconify(shell, gui.getStatus());
+					iconify(shell, engine.getStatus());
 					shell.setMinimized(false);
 				}
 			});
@@ -75,12 +75,10 @@ public class GuiTray {
 			boolean addListeners = false;
 			if (trayItem == null) {
 				trayItem = new TrayItem(tray, SWT.NONE);
-				final Image newTrayIcon = getTrayIcon(status);
-				if (newTrayIcon != null) {
-					trayIcon = newTrayIcon;
-					trayItem.setImage(trayIcon);
-				}
-				trayItem.setToolTipText(getBaseToolTipText(status));
+				trayIcon = getTrayIcon(status);
+				trayItem.setImage(trayIcon);
+				toolTipText = getBaseToolTipText(status);
+				trayItem.setToolTipText(toolTipText);
 				addListeners = true;
 			}
 			else {
@@ -147,12 +145,9 @@ public class GuiTray {
 									toolTipText = updatedToolTipText;
 									trayItem.setToolTipText(toolTipText);
 								}
-								if (!getTrayIcon(status).equals(trayIcon)) {
-									final Image newTrayIcon = getTrayIcon(status);
-									if (newTrayIcon != null) {
-										trayIcon = newTrayIcon;
-										trayItem.setImage(trayIcon);
-									}
+								if (status != null && !getTrayIcon(status).equals(trayIcon)) {
+									trayIcon = getTrayIcon(status);
+									trayItem.setImage(trayIcon);
 								}
 							}
 						}
