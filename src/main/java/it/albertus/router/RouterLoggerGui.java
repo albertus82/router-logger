@@ -15,7 +15,6 @@ import it.albertus.util.ExceptionUtils;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -103,7 +102,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	private void configureShell(final Shell shell) {
 		shell.setText(Resources.get("lbl.window.title"));
-		shell.setImages(new Image[] { GuiImages.ICONS_ROUTER[9], GuiImages.ICONS_ROUTER[10], GuiImages.ICONS_ROUTER[11], GuiImages.ICONS_ROUTER[12] });
+		shell.setImages(GuiImages.ICONS_ROUTER);
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
 			tray = GuiTray.getInstance();
 			tray.init(shell);

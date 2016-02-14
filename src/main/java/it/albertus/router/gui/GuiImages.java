@@ -16,8 +16,8 @@ public class GuiImages {
 	public static final Image[] ICONS_ROUTER = initRouterIcons();
 	public static final Image[] ICONS_WARNING = initWarningIcons();
 
-	public static final Image TRAY_ICON_ROUTER_OK = GuiImages.ICONS_ROUTER[12];
-	public static final Image TRAY_ICON_ROUTER_WARNING = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.ICONS_WARNING[5]), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ROUTER_OK = GuiImages.ICONS_ROUTER[1];
+	public static final Image TRAY_ICON_ROUTER_WARNING = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.ICONS_WARNING[0]), IDecoration.BOTTOM_RIGHT).createImage();
 
 	private static Image[] initRouterIcons() {
 		InputStream is = GuiImages.class.getResourceAsStream("router.ico");
