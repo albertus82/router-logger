@@ -1,5 +1,6 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.RouterLoggerGui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
@@ -23,25 +24,6 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class GuiTray {
 
-	private enum TrayIcon {
-		OK(RouterLoggerStatus.OK, GuiImages.TRAY_ICON_ROUTER_OK),
-		INFO(RouterLoggerStatus.WARNING, GuiImages.TRAY_ICON_ROUTER_WARNING),
-		WARNING(RouterLoggerStatus.WARNING, GuiImages.TRAY_ICON_ROUTER_WARNING),
-		ERROR(RouterLoggerStatus.ERROR, GuiImages.TRAY_ICON_ROUTER_WARNING);
-
-		private final RouterLoggerStatus status;
-		private final Image icon;
-
-		private TrayIcon(final RouterLoggerStatus status, final Image icon) {
-			this.status = status;
-			this.icon = icon;
-		}
-	}
-
-	private interface Defaults {
-		boolean GUI_TRAY_DYNAMIC = true;
-	}
-
 	private static class Singleton {
 		private static final GuiTray TRAY = new GuiTray();
 	}
@@ -55,15 +37,28 @@ public class GuiTray {
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private TrayItem trayItem = null;
 	private Menu menu = null;
-	private String toolTipText = Resources.get("lbl.tray.tooltip");
-	private TrayIcon trayIcon = TrayIcon.OK;
+	private String toolTipText = null;
+	private Image trayIcon = null;
 
-	public void init(final Shell shell) {
+	private Image getTrayIcon(RouterLoggerStatus status) {
+		switch (status) {
+		case CONNECTING:
+		case OK:
+		case STARTING:
+			return GuiImages.TRAY_ICON_ROUTER_OK;
+		case ERROR:
+			return GuiImages.TRAY_ICON_ROUTER_ERROR;
+		default:
+			return GuiImages.TRAY_ICON_ROUTER_WARNING;
+		}
+	}
+
+	public void init(final Shell shell, final RouterLoggerGui gui) {
 		if (this.trayItem == null && menu == null) {
 			shell.addShellListener(new ShellAdapter() {
 				@Override
 				public void shellIconified(ShellEvent e) {
-					iconify(shell);
+					iconify(shell, gui.getStatus());
 					shell.setMinimized(false);
 				}
 			});
@@ -73,15 +68,19 @@ public class GuiTray {
 		}
 	}
 
-	private void iconify(final Shell shell) {
+	private void iconify(final Shell shell, final RouterLoggerStatus status) {
 		Tray tray = shell.getDisplay().getSystemTray();
 		if (tray != null) {
 			shell.setVisible(false);
 			boolean addListeners = false;
 			if (trayItem == null) {
 				trayItem = new TrayItem(tray, SWT.NONE);
-				trayItem.setImage(GuiImages.TRAY_ICON_ROUTER_OK);
-				trayItem.setToolTipText(toolTipText);
+				final Image newTrayIcon = getTrayIcon(status);
+				if (newTrayIcon != null) {
+					trayIcon = newTrayIcon;
+					trayItem.setImage(trayIcon);
+				}
+				trayItem.setToolTipText(getBaseToolTipText(status));
 				addListeners = true;
 			}
 			else {
@@ -123,22 +122,22 @@ public class GuiTray {
 		}
 	}
 
-	public void updateTrayItem(final RouterData info, final RouterLoggerStatus status) {
-		if (configuration.getBoolean("gui.tray.dynamic", Defaults.GUI_TRAY_DYNAMIC) && trayItem != null && !trayItem.isDisposed()) {
-			final String updatedToolTipText;
+	public void updateTrayItem(final RouterLoggerStatus status) {
+		updateTrayItem(status, null);
+	}
+
+	public void updateTrayItem(final RouterLoggerStatus status, final RouterData info) {
+		if (trayItem != null && !trayItem.isDisposed()) {
+			final StringBuilder sb = new StringBuilder(getBaseToolTipText(status));
 			if (!configuration.getGuiImportantKeys().isEmpty() && info != null && info.getData() != null && !info.getData().isEmpty()) {
-				final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
 				for (final String key : configuration.getGuiImportantKeys()) {
 					if (info.getData().containsKey(key)) {
 						sb.append(NewLine.SYSTEM_LINE_SEPARATOR).append(key).append(": ").append(info.getData().get(key));
 					}
 				}
-				updatedToolTipText = sb.toString();
 			}
-			else {
-				updatedToolTipText = toolTipText;
-			}
-			if (!updatedToolTipText.equals(toolTipText) || !trayIcon.status.equals(status)) {
+			final String updatedToolTipText = sb.toString();
+			if (!updatedToolTipText.equals(toolTipText) || (status != null && !getTrayIcon(status).equals(trayIcon))) {
 				try {
 					trayItem.getDisplay().syncExec(new Runnable() {
 						@Override
@@ -148,11 +147,11 @@ public class GuiTray {
 									toolTipText = updatedToolTipText;
 									trayItem.setToolTipText(toolTipText);
 								}
-								if (!trayIcon.status.equals(status)) {
-									final TrayIcon newTrayIcon = TrayIcon.valueOf(status.name());
+								if (!getTrayIcon(status).equals(trayIcon)) {
+									final Image newTrayIcon = getTrayIcon(status);
 									if (newTrayIcon != null) {
 										trayIcon = newTrayIcon;
-										trayItem.setImage(trayIcon.icon);
+										trayItem.setImage(trayIcon);
 									}
 								}
 							}
@@ -164,6 +163,14 @@ public class GuiTray {
 				}
 			}
 		}
+	}
+
+	private String getBaseToolTipText(final RouterLoggerStatus status) {
+		final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
+		if (status != null) {
+			sb.append(" (").append(status.toString()).append(')');
+		}
+		return sb.toString();
 	}
 
 	private final class RestoreListener implements Listener {

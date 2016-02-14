@@ -39,7 +39,7 @@ public abstract class RouterLoggerEngine {
 
 	protected volatile boolean exit = false;
 
-	private RouterLoggerStatus status = RouterLoggerStatus.OK;
+	private RouterLoggerStatus status = RouterLoggerStatus.STARTING;
 	private int iteration = 1;
 
 	public RouterLoggerStatus getStatus() {
@@ -133,12 +133,14 @@ public abstract class RouterLoggerEngine {
 			/* Avvio della procedura... */
 			final boolean connected;
 			try {
+				updateStatus(RouterLoggerStatus.CONNECTING);
 				connected = reader.connect();
 			}
 			catch (RuntimeException re) {
 				/* Configurazione non valida */
 				logger.log(re);
 				exit = true;
+				updateStatus(RouterLoggerStatus.ERROR);
 				continue;
 			}
 
@@ -154,6 +156,7 @@ public abstract class RouterLoggerEngine {
 
 				// Loop...
 				if (loggedIn) {
+					updateStatus(RouterLoggerStatus.OK);
 					index = 0;
 					try {
 						loop();
@@ -174,12 +177,14 @@ public abstract class RouterLoggerEngine {
 							logger.log(e);
 						}
 						reader.disconnect();
+						updateStatus(RouterLoggerStatus.DISCONNECTED);
 					}
 				}
 				else {
 					// In caso di autenticazione fallita, si esce subito per evitare il blocco dell'account.
 					exit = true;
 					reader.disconnect();
+					updateStatus(RouterLoggerStatus.ERROR);
 				}
 			}
 		}
@@ -235,16 +240,16 @@ public abstract class RouterLoggerEngine {
 			/* Impostazione stato di allerta e gestione isteresi... */
 			final Map<String, String> thresholdsReached = configuration.getThresholds().getReached(info);
 			if (!thresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-				status = RouterLoggerStatus.WARNING;
+				status = RouterLoggerStatus.WARNING; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
 				if (!thresholdsReached.isEmpty()) {
 					hysteresis = System.currentTimeMillis();
 				}
 			}
 			else {
-				status = RouterLoggerStatus.OK;
+				status = RouterLoggerStatus.OK; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
 			}
 
-			showInfo(info, thresholdsReached);
+			showInfo(info, thresholdsReached); /* Aggiorna la GUI */
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
@@ -267,6 +272,10 @@ public abstract class RouterLoggerEngine {
 	}
 
 	protected abstract void showInfo(RouterData info, Map<String, String> thresholdsReached);
+
+	protected void updateStatus(RouterLoggerStatus status) {
+		this.status = status;
+	}
 
 	/**
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,

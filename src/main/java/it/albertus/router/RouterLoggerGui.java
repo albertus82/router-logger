@@ -2,6 +2,7 @@ package it.albertus.router;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.gui.GuiCloseMessageBox;
 import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.gui.GuiImages;
@@ -105,7 +106,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		shell.setImages(GuiImages.ICONS_ROUTER);
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
 			tray = GuiTray.getInstance();
-			tray.init(shell);
+			tray.init(shell, this);
 		}
 
 		// Listener sul pulsante di chiusura dell'applicazione...
@@ -155,11 +156,17 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	protected void showInfo(final RouterData info, final Map<String, String> thresholdsReached) {
 		table.addRow(info, thresholdsReached, getIteration());
 		if (tray != null) {
-			tray.updateTrayItem(info, getStatus());
+			tray.updateTrayItem(getStatus(), info);
 		}
 		if (thresholdsReached != null && !thresholdsReached.isEmpty()) {
 			logger.log(Resources.get("msg.thresholds.reached", thresholdsReached), Destination.CONSOLE);
 		}
+	}
+
+	@Override
+	protected void updateStatus(RouterLoggerStatus status) {
+		super.updateStatus(status);
+		tray.updateTrayItem(status);
 	}
 
 	@Override
