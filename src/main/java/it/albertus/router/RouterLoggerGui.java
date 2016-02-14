@@ -85,7 +85,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		}
 		catch (ExceptionInInitializerError e) {
 			fatalError(e.getCause() != null ? e.getCause() : e);
-		}	
+		}
 		return instance;
 	}
 
