@@ -13,14 +13,15 @@ IF "%JAVA_HOME%" == "" START /BELOWNORMAL "" javaw.exe -Xms8m -Xmx64m -classpath
 IF NOT "%JAVA_HOME%" == "" START /BELOWNORMAL "" "%JAVA_HOME%\bin\javaw.exe" -Xms8m -Xmx64m -classpath "%~dp0routerlogger.jar;%~dp0lib/*" it.albertus.router.RouterLoggerGui
 GOTO END
 :ERR
-ECHO.Invalid option - "%1".
+ECHO.RouterLogger: unrecognized option '%1'
+ECHO.Try 'ROUTERLOGGER /?' for more information.
 GOTO END
 :HLP
 ECHO.Launches RouterLogger application.
 ECHO.
 ECHO.Usage: ROUTERLOGGER [/C] [/?]
 ECHO.
-ECHO.  /C	Runs in console mode
-ECHO.  /?	Shows this help
+ECHO.  /C    Runs in console mode
+ECHO.  /?    Shows this help
 ECHO.
 :END

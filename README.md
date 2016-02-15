@@ -24,9 +24,11 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
-In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger-gui.bat`**](src/main/scripts/routerlogger-gui.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger-gui.sh`**](src/main/scripts/routerlogger-gui.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger-gui.sh`.
+In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger.sh`.
 
->&Egrave; disponibile anche una versione alternativa dell'applicazione che funziona da riga di comando; per eseguirla, utilizzare il file [**`routerlogger-con.bat`**](src/main/scripts/routerlogger-con.bat) (Windows) o [**`routerlogger-con.sh`**](src/main/scripts/routerlogger-con.sh) (Linux).
+>Gli script di avvio prevedono anche un parametro che consente di avviare l'applicazione in modalit&agrave; console (senza interfaccia grafica):
+>* Windows: **`routerlogger.bat /c`**
+>* Linux: **`routerlogger.sh -c`**
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
