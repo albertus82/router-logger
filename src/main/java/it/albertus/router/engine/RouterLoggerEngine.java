@@ -12,7 +12,6 @@ import it.albertus.util.Version;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class RouterLoggerEngine {
@@ -244,16 +243,17 @@ public abstract class RouterLoggerEngine {
 
 			/* Impostazione stato di allerta e gestione isteresi... */
 			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(info);
-			final Map<Threshold, String> importantThresholdsReached = new HashMap<Threshold, String>();
+			boolean importantThresholdReached = false;
 			for (final Threshold threshold : allThresholdsReached.keySet()) {
 				if (!configuration.getThresholdsExcluded().contains(threshold)) {
-					importantThresholdsReached.put(threshold, allThresholdsReached.get(threshold));
+					importantThresholdReached = true;
+					break;
 				}
 			}
 
-			if (!importantThresholdsReached.isEmpty() || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
+			if (importantThresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 				status = RouterLoggerStatus.WARNING; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
-				if (!importantThresholdsReached.isEmpty()) {
+				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
 				}
 			}

@@ -183,8 +183,8 @@ Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applica
 
 L'*identificativo univoco soglia* pu&ograve; essere un qualsiasi testo senza spazi n&eacute; carattere `=`.
 
-Pu&ograve; capitare che, al raggiungimento di una o pi&ugrave; soglie specifiche, non occorra che si attivi l'incremento della frequenza di registrazione; si avr&agrave; cos&igrave; soltanto un avviso nell'area di notifica (solo versione in interfaccia grafica). Per farlo, valorizzare opportunamente le seguenti propriet&agrave; nel nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg):
-* **`thresholds.excluded`**= elenco, separato da delimitatore, degli identificativi univoci delle soglie da escludere.
+Pu&ograve; capitare che, al raggiungimento di una o pi&ugrave; soglie specifiche, non occorra che si attivi l'incremento della frequenza di registrazione; il caso tipico &egrave; quello della velocit&agrave; di downstream agganciata, che in alcuni casi potrebbe essere inferiore al normale. In questi casi pu&ograve; comunque risultare utile un avviso nell'area di notifica e una particolare evidenziazione nella tabella a video (solo versione in interfaccia grafica), come normalmente avviene quando una soglia viene raggiunta. Per ottenere questo comportamento, valorizzare opportunamente le seguenti propriet&agrave; nel nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg):
+* **`thresholds.excluded`**= elenco, separato da delimitatore, degli identificativi univoci delle soglie per le quali, al raggiungimento, non si desidera l'incremento della frequenza di registrazione.
 * **`thresholds.excluded.separator`**= delimitatore (o espressione regolare) usato per separare gli identificativi univoci delle soglie specificati nella propriet&agrave; `thresholds.excluded` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche negli identificativi delle soglie.
 
 ##### Esempio
