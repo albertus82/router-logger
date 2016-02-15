@@ -20,7 +20,7 @@ ECHO.Launches RouterLogger application.
 ECHO.
 ECHO.Usage: ROUTERLOGGER [/C] [/?]
 ECHO.
-ECHO.  /C	Runs in terminal
+ECHO.  /C	Runs in console mode
 ECHO.  /?	Shows this help
 ECHO.
 :END
