@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/config"/>
-	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-net-3.4.jar" sourcepath="lib/src/commons-net-3.4-src.zip"/>
 	<classpathentry kind="lib" path="lib/albertus-utils-2.0.2.jar" sourcepath="lib/src/albertus-utils-2.0.2-sources.jar"/>
