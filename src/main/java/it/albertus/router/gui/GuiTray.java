@@ -51,12 +51,12 @@ public class GuiTray {
 		}
 	}
 
-	public void init(final Shell shell, final RouterLoggerEngine engine) {
+	public void init(final Shell shell, final RouterLoggerEngine app) {
 		if (this.trayItem == null && menu == null) {
 			shell.addShellListener(new ShellAdapter() {
 				@Override
 				public void shellIconified(ShellEvent e) {
-					iconify(shell, engine.getStatus());
+					iconify(shell, app.getStatus());
 					shell.setMinimized(false);
 				}
 			});

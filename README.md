@@ -183,6 +183,10 @@ Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applica
 
 L'*identificativo univoco soglia* pu&ograve; essere un qualsiasi testo senza spazi n&eacute; carattere `=`.
 
+Pu&ograve; capitare che, al raggiungimento di una o pi&ugrave; soglie specifiche, non occorra che si attivi l'incremento della frequenza di registrazione; si avr&agrave; cos&igrave; soltanto un avviso nell'area di notifica (solo versione in interfaccia grafica). Per farlo, valorizzare opportunamente le seguenti propriet&agrave; nel nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg):
+* **`thresholds.excluded`**= elenco, separato da delimitatore, degli identificativi univoci delle soglie da escludere.
+* **`thresholds.excluded.separator`**= delimitatore (o espressione regolare) usato per separare gli identificativi univoci delle soglie specificati nella propriet&agrave; `thresholds.excluded` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche negli identificativi delle soglie.
+
 ##### Esempio
 
 Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.

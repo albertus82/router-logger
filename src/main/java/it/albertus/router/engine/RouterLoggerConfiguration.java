@@ -18,7 +18,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		boolean THRESHOLDS_SPLIT = false;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
-		String THRESHOLDS_EXCLUDED_KEYS_SEPARATOR = ",";
+		String THRESHOLDS_EXCLUDED_SEPARATOR = ",";
 	}
 
 	private static class Singleton {
@@ -32,7 +32,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	private final Thresholds thresholds;
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
-	private final Set<String> thresholdsExcludedKeys = new HashSet<String>();
+	private final Set<Threshold> thresholdsExcluded = new HashSet<Threshold>();
 
 	public Set<String> getGuiImportantKeys() {
 		return guiImportantKeys;
@@ -46,8 +46,8 @@ public class RouterLoggerConfiguration extends Configuration {
 		return consoleKeysToShow;
 	}
 
-	public Set<String> getThresholdsExcludedKeys() {
-		return thresholdsExcludedKeys;
+	public Set<Threshold> getThresholdsExcluded() {
+		return thresholdsExcluded;
 	}
 
 	private RouterLoggerConfiguration() {
@@ -73,9 +73,13 @@ public class RouterLoggerConfiguration extends Configuration {
 		else {
 			thresholds = new ExpressionThresholds(); /* Nuovo stile */
 		}
-		for (final String excludedKey : this.getString("thresholds.excluded.keys", "").split(this.getString("thresholds.excluded.keys.separator", Defaults.THRESHOLDS_EXCLUDED_KEYS_SEPARATOR).trim())) {
-			if (StringUtils.isNotBlank(excludedKey)) {
-				this.thresholdsExcludedKeys.add(excludedKey.trim());
+		for (final String name : this.getString("thresholds.excluded", "").split(this.getString("thresholds.excluded.separator", Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).trim())) {
+			if (StringUtils.isNotBlank(name)) {
+				for (final Threshold threshold : thresholds.thresholds) {
+					if (name.equals(threshold.getName())) {
+						thresholdsExcluded.add(threshold);
+					}
+				}
 			}
 		}
 	}
@@ -109,9 +113,9 @@ public class RouterLoggerConfiguration extends Configuration {
 			return thresholds.toString();
 		}
 
-		public Map<String, String> getReached(final RouterData data) {
+		public Map<Threshold, String> getReached(final RouterData data) {
 			final Map<String, String> info = data.getData();
-			final Map<String, String> reached = new TreeMap<String, String>();
+			final Map<Threshold, String> reached = new TreeMap<Threshold, String>();
 
 			// Gestione delle soglie...
 			if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
@@ -119,7 +123,7 @@ public class RouterLoggerConfiguration extends Configuration {
 					if (key != null && key.trim().length() != 0) {
 						for (final Threshold threshold : thresholds) {
 							if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-								reached.put(key, info.get(key));
+								reached.put(threshold, info.get(key));
 							}
 						}
 					}
@@ -157,7 +161,7 @@ public class RouterLoggerConfiguration extends Configuration {
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
 						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
-					thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
+					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue));
 					thresholdsAdded.add(thresholdName);
 				}
 			}
@@ -194,7 +198,7 @@ public class RouterLoggerConfiguration extends Configuration {
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null) {
 						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
-					thresholds.add(new Threshold(thresholdKey.trim(), thresholdType, thresholdValue));
+					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue));
 				}
 			}
 		}

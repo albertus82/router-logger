@@ -3,6 +3,7 @@ package it.albertus.router;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
+import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.GuiCloseMessageBox;
 import it.albertus.router.gui.GuiConsole;
 import it.albertus.router.gui.GuiImages;
@@ -153,19 +154,19 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected void showInfo(final RouterData info, final Map<String, String> thresholdsReached) {
+	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
 		table.addRow(info, thresholdsReached, getIteration());
 		if (tray != null) {
 			tray.updateTrayItem(getStatus(), info);
 		}
-		if (thresholdsReached != null && !thresholdsReached.isEmpty() && !configuration.getThresholdsExcludedKeys().containsAll(thresholdsReached.keySet())) {
+		if (thresholdsReached != null && !thresholdsReached.isEmpty() && !configuration.getThresholdsExcluded().containsAll(thresholdsReached.keySet())) {
 			logger.log(Resources.get("msg.thresholds.reached", thresholdsReached), Destination.CONSOLE);
 		}
 	}
 
 	@Override
-	protected void updateStatus(RouterLoggerStatus status) {
-		super.updateStatus(status);
+	protected void setStatus(RouterLoggerStatus status) {
+		super.setStatus(status);
 		tray.updateTrayItem(status);
 	}
 

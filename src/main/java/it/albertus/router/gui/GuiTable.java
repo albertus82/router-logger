@@ -2,6 +2,7 @@ package it.albertus.router.gui;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 
@@ -156,7 +157,7 @@ public class GuiTable {
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 
-	public void addRow(final RouterData data, final Map<String, String> thresholdsReached, final int iteration) {
+	public void addRow(final RouterData data, final Map<Threshold, String> thresholdsReached, final int iteration) {
 		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();
 			final String timestamp = DATE_FORMAT_TABLE_GUI.format(data.getTimestamp());
@@ -213,8 +214,11 @@ public class GuiTable {
 								}
 
 								// Colore per i valori oltre soglia...
-								if (thresholdsReached.containsKey(key)) {
-									item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
+								for (final Threshold threshold : thresholdsReached.keySet()) {
+									if (key.equals(threshold.getKey())) {
+										item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
+										break;
+									}
 								}
 
 								item.setText(i++, info.get(key));

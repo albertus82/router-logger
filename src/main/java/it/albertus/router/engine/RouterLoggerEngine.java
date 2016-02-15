@@ -47,6 +47,10 @@ public abstract class RouterLoggerEngine {
 		return status;
 	}
 
+	protected void setStatus(RouterLoggerStatus status) {
+		this.status = status;
+	}
+
 	protected int getIteration() {
 		return iteration;
 	}
@@ -134,14 +138,14 @@ public abstract class RouterLoggerEngine {
 			/* Avvio della procedura... */
 			final boolean connected;
 			try {
-				updateStatus(RouterLoggerStatus.CONNECTING);
+				setStatus(RouterLoggerStatus.CONNECTING);
 				connected = reader.connect();
 			}
 			catch (RuntimeException re) {
 				/* Configurazione non valida */
 				logger.log(re);
 				exit = true;
-				updateStatus(RouterLoggerStatus.ERROR);
+				setStatus(RouterLoggerStatus.ERROR);
 				continue;
 			}
 
@@ -157,7 +161,7 @@ public abstract class RouterLoggerEngine {
 
 				// Loop...
 				if (loggedIn) {
-					updateStatus(RouterLoggerStatus.OK);
+					setStatus(RouterLoggerStatus.OK);
 					index = 0;
 					try {
 						loop();
@@ -178,14 +182,14 @@ public abstract class RouterLoggerEngine {
 							logger.log(e);
 						}
 						reader.disconnect();
-						updateStatus(RouterLoggerStatus.DISCONNECTED);
+						setStatus(RouterLoggerStatus.DISCONNECTED);
 					}
 				}
 				else {
 					// In caso di autenticazione fallita, si esce subito per evitare il blocco dell'account.
 					exit = true;
 					reader.disconnect();
-					updateStatus(RouterLoggerStatus.ERROR);
+					setStatus(RouterLoggerStatus.ERROR);
 				}
 			}
 		}
@@ -239,11 +243,11 @@ public abstract class RouterLoggerEngine {
 			writer.saveInfo(info);
 
 			/* Impostazione stato di allerta e gestione isteresi... */
-			final Map<String, String> allThresholdsReached = configuration.getThresholds().getReached(info);
-			final Map<String, String> importantThresholdsReached = new HashMap<String, String>();
-			for (final String key : allThresholdsReached.keySet()) {
-				if (!configuration.getThresholdsExcludedKeys().contains(key)) {
-					importantThresholdsReached.put(key, allThresholdsReached.get(key));
+			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(info);
+			final Map<Threshold, String> importantThresholdsReached = new HashMap<Threshold, String>();
+			for (final Threshold threshold : allThresholdsReached.keySet()) {
+				if (!configuration.getThresholdsExcluded().contains(threshold)) {
+					importantThresholdsReached.put(threshold, allThresholdsReached.get(threshold));
 				}
 			}
 
@@ -282,11 +286,7 @@ public abstract class RouterLoggerEngine {
 		}
 	}
 
-	protected abstract void showInfo(RouterData info, Map<String, String> thresholdsReached);
-
-	protected void updateStatus(RouterLoggerStatus status) {
-		this.status = status;
-	}
+	protected abstract void showInfo(RouterData info, Map<Threshold, String> thresholdsReached);
 
 	/**
 	 * Libera le risorse eventualmente allocate (file, connessioni a database,

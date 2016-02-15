@@ -49,14 +49,20 @@ public class Threshold implements Comparable<Threshold> {
 		}
 	}
 
+	private final String name;
 	private final String key;
 	private final Type type;
 	private final String value;
 
-	public Threshold(String key, Type type, String value) {
+	public Threshold(String name, String key, Type type, String value) {
+		this.name = name;
 		this.key = key;
 		this.type = type;
 		this.value = value;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public Type getType() {
@@ -108,6 +114,7 @@ public class Threshold implements Comparable<Threshold> {
 		int result = 1;
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
 
@@ -134,6 +141,14 @@ public class Threshold implements Comparable<Threshold> {
 		if (type != other.type) {
 			return false;
 		}
+		if (value == null) {
+			if (other.value != null) {
+				return false;
+			}
+		}
+		else if (!value.equals(other.value)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -144,7 +159,7 @@ public class Threshold implements Comparable<Threshold> {
 
 	@Override
 	public int compareTo(Threshold other) {
-		return this.key.compareTo(other.key) + this.type.compareTo(other.type);
+		return this.key.compareTo(other.key) + this.type.compareTo(other.type) + this.value.compareTo(other.value);
 	}
 
 }
