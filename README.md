@@ -26,7 +26,7 @@ Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://
 
 In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger.sh`.
 
->Gli script di avvio prevedono anche un parametro che consente di avviare l'applicazione in modalit&agrave; console (senza interfaccia grafica):
+>Gli script di avvio prevedono anche un'opzione che consente di avviare l'applicazione in modalit&agrave; console (senza interfaccia grafica):
 >* Windows: **`routerlogger.bat /c`**
 >* Linux: **`routerlogger.sh -c`**
 
