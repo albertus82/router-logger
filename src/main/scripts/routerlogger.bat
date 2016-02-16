@@ -24,9 +24,8 @@ GOTO END
 :HLP
 ECHO.Launches RouterLogger application.
 ECHO.
-ECHO.Usage: ROUTERLOGGER [/C] [/?]
+ECHO.Usage: ROUTERLOGGER [/C]
 ECHO.
-ECHO.  /C    Runs in console mode
-ECHO.  /?    Shows this help
+ECHO.  /C    Runs in console mode.
 ECHO.
 :END
