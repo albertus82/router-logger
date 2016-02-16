@@ -1,10 +1,11 @@
 if [ "$1" = "--help" ]
   then
-  echo "Launches RouterLogger application."
+  echo "Start RouterLogger application."
   echo
-  echo "Usage: routerlogger.sh [-c]"
+  echo "Usage: routerlogger.sh [-c] [--help]"
   echo
-  echo "  -c        Runs in console mode"
+  echo "  -c        start in console mode"
+  echo "  --help    display this help and exit"
 elif [ "$2" != "" ]
   then
   echo "routerlogger: too many parameters - $2"
