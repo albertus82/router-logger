@@ -1,8 +1,7 @@
 @ECHO OFF
 IF "%1" == "/?" GOTO HLP
 IF NOT "%2" == "" GOTO ER1
-IF "%1" == "/c" GOTO CON
-IF "%1" == "/C" GOTO CON
+IF /I "%1" == "/C" GOTO CON
 IF "%1" == "" GOTO GUI
 GOTO ER2
 :HLP
