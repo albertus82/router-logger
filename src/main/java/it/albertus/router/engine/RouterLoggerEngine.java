@@ -122,6 +122,7 @@ public abstract class RouterLoggerEngine {
 		for (int index = 0; index <= retries && !exit; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
+				setStatus(RouterLoggerStatus.DISCONNECTED);
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
 				out.println(Resources.get("msg.wait.reconnection", index, retries, retryIntervalInMillis), true);
 				try {
@@ -182,7 +183,6 @@ public abstract class RouterLoggerEngine {
 							logger.log(e);
 						}
 						reader.disconnect();
-						setStatus(RouterLoggerStatus.DISCONNECTED);
 					}
 				}
 				else {

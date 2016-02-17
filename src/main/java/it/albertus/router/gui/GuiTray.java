@@ -40,16 +40,16 @@ public class GuiTray {
 
 	private Image getTrayIcon(RouterLoggerStatus status) {
 		switch (status) {
-		case CONNECTING:
-		case OK:
-		case STARTING:
-			return GuiImages.TRAY_ICON_ROUTER_OK;
+		case DISCONNECTED:
+		case INFO:
+		case WARNING:
+			return GuiImages.TRAY_ICON_ROUTER_WARNING;
 		case AUTHENTICATING:
 			return GuiImages.TRAY_ICON_ROUTER_PADLOCK;
 		case ERROR:
 			return GuiImages.TRAY_ICON_ROUTER_ERROR;
 		default:
-			return GuiImages.TRAY_ICON_ROUTER_WARNING;
+			return GuiImages.TRAY_ICON_ROUTER_OK;
 		}
 	}
 
