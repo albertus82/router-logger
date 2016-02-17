@@ -15,6 +15,7 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ExceptionUtils;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -155,12 +156,21 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
+		/* Aggiunta riga nella tabella a video */
 		table.addRow(info, thresholdsReached, getIteration());
+
+		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
 		if (tray != null) {
 			tray.updateTrayItem(getStatus(), info);
 		}
+
+		/* Stampa eventuali soglie raggiunte in console */
 		if (thresholdsReached != null && !thresholdsReached.isEmpty() && !configuration.getThresholdsExcluded().containsAll(thresholdsReached.keySet())) {
-			logger.log(Resources.get("msg.thresholds.reached", thresholdsReached), Destination.CONSOLE);
+			final Map<String, String> message = new TreeMap<String, String>();
+			for (final Threshold threshold : thresholdsReached.keySet()) {
+				message.put(threshold.getKey(), thresholdsReached.get(threshold));
+			}
+			logger.log(Resources.get("msg.thresholds.reached", message), Destination.CONSOLE);
 		}
 	}
 
