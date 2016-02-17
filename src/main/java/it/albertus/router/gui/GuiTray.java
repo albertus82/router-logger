@@ -45,7 +45,7 @@ public class GuiTray {
 		case WARNING:
 			return GuiImages.TRAY_ICON_ROUTER_WARNING;
 		case AUTHENTICATING:
-			return GuiImages.TRAY_ICON_ROUTER_PADLOCK;
+			return GuiImages.TRAY_ICON_ROUTER_LOCK;
 		case ERROR:
 			return GuiImages.TRAY_ICON_ROUTER_ERROR;
 		default:
