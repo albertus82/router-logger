@@ -2,7 +2,7 @@ RouterLogger
 ============
 
 **RouterLogger** &egrave; una semplice applicazione per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i seguenti router:
-* **TP-Link TD-W8970 V1** 
+* **TP-Link TD-W8970 V1**
 * **ASUS DSL-N12E**
 * **ASUS DSL-N14U**
 * **D-Link DSL-2750B**
