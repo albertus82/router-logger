@@ -150,6 +150,7 @@ public abstract class RouterLoggerEngine {
 
 			// Log in...
 			if (connected) {
+				setStatus(RouterLoggerStatus.AUTHENTICATING);
 				boolean loggedIn = false;
 				try {
 					loggedIn = reader.login();

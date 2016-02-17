@@ -16,10 +16,12 @@ public class GuiImages {
 	public static final Image[] ICONS_ROUTER = loadIcons("router.ico");
 	public static final Image[] ICONS_WARNING = loadIcons("warning.ico");
 	public static final Image[] ICONS_ERROR = loadIcons("error.ico");
+	public static final Image[] ICONS_PADLOCK = loadIcons("padlock.ico");
 
 	public static final Image TRAY_ICON_ROUTER_OK = GuiImages.ICONS_ROUTER[1];
 	public static final Image TRAY_ICON_ROUTER_WARNING = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.ICONS_WARNING[0]), IDecoration.BOTTOM_RIGHT).createImage();
 	public static final Image TRAY_ICON_ROUTER_ERROR = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.ICONS_ERROR[0]), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ROUTER_PADLOCK = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.ICONS_PADLOCK[0]), IDecoration.BOTTOM_LEFT).createImage();
 
 	private static Image[] loadIcons(final String fileName) {
 		final InputStream is = GuiImages.class.getResourceAsStream(fileName);

@@ -5,6 +5,7 @@ import it.albertus.router.resources.Resources;
 public enum RouterLoggerStatus {
 	STARTING("lbl.status.starting"),
 	CONNECTING("lbl.status.connecting"),
+	AUTHENTICATING("lbl.status.authenticating"),
 	OK("lbl.status.ok"),
 	INFO("lbl.status.info"),
 	WARNING("lbl.status.warning"),
