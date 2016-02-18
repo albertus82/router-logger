@@ -11,15 +11,23 @@ public class DummyReader extends Reader {
 
 	private static final byte CHARACTERS = 15;
 	private static final byte COLUMNS = 30;
-	private static final short LAG_IN_MILLIS = 200;
+	private static final short LAG_IN_MILLIS = 100;
+	private static final short CONNECTION_TIME_IN_MILLIS = 1000;
+	private static final short AUTHENTICATION_TIME_IN_MILLIS = 1000;
 
 	@Override
 	public boolean connect() {
+		if (CONNECTION_TIME_IN_MILLIS > 0) {
+			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
+		}
 		return true;
 	}
 
 	@Override
 	public boolean login() {
+		if (AUTHENTICATION_TIME_IN_MILLIS > 0) {
+			ThreadUtils.sleep(AUTHENTICATION_TIME_IN_MILLIS);
+		}
 		final String message = getClass().getSimpleName() + " - " + Resources.get("msg.test.purposes.only");
 		final StringBuilder separator = new StringBuilder();
 		for (int c = 0; c < message.length(); c++) {
