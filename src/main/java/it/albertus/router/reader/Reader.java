@@ -103,11 +103,17 @@ public abstract class Reader {
 	 * {@link #readFromTelnet(String, boolean)} e {@link #writeToTelnet(String)}
 	 * per interagire con il server e comunicare le credenziali di accesso.
 	 * 
+	 * @param username proveniente dalla propriet&agrave;
+	 *        <tt>router.username</tt> del file di configurazione.
+	 * @param password proveniente dalla propriet&agrave;
+	 *        <tt>router.password</tt> del file di configurazione.
+	 * 
 	 * @return <tt>true</tt> se l'autenticazione &egrave; riuscita,
 	 *         <tt>false</tt> altrimenti.
+	 * 
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
-	public abstract boolean login() throws IOException;
+	public abstract boolean login(String username, String password) throws IOException;
 
 	/**
 	 * Effettua il logout dal server telnet inviando il comando <tt>exit</tt>.

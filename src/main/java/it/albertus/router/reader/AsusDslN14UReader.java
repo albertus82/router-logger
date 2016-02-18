@@ -29,14 +29,14 @@ public class AsusDslN14UReader extends Reader {
 	private static final String NODE_PREFIX = "Node:";
 
 	@Override
-	public boolean login() throws IOException {
+	public boolean login(final String username, final String password) throws IOException {
 		// Username...
 		out.print(readFromTelnet(LOGIN_PROMPT, true).trim(), true);
-		writeToTelnet(configuration.getString("router.username"));
+		writeToTelnet(username);
 
 		// Password...
 		out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
-		writeToTelnet(configuration.getString("router.password"));
+		writeToTelnet(password);
 
 		// Avanzamento fino al prompt...
 		out.print(readFromTelnet(COMMAND_PROMPT, true).trim());

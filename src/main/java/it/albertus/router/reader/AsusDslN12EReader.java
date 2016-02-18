@@ -29,14 +29,14 @@ public class AsusDslN12EReader extends Reader {
 	private static final String LOGIN_PROMPT = ": ";
 
 	@Override
-	public boolean login() throws IOException {
+	public boolean login(final String username, final String password) throws IOException {
 		// Username...
 		out.print(readFromTelnet(LOGIN_PROMPT, true).trim(), true);
-		writeToTelnet(configuration.getString("router.username"));
+		writeToTelnet(username);
 
 		// Password...
 		out.println(readFromTelnet(LOGIN_PROMPT, true).trim());
-		writeToTelnet(configuration.getString("router.password"));
+		writeToTelnet(password);
 
 		// Avanzo fino al prompt dei comandi
 		readFromTelnet(COMMAND_PROMPT, true);
