@@ -17,8 +17,8 @@ elif [ "$1" = "-c" ] || [ "$1" = "-C" ]
   fi
 elif [ "$1" = "" ]
   then if [ "$JAVA_HOME" != "" ]
-  then "$JAVA_HOME/bin/java" -Xms8m -Xmx64m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLoggerGui
-  else java -Xms8m -Xmx64m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLoggerGui
+  then nice "$JAVA_HOME/bin/java" -Xms8m -Xmx64m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLoggerGui
+  else nice java -Xms8m -Xmx64m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLoggerGui
   fi
 else
   echo "routerlogger: unrecognized option '"$1"'"
