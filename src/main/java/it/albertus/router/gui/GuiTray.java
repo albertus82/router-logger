@@ -45,7 +45,7 @@ public class GuiTray {
 		case DISCONNECTED:
 			return GuiImages.TRAY_ICON_ROUTER_GREY;
 		case RECONNECTING:
-			return GuiImages.TRAY_ICON_ROUTER_GREY_WARNING;
+			return GuiImages.TRAY_ICON_ROUTER_GREY_CLOCK;
 		case INFO:
 		case WARNING:
 			return GuiImages.TRAY_ICON_ROUTER_BLUE_WARNING;
