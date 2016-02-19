@@ -13,15 +13,23 @@ import org.eclipse.swt.widgets.Display;
 
 public class GuiImages {
 
-	public static final Image[] ICONS_ROUTER = loadIcons("router.ico");
-	private static final Image TRAY_ICON_WARNING = loadIcons("warning.ico")[0];
-	private static final Image TRAY_ICON_ERROR = loadIcons("error.ico")[0];
-	private static final Image TRAY_ICON_LOCK = loadIcons("lock.ico")[0];
+	/* Icona principale dell'applicazione (in vari formati) */
+	public static final Image[] ICONS_ROUTER_BLUE = loadIcons("blue.ico");
 
-	public static final Image TRAY_ICON_ROUTER_OK = GuiImages.ICONS_ROUTER[1];
-	public static final Image TRAY_ICON_ROUTER_WARNING = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.TRAY_ICON_WARNING), IDecoration.BOTTOM_RIGHT).createImage();
-	public static final Image TRAY_ICON_ROUTER_ERROR = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.TRAY_ICON_ERROR), IDecoration.BOTTOM_RIGHT).createImage();
-	public static final Image TRAY_ICON_ROUTER_LOCK = new DecorationOverlayIcon(TRAY_ICON_ROUTER_OK, ImageDescriptor.createFromImage(GuiImages.TRAY_ICON_LOCK), IDecoration.BOTTOM_RIGHT).createImage();
+	/* Icone base per l'area di notifica (16x16) */
+	public static final Image TRAY_ICON_ROUTER_BLUE = GuiImages.ICONS_ROUTER_BLUE[1];
+	public static final Image TRAY_ICON_ROUTER_GREY = loadIcons("grey.ico")[0];
+
+	/* Simboli in sovraimpressione per l'area di notifica (16x16, non utilizzabili da soli) */
+	private static final Image TRAY_ICON_OVERLAY_WARNING = loadIcons("warning.ico")[0];
+	private static final Image TRAY_ICON_OVERLAY_ERROR = loadIcons("error.ico")[0];
+	private static final Image TRAY_ICON_OVERLAY_LOCK = loadIcons("lock.ico")[0];
+
+	/* Icone composte per l'area di notifica (16x16) */
+	public static final Image TRAY_ICON_ROUTER_BLUE_WARNING = new DecorationOverlayIcon(TRAY_ICON_ROUTER_BLUE, ImageDescriptor.createFromImage(GuiImages.TRAY_ICON_OVERLAY_WARNING), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ROUTER_BLUE_LOCK = new DecorationOverlayIcon(TRAY_ICON_ROUTER_BLUE, ImageDescriptor.createFromImage(GuiImages.TRAY_ICON_OVERLAY_LOCK), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ROUTER_GREY_WARNING = new DecorationOverlayIcon(TRAY_ICON_ROUTER_GREY, ImageDescriptor.createFromImage(GuiImages.TRAY_ICON_OVERLAY_WARNING), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ROUTER_GREY_ERROR = new DecorationOverlayIcon(TRAY_ICON_ROUTER_GREY, ImageDescriptor.createFromImage(GuiImages.TRAY_ICON_OVERLAY_ERROR), IDecoration.BOTTOM_RIGHT).createImage();
 
 	private static Image[] loadIcons(final String fileName) {
 		final InputStream is = GuiImages.class.getResourceAsStream(fileName);

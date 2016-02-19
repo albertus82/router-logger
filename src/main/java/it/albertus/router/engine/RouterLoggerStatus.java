@@ -10,6 +10,7 @@ public enum RouterLoggerStatus {
 	INFO("lbl.status.info"),
 	WARNING("lbl.status.warning"),
 	DISCONNECTED("lbl.status.disconnected"),
+	RECONNECTING("lbl.status.reconnecting"),
 	ERROR("lbl.status.error");
 
 	private final String key;

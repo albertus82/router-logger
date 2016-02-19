@@ -105,7 +105,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	private void configureShell(final Shell shell) {
 		shell.setText(Resources.get("lbl.window.title"));
-		shell.setImages(GuiImages.ICONS_ROUTER);
+		shell.setImages(GuiImages.ICONS_ROUTER_BLUE);
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
 			tray = GuiTray.getInstance();
 			tray.init(shell, this);
