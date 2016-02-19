@@ -246,7 +246,7 @@ public abstract class RouterLoggerEngine {
 			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(info);
 			boolean importantThresholdReached = false;
 			for (final Threshold threshold : allThresholdsReached.keySet()) {
-				if (!configuration.getThresholdsExcluded().contains(threshold)) {
+				if (!threshold.isExcluded()) {
 					importantThresholdReached = true;
 					break;
 				}

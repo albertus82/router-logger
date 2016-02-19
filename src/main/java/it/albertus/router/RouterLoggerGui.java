@@ -165,12 +165,22 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		}
 
 		/* Stampa eventuali soglie raggiunte in console */
-		if (thresholdsReached != null && !thresholdsReached.isEmpty() && !configuration.getThresholdsExcluded().containsAll(thresholdsReached.keySet())) {
+		printThresholdsReached(thresholdsReached);
+	}
+
+	private void printThresholdsReached(final Map<Threshold, String> thresholdsReached) {
+		if (thresholdsReached != null && !thresholdsReached.isEmpty()) {
 			final Map<String, String> message = new TreeMap<String, String>();
+			boolean print = false;
 			for (final Threshold threshold : thresholdsReached.keySet()) {
 				message.put(threshold.getKey(), thresholdsReached.get(threshold));
+				if (!threshold.isExcluded()) {
+					print = true;
+				}
 			}
-			logger.log(Resources.get("msg.thresholds.reached", message), Destination.CONSOLE);
+			if (print) {
+				logger.log(Resources.get("msg.thresholds.reached", message), Destination.CONSOLE);
+			}
 		}
 	}
 

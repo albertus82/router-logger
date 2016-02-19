@@ -32,7 +32,6 @@ public class RouterLoggerConfiguration extends Configuration {
 	private final Thresholds thresholds;
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
-	private final Set<Threshold> thresholdsExcluded = new HashSet<Threshold>();
 
 	public Set<String> getGuiImportantKeys() {
 		return guiImportantKeys;
@@ -44,10 +43,6 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	public Set<String> getConsoleKeysToShow() {
 		return consoleKeysToShow;
-	}
-
-	public Set<Threshold> getThresholdsExcluded() {
-		return thresholdsExcluded;
 	}
 
 	private RouterLoggerConfiguration() {
@@ -73,15 +68,6 @@ public class RouterLoggerConfiguration extends Configuration {
 		else {
 			thresholds = new ExpressionThresholds(); /* Nuovo stile */
 		}
-		for (final String name : this.getString("thresholds.excluded", "").split(this.getString("thresholds.excluded.separator", Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).trim())) {
-			if (StringUtils.isNotBlank(name)) {
-				for (final Threshold threshold : thresholds.thresholds) {
-					if (name.equals(threshold.getName())) {
-						thresholdsExcluded.add(threshold);
-					}
-				}
-			}
-		}
 	}
 
 	public abstract class Thresholds {
@@ -103,6 +89,19 @@ public class RouterLoggerConfiguration extends Configuration {
 		}
 
 		protected abstract void load();
+
+		protected boolean isThresholdExcluded(final String thresholdName) {
+			boolean excluded = false;
+			for (final String name : getString("thresholds.excluded", "").split(getString("thresholds.excluded.separator", Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).trim())) {
+				if (StringUtils.isNotBlank(name)) {
+					if (name.equals(thresholdName)) {
+						excluded = true;
+						break;
+					}
+				}
+			}
+			return excluded;
+		}
 
 		public boolean isEmpty() {
 			return thresholds.isEmpty();
@@ -161,7 +160,7 @@ public class RouterLoggerConfiguration extends Configuration {
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
 						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
-					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue));
+					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
 					thresholdsAdded.add(thresholdName);
 				}
 			}
@@ -198,7 +197,7 @@ public class RouterLoggerConfiguration extends Configuration {
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null) {
 						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 					}
-					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue));
+					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
 				}
 			}
 		}

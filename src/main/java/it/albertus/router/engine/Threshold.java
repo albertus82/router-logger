@@ -53,12 +53,14 @@ public class Threshold implements Comparable<Threshold> {
 	private final String key;
 	private final Type type;
 	private final String value;
+	private final boolean excluded;
 
-	public Threshold(String name, String key, Type type, String value) {
+	public Threshold(String name, String key, Type type, String value, boolean excluded) {
 		this.name = name;
 		this.key = key;
 		this.type = type;
 		this.value = value;
+		this.excluded = excluded;
 	}
 
 	public String getName() {
@@ -75,6 +77,10 @@ public class Threshold implements Comparable<Threshold> {
 
 	public String getValue() {
 		return value;
+	}
+
+	public boolean isExcluded() {
+		return excluded;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -154,7 +160,7 @@ public class Threshold implements Comparable<Threshold> {
 
 	@Override
 	public String toString() {
-		return key + ' ' + type + ' ' + value;
+		return (excluded ? '-' : '+') + key + ' ' + type + ' ' + value;
 	}
 
 	@Override
