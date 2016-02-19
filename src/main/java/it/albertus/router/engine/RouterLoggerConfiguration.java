@@ -91,16 +91,14 @@ public class RouterLoggerConfiguration extends Configuration {
 		protected abstract void load();
 
 		protected boolean isThresholdExcluded(final String thresholdName) {
-			boolean excluded = false;
 			for (final String name : getString("thresholds.excluded", "").split(getString("thresholds.excluded.separator", Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).trim())) {
 				if (StringUtils.isNotBlank(name)) {
 					if (name.equals(thresholdName)) {
-						excluded = true;
-						break;
+						return true;
 					}
 				}
 			}
-			return excluded;
+			return false;
 		}
 
 		public boolean isEmpty() {
