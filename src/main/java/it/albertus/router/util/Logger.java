@@ -129,15 +129,15 @@ public class Logger {
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
 			}
-			logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+			logFile = new File(logDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
 		}
 		else {
 			try {
-				logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+				logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
 			}
 			catch (URISyntaxException use) {
 				/* Nella peggiore delle ipotesi, scrive nella directory del profilo dell'utente */
-				logFile = new File(System.getProperty("user.home") + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				logFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
 		}
 		final FileWriter logFileWriter = new FileWriter(logFile, true);

@@ -41,15 +41,15 @@ public class CsvWriter extends Writer {
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
 			}
-			csvFile = new File(csvDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			csvFile = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 		}
 		else {
 			try {
-				csvFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				csvFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
 			catch (URISyntaxException use) {
 				/* Nella peggiore delle ipotesi, scrive nella directory del profilo dell'utente */
-				csvFile = new File(System.getProperty("user.home") + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				csvFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
 		}
 
