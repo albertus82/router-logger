@@ -10,6 +10,7 @@ import it.albertus.util.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -119,7 +120,7 @@ public class Logger {
 
 	private void logToFile(final String text) throws IOException {
 		final String logDestinationDir = configuration.getString("logger.error.log.destination.path");
-		final File logFile;
+		File logFile;
 		if (StringUtils.isNotBlank(logDestinationDir)) {
 			File logDestDir = new File(logDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
@@ -131,7 +132,13 @@ public class Logger {
 			logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
 		}
 		else {
-			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+			try {
+				logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+			}
+			catch (URISyntaxException use) {
+				/* Nella peggiore delle ipotesi, scrive nella directory del profilo dell'utente */
+				logFile = new File(System.getProperty("user.home") + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			}
 		}
 		final FileWriter logFileWriter = new FileWriter(logFile, true);
 		final String base = new Date().toString() + " - ";

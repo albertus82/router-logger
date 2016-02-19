@@ -8,6 +8,7 @@ import it.albertus.util.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,34 +31,40 @@ public class CsvWriter extends Writer {
 	@Override
 	public synchronized void saveInfo(final RouterData info) {
 		// Selezione del percorso e nome del file di destinazione...
-		final String logDestinationDir = configuration.getString("csv.destination.path");
-		final File logFile;
-		if (StringUtils.isNotBlank(logDestinationDir)) {
-			File logDestDir = new File(logDestinationDir.trim());
+		final String csvDestinationDir = configuration.getString("csv.destination.path");
+		File csvFile;
+		if (StringUtils.isNotBlank(csvDestinationDir)) {
+			File logDestDir = new File(csvDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
 				throw new RuntimeException(Resources.get("err.invalid.path", logDestDir));
 			}
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
 			}
-			logFile = new File(logDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			csvFile = new File(csvDestinationDir.trim() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 		}
 		else {
-			logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			try {
+				csvFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			}
+			catch (URISyntaxException use) {
+				/* Nella peggiore delle ipotesi, scrive nella directory del profilo dell'utente */
+				csvFile = new File(System.getProperty("user.home") + '/' + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			}
 		}
 
 		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
-			if (!logFile.exists()) {
+			if (!csvFile.exists()) {
 				closeOutputFile();
-				logFileWriter = new FileWriter(logFile); // Crea nuovo file.
-				out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
+				logFileWriter = new FileWriter(csvFile); // Crea nuovo file.
+				out.println(Resources.get("msg.logging.to.file", csvFile.getAbsolutePath()), true);
 				logFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (logFileWriter == null) {
-				logFileWriter = new FileWriter(logFile, true); // Apre file esistente.
-				out.println(Resources.get("msg.logging.to.file", logFile.getAbsolutePath()), true);
+				logFileWriter = new FileWriter(csvFile, true); // Apre file esistente.
+				out.println(Resources.get("msg.logging.to.file", csvFile.getAbsolutePath()), true);
 			}
 			logFileWriter.append(buildCsvRow(info));
 			logFileWriter.flush();
