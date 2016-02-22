@@ -1,4 +1,4 @@
-package it.albertus.router;
+package it.albertus.router.console;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
@@ -9,7 +9,7 @@ import it.albertus.util.Version;
 
 import java.util.Map;
 
-public class RouterLoggerCon extends RouterLoggerEngine {
+public class RouterLoggerConsole extends RouterLoggerEngine {
 
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean CONSOLE_ANIMATION = true;
@@ -37,7 +37,7 @@ public class RouterLoggerCon extends RouterLoggerEngine {
 		}
 		else if (args[0].trim().equalsIgnoreCase(ARG_CONSOLE)) {
 			/* Start RouterLogger in console */
-			new RouterLoggerCon().run();
+			new RouterLoggerConsole().run();
 		}
 		else {
 			System.err.println(Resources.get("err.unrecognized.option", args[0]));

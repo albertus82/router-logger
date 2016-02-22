@@ -1,14 +1,9 @@
-package it.albertus.router;
+package it.albertus.router.gui;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Threshold;
-import it.albertus.router.gui.GuiCloseMessageBox;
-import it.albertus.router.gui.GuiConsole;
-import it.albertus.router.gui.GuiImages;
-import it.albertus.router.gui.GuiTable;
-import it.albertus.router.gui.GuiTray;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
