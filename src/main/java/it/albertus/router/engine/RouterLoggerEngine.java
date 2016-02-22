@@ -207,19 +207,8 @@ public abstract class RouterLoggerEngine {
 	}
 
 	private void welcome() {
-		// Preparazione numero di versione (se presente)...
 		final Version version = Version.getInstance();
-		final StringBuilder versionInfo = new StringBuilder();
-		final String versionNumber = version.getNumber();
-		if (versionNumber != null && !"".equals(versionNumber.trim())) {
-			versionInfo.append(versionNumber.trim()).append(' ');
-		}
-		String versionDate = version.getDate();
-		if (versionDate != null && !"".equals(versionDate.trim())) {
-			versionInfo.append('(').append(versionDate.trim()).append(") ");
-		}
-
-		out.println(Resources.get("msg.welcome", versionInfo));
+		out.println(Resources.get("msg.welcome", version.getNumber(), version.getDate()));
 		out.println();
 		out.println(Resources.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
 
