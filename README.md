@@ -26,8 +26,8 @@ Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://
 
 In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger.sh`.
 
->Gli script di avvio prevedono anche un'opzione che consente di avviare l'applicazione in modalit&agrave; console (senza interfaccia grafica):
->* Windows: **`routerlogger.bat /c`**
+>&Egrave; presente anche un'opzione che consente di avviare l'applicazione in modalit&agrave; console (senza interfaccia grafica):
+>* Windows: **`routerlogger.bat -c`**
 >* Linux: **`routerlogger.sh -c`**
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.

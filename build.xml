@@ -3,8 +3,10 @@
 <project name="RouterLogger" default="zip">
 
 	<property file="build.properties" />
-
 	<property file="${build.resourcesDirectory}/version.properties" />
+
+	<property name="jar.name" value="routerlogger.jar" />
+	<property name="main.class" value="it.albertus.router.RouterLogger" />
 
 	<target name="clean">
 		<delete dir="${build.directory}" />
@@ -61,7 +63,7 @@
 		</copy>
 
 		<!-- Preparazione dei file MANIFEST.MF -->
-		<manifestclasspath property="classpath.win32-win32-x86" jarfile="${build.distDirectory}/win32-win32-x86/routerlogger.jar" maxParentLevels="0">
+		<manifestclasspath property="classpath.win32-win32-x86" jarfile="${build.distDirectory}/win32-win32-x86/${jar.name}" maxParentLevels="0">
 			<classpath>
 				<fileset dir="${build.distDirectory}/win32-win32-x86/lib">
 					<include name="*.jar" />
@@ -69,7 +71,7 @@
 			</classpath>
 		</manifestclasspath>
 
-		<manifestclasspath property="classpath.win32-win32-x86_64" jarfile="${build.distDirectory}/win32-win32-x86_64/routerlogger.jar" maxParentLevels="0">
+		<manifestclasspath property="classpath.win32-win32-x86_64" jarfile="${build.distDirectory}/win32-win32-x86_64/${jar.name}" maxParentLevels="0">
 			<classpath>
 				<fileset dir="${build.distDirectory}/win32-win32-x86_64/lib">
 					<include name="*.jar" />
@@ -77,7 +79,7 @@
 			</classpath>
 		</manifestclasspath>
 
-		<manifestclasspath property="classpath.gtk-linux-x86" jarfile="${build.distDirectory}/gtk-linux-x86/routerlogger.jar" maxParentLevels="0">
+		<manifestclasspath property="classpath.gtk-linux-x86" jarfile="${build.distDirectory}/gtk-linux-x86/${jar.name}" maxParentLevels="0">
 			<classpath>
 				<fileset dir="${build.distDirectory}/gtk-linux-x86/lib">
 					<include name="*.jar" />
@@ -85,7 +87,7 @@
 			</classpath>
 		</manifestclasspath>
 
-		<manifestclasspath property="classpath.gtk-linux-x86_64" jarfile="${build.distDirectory}/gtk-linux-x86_64/routerlogger.jar" maxParentLevels="0">
+		<manifestclasspath property="classpath.gtk-linux-x86_64" jarfile="${build.distDirectory}/gtk-linux-x86_64/${jar.name}" maxParentLevels="0">
 			<classpath>
 				<fileset dir="${build.distDirectory}/gtk-linux-x86_64/lib">
 					<include name="*.jar" />
@@ -160,27 +162,27 @@
 
 
 	<target name="jar" depends="compile, resources, config, scripts, docs, lib">
-		<jar destfile="${build.distDirectory}/win32-win32-x86/routerlogger.jar" basedir="${build.outputDirectory}" level="9">
+		<jar destfile="${build.distDirectory}/win32-win32-x86/${jar.name}" basedir="${build.outputDirectory}" level="9">
 			<manifest>
-				<attribute name="Main-Class" value="it.albertus.router.RouterLoggerGui" />
+				<attribute name="Main-Class" value="${main.class}" />
 				<attribute name="Class-Path" value="${classpath.win32-win32-x86}" />
 			</manifest>
 		</jar>
-		<jar destfile="${build.distDirectory}/win32-win32-x86_64/routerlogger.jar" basedir="${build.outputDirectory}" level="9">
+		<jar destfile="${build.distDirectory}/win32-win32-x86_64/${jar.name}" basedir="${build.outputDirectory}" level="9">
 			<manifest>
-				<attribute name="Main-Class" value="it.albertus.router.RouterLoggerGui" />
+				<attribute name="Main-Class" value="${main.class}" />
 				<attribute name="Class-Path" value="${classpath.win32-win32-x86_64}" />
 			</manifest>
 		</jar>
-		<jar destfile="${build.distDirectory}/gtk-linux-x86/routerlogger.jar" basedir="${build.outputDirectory}" level="9">
+		<jar destfile="${build.distDirectory}/gtk-linux-x86/${jar.name}" basedir="${build.outputDirectory}" level="9">
 			<manifest>
-				<attribute name="Main-Class" value="it.albertus.router.RouterLoggerGui" />
+				<attribute name="Main-Class" value="${main.class}" />
 				<attribute name="Class-Path" value="${classpath.gtk-linux-x86}" />
 			</manifest>
 		</jar>
-		<jar destfile="${build.distDirectory}/gtk-linux-x86_64/routerlogger.jar" basedir="${build.outputDirectory}" level="9">
+		<jar destfile="${build.distDirectory}/gtk-linux-x86_64/${jar.name}" basedir="${build.outputDirectory}" level="9">
 			<manifest>
-				<attribute name="Main-Class" value="it.albertus.router.RouterLoggerGui" />
+				<attribute name="Main-Class" value="${main.class}" />
 				<attribute name="Class-Path" value="${classpath.gtk-linux-x86_64}" />
 			</manifest>
 		</jar>

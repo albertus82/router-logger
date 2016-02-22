@@ -38,7 +38,8 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	private final GuiTable table = GuiTable.getInstance();
 	private GuiTray tray = null;
 
-	public static void main(String args[]) {
+	/** Entry point for GUI version */
+	public static void start() {
 		try {
 			final RouterLoggerGui routerLogger = newInstance();
 
