@@ -230,7 +230,7 @@ Pu&ograve; capitare che, al raggiungimento di una o pi&ugrave; soglie specifiche
 &Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java).
 
 I metodi da implementare tassativamente sono i seguenti:
-* **`login`**: effettua l'autenticazione al server Telnet comunicando le credenziali di accesso che, per semplicit&agrave;, vengono preventivamente lette dal file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e rese disponibili direttamente nel metodo sotto forma di parametri dello stesso.
+* **`login`**: effettua l'autenticazione al server Telnet comunicando le credenziali di accesso che, per semplicit&agrave;, vengono preventivamente lette dal file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e rese disponibili direttamente nel metodo sotto forma di parametri `username` e `password`.
 * **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di oggetto [**`RouterData`**](src/main/java/it/albertus/router/engine/RouterData.java) che &egrave; costituito fondamentalmente da una mappa chiave-valore.
 
 All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/main/java/it/albertus/router/reader/Reader.java):
