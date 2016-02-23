@@ -25,7 +25,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		/* Controlli sui parametri */
 		if (args[0].trim().equalsIgnoreCase(ARG_HELP)) {
 			final Version version = Version.getInstance();
-			System.out.println(Resources.get("msg.help.head", version.getNumber(), version.getDate()));
+			System.out.println(Resources.get("msg.welcome", version.getNumber(), version.getDate()));
 			System.out.println();
 			System.out.println(Resources.get("msg.help.usage", ARG_CONSOLE, ARG_HELP));
 			System.out.println();
