@@ -196,7 +196,7 @@ public class GuiTable {
 							final TableItem item = new TableItem(table, SWT.NONE, 0);
 							item.setText(i++, Integer.toString(iteration));
 							item.setText(i++, timestamp);
-							item.setText(i++, String.valueOf(data.getResponseTime()));
+							item.setText(i++, Integer.toString(data.getResponseTime()));
 
 							for (String key : info.keySet()) {
 								// Grassetto...
