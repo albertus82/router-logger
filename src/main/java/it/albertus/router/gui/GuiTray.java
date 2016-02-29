@@ -93,8 +93,8 @@ public class GuiTray {
 			if (menu == null) {
 				menu = new Menu(shell, SWT.POP_UP);
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+				menu.setDefaultItem(menuItem);
 				menuItem.setText(Resources.get("lbl.tray.show"));
-
 				menuItem.addListener(SWT.Selection, new RestoreListener(shell));
 
 				menuItem = new MenuItem(menu, SWT.SEPARATOR);
