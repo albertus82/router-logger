@@ -49,6 +49,11 @@ public class RouterLoggerConfiguration extends Configuration {
 		/* Caricamento della configurazione... */
 		super("routerlogger.cfg");
 
+		/* Impostazione lingua */
+		if (this.contains("language")) {
+			Resources.setLanguage(this.getString("language"));
+		}
+
 		/* Caricamento chiavi da evidenziare */
 		for (final String importantKey : this.getString("gui.important.keys", "").split(this.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
 			if (StringUtils.isNotBlank(importantKey)) {
