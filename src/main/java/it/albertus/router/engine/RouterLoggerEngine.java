@@ -208,7 +208,7 @@ public abstract class RouterLoggerEngine {
 
 	private void welcome() {
 		final Version version = Version.getInstance();
-		out.println(Resources.get("msg.welcome", version.getNumber(), version.getDate()));
+		out.println(Resources.get("msg.welcome", Resources.get("msg.application.name"), Resources.get("msg.version", version.getNumber(), version.getDate()), Resources.get("msg.website")));
 		out.println();
 		out.println(Resources.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
 

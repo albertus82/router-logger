@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-public class RouterLoggerGui extends RouterLoggerEngine {
+public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_MINIMIZE_TRAY = true;
@@ -147,19 +147,20 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
 		fileMenuHeader.setMenu(fileMenu);
-/*
+
 		helpMenu = new Menu(shell, SWT.DROP_DOWN); // Help
 		helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 		helpMenuHeader.setText(Resources.get("lbl.menu.header.help"));
 		helpMenuHeader.setMenu(helpMenu);
-*/
+
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
 		fileExitItem.addSelectionListener(new CloseMenuListener(this));
-/*
+
 		helpAboutItem = new MenuItem(helpMenu, SWT.PUSH);
 		helpAboutItem.setText(Resources.get("lbl.menu.item.about"));
-*/
+		helpAboutItem.addSelectionListener(new AboutMenuListener(this));
+
 		shell.setMenuBar(menuBar);
 
 		// Tabella
@@ -224,6 +225,7 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		return tray;
 	}
 
+	@Override
 	public Shell getShell() {
 		return shell;
 	}
