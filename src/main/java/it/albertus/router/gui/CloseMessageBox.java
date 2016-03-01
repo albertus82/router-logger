@@ -7,7 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-public class GuiCloseMessageBox {
+public class CloseMessageBox {
 
 	private interface Defaults {
 		boolean GUI_CONFIRM_CLOSE = false;
@@ -15,14 +15,14 @@ public class GuiCloseMessageBox {
 
 	private final MessageBox messageBox;
 
-	private GuiCloseMessageBox(Shell shell) {
+	private CloseMessageBox(Shell shell) {
 		messageBox = new MessageBox(shell, SWT.YES | SWT.NO | SWT.ICON_QUESTION);
 		messageBox.setText(Resources.get("msg.confirm.close.text"));
 		messageBox.setMessage(Resources.get("msg.confirm.close.message"));
 	}
 
 	public static MessageBox newInstance(Shell shell) {
-		return new GuiCloseMessageBox(shell).messageBox;
+		return new CloseMessageBox(shell).messageBox;
 	}
 
 	public static boolean show() {

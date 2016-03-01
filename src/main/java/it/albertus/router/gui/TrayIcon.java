@@ -19,17 +19,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
-public class GuiTray {
+public class TrayIcon {
 
 	private static class Singleton {
-		private static final GuiTray TRAY = new GuiTray();
+		private static final TrayIcon TRAY = new TrayIcon();
 	}
 
-	public static GuiTray getInstance() {
+	public static TrayIcon getInstance() {
 		return Singleton.TRAY;
 	}
 
-	private GuiTray() {}
+	private TrayIcon() {}
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private TrayItem trayItem = null;
@@ -43,18 +43,18 @@ public class GuiTray {
 		case STARTING:
 		case CONNECTING:
 		case DISCONNECTED:
-			return GuiImages.TRAY_ICON_ROUTER_GREY;
+			return Images.TRAY_ICON_ROUTER_GREY;
 		case RECONNECTING:
-			return GuiImages.TRAY_ICON_ROUTER_GREY_CLOCK;
+			return Images.TRAY_ICON_ROUTER_GREY_CLOCK;
 		case INFO:
 		case WARNING:
-			return GuiImages.TRAY_ICON_ROUTER_BLUE_WARNING;
+			return Images.TRAY_ICON_ROUTER_BLUE_WARNING;
 		case AUTHENTICATING:
-			return GuiImages.TRAY_ICON_ROUTER_BLUE_LOCK;
+			return Images.TRAY_ICON_ROUTER_BLUE_LOCK;
 		case ERROR:
-			return GuiImages.TRAY_ICON_ROUTER_GREY_ERROR;
+			return Images.TRAY_ICON_ROUTER_GREY_ERROR;
 		default:
-			return GuiImages.TRAY_ICON_ROUTER_BLUE;
+			return Images.TRAY_ICON_ROUTER_BLUE;
 		}
 	}
 

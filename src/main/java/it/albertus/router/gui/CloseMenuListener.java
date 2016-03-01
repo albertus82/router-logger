@@ -14,7 +14,7 @@ public class CloseMenuListener extends SelectionAdapter {
 
 	@Override
 	public void widgetSelected(SelectionEvent event) {
-		if (!GuiCloseMessageBox.show() || GuiCloseMessageBox.newInstance(gui.getShell()).open() == SWT.YES) {
+		if (!CloseMessageBox.show() || CloseMessageBox.newInstance(gui.getShell()).open() == SWT.YES) {
 			gui.getShell().dispose();
 		}
 	}

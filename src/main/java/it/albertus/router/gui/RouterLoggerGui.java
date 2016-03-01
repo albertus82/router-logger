@@ -31,8 +31,8 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		boolean GUI_START_MINIMIZED = false;
 	}
 
-	private final GuiTable table = GuiTable.getInstance();
-	private GuiTray tray;
+	private final RouterDataTable table = RouterDataTable.getInstance();
+	private TrayIcon tray;
 	private Shell shell;
 	private Menu menuBar, fileMenu, helpMenu;
 	private MenuItem fileMenuHeader, helpMenuHeader;
@@ -106,18 +106,18 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 
 	private void configureShell() {
 		shell.setText(Resources.get("lbl.window.title"));
-		shell.setImages(GuiImages.ICONS_ROUTER_BLUE);
+		shell.setImages(Images.ICONS_ROUTER_BLUE);
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
-			tray = GuiTray.getInstance();
+			tray = TrayIcon.getInstance();
 			tray.init(this);
 		}
 
 		// Listener sul pulsante di chiusura dell'applicazione...
-		if (GuiCloseMessageBox.show()) {
+		if (CloseMessageBox.show()) {
 			shell.addListener(SWT.Close, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					event.doit = GuiCloseMessageBox.newInstance(shell).open() == SWT.YES;
+					event.doit = CloseMessageBox.newInstance(shell).open() == SWT.YES;
 				}
 			});
 		}
@@ -212,15 +212,15 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected GuiConsole getConsole() {
-		return GuiConsole.getInstance();
+	protected TextConsole getConsole() {
+		return TextConsole.getInstance();
 	}
 
-	public GuiTable getTable() {
+	public RouterDataTable getTable() {
 		return table;
 	}
 
-	public GuiTray getTray() {
+	public TrayIcon getTray() {
 		return tray;
 	}
 

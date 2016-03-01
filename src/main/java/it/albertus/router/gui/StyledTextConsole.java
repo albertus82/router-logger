@@ -12,17 +12,17 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class GuiStyledConsole extends GuiConsole {
+public class StyledTextConsole extends TextConsole {
 
 	private static class Singleton {
-		private static final GuiStyledConsole CONSOLE = new GuiStyledConsole();
+		private static final StyledTextConsole CONSOLE = new StyledTextConsole();
 	}
 
-	public static GuiStyledConsole getInstance() {
+	public static StyledTextConsole getInstance() {
 		return Singleton.CONSOLE;
 	}
 
-	private GuiStyledConsole() {}
+	private StyledTextConsole() {}
 
 	@Override
 	public void init(final Composite container, final Object layoutData) {

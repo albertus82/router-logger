@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-public class GuiTable {
+public class RouterDataTable {
 
 	private interface Defaults {
 		int GUI_TABLE_MAX_ITEMS = 2000;
@@ -38,14 +38,14 @@ public class GuiTable {
 	}
 
 	private static class Singleton {
-		private static final GuiTable TABLE = new GuiTable();
+		private static final RouterDataTable TABLE = new RouterDataTable();
 	}
 
-	public static GuiTable getInstance() {
+	public static RouterDataTable getInstance() {
 		return Singleton.TABLE;
 	}
 
-	private GuiTable() {}
+	private RouterDataTable() {}
 
 	public void init(final Composite container, final Object layoutData) {
 		if (this.table == null) {

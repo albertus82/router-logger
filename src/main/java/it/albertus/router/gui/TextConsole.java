@@ -15,21 +15,21 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Text;
 
-public class GuiConsole extends Console {
+public class TextConsole extends Console {
 
 	protected interface Defaults {
 		int GUI_CONSOLE_MAX_CHARS = 50000;
 	}
 
 	private static class Singleton {
-		private static final GuiConsole CONSOLE = new GuiConsole();
+		private static final TextConsole CONSOLE = new TextConsole();
 	}
 
-	public static GuiConsole getInstance() {
+	public static TextConsole getInstance() {
 		return Singleton.CONSOLE;
 	}
 
-	protected GuiConsole() {}
+	protected TextConsole() {}
 
 	public void init(final Composite container, final Object layoutData) {
 		if (this.text == null) {
