@@ -14,12 +14,13 @@ import java.util.TreeMap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -31,7 +32,11 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	private final GuiTable table = GuiTable.getInstance();
-	private GuiTray tray = null;
+	private GuiTray tray;
+	private Shell shell;
+	private Menu menuBar, fileMenu, helpMenu;
+	private MenuItem fileMenuHeader, helpMenuHeader;
+	private MenuItem fileExitItem, helpAboutItem;
 
 	/** Entry point for GUI version */
 	public static void start() {
@@ -99,17 +104,18 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 		System.exit(1);
 	}
 
-	private void configureShell(final Shell shell) {
+	private void configureShell() {
 		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(GuiImages.ICONS_ROUTER_BLUE);
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
 			tray = GuiTray.getInstance();
-			tray.init(shell, this);
+			tray.init(this);
 		}
 
 		// Listener sul pulsante di chiusura dell'applicazione...
 		if (GuiCloseMessageBox.show()) {
 			shell.addListener(SWT.Close, new Listener() {
+				@Override
 				public void handleEvent(Event event) {
 					event.doit = GuiCloseMessageBox.newInstance(shell).open() == SWT.YES;
 				}
@@ -122,32 +128,51 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	}
 
 	private Shell createShell(Display display) {
-		final Shell shell = new Shell(display);
+		shell = new Shell(display);
 		shell.setSize(getInitialSize());
 		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
-		configureShell(shell);
-		createContents(shell);
+		configureShell();
+		createContents();
 		return shell;
 	}
 
-	private Control createContents(Composite parent) {
-		Composite container = parent;// new Composite(parent, SWT.NONE);
-
-		/*
-		 * Variare il numero per aumentare o diminuire le colonne del layout.
-		 * Modificare conseguentemente anche lo span della tabella e della
-		 * console!
-		 */
+	private void createContents() {
 		GridLayout layout = new GridLayout(1, true);
-		container.setLayout(layout);
+		shell.setLayout(layout);
+
+		// Menu
+		menuBar = new Menu(shell, SWT.BAR); // Barra
+
+		fileMenu = new Menu(shell, SWT.DROP_DOWN); // File
+		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
+		fileMenuHeader.setMenu(fileMenu);
+/*
+		helpMenu = new Menu(shell, SWT.DROP_DOWN); // Help
+		helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		helpMenuHeader.setText(Resources.get("lbl.menu.header.help"));
+		helpMenuHeader.setMenu(helpMenu);
+*/
+		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
+		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
+		fileExitItem.addSelectionListener(new CloseMenuListener(this));
+/*
+		helpAboutItem = new MenuItem(helpMenu, SWT.PUSH);
+		helpAboutItem.setText(Resources.get("lbl.menu.item.about"));
+*/
+		shell.setMenuBar(menuBar);
 
 		// Tabella
-		table.init(container);
+		final GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		tableLayoutData.minimumHeight = 200;
+		tableLayoutData.heightHint = 200;
+		table.init(shell, tableLayoutData);
 
 		// Console
-		getConsole().init(container);
-
-		return container;
+		final GridData consoleLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		consoleLayoutData.minimumHeight = 200;
+		consoleLayoutData.heightHint = 200;
+		getConsole().init(shell, consoleLayoutData);
 	}
 
 	@Override
@@ -189,6 +214,46 @@ public class RouterLoggerGui extends RouterLoggerEngine {
 	@Override
 	protected GuiConsole getConsole() {
 		return GuiConsole.getInstance();
+	}
+
+	public GuiTable getTable() {
+		return table;
+	}
+
+	public GuiTray getTray() {
+		return tray;
+	}
+
+	public Shell getShell() {
+		return shell;
+	}
+
+	public Menu getMenuBar() {
+		return menuBar;
+	}
+
+	public Menu getFileMenu() {
+		return fileMenu;
+	}
+
+	public Menu getHelpMenu() {
+		return helpMenu;
+	}
+
+	public MenuItem getFileMenuHeader() {
+		return fileMenuHeader;
+	}
+
+	public MenuItem getHelpMenuHeader() {
+		return helpMenuHeader;
+	}
+
+	public MenuItem getFileExitItem() {
+		return fileExitItem;
+	}
+
+	public MenuItem getHelpAboutItem() {
+		return helpAboutItem;
 	}
 
 }

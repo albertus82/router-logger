@@ -25,8 +25,8 @@ public class GuiStyledConsole extends GuiConsole {
 	private GuiStyledConsole() {}
 
 	@Override
-	public void init(final Composite container) {
-		super.init(container);
+	public void init(final Composite container, final Object layoutData) {
+		super.init(container, layoutData);
 		createContextMenu();
 	}
 

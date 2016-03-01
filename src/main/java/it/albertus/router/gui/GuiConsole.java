@@ -10,7 +10,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Scrollable;
@@ -32,10 +31,10 @@ public class GuiConsole extends Console {
 
 	protected GuiConsole() {}
 
-	public void init(final Composite container) {
+	public void init(final Composite container, final Object layoutData) {
 		if (this.text == null) {
 			createText(container);
-			configureText();
+			configureText(layoutData);
 			addSelectAllKeyListener();
 		}
 		else {
@@ -59,11 +58,8 @@ public class GuiConsole extends Console {
 		});
 	}
 
-	protected void configureText() {
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gridData.minimumHeight = 200;
-		gridData.heightHint = 200;
-		text.setLayoutData(gridData);
+	protected void configureText(Object layoutData) {
+		text.setLayoutData(layoutData);
 		text.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 		text.setBackground(text.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 	}

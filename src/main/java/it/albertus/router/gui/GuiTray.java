@@ -2,7 +2,6 @@ package it.albertus.router.gui;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
@@ -37,6 +36,7 @@ public class GuiTray {
 	private Menu menu = null;
 	private String toolTipText = null;
 	private Image trayIcon = null;
+	private RouterLoggerGui gui = null;
 
 	private Image getTrayIcon(RouterLoggerStatus status) {
 		switch (status) {
@@ -58,13 +58,14 @@ public class GuiTray {
 		}
 	}
 
-	public void init(final Shell shell, final RouterLoggerEngine app) {
+	public void init(final RouterLoggerGui gui) {
+		this.gui = gui;
 		if (this.trayItem == null && menu == null) {
-			shell.addShellListener(new ShellAdapter() {
+			gui.getShell().addShellListener(new ShellAdapter() {
 				@Override
 				public void shellIconified(ShellEvent e) {
-					iconify(shell, app.getStatus());
-					shell.setMinimized(false);
+					iconify(gui.getShell(), gui.getStatus());
+					gui.getShell().setMinimized(false);
 				}
 			});
 		}
@@ -102,14 +103,7 @@ public class GuiTray {
 				// Tasto "Exit"...
 				menuItem = new MenuItem(menu, SWT.PUSH);
 				menuItem.setText(Resources.get("lbl.tray.close"));
-				menuItem.addListener(SWT.Selection, new Listener() {
-					@Override
-					public void handleEvent(Event event) {
-						if (!GuiCloseMessageBox.show() || GuiCloseMessageBox.newInstance(shell).open() == SWT.YES) {
-							shell.dispose();
-						}
-					}
-				});
+				menuItem.addSelectionListener(new CloseMenuListener(gui));
 			}
 
 			if (addListeners) {

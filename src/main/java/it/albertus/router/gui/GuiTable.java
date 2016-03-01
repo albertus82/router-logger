@@ -20,7 +20,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -48,9 +47,9 @@ public class GuiTable {
 
 	private GuiTable() {}
 
-	public void init(final Composite container) {
+	public void init(final Composite container, final Object layoutData) {
 		if (this.table == null) {
-			this.table = createTable(container);
+			this.table = createTable(container, layoutData);
 			createContextMenu();
 		}
 		else {
@@ -58,12 +57,9 @@ public class GuiTable {
 		}
 	}
 
-	private Table createTable(final Composite container) {
+	private Table createTable(final Composite container, final Object layoutData) {
 		final Table table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
-		final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gridData.minimumHeight = 200;
-		gridData.heightHint = 200;
-		table.setLayoutData(gridData);
+		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
