@@ -124,7 +124,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 	}
 
 	private Point getInitialSize() {
-		return new Point(750, 550);
+		return new Point(750, 580);
 	}
 
 	private Shell createShell(Display display) {
@@ -166,13 +166,11 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		// Tabella
 		final GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		tableLayoutData.minimumHeight = 200;
-		tableLayoutData.heightHint = 200;
 		table.init(shell, tableLayoutData);
 
 		// Console
 		final GridData consoleLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		consoleLayoutData.minimumHeight = 200;
-		consoleLayoutData.heightHint = 200;
 		getConsole().init(shell, consoleLayoutData);
 	}
 
