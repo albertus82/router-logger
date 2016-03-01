@@ -62,7 +62,6 @@ public class AboutDialog extends Dialog {
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 		link.setLayoutData(gridData);
 		link.addSelectionListener(new SelectionListener() {
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Program.launch(e.text);
@@ -76,11 +75,12 @@ public class AboutDialog extends Dialog {
 
 		Button okButton = new Button(shell, SWT.PUSH);
 		okButton.setText(Resources.get("lbl.button.ok"));
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false);
+		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
 		gridData.horizontalSpan = 2;
+		gridData.minimumWidth = 64;
 		okButton.setLayoutData(gridData);
-
 		okButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				shell.close();
 			}
