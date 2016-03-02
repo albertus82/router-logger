@@ -43,21 +43,15 @@ public class Logger {
 	public static Logger getInstance() {
 		return Singleton.LOGGER;
 	}
-	
+
 	public void init(final Console console) {
 		this.out = console;
 	}
 
-	private final boolean debug;
-
 	private Console out;
 
-	private Logger() {
-		this.debug = configuration.getBoolean("console.debug", Defaults.DEBUG);
-	}
-
 	public boolean isDebug() {
-		return debug;
+		return configuration.getBoolean("console.debug", Defaults.DEBUG);
 	}
 
 	public void log(final String text, final Destination... destinations) {
@@ -95,7 +89,7 @@ public class Logger {
 		String longLog = ExceptionUtils.getStackTrace(throwable);
 
 		if (dest.contains(Destination.CONSOLE)) {
-			if (debug) {
+			if (isDebug()) {
 				logToConsole(longLog);
 			}
 			else {

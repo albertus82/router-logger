@@ -61,6 +61,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			log.append(ANIMATION[getIteration() & 3]).append(' ');
 		}
 		log.append(getIteration());
+		final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
 		if (iterations > 0) {
 			log.append('/').append(iterations);
 		}

@@ -35,8 +35,6 @@ public abstract class RouterLoggerEngine {
 	protected final Reader reader;
 	protected final Writer writer;
 
-	protected final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
-
 	protected volatile boolean exit = false;
 
 	private RouterLoggerStatus status = RouterLoggerStatus.STARTING;
@@ -107,8 +105,6 @@ public abstract class RouterLoggerEngine {
 	protected void run() {
 		welcome();
 
-		final int retries = configuration.getInt("logger.retry.count", Defaults.RETRIES);
-
 		// Gestione chiusura console (CTRL+C)...
 		final Thread hook = new Thread() {
 			@Override
@@ -119,7 +115,7 @@ public abstract class RouterLoggerEngine {
 		};
 		Runtime.getRuntime().addShutdownHook(hook);
 
-		for (int index = 0; index <= retries && !exit; index++) {
+		for (int index = 0, retries = configuration.getInt("logger.retry.count", Defaults.RETRIES); index <= retries && !exit; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
 				setStatus(RouterLoggerStatus.RECONNECTING);
@@ -229,7 +225,7 @@ public abstract class RouterLoggerEngine {
 		long hysteresis = 0;
 
 		// Iterazione...
-		for (; (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
+		for (final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS); (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			final long timeBeforeRead = System.currentTimeMillis();
 			final RouterData info = reader.readInfo();
 			final long timeAfterRead = System.currentTimeMillis();

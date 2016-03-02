@@ -151,7 +151,6 @@ public class RouterDataTable {
 	private Table table = null;
 	private boolean tableInitialized = false;
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
-	private final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 
 	public void addRow(final RouterData data, final Map<Threshold, String> thresholdsReached, final int iteration) {
 		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
@@ -241,6 +240,7 @@ public class RouterDataTable {
 							}
 
 							// Limitatore righe in tabella...
+							final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 							if (table.getItemCount() > maxItems) {
 								table.remove(maxItems);
 							}
