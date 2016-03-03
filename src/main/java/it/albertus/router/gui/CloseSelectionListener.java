@@ -4,11 +4,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class CloseMenuListener extends SelectionAdapter {
+public class CloseSelectionListener extends SelectionAdapter {
 
 	private final RouterLoggerGui gui;
 
-	public CloseMenuListener(RouterLoggerGui gui) {
+	public CloseSelectionListener(RouterLoggerGui gui) {
 		this.gui = gui;
 	}
 

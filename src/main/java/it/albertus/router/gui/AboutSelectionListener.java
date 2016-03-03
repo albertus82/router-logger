@@ -6,11 +6,11 @@ import it.albertus.util.Version;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class AboutMenuListener extends SelectionAdapter {
+public class AboutSelectionListener extends SelectionAdapter {
 
 	private final Gui gui;
 
-	public AboutMenuListener(final Gui gui) {
+	public AboutSelectionListener(final Gui gui) {
 		this.gui = gui;
 	}
 

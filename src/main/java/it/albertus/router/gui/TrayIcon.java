@@ -103,7 +103,7 @@ public class TrayIcon {
 				// Tasto "Exit"...
 				menuItem = new MenuItem(menu, SWT.PUSH);
 				menuItem.setText(Resources.get("lbl.tray.close"));
-				menuItem.addSelectionListener(new CloseMenuListener(gui));
+				menuItem.addSelectionListener(new CloseSelectionListener(gui));
 			}
 
 			if (addListeners) {

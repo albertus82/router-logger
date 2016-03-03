@@ -155,11 +155,11 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
-		fileExitItem.addSelectionListener(new CloseMenuListener(this));
+		fileExitItem.addSelectionListener(new CloseSelectionListener(this));
 
 		helpAboutItem = new MenuItem(helpMenu, SWT.PUSH);
 		helpAboutItem.setText(Resources.get("lbl.menu.item.about"));
-		helpAboutItem.addSelectionListener(new AboutMenuListener(this));
+		helpAboutItem.addSelectionListener(new AboutSelectionListener(this));
 
 		shell.setMenuBar(menuBar);
 
