@@ -1,3 +1,4 @@
+#!/bin/sh
 if [ "$1" = "" ]
   then if [ "$JAVA_HOME" != "" ]
   then nice "$JAVA_HOME/bin/java" -Xms8m -Xmx64m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLogger

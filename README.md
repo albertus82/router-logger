@@ -24,11 +24,12 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
-In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat) senza specificare altro; analogamente su **Linux** basta richiamare lo script shell [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger.sh`.
+In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat) senza specificare altro; analogamente su **Linux** e **OS X** basta richiamare rispettivamente lo script shell [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh) o [**`routerlogger.command`**](src/main/scripts/routerlogger.command), avendogli prima assegnato il permesso di esecuzione con un comando del tipo `chmod 754 routerlogger.sh` o `chmod 754 routerlogger.command`.
 
 >&Egrave; presente anche un'opzione che consente di avviare l'applicazione in modalit&agrave; console (senza interfaccia grafica):
 >* Windows: **`routerlogger.bat -c`**
 >* Linux: **`routerlogger.sh -c`**
+>* OS X: **`routerlogger.command -c`**
 
 Il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.
 
