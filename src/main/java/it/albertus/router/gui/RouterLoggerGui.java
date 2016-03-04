@@ -17,8 +17,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -114,12 +112,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 		// Listener sul pulsante di chiusura dell'applicazione...
 		if (CloseMessageBox.show()) {
-			shell.addListener(SWT.Close, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					event.doit = CloseMessageBox.newInstance(shell).open() == SWT.YES;
-				}
-			});
+			shell.addListener(SWT.Close, new CloseListener(this));
 		}
 	}
 
@@ -155,7 +148,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
-		fileExitItem.addSelectionListener(new CloseSelectionListener(this));
+		fileExitItem.addSelectionListener(new CloseListener(this));
 
 		helpAboutItem = new MenuItem(helpMenu, SWT.PUSH);
 		helpAboutItem.setText(Resources.get("lbl.menu.item.about"));
@@ -166,11 +159,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		// Tabella
 		final GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		tableLayoutData.minimumHeight = 200;
+		tableLayoutData.heightHint = 200;
 		table.init(shell, tableLayoutData);
 
 		// Console
 		final GridData consoleLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		consoleLayoutData.minimumHeight = 200;
+		consoleLayoutData.heightHint = 200;
 		getConsole().init(shell, consoleLayoutData);
 	}
 
