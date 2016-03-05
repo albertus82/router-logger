@@ -17,8 +17,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -31,10 +29,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 	private final DataTable table = DataTable.getInstance();
 	private TrayIcon tray;
+	private MenuBar menuBar;
 	private Shell shell;
-	private Menu menuBar, fileMenu, helpMenu;
-	private MenuItem fileMenuHeader, helpMenuHeader;
-	private MenuItem fileExitItem, helpAboutItem;
 
 	/** Entry point for GUI version */
 	public static void start() {
@@ -134,27 +130,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		shell.setLayout(layout);
 
 		// Menu
-		menuBar = new Menu(shell, SWT.BAR); // Barra
-
-		fileMenu = new Menu(shell, SWT.DROP_DOWN); // File
-		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
-		fileMenuHeader.setMenu(fileMenu);
-
-		helpMenu = new Menu(shell, SWT.DROP_DOWN); // Help
-		helpMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-		helpMenuHeader.setText(Resources.get("lbl.menu.header.help"));
-		helpMenuHeader.setMenu(helpMenu);
-
-		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
-		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
-		fileExitItem.addSelectionListener(new CloseListener(this));
-
-		helpAboutItem = new MenuItem(helpMenu, SWT.PUSH);
-		helpAboutItem.setText(Resources.get("lbl.menu.item.about"));
-		helpAboutItem.addSelectionListener(new AboutSelectionListener(this));
-
-		shell.setMenuBar(menuBar);
+		menuBar = new MenuBar(this);
 
 		// Tabella
 		final GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -223,32 +199,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		return shell;
 	}
 
-	public Menu getMenuBar() {
+	public MenuBar getMenuBar() {
 		return menuBar;
-	}
-
-	public Menu getFileMenu() {
-		return fileMenu;
-	}
-
-	public Menu getHelpMenu() {
-		return helpMenu;
-	}
-
-	public MenuItem getFileMenuHeader() {
-		return fileMenuHeader;
-	}
-
-	public MenuItem getHelpMenuHeader() {
-		return helpMenuHeader;
-	}
-
-	public MenuItem getFileExitItem() {
-		return fileExitItem;
-	}
-
-	public MenuItem getHelpAboutItem() {
-		return helpAboutItem;
 	}
 
 }
