@@ -26,7 +26,7 @@ public class CloseListener extends SelectionAdapter implements Listener {
 
 	@Override
 	public void handleEvent(Event event) {
-		event.doit = confirmClose();
+		event.doit = !CloseMessageBox.show() || confirmClose();
 	}
 
 	private boolean confirmClose() {

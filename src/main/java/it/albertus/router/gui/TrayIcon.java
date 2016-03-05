@@ -3,6 +3,7 @@ package it.albertus.router.gui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
+import it.albertus.router.gui.RouterLoggerGui.Defaults;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.RestoreShellListener;
 import it.albertus.router.resources.Resources;
@@ -39,7 +40,9 @@ public class TrayIcon {
 		gui.getShell().addShellListener(new ShellAdapter() {
 			@Override
 			public void shellIconified(ShellEvent e) {
-				iconify();
+				if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
+					iconify();
+				}
 			}
 		});
 	}
@@ -98,13 +101,10 @@ public class TrayIcon {
 			}
 		}
 
-		if (tray != null && trayItem != null) {
+		if (tray != null && trayItem != null && !trayItem.isDisposed()) {
 			gui.getShell().setVisible(false);
 			trayItem.setVisible(true);
 			gui.getShell().setMinimized(false);
-		}
-		else {
-			gui.getShell().setMinimized(true);
 		}
 	}
 

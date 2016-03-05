@@ -102,14 +102,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 	private void configureShell() {
 		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(Images.ICONS_ROUTER_BLUE);
-		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
-			trayIcon = new TrayIcon(this);
-		}
+		trayIcon = new TrayIcon(this);
 
 		// Listener sul pulsante di chiusura dell'applicazione...
-		if (CloseMessageBox.show()) {
-			shell.addListener(SWT.Close, new CloseListener(this));
-		}
+		shell.addListener(SWT.Close, new CloseListener(this));
 	}
 
 	private Point getInitialSize() {
