@@ -176,6 +176,22 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		}
 	}
 
+	public boolean canCopyDataTable() {
+		return this.getDataTable().getTable() != null && this.getDataTable().getTable().getSelectionCount() > 0;
+	}
+
+	public boolean canCopyConsole() {
+		return this.getConsole().getText() != null && this.getConsole().getText().isFocusControl() && this.getConsole().getText().getSelectionCount() > 0;
+	}
+
+	public boolean canSelectAllDataTable() {
+		return this.getDataTable().getTable() != null && this.getDataTable().getTable().getItemCount() > 0;
+	}
+
+	public boolean canSelectAllConsole() {
+		return this.getConsole().getText() != null && this.getConsole().getText().isFocusControl();
+	}
+
 	@Override
 	protected void setStatus(RouterLoggerStatus status) {
 		super.setStatus(status);

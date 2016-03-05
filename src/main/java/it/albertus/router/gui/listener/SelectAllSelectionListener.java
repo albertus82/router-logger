@@ -15,11 +15,12 @@ public class SelectAllSelectionListener extends SelectionAdapter {
 
 	@Override
 	public void widgetSelected(SelectionEvent e) {
-		if (gui.getDataTable().getTable() != null && gui.getDataTable().getTable().isFocusControl()) {
-			gui.getDataTable().getTable().selectAll();
-		}
-		else if (gui.getConsole().getText() != null && gui.getConsole().getText().isFocusControl()) {
+		if (gui.canSelectAllConsole()) {
 			gui.getConsole().getText().selectAll();
 		}
+		else if (gui.canSelectAllDataTable()) {
+			gui.getDataTable().getTable().selectAll();
+		}
 	}
+
 }

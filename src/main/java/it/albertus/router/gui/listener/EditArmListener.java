@@ -24,20 +24,20 @@ public class EditArmListener implements ArmListener {
 	}
 
 	private boolean canCopy() {
-		if (gui.getDataTable().getTable() != null && gui.getDataTable().getTable().isFocusControl() && gui.getDataTable().getTable().getSelectionCount() != 0) {
+		if (gui.canCopyConsole()) {
 			return true;
 		}
-		if (gui.getConsole().getText() != null && gui.getConsole().getText().isFocusControl() && gui.getConsole().getText().getSelectionCount() != 0) {
+		if (gui.canCopyDataTable()) {
 			return true;
 		}
 		return false;
 	}
 
 	private boolean canSelectAll() {
-		if (gui.getDataTable().getTable() != null && gui.getDataTable().getTable().isFocusControl()) {
+		if (gui.canSelectAllConsole()) {
 			return true;
 		}
-		if (gui.getConsole().getText() != null && gui.getConsole().getText().isFocusControl()) {
+		if (gui.canSelectAllDataTable()) {
 			return true;
 		}
 		return false;
