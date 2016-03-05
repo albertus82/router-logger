@@ -138,7 +138,6 @@ public class DataTable {
 							if (!tableInitialized) {
 								// Iterazione...
 								TableColumn column = new TableColumn(table, SWT.NONE);
-								column.setText(Resources.get("lbl.column.iteration.text"));
 								column.setToolTipText(Resources.get("lbl.column.iteration.tooltip"));
 
 								// Timestamp...
@@ -194,13 +193,14 @@ public class DataTable {
 
 							// Dimesionamento delle colonne (una tantum)...
 							if (!tableInitialized) {
+								table.getColumn(0).setText("8888"); // Spazio per 4 cifre!
 								for (int j = 0; j < table.getColumns().length; j++) {
 									table.getColumn(j).pack();
 								}
-								table.getColumn(0).setWidth((int) (table.getColumn(0).getWidth() * 1.3));
+								table.getColumn(0).setText(Resources.get("lbl.column.iteration.text"));
 
 								if (packColumns) {
-									table.getColumn(2).setWidth((int) (table.getColumn(0).getWidth()));
+									table.getColumn(2).setWidth(table.getColumn(0).getWidth());
 									final String[] stringArray = new String[info.keySet().size()];
 									final TableColumn[] columns = table.getColumns();
 									final int startIndex = 3;
