@@ -28,6 +28,7 @@ public class TrayIcon {
 
 	private interface Defaults {
 		boolean GUI_MINIMIZE_TRAY = true;
+		boolean GUI_TRAY_TOOLTIP = true;
 	}
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
@@ -89,11 +90,13 @@ public class TrayIcon {
 				toolTipText = getBaseToolTipText(gui.getStatus());
 				trayItem.setToolTipText(toolTipText);
 
-				toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
-				toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
-				toolTip.setVisible(false);
-				toolTip.setAutoHide(true);
-				trayItem.setToolTip(toolTip);
+				if (configuration.getBoolean("gui.tray.tooltip", Defaults.GUI_TRAY_TOOLTIP)) {
+					toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
+					toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
+					toolTip.setVisible(false);
+					toolTip.setAutoHide(true);
+					trayItem.setToolTip(toolTip);
+				}
 
 				trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
 				showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
@@ -163,7 +166,7 @@ public class TrayIcon {
 	}
 
 	public void notifyThresholds(final Map<Threshold, String> thresholdsReached) {
-		if (thresholdsReached != null && !thresholdsReached.isEmpty() && trayItem != null && !trayItem.isDisposed()) {
+		if (toolTip != null && !toolTip.isDisposed() && trayItem != null && !trayItem.isDisposed() && thresholdsReached != null && !thresholdsReached.isEmpty()) {
 			final StringBuilder message = new StringBuilder();
 			for (final Threshold threshold : thresholdsReached.keySet()) {
 				message.append(threshold.getKey()).append('=').append(thresholdsReached.get(threshold)).append(NewLine.SYSTEM_LINE_SEPARATOR);
@@ -173,7 +176,7 @@ public class TrayIcon {
 				trayItem.getDisplay().syncExec(new Runnable() {
 					@Override
 					public void run() {
-						if (trayItem != null && !trayItem.isDisposed() && trayItem.getVisible() && toolTip != null && !toolTip.isDisposed()) {
+						if (toolTip != null && !toolTip.isDisposed() && trayItem != null && !trayItem.isDisposed() && trayItem.getVisible()) {
 							toolTip.setMessage(message.toString().trim());
 							toolTip.setVisible(true);
 						}
