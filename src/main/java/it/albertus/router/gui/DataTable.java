@@ -44,6 +44,8 @@ public class DataTable {
 		return Singleton.TABLE;
 	}
 
+	private static final char SAMPLE_CHAR = '9';
+
 	private RouterLoggerGui gui;
 
 	private Menu contextMenu;
@@ -140,6 +142,7 @@ public class DataTable {
 							if (!tableInitialized) {
 								// Iterazione...
 								TableColumn column = new TableColumn(table, SWT.NONE);
+								column.setText(Resources.get("lbl.column.iteration.text"));
 								column.setToolTipText(Resources.get("lbl.column.iteration.tooltip"));
 
 								// Timestamp...
@@ -195,11 +198,13 @@ public class DataTable {
 
 							// Dimesionamento delle colonne (una tantum)...
 							if (!tableInitialized) {
-								table.getColumn(0).setText("8888"); // Spazio per 4 cifre!
+								final TableItem iterationTableItem = table.getItem(0);
+								final String originalIteration = iterationTableItem.getText();
+								setSampleNumber(iterationTableItem, 4);
 								for (int j = 0; j < table.getColumns().length; j++) {
 									table.getColumn(j).pack();
 								}
-								table.getColumn(0).setText(Resources.get("lbl.column.iteration.text"));
+								iterationTableItem.setText(originalIteration);
 
 								if (packColumns) {
 									table.getColumn(2).setWidth(table.getColumn(0).getWidth());
@@ -226,6 +231,15 @@ public class DataTable {
 				}
 			});
 		}
+	}
+
+	/** Consente la determinazione automatica della larghezza del campo. */
+	private void setSampleNumber(final TableItem tableItem, final int size) {
+		final char[] sample = new char[size];
+		for (int i = 0; i < size; i++) {
+			sample[i] = SAMPLE_CHAR;
+		}
+		tableItem.setText(String.valueOf(sample));
 	}
 
 	public Table getTable() {
