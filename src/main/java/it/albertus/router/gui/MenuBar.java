@@ -2,9 +2,9 @@ package it.albertus.router.gui;
 
 import it.albertus.router.gui.listener.AboutSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
-import it.albertus.router.gui.listener.CopySelectionListener;
-import it.albertus.router.gui.listener.EditArmListener;
-import it.albertus.router.gui.listener.SelectAllSelectionListener;
+import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
+import it.albertus.router.gui.listener.EditMenuBarArmListener;
+import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.SWT;
@@ -44,18 +44,18 @@ public class MenuBar {
 		editMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		editMenuHeader.setText(Resources.get("lbl.menu.header.edit"));
 		editMenuHeader.setMenu(editMenu);
-		editMenuHeader.addArmListener(new EditArmListener(gui));
+		editMenuHeader.addArmListener(new EditMenuBarArmListener(gui));
 
 		editCopyMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
-		editCopyMenuItem.addSelectionListener(new CopySelectionListener(gui));
+		editCopyMenuItem.addSelectionListener(new CopyMenuBarSelectionListener(gui));
 		editCopyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY);
 
 		new MenuItem(editMenu, SWT.SEPARATOR);
 
 		editSelectAllMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
-		editSelectAllMenuItem.addSelectionListener(new SelectAllSelectionListener(gui));
+		editSelectAllMenuItem.addSelectionListener(new SelectAllMenuBarSelectionListener(gui));
 		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL);
 
 		helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN); // Help

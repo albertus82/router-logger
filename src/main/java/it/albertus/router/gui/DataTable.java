@@ -3,6 +3,9 @@ package it.albertus.router.gui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
+import it.albertus.router.gui.listener.CopyDataTableSelectionListener;
+import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
+import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 
@@ -16,10 +19,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
@@ -78,33 +77,16 @@ public class DataTable {
 		// Copia...
 		copyMenuItem = new MenuItem(contextMenu, SWT.PUSH);
 		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
-		copyMenuItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				copySelection();
-			}
-		});
+		copyMenuItem.addSelectionListener(new CopyDataTableSelectionListener(gui));
 
 		new MenuItem(contextMenu, SWT.SEPARATOR);
 
 		// Seleziona tutto...
 		selectAllMenuItem = new MenuItem(contextMenu, SWT.PUSH);
 		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
-		selectAllMenuItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				table.selectAll();
-			}
-		});
+		selectAllMenuItem.addSelectionListener(new SelectAllDataTableSelectionListener(gui));
 
-		table.addMenuDetectListener(new MenuDetectListener() {
-			@Override
-			public void menuDetected(MenuDetectEvent e) {
-				copyMenuItem.setEnabled(gui.canCopyDataTable());
-				selectAllMenuItem.setEnabled(gui.canSelectAllDataTable());
-				contextMenu.setVisible(true);
-			}
-		});
+		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
 	}
 
 	public void copySelection() {

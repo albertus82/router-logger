@@ -6,11 +6,11 @@ import org.eclipse.swt.events.ArmEvent;
 import org.eclipse.swt.events.ArmListener;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class EditArmListener implements ArmListener {
+public class EditMenuBarArmListener implements ArmListener {
 
 	private final RouterLoggerGui gui;
 
-	public EditArmListener(final RouterLoggerGui gui) {
+	public EditMenuBarArmListener(final RouterLoggerGui gui) {
 		this.gui = gui;
 	}
 
