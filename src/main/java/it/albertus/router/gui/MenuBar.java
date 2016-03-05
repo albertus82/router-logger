@@ -47,14 +47,14 @@ public class MenuBar {
 		editMenuHeader.addArmListener(new EditMenuBarArmListener(gui));
 
 		editCopyMenuItem = new MenuItem(editMenu, SWT.PUSH);
-		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
+		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
 		editCopyMenuItem.addSelectionListener(new CopyMenuBarSelectionListener(gui));
 		editCopyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY);
 
 		new MenuItem(editMenu, SWT.SEPARATOR);
 
 		editSelectAllMenuItem = new MenuItem(editMenu, SWT.PUSH);
-		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
+		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
 		editSelectAllMenuItem.addSelectionListener(new SelectAllMenuBarSelectionListener(gui));
 		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL);
 

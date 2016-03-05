@@ -76,15 +76,17 @@ public class DataTable {
 
 		// Copia...
 		copyMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
+		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
 		copyMenuItem.addSelectionListener(new CopyDataTableSelectionListener(gui));
+		copyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY);
 
 		new MenuItem(contextMenu, SWT.SEPARATOR);
 
 		// Seleziona tutto...
 		selectAllMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
+		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
 		selectAllMenuItem.addSelectionListener(new SelectAllDataTableSelectionListener(gui));
+		selectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL);
 
 		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
 	}
