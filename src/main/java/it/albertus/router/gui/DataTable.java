@@ -116,10 +116,10 @@ public class DataTable {
 		return menu;
 	}
 
-	private void copySelection() {
+	public void copySelection() {
 		if (table.getColumns() != null && table.getColumns().length != 0) {
 			if (table.getSelectionCount() > 1) {
-				System.gc(); // La copia negli appunti puo' richiedere molta memoria!
+				System.gc(); // La copia puo' richiedere molta memoria!
 			}
 			final StringBuilder data = new StringBuilder();
 
@@ -251,6 +251,10 @@ public class DataTable {
 				}
 			});
 		}
+	}
+
+	public Table getTable() {
+		return table;
 	}
 
 }

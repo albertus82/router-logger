@@ -32,7 +32,7 @@ public class TextConsole extends Console {
 	protected TextConsole() {}
 
 	public void init(final Composite container, final Object layoutData) {
-		if (this.text == null) {
+		if (this.scrollable == null) {
 			createText(container);
 			configureText(layoutData);
 			addSelectAllKeyListener();
@@ -43,11 +43,11 @@ public class TextConsole extends Console {
 	}
 
 	protected void createText(final Composite container) {
-		text = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		scrollable = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 	}
 
 	protected void addSelectAllKeyListener() {
-		text.addKeyListener(new KeyAdapter() {
+		scrollable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// Supporto CTRL+A per "Seleziona tutto"...
@@ -59,16 +59,16 @@ public class TextConsole extends Console {
 	}
 
 	protected void configureText(Object layoutData) {
-		text.setLayoutData(layoutData);
-		text.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
-		text.setBackground(text.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		scrollable.setLayoutData(layoutData);
+		scrollable.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+		scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 	}
 
 	protected static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-	protected Scrollable text = null;
+	protected Scrollable scrollable = null;
 
 	protected void failSafePrint(final String toPrint) {
 		System.out.print(toPrint);
@@ -93,7 +93,7 @@ public class TextConsole extends Console {
 		else {
 			toPrint = value;
 		}
-		if (text != null && !text.isDisposed()) {
+		if (scrollable != null && !scrollable.isDisposed()) {
 			Display.getDefault().syncExec(new Runnable() {
 				@Override
 				public void run() {
@@ -189,8 +189,8 @@ public class TextConsole extends Console {
 		newLine();
 	}
 
-	private Text getText() {
-		return (Text) text;
+	public Text getText() {
+		return (Text) scrollable;
 	}
 
 }

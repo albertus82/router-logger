@@ -1,4 +1,7 @@
-package it.albertus.router.gui;
+package it.albertus.router.gui.listener;
+
+import it.albertus.router.gui.CloseMessageBox;
+import it.albertus.router.gui.Gui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

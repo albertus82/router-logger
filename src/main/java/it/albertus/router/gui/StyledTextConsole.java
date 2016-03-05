@@ -32,12 +32,12 @@ public class StyledTextConsole extends TextConsole {
 
 	@Override
 	protected void createText(final Composite container) {
-		text = new StyledText(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		scrollable = new StyledText(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 	}
 
 	@Override
 	protected void addSelectAllKeyListener() {
-		text.addKeyListener(new KeyAdapter() {
+		scrollable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// Supporto CTRL+A per "Seleziona tutto"...
@@ -49,7 +49,7 @@ public class StyledTextConsole extends TextConsole {
 	}
 
 	private Menu createContextMenu() {
-		final Menu menu = new Menu(text);
+		final Menu menu = new Menu(scrollable);
 
 		// Copia...
 		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
@@ -85,7 +85,7 @@ public class StyledTextConsole extends TextConsole {
 			}
 		});
 
-		text.addListener(SWT.MenuDetect, new Listener() {
+		scrollable.addListener(SWT.MenuDetect, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				menu.setVisible(true);
@@ -95,8 +95,8 @@ public class StyledTextConsole extends TextConsole {
 		return menu;
 	}
 
-	private StyledText getStyledText() {
-		return (StyledText) text;
+	public StyledText getStyledText() {
+		return (StyledText) scrollable;
 	}
 
 	@Override

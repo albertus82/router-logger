@@ -4,6 +4,7 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Threshold;
+import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -27,8 +28,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		boolean GUI_START_MINIMIZED = false;
 	}
 
-	private final DataTable table = DataTable.getInstance();
-	private TrayIcon tray;
+	private final DataTable dataTable = DataTable.getInstance();
+	private TrayIcon trayIcon;
 	private MenuBar menuBar;
 	private Shell shell;
 
@@ -102,8 +103,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(Images.ICONS_ROUTER_BLUE);
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
-			tray = TrayIcon.getInstance();
-			tray.init(this);
+			trayIcon = TrayIcon.getInstance();
+			trayIcon.init(this);
 		}
 
 		// Listener sul pulsante di chiusura dell'applicazione...
@@ -136,7 +137,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		final GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		tableLayoutData.minimumHeight = 200;
 		tableLayoutData.heightHint = 200;
-		table.init(shell, tableLayoutData);
+		dataTable.init(shell, tableLayoutData);
 
 		// Console
 		final GridData consoleLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -148,11 +149,11 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
 		/* Aggiunta riga nella tabella a video */
-		table.addRow(info, thresholdsReached, getIteration());
+		dataTable.addRow(info, thresholdsReached, getIteration());
 
 		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
-		if (tray != null) {
-			tray.updateTrayItem(getStatus(), info);
+		if (trayIcon != null) {
+			trayIcon.updateTrayItem(getStatus(), info);
 		}
 
 		/* Stampa eventuali soglie raggiunte in console */
@@ -178,20 +179,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 	@Override
 	protected void setStatus(RouterLoggerStatus status) {
 		super.setStatus(status);
-		tray.updateTrayItem(status);
-	}
-
-	@Override
-	protected TextConsole getConsole() {
-		return TextConsole.getInstance();
-	}
-
-	public DataTable getTable() {
-		return table;
-	}
-
-	public TrayIcon getTray() {
-		return tray;
+		trayIcon.updateTrayItem(status);
 	}
 
 	@Override
@@ -199,8 +187,21 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		return shell;
 	}
 
+	@Override
+	public TextConsole getConsole() {
+		return TextConsole.getInstance();
+	}
+
 	public MenuBar getMenuBar() {
 		return menuBar;
+	}
+
+	public DataTable getDataTable() {
+		return dataTable;
+	}
+
+	public TrayIcon getTrayIcon() {
+		return trayIcon;
 	}
 
 }

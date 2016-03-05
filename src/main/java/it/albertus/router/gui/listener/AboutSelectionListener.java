@@ -1,5 +1,7 @@
-package it.albertus.router.gui;
+package it.albertus.router.gui.listener;
 
+import it.albertus.router.gui.AboutDialog;
+import it.albertus.router.gui.Gui;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Version;
 
