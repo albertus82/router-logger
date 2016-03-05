@@ -16,12 +16,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -43,11 +45,18 @@ public class DataTable {
 		return Singleton.TABLE;
 	}
 
+	private RouterLoggerGui gui;
+
+	private Menu contextMenu;
+	private MenuItem copyMenuItem;
+	private MenuItem selectAllMenuItem;
+
 	private DataTable() {}
 
-	public void init(final Composite container, final Object layoutData) {
+	public void init(final RouterLoggerGui gui, final Object layoutData) {
 		if (this.table == null) {
-			this.table = createTable(container, layoutData);
+			this.gui = gui;
+			this.table = createTable(gui.getShell(), layoutData);
 			createContextMenu();
 		}
 		else {
@@ -63,43 +72,43 @@ public class DataTable {
 		return table;
 	}
 
-	private Menu createContextMenu() {
-		final Menu menu = new Menu(table);
+	private void createContextMenu() {
+		contextMenu = new Menu(table);
 
 		// Copia...
-		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
-		menuItem.addListener(SWT.Selection, new Listener() {
+		copyMenuItem = new MenuItem(contextMenu, SWT.PUSH);
+		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
+		copyMenuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void handleEvent(Event event) {
+			public void widgetSelected(SelectionEvent e) {
 				copySelection();
 			}
 		});
 
-		menuItem = new MenuItem(menu, SWT.SEPARATOR);
+		new MenuItem(contextMenu, SWT.SEPARATOR);
 
 		// Seleziona tutto...
-		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
-		menuItem.addListener(SWT.Selection, new Listener() {
+		selectAllMenuItem = new MenuItem(contextMenu, SWT.PUSH);
+		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
+		selectAllMenuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void handleEvent(Event event) {
+			public void widgetSelected(SelectionEvent e) {
 				table.selectAll();
 			}
 		});
 
-		table.addListener(SWT.MenuDetect, new Listener() {
+		table.addMenuDetectListener(new MenuDetectListener() {
 			@Override
-			public void handleEvent(Event event) {
-				menu.setVisible(true);
+			public void menuDetected(MenuDetectEvent e) {
+				copyMenuItem.setEnabled(gui.canCopyDataTable());
+				selectAllMenuItem.setEnabled(gui.canSelectAllDataTable());
+				contextMenu.setVisible(true);
 			}
 		});
-
-		return menu;
 	}
 
 	public void copySelection() {
-		if (table.getColumns() != null && table.getColumns().length != 0) {
+		if (table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
 			if (table.getSelectionCount() > 1) {
 				System.gc(); // La copia puo' richiedere molta memoria!
 			}
@@ -237,6 +246,18 @@ public class DataTable {
 
 	public Table getTable() {
 		return table;
+	}
+
+	public Menu getContextMenu() {
+		return contextMenu;
+	}
+
+	public MenuItem getCopyMenuItem() {
+		return copyMenuItem;
+	}
+
+	public MenuItem getSelectAllMenuItem() {
+		return selectAllMenuItem;
 	}
 
 }

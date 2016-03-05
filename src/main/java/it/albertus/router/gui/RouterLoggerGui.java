@@ -137,7 +137,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		final GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		tableLayoutData.minimumHeight = 200;
 		tableLayoutData.heightHint = 200;
-		dataTable.init(shell, tableLayoutData);
+		dataTable.init(this, tableLayoutData);
 
 		// Console
 		final GridData consoleLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
