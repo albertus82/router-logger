@@ -29,7 +29,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		boolean GUI_START_MINIMIZED = false;
 	}
 
-	private final RouterDataTable table = RouterDataTable.getInstance();
+	private final DataTable table = DataTable.getInstance();
 	private TrayIcon tray;
 	private Shell shell;
 	private Menu menuBar, fileMenu, helpMenu;
@@ -210,7 +210,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		return TextConsole.getInstance();
 	}
 
-	public RouterDataTable getTable() {
+	public DataTable getTable() {
 		return table;
 	}
 

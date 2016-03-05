@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-public class RouterDataTable {
+public class DataTable {
 
 	private interface Defaults {
 		int GUI_TABLE_MAX_ITEMS = 2000;
@@ -38,14 +38,14 @@ public class RouterDataTable {
 	}
 
 	private static class Singleton {
-		private static final RouterDataTable TABLE = new RouterDataTable();
+		private static final DataTable TABLE = new DataTable();
 	}
 
-	public static RouterDataTable getInstance() {
+	public static DataTable getInstance() {
 		return Singleton.TABLE;
 	}
 
-	private RouterDataTable() {}
+	private DataTable() {}
 
 	public void init(final Composite container, final Object layoutData) {
 		if (this.table == null) {
@@ -86,7 +86,7 @@ public class RouterDataTable {
 
 		// Copia...
 		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.copy") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_COPY));
+		menuItem.setText(Resources.get("lbl.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -98,7 +98,7 @@ public class RouterDataTable {
 
 		// Seleziona tutto...
 		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.select.all") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
+		menuItem.setText(Resources.get("lbl.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {

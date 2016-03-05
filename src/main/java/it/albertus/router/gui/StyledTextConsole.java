@@ -53,7 +53,7 @@ public class StyledTextConsole extends TextConsole {
 
 		// Copia...
 		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.copy") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_COPY));
+		menuItem.setText(Resources.get("lbl.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -77,7 +77,7 @@ public class StyledTextConsole extends TextConsole {
 
 		// Seleziona tutto...
 		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.select.all") + '\t' + GuiUtils.getMod1KeyLabel() + '+' + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
+		menuItem.setText(Resources.get("lbl.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
