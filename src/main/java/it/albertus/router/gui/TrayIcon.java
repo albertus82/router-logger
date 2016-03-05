@@ -3,7 +3,6 @@ package it.albertus.router.gui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
-import it.albertus.router.gui.RouterLoggerGui.Defaults;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.RestoreShellListener;
 import it.albertus.router.resources.Resources;
@@ -22,6 +21,10 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
 public class TrayIcon {
+
+	private interface Defaults {
+		boolean GUI_MINIMIZE_TRAY = true;
+	}
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private final RouterLoggerGui gui;

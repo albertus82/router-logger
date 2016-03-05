@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Shell;
 public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
-		boolean GUI_MINIMIZE_TRAY = true;
 		boolean GUI_START_MINIMIZED = false;
 	}
 
