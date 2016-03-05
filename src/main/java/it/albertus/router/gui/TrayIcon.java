@@ -9,6 +9,8 @@ import it.albertus.util.NewLine;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
@@ -22,22 +24,28 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class TrayIcon {
 
-	private static class Singleton {
-		private static final TrayIcon TRAY = new TrayIcon();
-	}
-
-	public static TrayIcon getInstance() {
-		return Singleton.TRAY;
-	}
-
-	private TrayIcon() {}
-
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private TrayItem trayItem = null;
-	private Menu trayMenu = null;
-	private String toolTipText = null;
-	private Image trayIcon = null;
-	private RouterLoggerGui gui = null;
+	private final RouterLoggerGui gui;
+
+	private Tray tray;
+	private TrayItem trayItem;
+	private String toolTipText;
+	private Image trayIcon;
+
+	private Menu trayMenu;
+	private MenuItem showMenuItem;
+	private MenuItem exitMenuItem;
+
+	public TrayIcon(RouterLoggerGui gui) {
+		this.gui = gui;
+
+		gui.getShell().addShellListener(new ShellAdapter() {
+			@Override
+			public void shellIconified(ShellEvent e) {
+				iconify();
+			}
+		});
+	}
 
 	private Image getTrayIcon(RouterLoggerStatus status) {
 		switch (status) {
@@ -59,64 +67,47 @@ public class TrayIcon {
 		}
 	}
 
-	public void init(final RouterLoggerGui gui) {
-		this.gui = gui;
-		if (this.trayItem == null && trayMenu == null) {
-			gui.getShell().addShellListener(new ShellAdapter() {
-				@Override
-				public void shellIconified(ShellEvent e) {
-					iconify(gui.getShell(), gui.getStatus());
-					gui.getShell().setMinimized(false);
-				}
-			});
-		}
-		else {
-			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
-		}
-	}
+	private void iconify() {
+		if (tray == null) {
+			/* Inizializzazione */
+			tray = gui.getShell().getDisplay().getSystemTray();
 
-	private void iconify(final Shell shell, final RouterLoggerStatus status) {
-		Tray tray = shell.getDisplay().getSystemTray();
-		if (tray != null) {
-			shell.setVisible(false);
-			boolean addListeners = false;
-			if (trayItem == null) {
+			if (tray != null) {
 				trayItem = new TrayItem(tray, SWT.NONE);
-				trayIcon = getTrayIcon(status);
+				trayIcon = getTrayIcon(gui.getStatus());
 				trayItem.setImage(trayIcon);
-				toolTipText = getBaseToolTipText(status);
+				toolTipText = getBaseToolTipText(gui.getStatus());
 				trayItem.setToolTipText(toolTipText);
-				addListeners = true;
-			}
-			else {
-				trayItem.setVisible(true);
-			}
 
-			if (trayMenu == null) {
-				trayMenu = new Menu(shell, SWT.POP_UP);
-				MenuItem menuItem = new MenuItem(trayMenu, SWT.PUSH);
-				trayMenu.setDefaultItem(menuItem);
-				menuItem.setText(Resources.get("lbl.tray.show"));
-				menuItem.addListener(SWT.Selection, new RestoreListener(shell));
+				trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
+				showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
+				showMenuItem.setText(Resources.get("lbl.tray.show"));
+				showMenuItem.addListener(SWT.Selection, new RestoreListener(gui.getShell()));
+				trayMenu.setDefaultItem(showMenuItem);
 
-				menuItem = new MenuItem(trayMenu, SWT.SEPARATOR);
+				new MenuItem(trayMenu, SWT.SEPARATOR);
 
-				// Tasto "Exit"...
-				menuItem = new MenuItem(trayMenu, SWT.PUSH);
-				menuItem.setText(Resources.get("lbl.tray.close"));
-				menuItem.addSelectionListener(new CloseListener(gui));
-			}
-
-			if (addListeners) {
-				trayItem.addListener(SWT.MenuDetect, new Listener() {
+				exitMenuItem = new MenuItem(trayMenu, SWT.PUSH);
+				exitMenuItem.setText(Resources.get("lbl.tray.close"));
+				exitMenuItem.addSelectionListener(new CloseListener(gui));
+				trayItem.addMenuDetectListener(new MenuDetectListener() {
 					@Override
-					public void handleEvent(Event event) {
+					public void menuDetected(MenuDetectEvent e) {
 						trayMenu.setVisible(true);
 					}
 				});
 
-				trayItem.addListener(SWT.DefaultSelection, new RestoreListener(shell));
+				trayItem.addListener(SWT.DefaultSelection, new RestoreListener(gui.getShell()));
 			}
+		}
+
+		if (tray != null && trayItem != null) {
+			gui.getShell().setVisible(false);
+			trayItem.setVisible(true);
+			gui.getShell().setMinimized(false);
+		}
+		else {
+			gui.getShell().setMinimized(true);
 		}
 	}
 
@@ -180,12 +171,24 @@ public class TrayIcon {
 		}
 	}
 
+	public Tray getTray() {
+		return tray;
+	}
+
 	public TrayItem getTrayItem() {
 		return trayItem;
 	}
 
 	public Menu getTrayMenu() {
 		return trayMenu;
+	}
+
+	public MenuItem getShowMenuItem() {
+		return showMenuItem;
+	}
+
+	public MenuItem getExitMenuItem() {
+		return exitMenuItem;
 	}
 
 }

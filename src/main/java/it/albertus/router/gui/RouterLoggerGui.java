@@ -103,8 +103,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(Images.ICONS_ROUTER_BLUE);
 		if (configuration.getBoolean("gui.minimize.tray", Defaults.GUI_MINIMIZE_TRAY)) {
-			trayIcon = TrayIcon.getInstance();
-			trayIcon.init(this);
+			trayIcon = new TrayIcon(this);
 		}
 
 		// Listener sul pulsante di chiusura dell'applicazione...
@@ -195,7 +194,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 	@Override
 	protected void setStatus(RouterLoggerStatus status) {
 		super.setStatus(status);
-		trayIcon.updateTrayItem(status);
+		if (trayIcon != null) {
+			trayIcon.updateTrayItem(status);
+		}
 	}
 
 	@Override
