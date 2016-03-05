@@ -16,8 +16,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
@@ -62,22 +60,6 @@ public class DataTable {
 		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-
-		table.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// Supporto CTRL+C per "Copia"...
-				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_COPY && table.getSelection() != null && table.getSelection().length != 0) {
-					copySelection();
-				}
-
-				// Supporto CTRL+A per "Seleziona tutto"...
-				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_SELECT_ALL) {
-					table.selectAll();
-				}
-			}
-		});
-
 		return table;
 	}
 
@@ -86,7 +68,7 @@ public class DataTable {
 
 		// Copia...
 		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
+		menuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -98,7 +80,7 @@ public class DataTable {
 
 		// Seleziona tutto...
 		menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setText(Resources.get("lbl.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
+		menuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
 		menuItem.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {

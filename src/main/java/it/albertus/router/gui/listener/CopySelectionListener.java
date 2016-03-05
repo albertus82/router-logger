@@ -15,10 +15,10 @@ public class CopySelectionListener extends SelectionAdapter {
 
 	@Override
 	public void widgetSelected(SelectionEvent e) {
-		if (gui.getDataTable().getTable().isFocusControl() && gui.getDataTable().getTable().getSelectionIndex() != -1) {
+		if (gui.getDataTable().getTable() != null && gui.getDataTable().getTable().isFocusControl() && gui.getDataTable().getTable().getSelectionIndex() != -1) {
 			gui.getDataTable().copySelection();
 		}
-		else if (gui.getConsole().getText().isFocusControl() && gui.getConsole().getText().getSelectionCount() != 0) {
+		else if (gui.getConsole().getText() != null && gui.getConsole().getText().isFocusControl() && gui.getConsole().getText().getSelectionCount() != 0) {
 			gui.getConsole().getText().copy();
 		}
 	}

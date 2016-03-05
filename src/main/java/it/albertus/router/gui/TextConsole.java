@@ -8,8 +8,6 @@ import it.albertus.util.NewLine;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Scrollable;
@@ -35,7 +33,6 @@ public class TextConsole extends Console {
 		if (this.scrollable == null) {
 			createText(container);
 			configureText(layoutData);
-			addSelectAllKeyListener();
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
@@ -44,18 +41,6 @@ public class TextConsole extends Console {
 
 	protected void createText(final Composite container) {
 		scrollable = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
-	}
-
-	protected void addSelectAllKeyListener() {
-		scrollable.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// Supporto CTRL+A per "Seleziona tutto"...
-				if (e.stateMask == SWT.MOD1 && e.keyCode == GuiUtils.KEY_SELECT_ALL) {
-					getText().selectAll();
-				}
-			}
-		});
 	}
 
 	protected void configureText(Object layoutData) {

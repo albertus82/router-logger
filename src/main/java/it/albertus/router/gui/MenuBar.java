@@ -4,6 +4,7 @@ import it.albertus.router.gui.listener.AboutSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.CopySelectionListener;
 import it.albertus.router.gui.listener.EditArmListener;
+import it.albertus.router.gui.listener.SelectAllSelectionListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.SWT;
@@ -21,6 +22,7 @@ public class MenuBar {
 	private final Menu editMenu;
 	private final MenuItem editMenuHeader;
 	private final MenuItem editCopyMenuItem;
+	private final MenuItem editSelectAllMenuItem;
 
 	private final Menu helpMenu;
 	private final MenuItem helpMenuHeader;
@@ -48,6 +50,13 @@ public class MenuBar {
 		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_COPY));
 		editCopyMenuItem.addSelectionListener(new CopySelectionListener(gui));
 		editCopyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY);
+
+		new MenuItem(editMenu, SWT.SEPARATOR);
+
+		editSelectAllMenuItem = new MenuItem(editMenu, SWT.PUSH);
+		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1KeyLabel() + Character.toUpperCase(GuiUtils.KEY_SELECT_ALL));
+		editSelectAllMenuItem.addSelectionListener(new SelectAllSelectionListener(gui));
+		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL);
 
 		helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN); // Help
 		helpMenuHeader = new MenuItem(bar, SWT.CASCADE);
@@ -87,6 +96,10 @@ public class MenuBar {
 
 	public MenuItem getEditCopyMenuItem() {
 		return editCopyMenuItem;
+	}
+
+	public MenuItem getEditSelectAllMenuItem() {
+		return editSelectAllMenuItem;
 	}
 
 	public Menu getHelpMenu() {

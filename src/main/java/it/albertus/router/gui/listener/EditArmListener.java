@@ -18,13 +18,26 @@ public class EditArmListener implements ArmListener {
 	public void widgetArmed(ArmEvent e) {
 		final MenuItem copyMenuItem = gui.getMenuBar().getEditCopyMenuItem();
 		copyMenuItem.setEnabled(canCopy());
+
+		final MenuItem selectAllMenuItem = gui.getMenuBar().getEditSelectAllMenuItem();
+		selectAllMenuItem.setEnabled(canSelectAll());
 	}
 
 	private boolean canCopy() {
-		if (gui.getDataTable().getTable().isFocusControl() && gui.getDataTable().getTable().getSelectionIndex() != -1) {
+		if (gui.getDataTable().getTable() != null && gui.getDataTable().getTable().isFocusControl() && gui.getDataTable().getTable().getSelectionCount() != 0) {
 			return true;
 		}
-		if (gui.getConsole().getText().isFocusControl() && gui.getConsole().getText().getSelectionCount() != 0) {
+		if (gui.getConsole().getText() != null && gui.getConsole().getText().isFocusControl() && gui.getConsole().getText().getSelectionCount() != 0) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean canSelectAll() {
+		if (gui.getDataTable().getTable() != null && gui.getDataTable().getTable().isFocusControl()) {
+			return true;
+		}
+		if (gui.getConsole().getText() != null && gui.getConsole().getText().isFocusControl()) {
 			return true;
 		}
 		return false;
