@@ -166,6 +166,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			}
 			if (print) {
 				logger.log(Resources.get("msg.thresholds.reached", message), Destination.CONSOLE);
+				trayIcon.notifyThresholds(thresholdsReached);
 			}
 		}
 	}

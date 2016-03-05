@@ -3,10 +3,13 @@ package it.albertus.router.gui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
+import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.RestoreShellListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
+
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -17,6 +20,7 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
@@ -31,12 +35,15 @@ public class TrayIcon {
 
 	private Tray tray;
 	private TrayItem trayItem;
-	private String toolTipText;
-	private Image trayIcon;
+	private ToolTip toolTip;
 
 	private Menu trayMenu;
 	private MenuItem showMenuItem;
 	private MenuItem exitMenuItem;
+
+	/* To be accessed only from this class */
+	private String toolTipText;
+	private Image trayIcon;
 
 	public TrayIcon(RouterLoggerGui gui) {
 		this.gui = gui;
@@ -81,6 +88,12 @@ public class TrayIcon {
 				trayItem.setImage(trayIcon);
 				toolTipText = getBaseToolTipText(gui.getStatus());
 				trayItem.setToolTipText(toolTipText);
+
+				toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
+				toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
+				toolTip.setVisible(false);
+				toolTip.setAutoHide(true);
+				trayItem.setToolTip(toolTip);
 
 				trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
 				showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
@@ -149,6 +162,28 @@ public class TrayIcon {
 		}
 	}
 
+	public void notifyThresholds(final Map<Threshold, String> thresholdsReached) {
+		if (thresholdsReached != null && !thresholdsReached.isEmpty() && trayItem != null && !trayItem.isDisposed()) {
+			final StringBuilder message = new StringBuilder();
+			for (final Threshold threshold : thresholdsReached.keySet()) {
+				message.append(threshold.getKey()).append('=').append(thresholdsReached.get(threshold)).append(NewLine.SYSTEM_LINE_SEPARATOR);
+			}
+
+			try {
+				trayItem.getDisplay().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						if (trayItem != null && !trayItem.isDisposed() && trayItem.getVisible() && toolTip != null && !toolTip.isDisposed()) {
+							toolTip.setMessage(message.toString().trim());
+							toolTip.setVisible(true);
+						}
+					}
+				});
+			}
+			catch (SWTException se) {}
+		}
+	}
+
 	private String getBaseToolTipText(final RouterLoggerStatus status) {
 		final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
 		if (status != null) {
@@ -163,6 +198,10 @@ public class TrayIcon {
 
 	public TrayItem getTrayItem() {
 		return trayItem;
+	}
+
+	public ToolTip getToolTip() {
+		return toolTip;
 	}
 
 	public Menu getTrayMenu() {
