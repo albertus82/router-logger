@@ -4,6 +4,7 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.gui.listener.CloseListener;
+import it.albertus.router.gui.listener.RestoreShellListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 
@@ -14,11 +15,8 @@ import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
@@ -38,7 +36,6 @@ public class TrayIcon {
 
 	public TrayIcon(RouterLoggerGui gui) {
 		this.gui = gui;
-
 		gui.getShell().addShellListener(new ShellAdapter() {
 			@Override
 			public void shellIconified(ShellEvent e) {
@@ -82,7 +79,7 @@ public class TrayIcon {
 				trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
 				showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
 				showMenuItem.setText(Resources.get("lbl.tray.show"));
-				showMenuItem.addListener(SWT.Selection, new RestoreListener(gui.getShell()));
+				showMenuItem.addListener(SWT.Selection, new RestoreShellListener(gui));
 				trayMenu.setDefaultItem(showMenuItem);
 
 				new MenuItem(trayMenu, SWT.SEPARATOR);
@@ -97,7 +94,7 @@ public class TrayIcon {
 					}
 				});
 
-				trayItem.addListener(SWT.DefaultSelection, new RestoreListener(gui.getShell()));
+				trayItem.addListener(SWT.DefaultSelection, new RestoreShellListener(gui));
 			}
 		}
 
@@ -155,20 +152,6 @@ public class TrayIcon {
 			sb.append(" (").append(status.toString()).append(')');
 		}
 		return sb.toString();
-	}
-
-	private final class RestoreListener implements Listener {
-		private final Shell shell;
-
-		private RestoreListener(Shell shell) {
-			this.shell = shell;
-		}
-
-		@Override
-		public void handleEvent(Event event) {
-			shell.setVisible(true);
-			trayItem.setVisible(false);
-		}
 	}
 
 	public Tray getTray() {
