@@ -8,9 +8,9 @@ import org.eclipse.swt.widgets.Listener;
 
 public class CloseListener extends SelectionAdapter implements Listener {
 
-	private final RouterLoggerGui gui;
+	private final Gui gui;
 
-	public CloseListener(RouterLoggerGui gui) {
+	public CloseListener(final Gui gui) {
 		this.gui = gui;
 	}
 

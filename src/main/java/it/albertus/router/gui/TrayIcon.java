@@ -33,7 +33,7 @@ public class TrayIcon {
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	private TrayItem trayItem = null;
-	private Menu menu = null;
+	private Menu trayMenu = null;
 	private String toolTipText = null;
 	private Image trayIcon = null;
 	private RouterLoggerGui gui = null;
@@ -60,7 +60,7 @@ public class TrayIcon {
 
 	public void init(final RouterLoggerGui gui) {
 		this.gui = gui;
-		if (this.trayItem == null && menu == null) {
+		if (this.trayItem == null && trayMenu == null) {
 			gui.getShell().addShellListener(new ShellAdapter() {
 				@Override
 				public void shellIconified(ShellEvent e) {
@@ -91,17 +91,17 @@ public class TrayIcon {
 				trayItem.setVisible(true);
 			}
 
-			if (menu == null) {
-				menu = new Menu(shell, SWT.POP_UP);
-				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menu.setDefaultItem(menuItem);
+			if (trayMenu == null) {
+				trayMenu = new Menu(shell, SWT.POP_UP);
+				MenuItem menuItem = new MenuItem(trayMenu, SWT.PUSH);
+				trayMenu.setDefaultItem(menuItem);
 				menuItem.setText(Resources.get("lbl.tray.show"));
 				menuItem.addListener(SWT.Selection, new RestoreListener(shell));
 
-				menuItem = new MenuItem(menu, SWT.SEPARATOR);
+				menuItem = new MenuItem(trayMenu, SWT.SEPARATOR);
 
 				// Tasto "Exit"...
-				menuItem = new MenuItem(menu, SWT.PUSH);
+				menuItem = new MenuItem(trayMenu, SWT.PUSH);
 				menuItem.setText(Resources.get("lbl.tray.close"));
 				menuItem.addSelectionListener(new CloseListener(gui));
 			}
@@ -110,7 +110,7 @@ public class TrayIcon {
 				trayItem.addListener(SWT.MenuDetect, new Listener() {
 					@Override
 					public void handleEvent(Event event) {
-						menu.setVisible(true);
+						trayMenu.setVisible(true);
 					}
 				});
 
@@ -177,6 +177,14 @@ public class TrayIcon {
 			shell.setVisible(true);
 			trayItem.setVisible(false);
 		}
+	}
+
+	public TrayItem getTrayItem() {
+		return trayItem;
+	}
+
+	public Menu getTrayMenu() {
+		return trayMenu;
 	}
 
 }
