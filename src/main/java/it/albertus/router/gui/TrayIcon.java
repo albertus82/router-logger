@@ -85,9 +85,9 @@ public class TrayIcon {
 
 			if (tray != null) {
 				trayItem = new TrayItem(tray, SWT.NONE);
-				trayIcon = getTrayIcon(gui.getStatus());
+				trayIcon = getTrayIcon(gui.getCurrentStatus());
 				trayItem.setImage(trayIcon);
-				toolTipText = getBaseToolTipText(gui.getStatus());
+				toolTipText = getBaseToolTipText(gui.getCurrentStatus());
 				trayItem.setToolTipText(toolTipText);
 
 				if (configuration.getBoolean("gui.tray.tooltip", Defaults.GUI_TRAY_TOOLTIP)) {
@@ -165,8 +165,8 @@ public class TrayIcon {
 		}
 	}
 
-	public void notifyThresholds(final Map<Threshold, String> thresholdsReached) {
-		if (toolTip != null && !toolTip.isDisposed() && trayItem != null && !trayItem.isDisposed() && thresholdsReached != null && !thresholdsReached.isEmpty()) {
+	public void showBalloonToolTip(final Map<Threshold, String> thresholdsReached) {
+		if (toolTip != null && trayItem != null && thresholdsReached != null && !thresholdsReached.isEmpty() && !gui.getCurrentStatus().equals(gui.getPreviousStatus()) && !trayItem.isDisposed() && !toolTip.isDisposed()) {
 			final StringBuilder message = new StringBuilder();
 			for (final Threshold threshold : thresholdsReached.keySet()) {
 				message.append(threshold.getKey()).append('=').append(thresholdsReached.get(threshold)).append(NewLine.SYSTEM_LINE_SEPARATOR);

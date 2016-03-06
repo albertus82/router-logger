@@ -37,15 +37,26 @@ public abstract class RouterLoggerEngine {
 
 	protected volatile boolean exit = false;
 
-	private RouterLoggerStatus status = RouterLoggerStatus.STARTING;
+	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
+	private RouterLoggerStatus previousStatus = null;
+
 	private int iteration = 1;
 
-	public RouterLoggerStatus getStatus() {
-		return status;
+	public RouterLoggerStatus getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public RouterLoggerStatus getPreviousStatus() {
+		return previousStatus;
 	}
 
 	protected void setStatus(RouterLoggerStatus status) {
-		this.status = status;
+		_setStatus(status);
+	}
+
+	private final void _setStatus(RouterLoggerStatus status) {
+		this.previousStatus = this.currentStatus;
+		this.currentStatus = status;
 	}
 
 	protected int getIteration() {
@@ -196,7 +207,7 @@ public abstract class RouterLoggerEngine {
 		Runtime.getRuntime().removeShutdownHook(hook);
 
 		release();
-		if (!RouterLoggerStatus.ERROR.equals(status)) {
+		if (!RouterLoggerStatus.ERROR.equals(currentStatus)) {
 			setStatus(RouterLoggerStatus.DISCONNECTED);
 		}
 		out.println(Resources.get("msg.bye"), true);
@@ -244,16 +255,16 @@ public abstract class RouterLoggerEngine {
 			}
 
 			if (importantThresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-				status = RouterLoggerStatus.WARNING; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
+				_setStatus(RouterLoggerStatus.WARNING); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
 				}
 			}
 			else if (!allThresholdsReached.isEmpty()) {
-				status = RouterLoggerStatus.INFO; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
+				_setStatus(RouterLoggerStatus.INFO); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 			}
 			else {
-				status = RouterLoggerStatus.OK; /* Normalmente chiamare updateStatus(...) per garantire l'aggiornamento della GUI */
+				_setStatus(RouterLoggerStatus.OK); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 			}
 
 			showInfo(info, allThresholdsReached); /* Aggiorna la GUI */
@@ -261,7 +272,7 @@ public abstract class RouterLoggerEngine {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {
 				long waitTimeInMillis;
-				if (RouterLoggerStatus.WARNING.equals(status)) {
+				if (RouterLoggerStatus.WARNING.equals(currentStatus)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
 				else {

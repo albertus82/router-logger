@@ -147,7 +147,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
 		if (trayIcon != null) {
-			trayIcon.updateTrayItem(getStatus(), info);
+			trayIcon.updateTrayItem(getCurrentStatus(), info);
 		}
 
 		/* Stampa eventuali soglie raggiunte in console */
@@ -166,7 +166,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			}
 			if (print) {
 				logger.log(Resources.get("msg.thresholds.reached", message), Destination.CONSOLE);
-				trayIcon.notifyThresholds(thresholdsReached);
+				if (trayIcon != null) {
+					trayIcon.showBalloonToolTip(thresholdsReached);
+				}
 			}
 		}
 	}
