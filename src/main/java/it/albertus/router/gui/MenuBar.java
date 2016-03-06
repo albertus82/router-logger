@@ -3,7 +3,6 @@ package it.albertus.router.gui;
 import it.albertus.router.gui.listener.AboutSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
-import it.albertus.router.gui.listener.EditMenuBarArmListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Resources;
 
@@ -44,7 +43,6 @@ public class MenuBar {
 		editMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		editMenuHeader.setText(Resources.get("lbl.menu.header.edit"));
 		editMenuHeader.setMenu(editMenu);
-		editMenuHeader.addArmListener(new EditMenuBarArmListener(gui));
 
 		editCopyMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
