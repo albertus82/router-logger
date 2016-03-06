@@ -27,33 +27,29 @@ public class TextConsole extends Console {
 		return Singleton.CONSOLE;
 	}
 
+	protected Scrollable scrollable = null;
+
 	protected TextConsole() {}
 
-	public void init(final Composite container, final Object layoutData) {
+	protected void createText(final Composite container) {
+		scrollable = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	}
+
+	public void init(final Gui gui, final Object layoutData) {
 		if (this.scrollable == null) {
-			createText(container);
-			configureText(layoutData);
+			createText(gui.getShell());
+			scrollable.setLayoutData(layoutData);
+			scrollable.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+			scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
 		}
 	}
 
-	protected void createText(final Composite container) {
-		scrollable = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
-	}
-
-	protected void configureText(Object layoutData) {
-		scrollable.setLayoutData(layoutData);
-		scrollable.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
-		scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-	}
-
 	protected static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-
-	protected Scrollable scrollable = null;
 
 	protected void failSafePrint(final String toPrint) {
 		System.out.print(toPrint);

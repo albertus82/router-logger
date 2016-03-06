@@ -21,7 +21,6 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -36,42 +35,13 @@ public class DataTable {
 		boolean GUI_TABLE_COLUMNS_PACK = false;
 	}
 
-	private static class Singleton {
-		private static final DataTable TABLE = new DataTable();
-	}
-
-	public static DataTable getInstance() {
-		return Singleton.TABLE;
-	}
-
 	private static final char SAMPLE_CHAR = '9';
 
-	private RouterLoggerGui gui;
+	private final Table table;
 
-	private Menu contextMenu;
-	private MenuItem copyMenuItem;
-	private MenuItem selectAllMenuItem;
-
-	private DataTable() {}
-
-	public void init(final RouterLoggerGui gui, final Object layoutData) {
-		if (this.table == null) {
-			this.gui = gui;
-			this.table = createTable(gui.getShell(), layoutData);
-			createContextMenu();
-		}
-		else {
-			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
-		}
-	}
-
-	private Table createTable(final Composite container, final Object layoutData) {
-		final Table table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
-		table.setLayoutData(layoutData);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		return table;
-	}
+	private final Menu contextMenu;
+	private final MenuItem copyMenuItem;
+	private final MenuItem selectAllMenuItem;
 
 	/**
 	 * Solo i <tt>MenuItem</tt> che fanno parte di una barra dei men&ugrave; con
@@ -80,7 +50,12 @@ public class DataTable {
 	 * combinazioni di tasti, gli acceleratori non funzioneranno e le relative
 	 * combinazioni di tasti saranno ignorate.
 	 */
-	private void createContextMenu() {
+	public DataTable(final RouterLoggerGui gui, final Object layoutData) {
+		table = new Table(gui.getShell(), SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		table.setLayoutData(layoutData);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+
 		contextMenu = new Menu(table);
 
 		// Copia...
@@ -133,7 +108,6 @@ public class DataTable {
 	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private Table table = null;
 	private boolean tableInitialized = false;
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 

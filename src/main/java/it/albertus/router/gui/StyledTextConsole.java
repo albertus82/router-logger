@@ -23,8 +23,8 @@ public class StyledTextConsole extends TextConsole {
 	private StyledTextConsole() {}
 
 	@Override
-	public void init(final Composite container, final Object layoutData) {
-		super.init(container, layoutData);
+	public void init(final Gui gui, final Object layoutData) {
+		super.init(gui, layoutData);
 		createContextMenu();
 	}
 

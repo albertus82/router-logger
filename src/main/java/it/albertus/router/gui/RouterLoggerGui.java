@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -27,7 +26,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		boolean GUI_START_MINIMIZED = false;
 	}
 
-	private final DataTable dataTable = DataTable.getInstance();
+	private DataTable dataTable;
 	private TrayIcon trayIcon;
 	private MenuBar menuBar;
 	private Shell shell;
@@ -98,46 +97,33 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		System.exit(1);
 	}
 
-	private void configureShell() {
+	private Shell createShell(final Display display) {
+		final GridLayout shellLayout = new GridLayout(1, true);
+		shell = new Shell(display);
+		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
 		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(Images.ICONS_ROUTER_BLUE);
+		shell.setLayout(shellLayout);
+
 		trayIcon = new TrayIcon(this);
 
-		// Listener sul pulsante di chiusura dell'applicazione...
+		menuBar = new MenuBar(this);
+
+		final GridData layoutData = newLayoutData();
+
+		dataTable = new DataTable(this, layoutData);
+
+		getConsole().init(this, layoutData);
+
 		shell.addListener(SWT.Close, new CloseListener(this));
-	}
 
-	private Point getInitialSize() {
-		return new Point(750, 580);
-	}
-
-	private Shell createShell(Display display) {
-		shell = new Shell(display);
-		shell.setSize(getInitialSize());
-		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
-		configureShell();
-		createContents();
 		return shell;
 	}
 
-	private void createContents() {
-		GridLayout layout = new GridLayout(1, true);
-		shell.setLayout(layout);
-
-		// Menu
-		menuBar = new MenuBar(this);
-
-		// Tabella
-		final GridData tableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		tableLayoutData.minimumHeight = 200;
-		tableLayoutData.heightHint = 200;
-		dataTable.init(this, tableLayoutData);
-
-		// Console
-		final GridData consoleLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		consoleLayoutData.minimumHeight = 200;
-		consoleLayoutData.heightHint = 200;
-		getConsole().init(shell, consoleLayoutData);
+	private GridData newLayoutData() {
+		final GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		layoutData.heightHint = 1;
+		return layoutData;
 	}
 
 	@Override
