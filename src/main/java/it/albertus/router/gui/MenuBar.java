@@ -10,6 +10,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+/**
+ * Solo i <tt>MenuItem</tt> che fanno parte della barra dei men&ugrave; 
+ * (<tt>SWT.BAR</tt>) hanno gli accelerator funzionanti; negli altri casi (ad es.
+ * <tt>SWT.POP_UP</tt>), bench&eacute; venga visualizzata la combinazione di
+ * tasti, l'accelerator non funzioner&agrave; e la combinazione di tasti
+ * sar&agrave; ignorata.
+ */
 public class MenuBar {
 
 	private final Menu bar;
@@ -47,14 +54,14 @@ public class MenuBar {
 		editCopyMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
 		editCopyMenuItem.addSelectionListener(new CopyMenuBarSelectionListener(gui));
-		editCopyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY);
+		editCopyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY); // Vero!
 
 		new MenuItem(editMenu, SWT.SEPARATOR);
 
 		editSelectAllMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
 		editSelectAllMenuItem.addSelectionListener(new SelectAllMenuBarSelectionListener(gui));
-		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL);
+		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Vero!
 
 		helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN); // Help
 		helpMenuHeader = new MenuItem(bar, SWT.CASCADE);

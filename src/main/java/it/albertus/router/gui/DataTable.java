@@ -73,6 +73,13 @@ public class DataTable {
 		return table;
 	}
 
+	/**
+	 * Solo i <tt>MenuItem</tt> che fanno parte della barra dei men&ugrave; 
+	 * (<tt>SWT.BAR</tt>) hanno gli accelerator funzionanti; negli altri casi (ad es.
+	 * <tt>SWT.POP_UP</tt>), bench&eacute; venga visualizzata la combinazione di
+	 * tasti, l'accelerator non funzioner&agrave; e la combinazione di tasti
+	 * sar&agrave; ignorata.
+	 */
 	private void createContextMenu() {
 		contextMenu = new Menu(table);
 
@@ -80,7 +87,7 @@ public class DataTable {
 		copyMenuItem = new MenuItem(contextMenu, SWT.PUSH);
 		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
 		copyMenuItem.addSelectionListener(new CopyDataTableSelectionListener(gui));
-		copyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY);
+		copyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY); // Finto!
 
 		new MenuItem(contextMenu, SWT.SEPARATOR);
 
@@ -88,7 +95,7 @@ public class DataTable {
 		selectAllMenuItem = new MenuItem(contextMenu, SWT.PUSH);
 		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
 		selectAllMenuItem.addSelectionListener(new SelectAllDataTableSelectionListener(gui));
-		selectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL);
+		selectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Finto!
 
 		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
 	}
