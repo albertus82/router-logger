@@ -93,8 +93,9 @@ public class DataTable {
 		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
 	}
 
-	public void copySelection() {
-		if (table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
+	/** Copies the current selection to the clipboard. */
+	public void copy() {
+		if (table != null && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
 			if (table.getSelectionCount() > 1) {
 				System.gc(); // La copia puo' richiedere molta memoria!
 			}

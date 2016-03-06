@@ -19,7 +19,7 @@ public class CopyMenuBarSelectionListener extends SelectionAdapter {
 			gui.getConsole().getText().copy();
 		}
 		else if (gui.canCopyDataTable()) {
-			gui.getDataTable().copySelection();
+			gui.getDataTable().copy();
 		}
 	}
 

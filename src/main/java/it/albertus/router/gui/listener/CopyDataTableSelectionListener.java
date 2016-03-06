@@ -16,7 +16,7 @@ public class CopyDataTableSelectionListener extends SelectionAdapter {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		if (gui.canCopyDataTable()) {
-			gui.getDataTable().copySelection();
+			gui.getDataTable().copy();
 		}
 	}
 
