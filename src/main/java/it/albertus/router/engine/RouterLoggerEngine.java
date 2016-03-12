@@ -40,7 +40,7 @@ public abstract class RouterLoggerEngine {
 	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
 	private RouterLoggerStatus previousStatus = null;
 
-	private int iteration = 1;
+	protected int iteration = 1;
 
 	public RouterLoggerStatus getCurrentStatus() {
 		return currentStatus;
@@ -57,10 +57,6 @@ public abstract class RouterLoggerEngine {
 	private final void _setStatus(RouterLoggerStatus status) {
 		this.previousStatus = this.currentStatus;
 		this.currentStatus = status;
-	}
-
-	protected int getIteration() {
-		return iteration;
 	}
 
 	private Reader initReader() {

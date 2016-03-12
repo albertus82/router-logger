@@ -44,13 +44,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			shell.open();
 
 			// Avvio thread di interrogazione router...
-			routerLogger.updateThread = new Thread() {
-				@Override
-				public void run() {
-					routerLogger.run();
-				}
-			};
-			routerLogger.updateThread.start();
+			routerLogger.connect();
 
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
@@ -130,7 +124,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
 		/* Aggiunta riga nella tabella a video */
-		dataTable.addRow(info, thresholdsReached, getIteration());
+		dataTable.addRow(info, thresholdsReached, iteration);
 
 		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
 		if (trayIcon != null) {
@@ -184,10 +178,23 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		}
 	}
 
-	/** Interrompe il thread di aggiornamento e forza la disconnessione */
+	/** Avvia il ciclo */
+	public void connect() {
+		exit = false;
+		updateThread = new Thread() {
+			@Override
+			public void run() {
+				RouterLoggerGui.this.run();
+			}
+		};
+		updateThread.start();
+	}
+
+	/** Interrompe il ciclo e forza la disconnessione */
 	public void disconnect() {
 		exit = true;
 		updateThread.interrupt();
+		iteration++;
 	}
 
 	@Override

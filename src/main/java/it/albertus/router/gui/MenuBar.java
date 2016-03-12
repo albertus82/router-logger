@@ -25,7 +25,7 @@ public class MenuBar {
 
 	private final Menu fileMenu;
 	private final MenuItem fileMenuHeader;
-//	private final MenuItem fileConnectItem;
+	private final MenuItem fileConnectItem;
 	private final MenuItem fileDisconnectItem;
 	private final MenuItem fileExitItem;
 
@@ -46,9 +46,9 @@ public class MenuBar {
 		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
 		fileMenuHeader.setMenu(fileMenu);
 
-//		fileConnectItem = new MenuItem(fileMenu, SWT.PUSH);
-//		fileConnectItem.setText(Resources.get("lbl.menu.item.connect"));
-//		fileConnectItem.addSelectionListener(new ConnectListener(gui));
+		fileConnectItem = new MenuItem(fileMenu, SWT.PUSH);
+		fileConnectItem.setText(Resources.get("lbl.menu.item.connect"));
+		fileConnectItem.addSelectionListener(new ConnectListener(gui));
 
 		fileDisconnectItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileDisconnectItem.setText(Resources.get("lbl.menu.item.disconnect"));
@@ -97,9 +97,9 @@ public class MenuBar {
 		return fileMenuHeader;
 	}
 
-//	public MenuItem getFileConnectItem() {
-//		return fileConnectItem;
-//	}
+	public MenuItem getFileConnectItem() {
+		return fileConnectItem;
+	}
 
 	public MenuItem getFileDisconnectItem() {
 		return fileDisconnectItem;
