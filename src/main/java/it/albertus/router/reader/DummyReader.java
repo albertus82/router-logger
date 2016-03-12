@@ -17,6 +17,7 @@ public class DummyReader extends Reader {
 
 	@Override
 	public boolean connect() {
+		out.println(Resources.get("msg.dummy.connect"));
 		if (CONNECTION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
 		}
