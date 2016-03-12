@@ -46,6 +46,8 @@ public class MenuBar {
 		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
 		fileMenuHeader.setMenu(fileMenu);
 
+		// TODO ArmListener per attivare/disattivare Connect/Disconnect a seconda dello stato.
+
 		fileConnectItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileConnectItem.setText(Resources.get("lbl.menu.item.connect"));
 		fileConnectItem.addSelectionListener(new ConnectListener(gui));
@@ -55,6 +57,8 @@ public class MenuBar {
 		fileDisconnectItem.addSelectionListener(new DisconnectListener(gui));
 
 		new MenuItem(fileMenu, SWT.SEPARATOR);
+
+		// TODO Aggiungere RESET e altro separatore
 
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));

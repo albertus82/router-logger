@@ -36,6 +36,7 @@ public abstract class RouterLoggerEngine {
 	protected final Writer writer;
 
 	protected volatile boolean exit = false;
+	protected Thread shutdownHook;
 
 	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
 	private RouterLoggerStatus previousStatus = null;
@@ -108,20 +109,34 @@ public abstract class RouterLoggerEngine {
 		writer.init(out);
 		return writer;
 	}
-
-	protected void run() {
+	
+	/** Stampa il messaggio di benvenuto e registra un listener per CTRL+C. */
+	protected void beforeOuterLoop() {
 		welcome();
 
 		// Gestione chiusura console (CTRL+C)...
-		final Thread hook = new Thread() {
+		shutdownHook = new Thread() {
 			@Override
 			public void run() {
 				reader.disconnect();
 				release();
 			}
 		};
-		Runtime.getRuntime().addShutdownHook(hook);
+		Runtime.getRuntime().addShutdownHook(shutdownHook);
+	}
 
+	/** Rimuove il listener per CTRL+C e stampa il messaggio di commiato. */
+	protected void afterOuterLoop() {
+		if (shutdownHook != null) {
+			try {
+				Runtime.getRuntime().removeShutdownHook(shutdownHook);
+			}
+			catch (Exception e) {}
+		}
+		out.println(Resources.get("msg.bye"), true);
+	}
+
+	protected void outerLoop() {
 		for (int index = 0, retries = configuration.getInt("logger.retry.count", Defaults.RETRIES); index <= retries && !exit; index++) {
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
@@ -168,7 +183,7 @@ public abstract class RouterLoggerEngine {
 					setStatus(RouterLoggerStatus.OK);
 					index = 0;
 					try {
-						loop();
+						innerLoop();
 						exit = true; // Se non si sono verificati errori.
 					}
 					catch (InterruptedException ie) {
@@ -200,13 +215,10 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 
-		Runtime.getRuntime().removeShutdownHook(hook);
-
 		release();
 		if (!RouterLoggerStatus.ERROR.equals(currentStatus)) {
 			setStatus(RouterLoggerStatus.DISCONNECTED);
 		}
-		out.println(Resources.get("msg.bye"), true);
 	}
 
 	private void welcome() {
@@ -228,7 +240,7 @@ public abstract class RouterLoggerEngine {
 		out.println();
 	}
 
-	private void loop() throws IOException, InterruptedException {
+	private void innerLoop() throws IOException, InterruptedException {
 		long hysteresis = 0;
 
 		// Iterazione...

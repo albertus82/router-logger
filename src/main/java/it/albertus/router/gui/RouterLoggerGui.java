@@ -43,6 +43,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			final Shell shell = routerLogger.createShell(display);
 			shell.open();
 
+			routerLogger.beforeOuterLoop();
+
 			// Avvio thread di interrogazione router...
 			routerLogger.connect();
 
@@ -54,6 +56,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 			// Segnala al thread che deve terminare il loop immediatamente...
 			routerLogger.disconnect();
+			routerLogger.afterOuterLoop();
 
 			// Distrugge la GUI...
 			display.dispose();
@@ -178,19 +181,19 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		}
 	}
 
-	/** Avvia il ciclo */
+	/** Avvia il ciclo. */
 	public void connect() {
 		exit = false;
 		updateThread = new Thread() {
 			@Override
 			public void run() {
-				RouterLoggerGui.this.run();
+				outerLoop();
 			}
 		};
 		updateThread.start();
 	}
 
-	/** Interrompe il ciclo e forza la disconnessione */
+	/** Interrompe il ciclo e forza la disconnessione. */
 	public void disconnect() {
 		exit = true;
 		updateThread.interrupt();

@@ -38,7 +38,10 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		}
 		else if (args[0].trim().equalsIgnoreCase(ARG_CONSOLE)) {
 			/* Start RouterLogger in console */
-			new RouterLoggerConsole().run();
+			final RouterLoggerConsole routerLogger = new RouterLoggerConsole();
+			routerLogger.beforeOuterLoop();
+			routerLogger.outerLoop();
+			routerLogger.afterOuterLoop();
 		}
 		else {
 			System.err.println(Resources.get("err.unrecognized.option", args[0]));
