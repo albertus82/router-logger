@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -191,7 +192,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			if (dataTable != null && dataTable.getTable() != null) {
 				iteration = dataTable.getTable().getItemCount() + 1;
 			}
-			updateThread = new Thread() {
+			updateThread = new Thread("updateThread") {
 				@Override
 				public void run() {
 					outerLoop();
@@ -200,7 +201,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			updateThread.start();
 		}
 		else {
-			logger.log(Resources.get("err.operation.not.allowed"), Destination.CONSOLE);
+			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
 		}
 	}
 
@@ -211,13 +212,43 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			updateThread.interrupt();
 		}
 		else {
-			logger.log(Resources.get("err.operation.not.allowed"), Destination.CONSOLE);
+			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
 		}
 	}
 
 	/** Interrompe il ciclo e forza la disconnessione. */
 	public void disconnect() {
 		disconnect(false);
+	}
+
+	public void reset() {
+		disconnect(true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					updateThread.join();
+				}
+				catch (InterruptedException e) {}
+				afterOuterLoop();
+				configuration.reload();
+				iteration = 1;
+				setStatus(RouterLoggerStatus.STARTING);
+				if (shell != null && !shell.isDisposed()) {
+					try {
+						shell.getDisplay().syncExec(new Runnable() {
+							public void run() {
+								getConsole().getText().setText("");
+								dataTable.reset();
+								beforeOuterLoop();
+								connect();
+							}
+						});
+					}
+					catch (SWTException se) {}
+				}
+			}
+		}, "resetThread").start();
 	}
 
 	@Override

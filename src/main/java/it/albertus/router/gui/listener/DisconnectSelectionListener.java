@@ -8,11 +8,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.MessageBox;
 
-public class DisconnectListener extends SelectionAdapter {
+public class DisconnectSelectionListener extends SelectionAdapter {
 
 	private final RouterLoggerGui gui;
 
-	public DisconnectListener(final RouterLoggerGui gui) {
+	public DisconnectSelectionListener(final RouterLoggerGui gui) {
 		this.gui = gui;
 	}
 

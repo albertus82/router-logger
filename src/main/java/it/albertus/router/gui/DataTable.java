@@ -21,7 +21,6 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -36,6 +35,13 @@ public class DataTable {
 	}
 
 	private static final char SAMPLE_CHAR = '9';
+
+	private static final char FIELD_SEPARATOR = '\t';
+	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+
+	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	private boolean tableInitialized = false;
+	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 
 	private final Table table;
 
@@ -104,114 +110,129 @@ public class DataTable {
 		}
 	}
 
-	private static final char FIELD_SEPARATOR = '\t';
-	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-
-	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private boolean tableInitialized = false;
-	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
+	public void reset() {
+		if (table != null && !table.isDisposed()) {
+			table.setRedraw(false);
+			table.clearAll();
+			table.setItemCount(0);
+			for (final TableColumn tc : table.getColumns()) {
+				tc.dispose();
+			}
+			tableInitialized = false;
+			table.setRedraw(true);
+		}
+	}
 
 	public void addRow(final RouterData data, final Map<Threshold, String> thresholdsReached, final int iteration) {
-		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
+		if (table != null && !table.isDisposed() && data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();
 			final String timestamp = DATE_FORMAT_TABLE_GUI.format(data.getTimestamp());
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						if (table != null && !table.isDisposed()) {
-							// Header (una tantum)...
-							if (!tableInitialized) {
-								// Iterazione...
-								TableColumn column = new TableColumn(table, SWT.NONE);
-								column.setText(Resources.get("lbl.column.iteration.text"));
-								column.setToolTipText(Resources.get("lbl.column.iteration.tooltip"));
+			try {
+				table.getDisplay().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							if (table != null && !table.isDisposed()) {
+								// Header (una tantum)...
+								if (!tableInitialized) {
+									// Disattivazione ridisegno automatico...
+									table.setRedraw(false);
 
-								// Timestamp...
-								column = new TableColumn(table, SWT.NONE);
-								column.setText(Resources.get("lbl.column.timestamp.text"));
-								column.setToolTipText(Resources.get("lbl.column.timestamp.tooltip"));
+									// Iterazione...
+									TableColumn column = new TableColumn(table, SWT.NONE);
+									column.setText(Resources.get("lbl.column.iteration.text"));
+									column.setToolTipText(Resources.get("lbl.column.iteration.tooltip"));
 
-								// Tempo di risposta...
-								column = new TableColumn(table, SWT.NONE);
-								column.setText(Resources.get("lbl.column.response.time.text"));
-								column.setToolTipText(Resources.get("lbl.column.response.time.tooltip"));
-
-								// Tutte le altre colonne...
-								for (String key : info.keySet()) {
+									// Timestamp...
 									column = new TableColumn(table, SWT.NONE);
-									column.setText(packColumns ? " " : key);
-									column.setToolTipText(key);
-								}
-							}
+									column.setText(Resources.get("lbl.column.timestamp.text"));
+									column.setToolTipText(Resources.get("lbl.column.timestamp.tooltip"));
 
-							// Dati...
-							int i = 0;
-							final TableItem item = new TableItem(table, SWT.NONE, 0);
-							item.setText(i++, Integer.toString(iteration));
-							item.setText(i++, timestamp);
-							item.setText(i++, Integer.toString(data.getResponseTime()));
+									// Tempo di risposta...
+									column = new TableColumn(table, SWT.NONE);
+									column.setText(Resources.get("lbl.column.response.time.text"));
+									column.setToolTipText(Resources.get("lbl.column.response.time.tooltip"));
 
-							for (String key : info.keySet()) {
-								// Grassetto...
-								if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
-									FontRegistry fontRegistry = JFaceResources.getFontRegistry();
-									if (!fontRegistry.hasValueFor("tableBold")) {
-										final Font tableFont = item.getFont();
-										final FontData oldFontData = tableFont.getFontData()[0];
-										fontRegistry.put("tableBold", new FontData[] { new FontData(oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD) });
-									}
-									item.setFont(i, fontRegistry.get("tableBold"));
-
-									// Evidenzia cella...
-									item.setBackground(i, item.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-								}
-
-								// Colore per i valori oltre soglia...
-								for (final Threshold threshold : thresholdsReached.keySet()) {
-									if (key.equals(threshold.getKey())) {
-										item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
-										break;
+									// Tutte le altre colonne...
+									for (String key : info.keySet()) {
+										column = new TableColumn(table, SWT.NONE);
+										column.setText(packColumns ? " " : key);
+										column.setToolTipText(key);
 									}
 								}
 
-								item.setText(i++, info.get(key));
-							}
+								// Dati...
+								int i = 0;
+								final TableItem item = new TableItem(table, SWT.NONE, 0);
+								item.setText(i++, Integer.toString(iteration));
+								item.setText(i++, timestamp);
+								item.setText(i++, Integer.toString(data.getResponseTime()));
 
-							// Dimesionamento delle colonne (una tantum)...
-							if (!tableInitialized) {
-								final TableItem iterationTableItem = table.getItem(0);
-								final String originalIteration = iterationTableItem.getText();
-								setSampleNumber(iterationTableItem, 4);
-								for (int j = 0; j < table.getColumns().length; j++) {
-									table.getColumn(j).pack();
-								}
-								iterationTableItem.setText(originalIteration);
+								for (String key : info.keySet()) {
+									// Grassetto...
+									if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
+										FontRegistry fontRegistry = JFaceResources.getFontRegistry();
+										if (!fontRegistry.hasValueFor("tableBold")) {
+											final Font tableFont = item.getFont();
+											final FontData oldFontData = tableFont.getFontData()[0];
+											fontRegistry.put("tableBold", new FontData[] { new FontData(oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD) });
+										}
+										item.setFont(i, fontRegistry.get("tableBold"));
 
-								if (packColumns) {
-									table.getColumn(2).setWidth(table.getColumn(0).getWidth());
-									final String[] stringArray = new String[info.keySet().size()];
-									final TableColumn[] columns = table.getColumns();
-									final int startIndex = 3;
-									for (int k = startIndex; k < columns.length; k++) {
-										final TableColumn column = columns[k];
-										column.setText(info.keySet().toArray(stringArray)[k - startIndex]);
+										// Evidenzia cella...
+										item.setBackground(i, item.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
 									}
-								}
-								tableInitialized = true;
-							}
 
-							// Limitatore righe in tabella...
-							final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
-							if (table.getItemCount() > maxItems) {
-								table.remove(maxItems);
+									// Colore per i valori oltre soglia...
+									for (final Threshold threshold : thresholdsReached.keySet()) {
+										if (key.equals(threshold.getKey())) {
+											item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
+											break;
+										}
+									}
+
+									item.setText(i++, info.get(key));
+								}
+
+								// Dimesionamento delle colonne (una tantum)...
+								if (!tableInitialized) {
+									final TableItem iterationTableItem = table.getItem(0);
+									final String originalIteration = iterationTableItem.getText();
+									setSampleNumber(iterationTableItem, 4);
+									for (int j = 0; j < table.getColumns().length; j++) {
+										table.getColumn(j).pack();
+									}
+									iterationTableItem.setText(originalIteration);
+
+									if (packColumns) {
+										table.getColumn(2).setWidth(table.getColumn(0).getWidth());
+										final String[] stringArray = new String[info.keySet().size()];
+										final TableColumn[] columns = table.getColumns();
+										final int startIndex = 3;
+										for (int k = startIndex; k < columns.length; k++) {
+											final TableColumn column = columns[k];
+											column.setText(info.keySet().toArray(stringArray)[k - startIndex]);
+										}
+									}
+									tableInitialized = true;
+
+									// Attivazione ridisegno automatico...
+									table.setRedraw(true);
+								}
+
+								// Limitatore righe in tabella...
+								final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
+								if (table.getItemCount() > maxItems) {
+									table.remove(maxItems);
+								}
 							}
 						}
+						catch (IllegalArgumentException iae) {}
+						catch (SWTException se) {}
 					}
-					catch (IllegalArgumentException iae) {}
-					catch (SWTException se) {}
-				}
-			});
+				});
+			}
+			catch (SWTException se) {}
 		}
 	}
 

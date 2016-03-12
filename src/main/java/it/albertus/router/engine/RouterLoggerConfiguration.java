@@ -5,6 +5,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
 import it.albertus.util.StringUtils;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		return Singleton.CONFIGURATION;
 	}
 
-	private final Thresholds thresholds;
+	private Thresholds thresholds;
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
 
@@ -48,7 +49,10 @@ public class RouterLoggerConfiguration extends Configuration {
 	private RouterLoggerConfiguration() {
 		/* Caricamento della configurazione... */
 		super("routerlogger.cfg");
+		init();
+	}
 
+	private void init() {
 		/* Impostazione lingua */
 		if (this.contains("language")) {
 			Resources.setLanguage(this.getString("language"));
@@ -73,6 +77,16 @@ public class RouterLoggerConfiguration extends Configuration {
 		else {
 			thresholds = new ExpressionThresholds(); /* Nuovo stile */
 		}
+	}
+
+	public void reload() {
+		try {
+			load();
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
+		init();
 	}
 
 	public abstract class Thresholds {

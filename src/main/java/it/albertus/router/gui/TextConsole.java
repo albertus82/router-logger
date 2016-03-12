@@ -9,7 +9,6 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Text;
 
@@ -75,20 +74,26 @@ public class TextConsole extends Console {
 			toPrint = value;
 		}
 		if (scrollable != null && !scrollable.isDisposed()) {
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						doPrint(value);
+			try {
+				scrollable.getDisplay().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							doPrint(value);
+						}
+						catch (SWTException se) {
+							failSafePrint(value);
+						}
+						finally {
+							updatePosition(value);
+						}
 					}
-					catch (SWTException se) {
-						failSafePrint(value);
-					}
-					finally {
-						updatePosition(value);
-					}
-				}
-			});
+				});
+			}
+			catch (SWTException se) {
+				failSafePrint(toPrint);
+				updatePosition(toPrint);
+			}
 		}
 		else {
 			failSafePrint(toPrint);
