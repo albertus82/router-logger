@@ -109,7 +109,7 @@ public abstract class RouterLoggerEngine {
 		writer.init(out);
 		return writer;
 	}
-	
+
 	/** Stampa il messaggio di benvenuto e registra un listener per CTRL+C. */
 	protected void beforeOuterLoop() {
 		welcome();
@@ -168,7 +168,7 @@ public abstract class RouterLoggerEngine {
 			}
 
 			// Log in...
-			if (connected) {
+			if (connected && !exit) {
 				setStatus(RouterLoggerStatus.AUTHENTICATING);
 				boolean loggedIn = false;
 				try {
@@ -179,7 +179,7 @@ public abstract class RouterLoggerEngine {
 				}
 
 				// Loop...
-				if (loggedIn) {
+				if (loggedIn && !exit) {
 					setStatus(RouterLoggerStatus.OK);
 					index = 0;
 					try {
@@ -204,14 +204,29 @@ public abstract class RouterLoggerEngine {
 					}
 				}
 				else {
+					if (loggedIn) { // Evidentemente exit == true!
+						try {
+							reader.logout();
+						}
+						catch (Exception e) {
+							logger.log(e);
+						}
+					}
 					// In caso di autenticazione fallita, si esce subito per evitare il blocco dell'account.
-					exit = true;
+					else {
+						exit = true;
+						setStatus(RouterLoggerStatus.ERROR);
+					}
 					reader.disconnect();
-					setStatus(RouterLoggerStatus.ERROR);
 				}
 			}
 			else {
-				setStatus(RouterLoggerStatus.ERROR);
+				if (connected) { // Evidentemente exit == true!
+					reader.disconnect();
+				}
+				else {
+					setStatus(RouterLoggerStatus.ERROR);
+				}
 			}
 		}
 

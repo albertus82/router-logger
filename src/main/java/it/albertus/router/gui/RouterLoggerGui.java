@@ -181,7 +181,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 	}
 
 	public boolean canDisconnect() {
-		return RouterLoggerStatus.INFO.equals(getCurrentStatus()) || RouterLoggerStatus.OK.equals(getCurrentStatus()) || RouterLoggerStatus.WARNING.equals(getCurrentStatus()) || RouterLoggerStatus.RECONNECTING.equals(getCurrentStatus());
+		return !(RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTING.equals(getCurrentStatus()));
 	}
 
 	/** Avvia il ciclo. */
