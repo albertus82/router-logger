@@ -4,6 +4,7 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.ThreadUtils;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,15 +12,23 @@ public class DummyReader extends Reader {
 
 	private static final byte CHARACTERS = 15;
 	private static final byte COLUMNS = 30;
+
 	private static final short LAG_IN_MILLIS = 100;
 	private static final short CONNECTION_TIME_IN_MILLIS = 1000;
 	private static final short AUTHENTICATION_TIME_IN_MILLIS = 1000;
+
+	private static final double CONNECTION_ERROR_PERCENTAGE = 0;
+	private static final double AUTHENTICATION_ERROR_PERCENTAGE = 0;
+	private static final double READ_ERROR_PERCENTAGE = 0;
 
 	@Override
 	public boolean connect() {
 		out.println(Resources.get("msg.dummy.connect"));
 		if (CONNECTION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
+		}
+		if (Math.random() > (100 - CONNECTION_ERROR_PERCENTAGE) / 100) {
+			throw new RuntimeException(Resources.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE));
 		}
 		return true;
 	}
@@ -30,6 +39,9 @@ public class DummyReader extends Reader {
 		out.println("Password: " + password);
 		if (AUTHENTICATION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(AUTHENTICATION_TIME_IN_MILLIS);
+		}
+		if (Math.random() > (100 - AUTHENTICATION_ERROR_PERCENTAGE) / 100) {
+			throw new RuntimeException(Resources.get("msg.dummy.authentication.error", AUTHENTICATION_ERROR_PERCENTAGE));
 		}
 		final String message = getClass().getSimpleName() + " - " + Resources.get("msg.test.purposes.only");
 		final StringBuilder separator = new StringBuilder();
@@ -43,7 +55,7 @@ public class DummyReader extends Reader {
 	}
 
 	@Override
-	public RouterData readInfo() {
+	public RouterData readInfo() throws IOException {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		for (byte i = 1; i <= COLUMNS; i++) {
 			StringBuilder field = new StringBuilder();
@@ -54,6 +66,9 @@ public class DummyReader extends Reader {
 		}
 		if (LAG_IN_MILLIS != 0) {
 			ThreadUtils.sleep(LAG_IN_MILLIS);
+		}
+		if (Math.random() > (100 - READ_ERROR_PERCENTAGE) / 100) {
+			throw new IOException(Resources.get("msg.dummy.readinfo.error", READ_ERROR_PERCENTAGE));
 		}
 		return new RouterData(map);
 	}
