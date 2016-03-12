@@ -1,14 +1,13 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.gui.listener.LinkSelectionListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -19,7 +18,8 @@ import org.eclipse.swt.widgets.Shell;
 public class AboutDialog extends Dialog {
 
 	private String message = "";
-	private String link = "";
+	private String applicationUrl = "";
+	private String iconUrl = "";
 
 	public AboutDialog(Shell parent) {
 		this(parent, SWT.SHEET); // SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL
@@ -47,36 +47,31 @@ public class AboutDialog extends Dialog {
 		shell.setLayout(new GridLayout(2, false));
 
 		final Label icon = new Label(shell, SWT.NONE);
-		icon.setImage(shell.getDisplay().getSystemImage(SWT.ICON_INFORMATION));
-		GridData gridData = new GridData();
-		gridData.verticalSpan = 2;
+		icon.setImage(Images.ICONS_ROUTER_BLUE[3]);
+		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 0, 3);
 		icon.setLayoutData(gridData);
 
 		final Label info = new Label(shell, SWT.NONE);
 		info.setText(this.message);
-		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+		gridData = new GridData(SWT.LEAD, SWT.CENTER, false, true);
 		info.setLayoutData(gridData);
 
-		final Link link = new Link(shell, SWT.NONE);
-		link.setText("<a href=\"" + getLink() + "\">" + getLink() + "</a>");
-		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-		link.setLayoutData(gridData);
-		link.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Program.launch(e.text);
-			}
+		final Link linkProject = new Link(shell, SWT.NONE);
+		linkProject.setText("<a href=\"" + getApplicationUrl() + "\">" + getApplicationUrl() + "</a>");
+		gridData = new GridData(SWT.LEAD, SWT.CENTER, false, true);
+		linkProject.setLayoutData(gridData);
+		linkProject.addSelectionListener(new LinkSelectionListener());
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
+		final Link linkIcon = new Link(shell, SWT.NONE);
+		String url = getIconUrl().startsWith("http") ? getIconUrl() : "http://" + getIconUrl();
+		linkIcon.setText(Resources.get("msg.info.icon") + " <a href=\"" + url + "\">" + getIconUrl() + "</a>");
+		gridData = new GridData(SWT.LEAD, SWT.CENTER, false, true);
+		linkIcon.setLayoutData(gridData);
+		linkIcon.addSelectionListener(new LinkSelectionListener());
 
 		Button okButton = new Button(shell, SWT.PUSH);
 		okButton.setText(Resources.get("lbl.button.ok"));
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
-		gridData.horizontalSpan = 2;
+		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 0);
 		gridData.minimumWidth = 64;
 		okButton.setLayoutData(gridData);
 		okButton.addSelectionListener(new SelectionAdapter() {
@@ -96,12 +91,20 @@ public class AboutDialog extends Dialog {
 		this.message = message;
 	}
 
-	public String getLink() {
-		return link;
+	public String getApplicationUrl() {
+		return applicationUrl;
 	}
 
-	public void setLink(String link) {
-		this.link = link;
+	public void setApplicationUrl(String applicationUrl) {
+		this.applicationUrl = applicationUrl;
+	}
+
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
 	}
 
 }

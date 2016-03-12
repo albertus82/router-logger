@@ -17,7 +17,7 @@ public class Images {
 	public static final Image[] ICONS_ROUTER_BLUE = loadIcons("blue.ico");
 
 	/* Icone base per l'area di notifica (16x16) */
-	public static final Image TRAY_ICON_ROUTER_BLUE = Images.ICONS_ROUTER_BLUE[1];
+	public static final Image TRAY_ICON_ROUTER_BLUE = Images.ICONS_ROUTER_BLUE[2];
 	public static final Image TRAY_ICON_ROUTER_GREY = loadIcons("grey.ico")[0];
 
 	/* Simboli in sovraimpressione per l'area di notifica (16x16, non utilizzabili da soli) */
