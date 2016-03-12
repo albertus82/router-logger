@@ -189,6 +189,11 @@ public abstract class RouterLoggerEngine {
 					catch (InterruptedException ie) {
 						out.println(Resources.get("msg.loop.interrupted"), true);
 					}
+					catch (IOException ioe) {
+						if (!exit) {
+							logger.log(ioe);
+						}
+					}
 					catch (Exception e) {
 						logger.log(e);
 					}
@@ -198,7 +203,9 @@ public abstract class RouterLoggerEngine {
 							reader.logout();
 						}
 						catch (Exception e) {
-							logger.log(e);
+							if (!exit) {
+								logger.log(e);
+							}
 						}
 						reader.disconnect();
 					}
