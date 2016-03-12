@@ -3,9 +3,9 @@ package it.albertus.router.gui;
 import it.albertus.router.gui.listener.AboutSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.ConnectListener;
+import it.albertus.router.gui.listener.ConnectionMenuBarArmListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
 import it.albertus.router.gui.listener.DisconnectListener;
-import it.albertus.router.gui.listener.FileMenuBarArmListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Resources;
 
@@ -26,14 +26,17 @@ public class MenuBar {
 
 	private final Menu fileMenu;
 	private final MenuItem fileMenuHeader;
-	private final MenuItem fileConnectItem;
-	private final MenuItem fileDisconnectItem;
 	private final MenuItem fileExitItem;
 
 	private final Menu editMenu;
 	private final MenuItem editMenuHeader;
 	private final MenuItem editCopyMenuItem;
 	private final MenuItem editSelectAllMenuItem;
+
+	private final Menu connectionMenu;
+	private final MenuItem connectionMenuHeader;
+	private final MenuItem connectionConnectItem;
+	private final MenuItem connectionDisconnectItem;
 
 	private final Menu helpMenu;
 	private final MenuItem helpMenuHeader;
@@ -42,29 +45,18 @@ public class MenuBar {
 	public MenuBar(final RouterLoggerGui gui) {
 		bar = new Menu(gui.getShell(), SWT.BAR); // Barra
 
-		fileMenu = new Menu(gui.getShell(), SWT.DROP_DOWN); // File
+		/* File */
+		fileMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		fileMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
 		fileMenuHeader.setMenu(fileMenu);
-		fileMenuHeader.addArmListener(new FileMenuBarArmListener(gui));
-
-		fileConnectItem = new MenuItem(fileMenu, SWT.PUSH);
-		fileConnectItem.setText(Resources.get("lbl.menu.item.connect"));
-		fileConnectItem.addSelectionListener(new ConnectListener(gui));
-
-		fileDisconnectItem = new MenuItem(fileMenu, SWT.PUSH);
-		fileDisconnectItem.setText(Resources.get("lbl.menu.item.disconnect"));
-		fileDisconnectItem.addSelectionListener(new DisconnectListener(gui));
-
-		new MenuItem(fileMenu, SWT.SEPARATOR);
-
-		// TODO Aggiungere RESET e altro separatore
 
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
 		fileExitItem.addSelectionListener(new CloseListener(gui));
 
-		editMenu = new Menu(gui.getShell(), SWT.DROP_DOWN); // Edit
+		/* Edit */
+		editMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		editMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		editMenuHeader.setText(Resources.get("lbl.menu.header.edit"));
 		editMenuHeader.setMenu(editMenu);
@@ -81,7 +73,25 @@ public class MenuBar {
 		editSelectAllMenuItem.addSelectionListener(new SelectAllMenuBarSelectionListener(gui));
 		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Vero!
 
-		helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN); // Help
+		/* Connection */
+		connectionMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		connectionMenuHeader = new MenuItem(bar, SWT.CASCADE);
+		connectionMenuHeader.setText(Resources.get("lbl.menu.header.connection"));
+		connectionMenuHeader.setMenu(connectionMenu);
+		connectionMenuHeader.addArmListener(new ConnectionMenuBarArmListener(gui));
+
+		connectionConnectItem = new MenuItem(connectionMenu, SWT.PUSH);
+		connectionConnectItem.setText(Resources.get("lbl.menu.item.connect"));
+		connectionConnectItem.addSelectionListener(new ConnectListener(gui));
+
+		new MenuItem(connectionMenu, SWT.SEPARATOR);
+
+		connectionDisconnectItem = new MenuItem(connectionMenu, SWT.PUSH);
+		connectionDisconnectItem.setText(Resources.get("lbl.menu.item.disconnect"));
+		connectionDisconnectItem.addSelectionListener(new DisconnectListener(gui));
+
+		/* Help */
+		helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		helpMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		helpMenuHeader.setText(Resources.get("lbl.menu.header.help"));
 		helpMenuHeader.setMenu(helpMenu);
@@ -93,6 +103,10 @@ public class MenuBar {
 		gui.getShell().setMenuBar(bar);
 	}
 
+	public Menu getBar() {
+		return bar;
+	}
+
 	public Menu getFileMenu() {
 		return fileMenu;
 	}
@@ -101,20 +115,8 @@ public class MenuBar {
 		return fileMenuHeader;
 	}
 
-	public MenuItem getFileConnectItem() {
-		return fileConnectItem;
-	}
-
-	public MenuItem getFileDisconnectItem() {
-		return fileDisconnectItem;
-	}
-
 	public MenuItem getFileExitItem() {
 		return fileExitItem;
-	}
-
-	public Menu getBar() {
-		return bar;
 	}
 
 	public Menu getEditMenu() {
@@ -131,6 +133,22 @@ public class MenuBar {
 
 	public MenuItem getEditSelectAllMenuItem() {
 		return editSelectAllMenuItem;
+	}
+
+	public Menu getConnectionMenu() {
+		return connectionMenu;
+	}
+
+	public MenuItem getConnectionMenuHeader() {
+		return connectionMenuHeader;
+	}
+
+	public MenuItem getConnectionConnectItem() {
+		return connectionConnectItem;
+	}
+
+	public MenuItem getConnectionDisconnectItem() {
+		return connectionDisconnectItem;
 	}
 
 	public Menu getHelpMenu() {

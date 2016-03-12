@@ -10,20 +10,20 @@ import org.eclipse.swt.widgets.MenuItem;
  * Attenzione: disabilitando gli elementi dei menu, vengono automaticamente
  * disabilitati anche i relativi acceleratori.
  */
-public class FileMenuBarArmListener implements ArmListener {
+public class ConnectionMenuBarArmListener implements ArmListener {
 
 	private final RouterLoggerGui gui;
 
-	public FileMenuBarArmListener(final RouterLoggerGui gui) {
+	public ConnectionMenuBarArmListener(final RouterLoggerGui gui) {
 		this.gui = gui;
 	}
 
 	@Override
 	public void widgetArmed(ArmEvent e) {
-		final MenuItem connectMenuItem = gui.getMenuBar().getFileConnectItem();
+		final MenuItem connectMenuItem = gui.getMenuBar().getConnectionConnectItem();
 		connectMenuItem.setEnabled(gui.canConnect());
 
-		final MenuItem disconnectMenuItem = gui.getMenuBar().getFileDisconnectItem();
+		final MenuItem disconnectMenuItem = gui.getMenuBar().getConnectionDisconnectItem();
 		disconnectMenuItem.setEnabled(gui.canDisconnect());
 	}
 
