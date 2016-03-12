@@ -41,7 +41,7 @@ public abstract class RouterLoggerEngine {
 	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
 	private RouterLoggerStatus previousStatus = null;
 
-	protected int iteration = 1;
+	protected volatile int iteration = 1;
 
 	public RouterLoggerStatus getCurrentStatus() {
 		return currentStatus;

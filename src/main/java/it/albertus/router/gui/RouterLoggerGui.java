@@ -43,6 +43,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			final Shell shell = routerLogger.createShell(display);
 			shell.open();
 
+			// Stampa del messaggio di benvenuto...
 			routerLogger.beforeOuterLoop();
 
 			// Avvio thread di interrogazione router...
@@ -54,15 +55,17 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 				}
 			}
 
-			// Segnala al thread che deve terminare il loop immediatamente...
-			routerLogger.disconnect();
-			routerLogger.afterOuterLoop();
+			// Segnala al thread che deve terminare il loop immediatamente.
+			routerLogger.disconnect(true);
 
 			// Distrugge la GUI...
 			display.dispose();
 
 			// Attende che il thread completi il rilascio risorse...
 			routerLogger.updateThread.join();
+
+			// Stampa del messaggio di commiato...
+			routerLogger.afterOuterLoop();
 		}
 		catch (Exception e) {
 			Logger.getInstance().log(e);
@@ -173,31 +176,55 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		return this.getConsole().getText() != null && this.getConsole().getText().isFocusControl();
 	}
 
+	public boolean canConnect() {
+		return (RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || iteration <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
+	}
+
+	public boolean canDisconnect() {
+		return RouterLoggerStatus.INFO.equals(getCurrentStatus()) || RouterLoggerStatus.OK.equals(getCurrentStatus()) || RouterLoggerStatus.WARNING.equals(getCurrentStatus()) || RouterLoggerStatus.RECONNECTING.equals(getCurrentStatus());
+	}
+
+	/** Avvia il ciclo. */
+	public void connect() {
+		if (canConnect()) {
+			exit = false;
+			if (dataTable != null && dataTable.getTable() != null) {
+				iteration = dataTable.getTable().getItemCount() + 1;
+			}
+			updateThread = new Thread() {
+				@Override
+				public void run() {
+					outerLoop();
+				}
+			};
+			updateThread.start();
+		}
+		else {
+			logger.log(Resources.get("err.operation.not.allowed"), Destination.CONSOLE);
+		}
+	}
+
+	private void disconnect(final boolean force) {
+		if (canDisconnect() || force) {
+			exit = true;
+			updateThread.interrupt();
+		}
+		else {
+			logger.log(Resources.get("err.operation.not.allowed"), Destination.CONSOLE);
+		}
+	}
+
+	/** Interrompe il ciclo e forza la disconnessione. */
+	public void disconnect() {
+		disconnect(false);
+	}
+
 	@Override
 	protected void setStatus(RouterLoggerStatus status) {
 		super.setStatus(status);
 		if (trayIcon != null) {
 			trayIcon.updateTrayItem(status);
 		}
-	}
-
-	/** Avvia il ciclo. */
-	public void connect() {
-		exit = false;
-		updateThread = new Thread() {
-			@Override
-			public void run() {
-				outerLoop();
-			}
-		};
-		updateThread.start();
-	}
-
-	/** Interrompe il ciclo e forza la disconnessione. */
-	public void disconnect() {
-		exit = true;
-		updateThread.interrupt();
-		iteration++;
 	}
 
 	@Override

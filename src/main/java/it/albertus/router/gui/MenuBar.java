@@ -5,6 +5,7 @@ import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.ConnectListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
 import it.albertus.router.gui.listener.DisconnectListener;
+import it.albertus.router.gui.listener.FileMenuBarArmListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Resources;
 
@@ -45,8 +46,7 @@ public class MenuBar {
 		fileMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
 		fileMenuHeader.setMenu(fileMenu);
-
-		// TODO ArmListener per attivare/disattivare Connect/Disconnect a seconda dello stato.
+		fileMenuHeader.addArmListener(new FileMenuBarArmListener(gui));
 
 		fileConnectItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileConnectItem.setText(Resources.get("lbl.menu.item.connect"));
