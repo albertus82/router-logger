@@ -206,6 +206,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 
 	private void disconnect(final boolean force) {
 		if (canDisconnect() || force) {
+			setStatus(RouterLoggerStatus.DISCONNECTING);
 			exit = true;
 			updateThread.interrupt();
 		}
