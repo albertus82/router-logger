@@ -2,7 +2,9 @@ package it.albertus.router.gui;
 
 import it.albertus.router.gui.listener.AboutSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
+import it.albertus.router.gui.listener.ConnectListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
+import it.albertus.router.gui.listener.DisconnectListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Resources;
 
@@ -23,6 +25,8 @@ public class MenuBar {
 
 	private final Menu fileMenu;
 	private final MenuItem fileMenuHeader;
+//	private final MenuItem fileConnectItem;
+	private final MenuItem fileDisconnectItem;
 	private final MenuItem fileExitItem;
 
 	private final Menu editMenu;
@@ -41,6 +45,16 @@ public class MenuBar {
 		fileMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
 		fileMenuHeader.setMenu(fileMenu);
+
+//		fileConnectItem = new MenuItem(fileMenu, SWT.PUSH);
+//		fileConnectItem.setText(Resources.get("lbl.menu.item.connect"));
+//		fileConnectItem.addSelectionListener(new ConnectListener(gui));
+
+		fileDisconnectItem = new MenuItem(fileMenu, SWT.PUSH);
+		fileDisconnectItem.setText(Resources.get("lbl.menu.item.disconnect"));
+		fileDisconnectItem.addSelectionListener(new DisconnectListener(gui));
+
+		new MenuItem(fileMenu, SWT.SEPARATOR);
 
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
@@ -81,6 +95,14 @@ public class MenuBar {
 
 	public MenuItem getFileMenuHeader() {
 		return fileMenuHeader;
+	}
+
+//	public MenuItem getFileConnectItem() {
+//		return fileConnectItem;
+//	}
+
+	public MenuItem getFileDisconnectItem() {
+		return fileDisconnectItem;
 	}
 
 	public MenuItem getFileExitItem() {

@@ -26,6 +26,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		boolean GUI_START_MINIMIZED = false;
 	}
 
+	private Thread updateThread;
+
 	private DataTable dataTable;
 	private TrayIcon trayIcon;
 	private MenuBar menuBar;
@@ -42,13 +44,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			shell.open();
 
 			// Avvio thread di interrogazione router...
-			final Thread updateThread = new Thread() {
+			routerLogger.updateThread = new Thread() {
 				@Override
 				public void run() {
 					routerLogger.run();
 				}
 			};
-			updateThread.start();
+			routerLogger.updateThread.start();
 
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
@@ -57,14 +59,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 			}
 
 			// Segnala al thread che deve terminare il loop immediatamente...
-			routerLogger.exit = true;
-			updateThread.interrupt();
+			routerLogger.disconnect();
 
 			// Distrugge la GUI...
 			display.dispose();
 
 			// Attende che il thread completi il rilascio risorse...
-			updateThread.join();
+			routerLogger.updateThread.join();
 		}
 		catch (Exception e) {
 			Logger.getInstance().log(e);
@@ -181,6 +182,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
 		if (trayIcon != null) {
 			trayIcon.updateTrayItem(status);
 		}
+	}
+
+	/** Interrompe il thread di aggiornamento e forza la disconnessione */
+	public void disconnect() {
+		exit = true;
+		updateThread.interrupt();
 	}
 
 	@Override
