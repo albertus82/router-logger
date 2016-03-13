@@ -13,6 +13,7 @@ import it.albertus.util.ExceptionUtils;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.layout.GridData;
@@ -21,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-public class RouterLoggerGui extends RouterLoggerEngine implements Gui {
+public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvider {
 
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_START_MINIMIZED = false;

@@ -1,18 +1,18 @@
 package it.albertus.router.gui.listener;
 
 import it.albertus.router.gui.AboutDialog;
-import it.albertus.router.gui.Gui;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Version;
 
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 public class AboutSelectionListener extends SelectionAdapter {
 
-	private final Gui gui;
+	private final IShellProvider gui;
 
-	public AboutSelectionListener(final Gui gui) {
+	public AboutSelectionListener(final IShellProvider gui) {
 		this.gui = gui;
 	}
 
