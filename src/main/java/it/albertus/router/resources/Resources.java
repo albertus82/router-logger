@@ -10,12 +10,12 @@ public class Resources {
 
 	private static final String BASE_NAME = Resources.class.getName().toLowerCase();
 
-	private static ResourceBundle RESOURCES = ResourceBundle.getBundle(BASE_NAME, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+	private static ResourceBundle resources = ResourceBundle.getBundle(BASE_NAME, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
 	/** Aggiorna la lingua in cui vengono mostrati i messaggi. */
 	public static void setLanguage(final String language) {
 		if (language != null) {
-			RESOURCES = ResourceBundle.getBundle(BASE_NAME, new Locale(language), ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+			resources = ResourceBundle.getBundle(BASE_NAME, new Locale(language), ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 		}
 	}
 
@@ -24,7 +24,7 @@ public class Resources {
 		for (Object param : params) {
 			stringParams.add(param != null ? param.toString() : "");
 		}
-		final String message = MessageFormat.format(RESOURCES.getString(key), stringParams.toArray());
+		final String message = MessageFormat.format(resources.getString(key), stringParams.toArray());
 		return message != null ? message.trim() : "";
 	}
 

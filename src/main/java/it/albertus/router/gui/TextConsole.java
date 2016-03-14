@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Text;
 public class TextConsole extends Console {
 
 	protected interface Defaults {
-		int GUI_CONSOLE_MAX_CHARS = 50000;
+		int GUI_CONSOLE_MAX_CHARS = 100000;
 	}
 
 	private static class Singleton {
