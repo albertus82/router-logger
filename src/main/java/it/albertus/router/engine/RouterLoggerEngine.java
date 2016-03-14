@@ -115,7 +115,7 @@ public abstract class RouterLoggerEngine {
 		welcome();
 
 		// Gestione chiusura console (CTRL+C)...
-		shutdownHook = new Thread() {
+		shutdownHook = new Thread("shutdownHook") {
 			@Override
 			public void run() {
 				reader.disconnect();

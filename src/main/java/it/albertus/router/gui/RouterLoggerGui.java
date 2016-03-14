@@ -190,7 +190,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	public void connect() {
 		if (canConnect()) {
 			exit = false;
-			if (dataTable != null && dataTable.getTable() != null) {
+			if (dataTable != null && dataTable.getTable() != null && !dataTable.getTable().isDisposed()) {
 				iteration = dataTable.getTable().getItemCount() + 1;
 			}
 			updateThread = new Thread("updateThread") {
