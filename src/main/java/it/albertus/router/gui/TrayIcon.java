@@ -7,6 +7,8 @@ import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.RestoreShellListener;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.NewLine;
 
 import java.util.Map;
@@ -79,51 +81,60 @@ public class TrayIcon {
 	}
 
 	private void iconify() {
-		if (tray == null) {
+		final Logger logger = Logger.getInstance();
+		if (tray == null || trayItem == null || trayItem.isDisposed()) {
 			/* Inizializzazione */
-			tray = gui.getShell().getDisplay().getSystemTray();
+			try {
+				tray = gui.getShell().getDisplay().getSystemTray();
 
-			if (tray != null) {
-				trayItem = new TrayItem(tray, SWT.NONE);
-				trayIcon = getTrayIcon(gui.getCurrentStatus());
-				trayItem.setImage(trayIcon);
-				toolTipText = getBaseToolTipText(gui.getCurrentStatus());
-				trayItem.setToolTipText(toolTipText);
+				if (tray != null) {
+					trayItem = new TrayItem(tray, SWT.NONE);
+					trayIcon = getTrayIcon(gui.getCurrentStatus());
+					trayItem.setImage(trayIcon);
+					toolTipText = getBaseToolTipText(gui.getCurrentStatus());
+					trayItem.setToolTipText(toolTipText);
 
-				if (configuration.getBoolean("gui.tray.tooltip", Defaults.GUI_TRAY_TOOLTIP)) {
-					toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
-					toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
-					toolTip.setVisible(false);
-					toolTip.setAutoHide(true);
-					trayItem.setToolTip(toolTip);
-				}
-
-				trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
-				showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
-				showMenuItem.setText(Resources.get("lbl.tray.show"));
-				showMenuItem.addListener(SWT.Selection, new RestoreShellListener(gui));
-				trayMenu.setDefaultItem(showMenuItem);
-
-				new MenuItem(trayMenu, SWT.SEPARATOR);
-
-				exitMenuItem = new MenuItem(trayMenu, SWT.PUSH);
-				exitMenuItem.setText(Resources.get("lbl.tray.close"));
-				exitMenuItem.addSelectionListener(new CloseListener(gui));
-				trayItem.addMenuDetectListener(new MenuDetectListener() {
-					@Override
-					public void menuDetected(MenuDetectEvent e) {
-						trayMenu.setVisible(true);
+					if (configuration.getBoolean("gui.tray.tooltip", Defaults.GUI_TRAY_TOOLTIP)) {
+						toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
+						toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
+						toolTip.setVisible(false);
+						toolTip.setAutoHide(true);
+						trayItem.setToolTip(toolTip);
 					}
-				});
 
-				trayItem.addListener(SWT.DefaultSelection, new RestoreShellListener(gui));
+					trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
+					showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
+					showMenuItem.setText(Resources.get("lbl.tray.show"));
+					showMenuItem.addListener(SWT.Selection, new RestoreShellListener(gui));
+					trayMenu.setDefaultItem(showMenuItem);
+
+					new MenuItem(trayMenu, SWT.SEPARATOR);
+
+					exitMenuItem = new MenuItem(trayMenu, SWT.PUSH);
+					exitMenuItem.setText(Resources.get("lbl.tray.close"));
+					exitMenuItem.addSelectionListener(new CloseListener(gui));
+					trayItem.addMenuDetectListener(new MenuDetectListener() {
+						@Override
+						public void menuDetected(MenuDetectEvent e) {
+							trayMenu.setVisible(true);
+						}
+					});
+
+					trayItem.addListener(SWT.DefaultSelection, new RestoreShellListener(gui));
+				}
+			}
+			catch (Exception e) {
+				logger.log(e, logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
 			}
 		}
 
-		if (tray != null && trayItem != null && !trayItem.isDisposed()) {
+		if (tray != null && !tray.isDisposed() && trayItem != null && !trayItem.isDisposed()) {
 			gui.getShell().setVisible(false);
 			trayItem.setVisible(true);
 			gui.getShell().setMinimized(false);
+		}
+		else {
+			logger.log("Tray not available.", logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
 		}
 	}
 

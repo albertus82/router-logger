@@ -6,7 +6,9 @@ import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
+import it.albertus.util.TerminalConsole;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -48,9 +50,9 @@ public class Logger {
 		this.out = console;
 	}
 
-	private Console out;
+	private Console out = TerminalConsole.getInstance(); // Fail-safe.
 
-	public boolean isDebug() {
+	public boolean isDebugEnabled() {
 		return configuration.getBoolean("console.debug", Defaults.DEBUG);
 	}
 
@@ -89,7 +91,7 @@ public class Logger {
 		String longLog = ExceptionUtils.getStackTrace(throwable);
 
 		if (dest.contains(Destination.CONSOLE)) {
-			if (isDebug()) {
+			if (isDebugEnabled()) {
 				logToConsole(longLog);
 			}
 			else {
@@ -134,9 +136,10 @@ public class Logger {
 				logFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
 		}
-		final FileWriter logFileWriter = new FileWriter(logFile, true);
+		final BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
 		final String base = new Date().toString() + " - ";
-		logFileWriter.write(base + text);
+		logFileWriter.write(base + text.trim());
+		logFileWriter.newLine();
 		logFileWriter.flush();
 		logFileWriter.close();
 	}
