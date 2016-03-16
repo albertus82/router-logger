@@ -34,9 +34,9 @@ public class DummyReader extends Reader {
 	}
 
 	@Override
-	public boolean login(final String username, final String password) {
+	public boolean login(final String username, final char[] password) {
 		out.println("Username: " + username);
-		out.println("Password: " + password);
+		out.println("Password: " + String.valueOf(password));
 		if (AUTHENTICATION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(AUTHENTICATION_TIME_IN_MILLIS);
 		}

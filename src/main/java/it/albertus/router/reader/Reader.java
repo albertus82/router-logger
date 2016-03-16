@@ -40,7 +40,7 @@ public abstract class Reader {
 	protected final TelnetClient telnet = new TelnetClient();
 
 	/**
-	 * Effettua la connessione al server telnet, ma non l'autenticazione.
+	 * Effettua la connessione al server Telnet, ma non l'autenticazione.
 	 * <b>Normalmente non occorre sovrascrivere questo metodo</b>.
 	 * 
 	 * @return <tt>true</tt> se la connessione &egrave; riuscita, <tt>false</tt>
@@ -99,7 +99,7 @@ public abstract class Reader {
 	}
 
 	/**
-	 * Effettua l'autenticazione sul server telnet, utilizzando i metodi
+	 * Effettua l'autenticazione sul server Telnet, utilizzando i metodi
 	 * {@link #readFromTelnet(String, boolean)} e {@link #writeToTelnet(String)}
 	 * per interagire con il server e comunicare le credenziali di accesso.
 	 * 
@@ -113,10 +113,10 @@ public abstract class Reader {
 	 * 
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
-	public abstract boolean login(String username, String password) throws IOException;
+	public abstract boolean login(String username, char[] password) throws IOException;
 
 	/**
-	 * Effettua il logout dal server telnet inviando il comando <tt>exit</tt>.
+	 * Effettua il logout dal server Telnet inviando il comando <tt>exit</tt>.
 	 * &Egrave; possibile sovrascrivere questo metodo per aggiungere altri o
 	 * diversi comandi che debbano essere eseguiti in fase di logout. <b>Questo
 	 * metodo non effettua esplicitamente la disconnessione dal server</b>.
@@ -129,9 +129,9 @@ public abstract class Reader {
 	}
 
 	/**
-	 * Effettua la disconnessione dal server telnet, ma non invia alcun comando
+	 * Effettua la disconnessione dal server Telnet, ma non invia alcun comando
 	 * di logout. &Egrave; buona norma richiamare prima il metodo
-	 * {@link #logout()} per inviare al server telnet gli opportuni comandi di
+	 * {@link #logout()} per inviare al server Telnet gli opportuni comandi di
 	 * chiusura della sessione (ad esempio <tt>logout</tt>). <b>Normalmente non
 	 * occorre sovrascrivere questo metodo</b>.
 	 */
@@ -146,7 +146,7 @@ public abstract class Reader {
 	}
 
 	/**
-	 * Estrae le informazioni di interesse dai dati ricevuti dal server telnet,
+	 * Estrae le informazioni di interesse dai dati ricevuti dal server Telnet,
 	 * utilizzando i metodi {@link #writeToTelnet(String)} e
 	 * {@link #readFromTelnet(String, boolean)}.
 	 * 
@@ -164,7 +164,7 @@ public abstract class Reader {
 	}
 
 	/**
-	 * Legge i dati inviati dal server telnet fin quando non incontra la stringa
+	 * Legge i dati inviati dal server Telnet fin quando non incontra la stringa
 	 * limite passata come parametro. <b>Se la stringa non viene trovata e lo
 	 * stream si esaurisce, il programma si blocca in attesa di altri dati dal
 	 * server</b>, che potrebbero non arrivare mai.
@@ -173,7 +173,7 @@ public abstract class Reader {
 	 * @param inclusive
 	 *            determina l'inclusione o meno della stringa limite all'interno
 	 *            della stringa restituita.
-	 * @return la stringa contenente i dati ricevuti dal server telnet.
+	 * @return la stringa contenente i dati ricevuti dal server Telnet.
 	 * @throws IOException in caso di errore durante la lettura dei dati.
 	 * @throws NullPointerException se la stringa fornita &egrave; null.
 	 */
@@ -196,21 +196,39 @@ public abstract class Reader {
 	}
 
 	/**
-	 * Invia un comando al server telnet. La stringa passata viene
+	 * Invia un comando al server Telnet. La stringa passata viene
 	 * automaticamente inviata al server e non occorre la presenza del carattere
 	 * <tt>\n</tt>. Se nella stringa sono presenti caratteri <tt>\n</tt> o
 	 * <tt>\r</tt>, questa viene troncata alla prima occorrenza di uno di questi
 	 * caratteri.
 	 * 
-	 * @param command  il comando da inviare al server telnet.
-	 * @return l'eco del testo inviato al server telnet.
+	 * @param command il comando da inviare al server Telnet.
+	 * @return l'eco del testo inviato al server Telnet.
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 * @throws NullPointerException se il comando fornito &egrave; null.
 	 */
 	protected String writeToTelnet(final String command) throws IOException {
+		return writeToTelnet(command.toCharArray());
+	}
+
+	/**
+	 * Invia una <b>password</b> o altro contenuto sensibile al server Telnet.
+	 * L'array di caratteri passato viene automaticamente inviato al server e
+	 * non occorre la presenza del carattere <tt>\n</tt>. Se nell'array sono
+	 * presenti caratteri <tt>\n</tt> o <tt>\r</tt>, questo viene troncato alla
+	 * prima occorrenza di uno di questi caratteri.
+	 * 
+	 * @param password l'array di caratteri da inviare al server Telnet
+	 *        (tipicamente una password).
+	 * @return l'eco del testo inviato al server Telnet (solitamente una stringa
+	 *         vuota quando si invia una password).
+	 * @throws IOException in caso di errore nella comunicazione con il server.
+	 * @throws NullPointerException se il parametro fornito &egrave; null.
+	 */
+	protected String writeToTelnet(final char[] password) throws IOException {
 		final OutputStream out = telnet.getOutputStream();
 		final StringBuilder echo = new StringBuilder();
-		for (final char character : command.toCharArray()) {
+		for (final char character : password) {
 			if (character == '\n' || character == '\r') {
 				break;
 			}

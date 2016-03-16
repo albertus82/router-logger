@@ -25,7 +25,7 @@ public class DLinkDsl2750Reader extends Reader {
 	private static final String LOGIN_PROMPT = ":";
 
 	@Override
-	public boolean login(final String username, final String password) throws IOException {
+	public boolean login(final String username, final char[] password) throws IOException {
 		// Username...
 		out.print(readFromTelnet(LOGIN_PROMPT, true).trim(), true);
 		writeToTelnet(username);
