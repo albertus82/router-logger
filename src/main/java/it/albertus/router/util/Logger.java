@@ -57,7 +57,7 @@ public class Logger {
 	}
 
 	public void log(final String text, final Destination... destinations) {
-		Set<Destination> dest = getDestinations(destinations);
+		final Set<Destination> dest = getDestinations(destinations);
 
 		if (dest.contains(Destination.CONSOLE)) {
 			logToConsole(text);
@@ -74,7 +74,7 @@ public class Logger {
 	}
 
 	private Set<Destination> getDestinations(final Destination... destinations) {
-		Set<Destination> dest = new HashSet<Destination>();
+		final Set<Destination> dest = new HashSet<Destination>();
 		if (destinations != null && destinations.length != 0) {
 			dest.addAll(Arrays.asList(destinations));
 		}
@@ -85,10 +85,10 @@ public class Logger {
 	}
 
 	public void log(final Throwable throwable, Destination... destinations) {
-		Set<Destination> dest = getDestinations(destinations);
+		final Set<Destination> dest = getDestinations(destinations);
 
-		String shortLog = ExceptionUtils.getLogMessage(throwable);
-		String longLog = ExceptionUtils.getStackTrace(throwable);
+		final String shortLog = ExceptionUtils.getLogMessage(throwable);
+		final String longLog = ExceptionUtils.getStackTrace(throwable);
 
 		if (dest.contains(Destination.CONSOLE)) {
 			if (isDebugEnabled()) {
@@ -111,7 +111,7 @@ public class Logger {
 
 	private void logToConsole(final String text) {
 		final String base = DATE_FORMAT_LOG.format(new Date()) + ' ';
-		out.println(base + text, true);
+		out.println(base + StringUtils.trimToEmpty(text), true);
 	}
 
 	private void logToFile(final String text) throws IOException {
@@ -138,7 +138,8 @@ public class Logger {
 		}
 		final BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
 		final String base = new Date().toString() + " - ";
-		logFileWriter.write(base + text.trim());
+		logFileWriter.write(base);
+		logFileWriter.write(StringUtils.trimToEmpty(text));
 		logFileWriter.newLine();
 		logFileWriter.flush();
 		logFileWriter.close();
