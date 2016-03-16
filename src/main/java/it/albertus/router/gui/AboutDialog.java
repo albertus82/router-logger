@@ -47,7 +47,7 @@ public class AboutDialog extends Dialog {
 		shell.setLayout(new GridLayout(2, false));
 
 		final Label icon = new Label(shell, SWT.NONE);
-		icon.setImage(Images.ICONS_ROUTER_BLUE[3]);
+		icon.setImage(Images.APP_ICONS[3]);
 		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 0, 3);
 		icon.setLayoutData(gridData);
 

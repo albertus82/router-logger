@@ -65,18 +65,18 @@ public class TrayIcon {
 		case STARTING:
 		case CONNECTING:
 		case DISCONNECTED:
-			return Images.TRAY_ICON_ROUTER_GREY;
+			return Images.TRAY_ICON_INACTIVE;
 		case RECONNECTING:
-			return Images.TRAY_ICON_ROUTER_GREY_CLOCK;
+			return Images.TRAY_ICON_INACTIVE_CLOCK;
 		case INFO:
 		case WARNING:
-			return Images.TRAY_ICON_ROUTER_BLUE_WARNING;
+			return Images.TRAY_ICON_ACTIVE_WARNING;
 		case AUTHENTICATING:
-			return Images.TRAY_ICON_ROUTER_BLUE_LOCK;
+			return Images.TRAY_ICON_ACTIVE_LOCK;
 		case ERROR:
-			return Images.TRAY_ICON_ROUTER_GREY_ERROR;
+			return Images.TRAY_ICON_INACTIVE_ERROR;
 		default:
-			return Images.TRAY_ICON_ROUTER_BLUE;
+			return Images.TRAY_ICON_ACTIVE;
 		}
 	}
 
