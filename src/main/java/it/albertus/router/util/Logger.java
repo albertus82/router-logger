@@ -141,7 +141,6 @@ public class Logger {
 		logFileWriter.write(base);
 		logFileWriter.write(StringUtils.trimToEmpty(text));
 		logFileWriter.newLine();
-		logFileWriter.flush();
 		logFileWriter.close();
 	}
 
