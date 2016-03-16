@@ -14,10 +14,10 @@ import org.eclipse.swt.widgets.Display;
 public class Images {
 
 	/* Icona principale dell'applicazione (in vari formati) */
-	public static final Image[] APP_ICONS = loadIcons("active.ico");
+	public static final Image[] MAIN_ICONS = loadIcons("main.ico");
 
 	/* Icone base per l'area di notifica (16x16) */
-	public static final Image TRAY_ICON_ACTIVE = Images.APP_ICONS[2];
+	public static final Image TRAY_ICON_ACTIVE = Images.MAIN_ICONS[2];
 	public static final Image TRAY_ICON_INACTIVE = loadIcons("inactive.ico")[0];
 
 	/* Simboli in sovraimpressione per l'area di notifica (16x16, non utilizzabili da soli) */

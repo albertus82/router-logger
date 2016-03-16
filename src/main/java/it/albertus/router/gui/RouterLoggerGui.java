@@ -105,7 +105,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		shell = new Shell(display);
 		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
 		shell.setText(Resources.get("lbl.window.title"));
-		shell.setImages(Images.APP_ICONS);
+		shell.setImages(Images.MAIN_ICONS);
 		shell.setLayout(shellLayout);
 
 		trayIcon = new TrayIcon(this);
