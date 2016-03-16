@@ -7,9 +7,11 @@
 	<property file="build.properties" />
 	<property file="${build.resourcesDirectory}/version.properties" />
 
+
 	<target name="clean">
 		<delete dir="${build.directory}" />
 	</target>
+
 
 	<target name="compile" depends="clean">
 		<mkdir dir="${build.outputDirectory}" />
@@ -24,6 +26,7 @@
 		</javac>
 	</target>
 
+
 	<target name="resources">
 		<copy todir="${build.outputDirectory}">
 			<fileset dir="${build.resourcesDirectory}" />
@@ -31,12 +34,12 @@
 	</target>
 
 
-	<fileset id="lib" dir="${dependencies.directory}">
-		<include name="*.jar" />
-		<include name="license/*.txt" />
-	</fileset>
-
 	<target name="lib">
+		<fileset id="lib" dir="${dependencies.directory}">
+			<include name="*.jar" />
+			<include name="license/*.txt" />
+		</fileset>
+
 		<!-- Copia dei file JAR delle librerie -->
 		<copy todir="${build.distDirectory}/win32-win32-x86/lib">
 			<fileset refid="lib" />
@@ -121,9 +124,9 @@
 	</target>
 
 
-	<fileset id="config" dir="${build.configDirectory}" />
-
 	<target name="config">
+		<fileset id="config" dir="${build.configDirectory}" />
+
 		<copy todir="${build.distDirectory}/win32-win32-x86">
 			<fileset refid="config" />
 		</copy>
@@ -144,20 +147,18 @@
 		</copy>
 	</target>
 
-
-	<fileset id="bat" dir="${build.scriptSourceDirectory}">
-		<include name="*.bat" />
-	</fileset>
-
-	<fileset id="sh" dir="${build.scriptSourceDirectory}">
-		<include name="*.sh" />
-	</fileset>
-
-	<fileset id="command" dir="${build.scriptSourceDirectory}">
-		<include name="*.command" />
-	</fileset>
 
 	<target name="scripts">
+		<fileset id="bat" dir="${build.scriptSourceDirectory}">
+			<include name="*.bat" />
+		</fileset>
+		<fileset id="sh" dir="${build.scriptSourceDirectory}">
+			<include name="*.sh" />
+		</fileset>
+		<fileset id="command" dir="${build.scriptSourceDirectory}">
+			<include name="*.command" />
+		</fileset>
+
 		<copy todir="${build.distDirectory}/win32-win32-x86">
 			<fileset refid="bat" />
 		</copy>
@@ -179,13 +180,13 @@
 	</target>
 
 
-	<fileset id="docs" dir="">
-		<include name="README*" />
-		<include name="LICENSE*" />
-		<include name="NOTICE*" />
-	</fileset>
-
 	<target name="docs">
+		<fileset id="docs" dir="">
+			<include name="README*" />
+			<include name="LICENSE*" />
+			<include name="NOTICE*" />
+		</fileset>
+
 		<copy todir="${build.distDirectory}/win32-win32-x86">
 			<fileset refid="docs" />
 		</copy>
