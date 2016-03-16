@@ -7,11 +7,9 @@
 	<property file="build.properties" />
 	<property file="${build.resourcesDirectory}/version.properties" />
 
-
 	<target name="clean">
 		<delete dir="${build.directory}" />
 	</target>
-
 
 	<target name="compile" depends="clean">
 		<mkdir dir="${build.outputDirectory}" />
@@ -26,13 +24,11 @@
 		</javac>
 	</target>
 
-
 	<target name="resources">
 		<copy todir="${build.outputDirectory}">
 			<fileset dir="${build.resourcesDirectory}" />
 		</copy>
 	</target>
-
 
 	<target name="lib">
 		<fileset id="lib" dir="${dependencies.directory}">
@@ -123,7 +119,6 @@
 		</manifestclasspath>
 	</target>
 
-
 	<target name="config">
 		<fileset id="config" dir="${build.configDirectory}" />
 
@@ -146,7 +141,6 @@
 			<fileset refid="config" />
 		</copy>
 	</target>
-
 
 	<target name="scripts">
 		<fileset id="bat" dir="${build.scriptSourceDirectory}">
@@ -179,7 +173,6 @@
 		</copy>
 	</target>
 
-
 	<target name="docs">
 		<fileset id="docs" dir="">
 			<include name="README*" />
@@ -207,7 +200,6 @@
 		</copy>
 	</target>
 
-
 	<target name="icons">
 		<copy file="${icons.directory}/main.ico"  tofile="${build.distDirectory}/win32-win32-x86/${artifactId}.ico" />
 		<copy file="${icons.directory}/main.ico"  tofile="${build.distDirectory}/win32-win32-x86_64/${artifactId}.ico" />
@@ -216,7 +208,6 @@
 		<copy file="${icons.directory}/main.icns" tofile="${build.distDirectory}/cocoa-macosx/${artifactId}.icns" />
 		<copy file="${icons.directory}/main.icns" tofile="${build.distDirectory}/cocoa-macosx-x86_64/${artifactId}.icns" />
 	</target>
-
 
 	<target name="jar" depends="compile, resources, config, scripts, docs, icons, lib">
 		<jar destfile="${build.distDirectory}/win32-win32-x86/${artifactId}.jar" basedir="${build.outputDirectory}" level="9">
@@ -256,7 +247,6 @@
 			</manifest>
 		</jar>
 	</target>
-
 
 	<target name="zip" depends="jar">
 		<zip destfile="${build.releaseDirectory}/${artifactId}-${version.number}-win32-win32-x86-bin.zip" basedir="${build.distDirectory}/win32-win32-x86" level="9" />
