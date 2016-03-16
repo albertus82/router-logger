@@ -208,27 +208,9 @@ public abstract class Reader {
 	 * @throws NullPointerException se il comando fornito &egrave; null.
 	 */
 	protected String writeToTelnet(final String command) throws IOException {
-		return writeToTelnet(command.toCharArray());
-	}
-
-	/**
-	 * Invia una <b>password</b> o altro contenuto sensibile al server Telnet.
-	 * L'array di caratteri passato viene automaticamente inviato al server e
-	 * non occorre la presenza del carattere <tt>\n</tt>. Se nell'array sono
-	 * presenti caratteri <tt>\n</tt> o <tt>\r</tt>, questo viene troncato alla
-	 * prima occorrenza di uno di questi caratteri.
-	 * 
-	 * @param password l'array di caratteri da inviare al server Telnet
-	 *        (tipicamente una password).
-	 * @return l'eco del testo inviato al server Telnet (solitamente una stringa
-	 *         vuota quando si invia una password).
-	 * @throws IOException in caso di errore nella comunicazione con il server.
-	 * @throws NullPointerException se il parametro fornito &egrave; null.
-	 */
-	protected String writeToTelnet(final char[] password) throws IOException {
 		final OutputStream out = telnet.getOutputStream();
 		final StringBuilder echo = new StringBuilder();
-		for (final char character : password) {
+		for (final char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
 				break;
 			}
@@ -243,6 +225,34 @@ public abstract class Reader {
 		}
 		out.flush();
 		return echo.toString();
+	}
+
+	/**
+	 * Invia una <b>password</b> o altro contenuto sensibile al server Telnet.
+	 * L'array di caratteri passato viene automaticamente inviato al server e
+	 * non occorre la presenza del carattere <tt>\n</tt>. Se nell'array sono
+	 * presenti caratteri <tt>\n</tt> o <tt>\r</tt>, questo viene troncato alla
+	 * prima occorrenza di uno di questi caratteri.
+	 * 
+	 * @param password l'array di caratteri da inviare al server Telnet
+	 *        (tipicamente una password).
+	 * @throws IOException in caso di errore nella comunicazione con il server.
+	 * @throws NullPointerException se il parametro fornito &egrave; null.
+	 */
+	protected void writeToTelnet(final char[] password) throws IOException {
+		final OutputStream out = telnet.getOutputStream();
+		for (final char character : password) {
+			if (character == '\n' || character == '\r') {
+				break;
+			}
+			out.write(character);
+		}
+		out.flush();
+		// Thread.sleep(50);
+		for (final char character : NewLine.getEnum(configuration.getString("telnet.newline.characters", Defaults.TELNET_NEWLINE_CHARACTERS)).toCharArray()) {
+			out.write(character);
+		}
+		out.flush();
 	}
 
 	public void release() {}
