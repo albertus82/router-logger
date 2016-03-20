@@ -13,7 +13,6 @@ import it.albertus.util.ExceptionUtils;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -116,21 +115,14 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 		sashForm = new SashForm(shell, SWT.VERTICAL);
 		sashForm.setLayout(new GridLayout());
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(sashForm);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		final GridData layoutData = newLayoutData();
-		dataTable = new DataTable(sashForm, layoutData, this);
-		getConsole().init(sashForm, layoutData);
+		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
+		getConsole().init(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		shell.addListener(SWT.Close, new CloseListener(this));
 
 		return shell;
-	}
-
-	private GridData newLayoutData() {
-		final GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		layoutData.heightHint = 1;
-		return layoutData;
 	}
 
 	@Override
