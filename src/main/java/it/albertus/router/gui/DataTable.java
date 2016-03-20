@@ -20,8 +20,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -50,6 +52,9 @@ public class DataTable {
 	private final MenuItem copyMenuItem;
 	private final MenuItem selectAllMenuItem;
 
+	private final Color importantKeyBackgroundColor;
+	private final Color thresholdReachedForegroudColor;
+
 	/**
 	 * Solo i <tt>MenuItem</tt> che fanno parte di una barra dei men&ugrave; con
 	 * stile <tt>SWT.BAR</tt> hanno gli acceleratori funzionanti; negli altri
@@ -57,8 +62,8 @@ public class DataTable {
 	 * combinazioni di tasti, gli acceleratori non funzioneranno e le relative
 	 * combinazioni di tasti saranno ignorate.
 	 */
-	public DataTable(final RouterLoggerGui gui, final Object layoutData) {
-		table = new Table(gui.getShell(), SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+	public DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
+		table = new Table(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -80,6 +85,9 @@ public class DataTable {
 		selectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Finto!
 
 		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
+
+		importantKeyBackgroundColor = table.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+		thresholdReachedForegroudColor = table.getDisplay().getSystemColor(SWT.COLOR_RED);
 	}
 
 	/** Copies the current selection to the clipboard. */
@@ -190,13 +198,13 @@ public class DataTable {
 										item.setFont(i, fontRegistry.get("tableBold"));
 
 										// Evidenzia cella...
-										item.setBackground(i, item.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+										item.setBackground(i, importantKeyBackgroundColor);
 									}
 
 									// Colore per i valori oltre soglia...
 									for (final Threshold threshold : thresholdsReached.keySet()) {
 										if (key.equals(threshold.getKey())) {
-											item.setForeground(i, item.getDisplay().getSystemColor(SWT.COLOR_RED));
+											item.setForeground(i, thresholdReachedForegroudColor);
 											break;
 										}
 									}

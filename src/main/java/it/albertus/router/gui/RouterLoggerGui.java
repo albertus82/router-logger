@@ -13,9 +13,11 @@ import it.albertus.util.ExceptionUtils;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -30,10 +32,11 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	private Thread updateThread;
 
+	private Shell shell;
 	private DataTable dataTable;
 	private TrayIcon trayIcon;
 	private MenuBar menuBar;
-	private Shell shell;
+	private SashForm sashForm;
 
 	/** Entry point for GUI version */
 	public static void start() {
@@ -101,22 +104,23 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	private Shell createShell(final Display display) {
-		final GridLayout shellLayout = new GridLayout(1, true);
 		shell = new Shell(display);
 		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
 		shell.setText(Resources.get("lbl.window.title"));
 		shell.setImages(Images.MAIN_ICONS);
-		shell.setLayout(shellLayout);
+		shell.setLayout(new GridLayout());
 
 		trayIcon = new TrayIcon(this);
 
 		menuBar = new MenuBar(this);
 
+		sashForm = new SashForm(shell, SWT.VERTICAL);
+		sashForm.setLayout(new GridLayout());
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(sashForm);
+
 		final GridData layoutData = newLayoutData();
-
-		dataTable = new DataTable(this, layoutData);
-
-		getConsole().init(this, layoutData);
+		dataTable = new DataTable(sashForm, layoutData, this);
+		getConsole().init(sashForm, layoutData);
 
 		shell.addListener(SWT.Close, new CloseListener(this));
 

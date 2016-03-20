@@ -6,7 +6,6 @@ import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Composite;
@@ -31,13 +30,13 @@ public class TextConsole extends Console {
 
 	protected TextConsole() {}
 
-	protected void createText(final Composite container) {
-		scrollable = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	protected void createText(final Composite parent) {
+		scrollable = new Text(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 	}
 
-	public void init(final IShellProvider gui, final Object layoutData) {
+	public void init(final Composite parent, final Object layoutData) {
 		if (this.scrollable == null) {
-			createText(gui.getShell());
+			createText(parent);
 			scrollable.setLayoutData(layoutData);
 			scrollable.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 			scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_WHITE));

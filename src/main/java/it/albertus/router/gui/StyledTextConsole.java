@@ -2,7 +2,6 @@ package it.albertus.router.gui;
 
 import it.albertus.router.resources.Resources;
 
-import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -24,8 +23,8 @@ public class StyledTextConsole extends TextConsole {
 	private StyledTextConsole() {}
 
 	@Override
-	public void init(final IShellProvider gui, final Object layoutData) {
-		super.init(gui, layoutData);
+	public void init(final Composite parent, final Object layoutData) {
+		super.init(parent, layoutData);
 		createContextMenu();
 	}
 
