@@ -114,64 +114,55 @@ public class TextConsole extends Console {
 
 	@Override
 	public void println(String value) {
-		print(value);
-		print(NEWLINE);
+		print(value + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(Object value) {
-		print(value);
-		print(NEWLINE);
+		print(String.valueOf(value) + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(boolean value) {
-		print(value);
-		print(NEWLINE);
+		print(String.valueOf(value) + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(char value) {
-		print(value);
-		print(NEWLINE);
+		print(String.valueOf(value) + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(int value) {
-		print(value);
-		print(NEWLINE);
+		print(String.valueOf(value) + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(long value) {
-		print(value);
-		print(NEWLINE);
+		print(String.valueOf(value) + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(float value) {
-		print(value);
-		print(NEWLINE);
+		print(String.valueOf(value) + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(double value) {
-		print(value);
-		print(NEWLINE);
+		print(String.valueOf(value) + NEWLINE);
 		newLine();
 	}
 
 	@Override
 	public void println(char array[]) {
-		print(array);
-		print(NEWLINE);
+		print(String.valueOf(array) + NEWLINE);
 		newLine();
 	}
 
