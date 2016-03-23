@@ -99,6 +99,7 @@ public class TrayIcon {
 						toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
 						toolTip.setVisible(false);
 						toolTip.setAutoHide(true);
+						toolTip.addListener(SWT.Selection, new RestoreShellListener(gui));
 						trayItem.setToolTip(toolTip);
 					}
 
