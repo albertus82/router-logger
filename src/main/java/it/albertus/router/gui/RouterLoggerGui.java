@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvider {
 
+	private static final float SASH_MAGNIFICATION_FACTOR = 1.5f;
+
 	protected interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_START_MINIMIZED = false;
 	}
@@ -114,6 +116,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		menuBar = new MenuBar(this);
 
 		sashForm = new SashForm(shell, SWT.VERTICAL);
+		sashForm.setSashWidth((int) (sashForm.getSashWidth() * SASH_MAGNIFICATION_FACTOR));
 		sashForm.setLayout(new GridLayout());
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
