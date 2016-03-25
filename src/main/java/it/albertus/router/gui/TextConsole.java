@@ -55,7 +55,12 @@ public class TextConsole extends Console {
 	}
 
 	protected void doPrint(final String toPrint) {
-		if (getText().getCharCount() < configuration.getInt("gui.console.max.chars", Defaults.GUI_CONSOLE_MAX_CHARS)) {
+		int maxChars = Defaults.GUI_CONSOLE_MAX_CHARS;
+		try {
+			maxChars = configuration.getInt("gui.console.max.chars");
+		}
+		catch (Exception e) {}
+		if (getText().getCharCount() < maxChars) {
 			getText().append(toPrint);
 		}
 		else {
