@@ -79,7 +79,7 @@ public abstract class RouterLoggerEngine {
 			throw re;
 		}
 		catch (Exception e) {
-			throw new RuntimeException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), e);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), e);
 		}
 		reader.init(out);
 		return reader;
@@ -104,7 +104,7 @@ public abstract class RouterLoggerEngine {
 			throw re;
 		}
 		catch (Exception e) {
-			throw new RuntimeException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), e);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), e);
 		}
 		writer.init(out);
 		return writer;

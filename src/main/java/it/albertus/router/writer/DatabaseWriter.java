@@ -1,5 +1,6 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.engine.ConfigurationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 
@@ -34,13 +35,13 @@ public class DatabaseWriter extends Writer {
 
 	public DatabaseWriter() {
 		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME) || !configuration.contains(CFG_KEY_DB_URL) || !configuration.contains(CFG_KEY_DB_USERNAME) || !configuration.contains(CFG_KEY_DB_PASSWORD)) {
-			throw new RuntimeException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 		}
 		try {
 			Class.forName(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME));
 		}
 		catch (ClassNotFoundException e) {
-			throw new RuntimeException(Resources.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e);
+			throw new ConfigurationException(Resources.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e);
 		}
 		connectionValidationTimeoutInMillis = configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS);
 	}

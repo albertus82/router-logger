@@ -1,5 +1,6 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.engine.ConfigurationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
@@ -124,7 +125,7 @@ public class CsvWriter extends Writer {
 				return newLine.toString();
 			}
 			else {
-				throw new RuntimeException(Resources.get("err.invalid.cfg", cfgKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+				throw new ConfigurationException(Resources.get("err.invalid.cfg", cfgKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 			}
 		}
 	}
