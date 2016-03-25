@@ -21,7 +21,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
 	/** Entry point for console version */
-	public static void start(String args[]) {
+	public static void start(final String args[]) {
 		/* Controlli sui parametri */
 		if (args[0].trim().equalsIgnoreCase(ARG_HELP)) {
 			final Version version = Version.getInstance();
