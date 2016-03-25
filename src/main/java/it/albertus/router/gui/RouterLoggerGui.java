@@ -33,20 +33,19 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	private Thread updateThread;
 
-	private Shell shell;
-	private DataTable dataTable;
-	private TrayIcon trayIcon;
-	private MenuBar menuBar;
-	private SashForm sashForm;
+	private final Shell shell;
+	private final DataTable dataTable;
+	private final TrayIcon trayIcon;
+	private final MenuBar menuBar;
+	private final SashForm sashForm;
 
 	/** Entry point for GUI version */
 	public static void start() {
 		try {
-			final RouterLoggerGui routerLogger = newInstance();
-
 			// Creazione finestra applicazione...
 			final Display display = new Display();
-			final Shell shell = routerLogger.createShell(display);
+			final RouterLoggerGui routerLogger = newInstance(display);
+			final Shell shell = routerLogger.getShell();
 			shell.open();
 
 			// Stampa del messaggio di benvenuto...
@@ -73,38 +72,37 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			// Stampa del messaggio di commiato...
 			routerLogger.afterOuterLoop();
 		}
-		catch (Exception e) {
+		catch (final Exception e) {
 			Logger.getInstance().log(e);
 		}
 	}
 
-	private static RouterLoggerGui newInstance() {
+	private static RouterLoggerGui newInstance(final Display display) {
 		RouterLoggerGui instance = null;
 		try {
-			instance = new RouterLoggerGui();
+			instance = new RouterLoggerGui(display);
 		}
-		catch (Exception e) {
-			fatalError(e);
+		catch (final Exception exception) {
+			fatalError(display, exception);
 		}
-		catch (ExceptionInInitializerError e) {
-			fatalError(e.getCause() != null ? e.getCause() : e);
+		catch (final ExceptionInInitializerError exception) {
+			fatalError(display, exception.getCause() != null ? exception.getCause() : exception);
 		}
 		return instance;
 	}
 
-	private static void fatalError(Throwable e) {
-		final Display display = new Display();
+	private static void fatalError(final Display display, final Throwable throwable) {
 		final Shell shell = new Shell(display);
 		final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
 		messageBox.setText(Resources.get("lbl.window.title"));
-		messageBox.setMessage(ExceptionUtils.getUIMessage(e));
+		messageBox.setMessage(ExceptionUtils.getUIMessage(throwable));
 		messageBox.open();
 		shell.dispose();
 		display.dispose();
 		System.exit(1);
 	}
 
-	private Shell createShell(final Display display) {
+	private RouterLoggerGui(final Display display) {
 		shell = new Shell(display);
 		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
 		shell.setText(Resources.get("lbl.window.title"));
@@ -124,8 +122,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		getConsole().init(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		shell.addListener(SWT.Close, new CloseListener(this));
-
-		return shell;
 	}
 
 	@Override
