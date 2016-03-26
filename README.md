@@ -7,7 +7,7 @@ RouterLogger
 * **ASUS DSL-N14U**
 * **D-Link DSL-2750B**
 
-![routerlogger610](https://cloud.githubusercontent.com/assets/8672431/13954684/21549c9c-f042-11e5-89ee-aececc4fbc0f.png)
+![Screenshot](https://cloud.githubusercontent.com/assets/8672431/14059571/77b05a58-f345-11e5-8c92-46b6c7caa3a2.png)
 
 Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 >Molti dispositivi hanno l'interfaccia Telnet disabilitata per impostazione predefinita, occorre pertanto abilitarla tramite configurazione web prima di poter utilizzare l'applicazione.
