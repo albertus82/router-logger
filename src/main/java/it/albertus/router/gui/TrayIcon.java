@@ -48,7 +48,7 @@ public class TrayIcon {
 	private String toolTipText;
 	private Image trayIcon;
 
-	public TrayIcon(RouterLoggerGui gui) {
+	TrayIcon(final RouterLoggerGui gui) {
 		this.gui = gui;
 		gui.getShell().addShellListener(new ShellAdapter() {
 			@Override
@@ -60,7 +60,7 @@ public class TrayIcon {
 		});
 	}
 
-	private Image getTrayIcon(RouterLoggerStatus status) {
+	private Image getTrayIcon(final RouterLoggerStatus status) {
 		switch (status) {
 		case STARTING:
 		case CONNECTING:

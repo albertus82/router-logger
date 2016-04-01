@@ -62,7 +62,7 @@ public class DataTable {
 	 * combinazioni di tasti, gli acceleratori non funzioneranno e le relative
 	 * combinazioni di tasti saranno ignorate.
 	 */
-	public DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
+	DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
 		table = new Table(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);
