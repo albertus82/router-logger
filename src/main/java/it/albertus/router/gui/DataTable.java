@@ -37,13 +37,26 @@ public class DataTable {
 		boolean GUI_TABLE_COLUMNS_PACK = false;
 	}
 
+	enum TableDataKey {
+		INITIALIZED(Boolean.class);
+
+		private final Class<?> type;
+
+		private TableDataKey(final Class<?> type) {
+			this.type = type;
+		}
+
+		public Class<?> getType() {
+			return type;
+		}
+	}
+
 	private static final char SAMPLE_CHAR = '9';
 
 	private static final char FIELD_SEPARATOR = '\t';
 	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private boolean tableInitialized = false;
 	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 
 	private final Table table;
@@ -67,6 +80,7 @@ public class DataTable {
 		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		table.setData(TableDataKey.INITIALIZED.toString(), false);
 
 		contextMenu = new Menu(table);
 
@@ -136,7 +150,7 @@ public class DataTable {
 			for (final TableColumn tc : table.getColumns()) {
 				tc.dispose();
 			}
-			tableInitialized = false;
+			table.setData(TableDataKey.INITIALIZED.toString(), false);
 			table.setRedraw(true);
 		}
 	}
@@ -152,7 +166,7 @@ public class DataTable {
 						try {
 							if (table != null && !table.isDisposed()) {
 								// Header (una tantum)...
-								if (!tableInitialized) {
+								if (!(Boolean) table.getData(TableDataKey.INITIALIZED.toString())) {
 									// Disattivazione ridisegno automatico...
 									table.setRedraw(false);
 
@@ -186,7 +200,7 @@ public class DataTable {
 								item.setText(i++, timestamp);
 								item.setText(i++, Integer.toString(data.getResponseTime()));
 
-								for (String key : info.keySet()) {
+								for (final String key : info.keySet()) {
 									// Grassetto...
 									if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
 										FontRegistry fontRegistry = JFaceResources.getFontRegistry();
@@ -213,7 +227,7 @@ public class DataTable {
 								}
 
 								// Dimesionamento delle colonne (una tantum)...
-								if (!tableInitialized) {
+								if (!(Boolean) table.getData(TableDataKey.INITIALIZED.toString())) {
 									final TableItem iterationTableItem = table.getItem(0);
 									final String originalIteration = iterationTableItem.getText();
 									setSampleNumber(iterationTableItem, 4);
@@ -232,7 +246,7 @@ public class DataTable {
 											column.setText(info.keySet().toArray(stringArray)[k - startIndex]);
 										}
 									}
-									tableInitialized = true;
+									table.setData(TableDataKey.INITIALIZED.toString(), true);
 
 									// Attivazione ridisegno automatico...
 									table.setRedraw(true);
