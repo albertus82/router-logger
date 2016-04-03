@@ -89,9 +89,9 @@ public class MenuBar {
 		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
 		editSelectAllMenuItem.addSelectionListener(new SelectAllMenuBarSelectionListener(gui));
 		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Vero!
-		
+
 		new MenuItem(editMenu, SWT.SEPARATOR);
-		
+
 		editClearMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editClearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
 		editClearMenuItem.addSelectionListener(new ClearMenuBarSelectionListener(gui));
