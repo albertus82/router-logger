@@ -127,7 +127,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
 		/* Aggiunta riga nella tabella a video */
-		dataTable.addRow(info, thresholdsReached, getIteration());
+		dataTable.addRow(getIteration(), info, thresholdsReached);
 
 		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
 		if (trayIcon != null) {

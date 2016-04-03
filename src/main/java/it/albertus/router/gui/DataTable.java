@@ -190,7 +190,7 @@ public class DataTable {
 		}
 	}
 
-	public void addRow(final RouterData data, final Map<Threshold, String> thresholdsReached, final int iteration) {
+	public void addRow(final int iteration, final RouterData data, final Map<Threshold, String> thresholdsReached) {
 		if (table != null && !table.isDisposed() && data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();
 			final String timestamp = DATE_FORMAT_TABLE_GUI.format(data.getTimestamp());

@@ -8,6 +8,7 @@ import it.albertus.router.gui.listener.ConnectionMenuBarArmListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.DisconnectSelectionListener;
+import it.albertus.router.gui.listener.EditMenuBarArmListener;
 import it.albertus.router.gui.listener.RestartSelectionListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Resources;
@@ -72,6 +73,7 @@ public class MenuBar {
 		editMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		editMenuHeader.setText(Resources.get("lbl.menu.header.edit"));
 		editMenuHeader.setMenu(editMenu);
+		editMenuHeader.addArmListener(new EditMenuBarArmListener(gui));
 
 		editCopyMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
@@ -81,7 +83,7 @@ public class MenuBar {
 		editDeleteMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editDeleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + GuiUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
 		editDeleteMenuItem.addSelectionListener(new DeleteDataTableSelectionListener(gui));
-		editDeleteMenuItem.setAccelerator(GuiUtils.KEY_DELETE); // Finto!
+		editDeleteMenuItem.setAccelerator(GuiUtils.KEY_DELETE); // Vero!
 
 		new MenuItem(editMenu, SWT.SEPARATOR);
 
