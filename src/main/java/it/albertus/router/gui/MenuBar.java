@@ -1,10 +1,12 @@
 package it.albertus.router.gui;
 
 import it.albertus.router.gui.listener.AboutSelectionListener;
+import it.albertus.router.gui.listener.ClearMenuBarSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.ConnectSelectionListener;
 import it.albertus.router.gui.listener.ConnectionMenuBarArmListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
+import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.DisconnectSelectionListener;
 import it.albertus.router.gui.listener.RestartSelectionListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
@@ -33,7 +35,9 @@ public class MenuBar {
 	private final Menu editMenu;
 	private final MenuItem editMenuHeader;
 	private final MenuItem editCopyMenuItem;
+	private final MenuItem editDeleteMenuItem;
 	private final MenuItem editSelectAllMenuItem;
+	private final MenuItem editClearMenuItem;
 
 	private final Menu connectionMenu;
 	private final MenuItem connectionMenuHeader;
@@ -74,12 +78,23 @@ public class MenuBar {
 		editCopyMenuItem.addSelectionListener(new CopyMenuBarSelectionListener(gui));
 		editCopyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY); // Vero!
 
+		editDeleteMenuItem = new MenuItem(editMenu, SWT.PUSH);
+		editDeleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + GuiUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
+		editDeleteMenuItem.addSelectionListener(new DeleteDataTableSelectionListener(gui));
+		editDeleteMenuItem.setAccelerator(GuiUtils.KEY_DELETE); // Finto!
+
 		new MenuItem(editMenu, SWT.SEPARATOR);
 
 		editSelectAllMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
 		editSelectAllMenuItem.addSelectionListener(new SelectAllMenuBarSelectionListener(gui));
 		editSelectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Vero!
+		
+		new MenuItem(editMenu, SWT.SEPARATOR);
+		
+		editClearMenuItem = new MenuItem(editMenu, SWT.PUSH);
+		editClearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+		editClearMenuItem.addSelectionListener(new ClearMenuBarSelectionListener(gui));
 
 		/* Connection */
 		connectionMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
@@ -143,8 +158,16 @@ public class MenuBar {
 		return editCopyMenuItem;
 	}
 
+	public MenuItem getEditDeleteMenuItem() {
+		return editDeleteMenuItem;
+	}
+
 	public MenuItem getEditSelectAllMenuItem() {
 		return editSelectAllMenuItem;
+	}
+
+	public MenuItem getEditClearMenuItem() {
+		return editClearMenuItem;
 	}
 
 	public Menu getConnectionMenu() {

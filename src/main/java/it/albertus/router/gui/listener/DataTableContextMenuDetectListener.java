@@ -16,7 +16,9 @@ public class DataTableContextMenuDetectListener implements MenuDetectListener {
 	@Override
 	public void menuDetected(MenuDetectEvent e) {
 		gui.getDataTable().getCopyMenuItem().setEnabled(gui.canCopyDataTable());
+		gui.getDataTable().getDeleteMenuItem().setEnabled(gui.canDeleteDataTable());
 		gui.getDataTable().getSelectAllMenuItem().setEnabled(gui.canSelectAllDataTable());
+		gui.getDataTable().getClearMenuItem().setEnabled(gui.canClearDataTable());
 		gui.getDataTable().getContextMenu().setVisible(true);
 	}
 

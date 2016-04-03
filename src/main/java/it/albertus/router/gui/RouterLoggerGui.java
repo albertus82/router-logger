@@ -173,6 +173,18 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		return this.getConsole().getText() != null && this.getConsole().getText().isFocusControl();
 	}
 
+	public boolean canDeleteDataTable() {
+		return canCopyDataTable();
+	}
+
+	public boolean canClearDataTable() {
+		return canSelectAllDataTable();
+	}
+
+	public boolean canClearConsole() {
+		return canSelectAllConsole() && !this.getConsole().getText().getText().isEmpty();
+	}
+
 	public boolean canConnect() {
 		return (RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || iteration <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
 	}

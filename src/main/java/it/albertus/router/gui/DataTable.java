@@ -3,8 +3,10 @@ package it.albertus.router.gui;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
+import it.albertus.router.gui.listener.ClearDataTableSelectionListener;
 import it.albertus.router.gui.listener.CopyDataTableSelectionListener;
 import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
+import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -63,7 +65,9 @@ public class DataTable {
 
 	private final Menu contextMenu;
 	private final MenuItem copyMenuItem;
+	private final MenuItem deleteMenuItem;
 	private final MenuItem selectAllMenuItem;
+	private final MenuItem clearMenuItem;
 
 	private final Color importantKeyBackgroundColor;
 	private final Color thresholdReachedForegroudColor;
@@ -84,19 +88,32 @@ public class DataTable {
 
 		contextMenu = new Menu(table);
 
-		// Copia...
+		// Copy...
 		copyMenuItem = new MenuItem(contextMenu, SWT.PUSH);
 		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
 		copyMenuItem.addSelectionListener(new CopyDataTableSelectionListener(gui));
 		copyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY); // Finto!
 
+		// Delete...
+		deleteMenuItem = new MenuItem(contextMenu, SWT.PUSH);
+		deleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + GuiUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
+		deleteMenuItem.addSelectionListener(new DeleteDataTableSelectionListener(gui));
+		deleteMenuItem.setAccelerator(GuiUtils.KEY_DELETE); // Finto!
+
 		new MenuItem(contextMenu, SWT.SEPARATOR);
 
-		// Seleziona tutto...
+		// Select all...
 		selectAllMenuItem = new MenuItem(contextMenu, SWT.PUSH);
 		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
 		selectAllMenuItem.addSelectionListener(new SelectAllDataTableSelectionListener(gui));
 		selectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Finto!
+
+		new MenuItem(contextMenu, SWT.SEPARATOR);
+
+		// Clear...
+		clearMenuItem = new MenuItem(contextMenu, SWT.PUSH);
+		clearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+		clearMenuItem.addSelectionListener(new ClearDataTableSelectionListener(gui));
 
 		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
 
@@ -107,7 +124,7 @@ public class DataTable {
 	/** Copies the current selection to the clipboard. */
 	public void copy() {
 		final Logger logger = Logger.getInstance();
-		if (table != null && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
+		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
 			if (table.getSelectionCount() > 1) {
 				System.gc(); // La copia puo' richiedere molta memoria!
 			}
@@ -142,11 +159,26 @@ public class DataTable {
 		}
 	}
 
+	public void delete() {
+		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
+			table.setRedraw(false);
+			table.remove(table.getSelectionIndices());
+			table.setRedraw(true);
+		}
+	}
+
+	public void clear() {
+		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0) {
+			table.setRedraw(false);
+			table.removeAll();
+			table.setRedraw(true);
+		}
+	}
+
 	public void reset() {
 		if (table != null && !table.isDisposed()) {
 			table.setRedraw(false);
-			table.clearAll();
-			table.setItemCount(0);
+			table.removeAll();
 			for (final TableColumn tc : table.getColumns()) {
 				tc.dispose();
 			}
@@ -289,8 +321,16 @@ public class DataTable {
 		return copyMenuItem;
 	}
 
+	public MenuItem getDeleteMenuItem() {
+		return deleteMenuItem;
+	}
+
 	public MenuItem getSelectAllMenuItem() {
 		return selectAllMenuItem;
+	}
+
+	public MenuItem getClearMenuItem() {
+		return clearMenuItem;
 	}
 
 }
