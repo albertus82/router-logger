@@ -63,7 +63,7 @@ public class DataTable {
 
 	private final Table table;
 
-	private int iteration = 0;
+	private int iteration;
 
 	private final Menu contextMenu;
 	private final MenuItem copyMenuItem;
@@ -339,10 +339,6 @@ public class DataTable {
 
 	public int getIteration() {
 		return iteration;
-	}
-
-	public void setIteration(int iteration) {
-		this.iteration = iteration;
 	}
 
 }

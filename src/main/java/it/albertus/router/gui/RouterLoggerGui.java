@@ -240,7 +240,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				catch (InterruptedException e) {}
 				afterOuterLoop();
 				configuration.reload();
-				setIteration(1);
+				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
 				if (shell != null && !shell.isDisposed()) {
 					try {

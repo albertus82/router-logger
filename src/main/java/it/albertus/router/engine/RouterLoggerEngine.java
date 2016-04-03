@@ -27,6 +27,8 @@ public abstract class RouterLoggerEngine {
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
+	protected static final int FIRST_ITERATION = 1;
+
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 
@@ -41,7 +43,7 @@ public abstract class RouterLoggerEngine {
 	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
 	private RouterLoggerStatus previousStatus = null;
 
-	private volatile int iteration = 1;
+	private volatile int iteration = FIRST_ITERATION;
 
 	public RouterLoggerStatus getCurrentStatus() {
 		return currentStatus;
