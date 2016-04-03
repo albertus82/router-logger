@@ -14,7 +14,7 @@ public class ClearDataTableSelectionListener extends ClearSelectionListener {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		if (gui.canClearDataTable()) {
-			if (askForClearing(Resources.get("msg.confirm.clear.table.text"), Resources.get("msg.confirm.clear.table.message")) && gui.canClearDataTable()) {
+			if (confirm(Resources.get("msg.confirm.clear.table.text"), Resources.get("msg.confirm.clear.table.message")) && gui.canClearDataTable()) {
 				gui.getDataTable().clear();
 			}
 		}

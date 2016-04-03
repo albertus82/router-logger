@@ -18,7 +18,7 @@ public abstract class ClearSelectionListener implements SelectionListener {
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {}
 
-	public boolean askForClearing(final String dialogTitle, final String dialogMessage) {
+	protected boolean confirm(final String dialogTitle, final String dialogMessage) {
 		final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 		messageBox.setMessage(dialogMessage);
 		messageBox.setText(dialogTitle);
