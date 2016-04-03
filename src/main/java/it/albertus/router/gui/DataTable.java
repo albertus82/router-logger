@@ -63,6 +63,8 @@ public class DataTable {
 
 	private final Table table;
 
+	private int iteration = 0;
+
 	private final Menu contextMenu;
 	private final MenuItem copyMenuItem;
 	private final MenuItem deleteMenuItem;
@@ -179,6 +181,7 @@ public class DataTable {
 		if (table != null && !table.isDisposed()) {
 			table.setRedraw(false);
 			table.removeAll();
+			iteration = 0;
 			for (final TableColumn tc : table.getColumns()) {
 				tc.dispose();
 			}
@@ -295,6 +298,7 @@ public class DataTable {
 						catch (SWTException se) {}
 					}
 				});
+				this.iteration = iteration;
 			}
 			catch (SWTException se) {}
 		}
@@ -331,6 +335,14 @@ public class DataTable {
 
 	public MenuItem getClearMenuItem() {
 		return clearMenuItem;
+	}
+
+	public int getIteration() {
+		return iteration;
+	}
+
+	public void setIteration(int iteration) {
+		this.iteration = iteration;
 	}
 
 }

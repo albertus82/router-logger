@@ -127,7 +127,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
 		/* Aggiunta riga nella tabella a video */
-		dataTable.addRow(info, thresholdsReached, iteration);
+		dataTable.addRow(info, thresholdsReached, getIteration());
 
 		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
 		if (trayIcon != null) {
@@ -186,7 +186,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canConnect() {
-		return (RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || iteration <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
+		return (RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
 	}
 
 	public boolean canDisconnect() {
@@ -198,7 +198,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		if (canConnect()) {
 			exit = false;
 			if (dataTable != null && dataTable.getTable() != null && !dataTable.getTable().isDisposed()) {
-				iteration = dataTable.getTable().getItemCount() + 1;
+				setIteration(dataTable.getIteration() + 1);
 			}
 			updateThread = new Thread("updateThread") {
 				@Override
@@ -240,7 +240,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				catch (InterruptedException e) {}
 				afterOuterLoop();
 				configuration.reload();
-				iteration = 1;
+				setIteration(1);
 				setStatus(RouterLoggerStatus.STARTING);
 				if (shell != null && !shell.isDisposed()) {
 					try {

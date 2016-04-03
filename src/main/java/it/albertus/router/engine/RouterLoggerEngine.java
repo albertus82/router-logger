@@ -41,7 +41,7 @@ public abstract class RouterLoggerEngine {
 	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
 	private RouterLoggerStatus previousStatus = null;
 
-	protected volatile int iteration = 1;
+	private volatile int iteration = 1;
 
 	public RouterLoggerStatus getCurrentStatus() {
 		return currentStatus;
@@ -348,5 +348,13 @@ public abstract class RouterLoggerEngine {
 	}
 
 	protected abstract Console getConsole();
+
+	protected int getIteration() {
+		return iteration;
+	}
+
+	protected void setIteration(int iteration) {
+		this.iteration = iteration;
+	}
 
 }

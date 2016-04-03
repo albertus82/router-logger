@@ -61,16 +61,16 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		final StringBuilder log = new StringBuilder();
 		final boolean animate = configuration.getBoolean("console.animation", Defaults.CONSOLE_ANIMATION);
 		if (animate) {
-			log.append(ANIMATION[iteration & 3]).append(' ');
+			log.append(ANIMATION[getIteration() & 3]).append(' ');
 		}
-		log.append(iteration);
+		log.append(getIteration());
 		final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
 		if (iterations > 0) {
 			log.append('/').append(iterations);
 		}
 		log.append(' ');
 		if (animate) {
-			log.append(ANIMATION[iteration & 3]).append(' ');
+			log.append(ANIMATION[getIteration() & 3]).append(' ');
 		}
 		// Fine scrittura indice.
 
