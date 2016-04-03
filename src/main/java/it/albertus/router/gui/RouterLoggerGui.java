@@ -162,7 +162,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canCopyConsole() {
-		return this.getConsole().getText() != null && this.getConsole().getText().isFocusControl() && this.getConsole().getText().getSelectionCount() > 0;
+		return this.getConsole().getText() != null && this.getConsole().getText().getSelectionCount() > 0 && (this.getConsole().getText().isFocusControl() || !canCopyDataTable());
 	}
 
 	public boolean canSelectAllDataTable() {
@@ -170,7 +170,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canSelectAllConsole() {
-		return this.getConsole().getText() != null && this.getConsole().getText().isFocusControl();
+		return this.getConsole().getText() != null && !this.getConsole().getText().getText().isEmpty() && (this.getConsole().getText().isFocusControl() || !canSelectAllDataTable());
 	}
 
 	public boolean canDeleteDataTable() {
@@ -182,7 +182,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canClearConsole() {
-		return canSelectAllConsole() && !this.getConsole().getText().getText().isEmpty();
+		return canSelectAllConsole();
 	}
 
 	public boolean canConnect() {
