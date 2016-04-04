@@ -12,8 +12,6 @@ RouterLogger
 Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 >Molti dispositivi hanno l'interfaccia Telnet disabilitata per impostazione predefinita, occorre pertanto abilitarla tramite configurazione web prima di poter utilizzare l'applicazione.
 
->L'icona dell'applicazione &egrave; stata realizzata da [Everaldo Coelho](http://www.everaldo.com) (licenza [LGPL](http://www.gnu.org/licenses/lgpl.html)), e prelevata da [Iconfinder](http://www.iconfinder.com).
-
 
 ### Installazione e configurazione di base
 
@@ -264,3 +262,9 @@ Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o
 >&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/main/config/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Writer`](src/main/java/it/albertus/router/writer/Writer.java).
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che quest'ultima sia aggiunta automaticamente al *classpath*.
+
+
+### Riconoscimenti
+
+* Quest'applicazione include componenti realizzati da [Apache Software Foundation](src/lib/license/apache-2.0.txt) ed [Eclipse Foundation](src/lib/license/eclipse-1.0.txt).
+* L'icona dell'applicazione &egrave; stata realizzata da [Everaldo Coelho](http://www.everaldo.com) (licenza [LGPL](http://www.gnu.org/licenses/lgpl.html)), e prelevata da [Iconfinder](http://www.iconfinder.com).
