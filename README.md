@@ -266,5 +266,6 @@ Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della 
 
 ### Riconoscimenti
 
-* Quest'applicazione include componenti realizzati da [Apache Software Foundation](src/lib/license/apache-2.0.txt) ed [Eclipse Foundation](src/lib/license/eclipse-1.0.txt).
-* L'icona dell'applicazione &egrave; stata realizzata da [Everaldo Coelho](http://www.everaldo.com) (licenza [LGPL](http://www.gnu.org/licenses/lgpl.html)), e prelevata da [Iconfinder](http://www.iconfinder.com).
+Quest'applicazione include componenti realizzati da [Apache Software Foundation](lib/license/apache-2.0.txt) ed [Eclipse Foundation](lib/license/eclipse-1.0.txt).
+
+L'icona dell'applicazione &egrave; stata realizzata da [Everaldo Coelho](http://www.everaldo.com) (licenza [LGPL](http://www.gnu.org/licenses/lgpl.html)), e prelevata da [Iconfinder](http://www.iconfinder.com).
