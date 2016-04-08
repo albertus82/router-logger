@@ -17,7 +17,7 @@ import java.util.Map;
 public abstract class RouterLoggerEngine {
 
 	public interface Defaults {
-		int ITERATIONS = -1;
+		int ITERATIONS = 0;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
 		long HYSTERESIS_IN_MILLIS = 10000L;

@@ -14,22 +14,22 @@ public enum Page {
 
 	private final String nodeId;
 	private final String resourceKey;
-	private final Class<? extends RouterLoggerPreferencePage> pageClass;
+	private final Class<? extends BasePreferencePage> pageClass;
 	private final Page parent;
 
-	private Page(final Class<? extends RouterLoggerPreferencePage> pageClass) {
+	private Page(final Class<? extends BasePreferencePage> pageClass) {
 		this(null, null, pageClass, null);
 	}
 
-	private Page(final Class<? extends RouterLoggerPreferencePage> pageClass, final Page parent) {
+	private Page(final Class<? extends BasePreferencePage> pageClass, final Page parent) {
 		this(null, null, pageClass, parent);
 	}
 
-	private Page(final String nodeId, final String resourceKey, final Class<? extends RouterLoggerPreferencePage> pageClass) {
+	private Page(final String nodeId, final String resourceKey, final Class<? extends BasePreferencePage> pageClass) {
 		this(nodeId, resourceKey, pageClass, null);
 	}
 
-	private Page(final String nodeId, final String resourceKey, final Class<? extends RouterLoggerPreferencePage> pageClass, final Page parent) {
+	private Page(final String nodeId, final String resourceKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
 		if (nodeId != null && !nodeId.isEmpty()) {
 			this.nodeId = nodeId;
 		}
@@ -54,7 +54,7 @@ public enum Page {
 		return resourceKey;
 	}
 
-	public Class<? extends RouterLoggerPreferencePage> getPageClass() {
+	public Class<? extends BasePreferencePage> getPageClass() {
 		return pageClass;
 	}
 

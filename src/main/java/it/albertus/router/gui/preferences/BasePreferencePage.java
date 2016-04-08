@@ -11,11 +11,11 @@ import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class RouterLoggerPreferencePage extends FieldEditorPreferencePage {
+public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	protected abstract Page getPage();
 
-	public RouterLoggerPreferencePage() {
+	public BasePreferencePage() {
 		super(GRID);
 	}
 
@@ -60,6 +60,10 @@ public abstract class RouterLoggerPreferencePage extends FieldEditorPreferencePa
 		else if (clazz.equals(ScaleFieldEditor.class)) {
 			int[] data = (int[]) preference.getFieldEditorData();
 			fe = new ScaleFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
+		}
+		else if (clazz.equals(ScaleWithLabelFieldEditor.class)) {
+			int[] data = (int[]) preference.getFieldEditorData();
+			fe = new ScaleWithLabelFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
 		}
 
 		return fe;

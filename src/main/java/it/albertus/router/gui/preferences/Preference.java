@@ -12,7 +12,6 @@ import it.albertus.router.reader.Reader;
 import it.albertus.router.util.Logger;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -34,13 +33,6 @@ import org.eclipse.jface.preference.StringFieldEditor;
  #socket.timeout.ms=30000
  #connection.timeout.ms=20000
  #telnet.newline.characters=CRLF
-
- ### Console ###
- #console.animation=true
- #console.show.configuration=false
- #console.show.keys=downstreamNoiseMargin,downstreamCurrRate
- #console.show.keys.separator=,
- #console.debug=false
 
  ### Source ## TpLink8970Reader: TP-Link TD-W8970 V1 ## AsusDslN12EReader: ASUS DSL-N12E ## AsusDslN14UReader: ASUS DSL-N14U ## DLinkDsl2750Reader: D-Link DSL-2750B ## Specify your Reader's fully qualified class name for customized logging ###
  reader.class.name=TpLink8970Reader
@@ -104,7 +96,16 @@ public enum Preference {
 	ROUTER_ADDRESS(Page.ROUTER, StringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
 	ROUTER_PORT(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
 
-	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
+	LOGGER_ITERATIONS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), new int[] {0, Integer.MAX_VALUE, 1, 1000}),
+	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] {0, 15000, 10, 1000}),
+	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] {0, 15000, 10, 1000}),
+//	LOGGER_HYSTERESIS_MS 
+//	LOGGER_RETRY_COUNT 
+//	LOGGER_RETRY_INTERVAL_MS 
+//	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
+//	LANGUAGE 
+	
+	
 
 	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(DataTable.Defaults.GUI_TABLE_MAX_ITEMS), 4),
 	GUI_TABLE_COLUMNS_PACK(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(DataTable.Defaults.GUI_TABLE_COLUMNS_PACK)),

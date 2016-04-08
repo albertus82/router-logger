@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preferences;
 
-public class ConsolePreferencePage extends RouterLoggerPreferencePage {
+public class ConsolePreferencePage extends BasePreferencePage {
 
 	@Override
 	protected Page getPage() {
