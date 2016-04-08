@@ -82,7 +82,7 @@ public class Preferences {
 				try {
 					configurationOutputStream.close();
 				}
-				catch (IOException e) {}
+				catch (Exception e) {}
 			}
 
 			// Reload RouterLogger configuration...
