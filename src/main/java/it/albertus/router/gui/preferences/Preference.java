@@ -8,7 +8,11 @@ import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
+import it.albertus.router.reader.AsusDslN12EReader;
+import it.albertus.router.reader.AsusDslN14UReader;
+import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
+import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
 
 import java.util.Locale;
@@ -21,29 +25,6 @@ import org.eclipse.jface.preference.StringFieldEditor;
 
 /*
  ##### RouterLogger ## Uncomment properties to enable custom settings #####
-
- ### Source ## TpLink8970Reader: TP-Link TD-W8970 V1 ## AsusDslN12EReader: ASUS DSL-N12E ## AsusDslN14UReader: ASUS DSL-N14U ## DLinkDsl2750Reader: D-Link DSL-2750B ## Specify your Reader's fully qualified class name for customized logging ###
- reader.class.name=TpLink8970Reader
- #reader.class.name=AsusDslN12EReader
- #reader.class.name=AsusDslN14UReader
- #reader.class.name=DLinkDsl2750Reader
- #reader.class.name=
-
- ### TP-Link TD-W8970 V1 ###
- #tplink.8970.command.info.adsl=adsl show info
- #tplink.8970.command.info.wan=wan show connection info pppoa_8_35_1_d
-
- ### ASUS DSL-N12E ###
- #asus.dsln12e.command.info.adsl=show wan adsl
- #asus.dsln12e.command.info.wan=show wan interface
-
- ### ASUS DSL-N14U ###
- #asus.dsln14u.command.info.adsl=tcapi show Info_Adsl
- #asus.dsln14u.command.info.wan=tcapi show Wan_PVC0
-
- ### D-Link DSL-2750B ###
- #dlink.2750.command.info.adsl.status=adsl status
- #dlink.2750.command.info.adsl.snr=adsl snr
 
  ### Destination ## CsvWriter: CSV ## DatabaseWriter: database ## Specify your Writer's fully qualified class name for customized logging ###
  #writer.class.name=CsvWriter
@@ -75,9 +56,11 @@ import org.eclipse.jface.preference.StringFieldEditor;
  #thresholds.excluded.separator=,
  #threshold.snr.down=downstreamNoiseMargin lt 100
  #threshold.rate.down=downstreamCurrRate lt 2500
+ 
  */
 	
 public enum Preference {
+	READER_CLASS_NAME(Page.ROUTER, StringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
 	ROUTER_USERNAME(Page.ROUTER, StringFieldEditor.class),
 	ROUTER_PASSWORD(Page.ROUTER, StringFieldEditor.class),
 	ROUTER_ADDRESS(Page.ROUTER, StringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
@@ -95,6 +78,15 @@ public enum Preference {
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
 	LANGUAGE(Page.GENERAL, StringFieldEditor.class, Locale.getDefault().getLanguage()), // TODO Combo
+
+	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, StringFieldEditor.class, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
+	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, StringFieldEditor.class),
+	ASUS_DSLN12E_COMMAND_INFO_ADSL(Page.ASUS_N12E, StringFieldEditor.class, AsusDslN12EReader.Defaults.COMMAND_INFO_ADSL),
+	ASUS_DSLN12E_COMMAND_INFO_WAN(Page.ASUS_N12E, StringFieldEditor.class, AsusDslN12EReader.Defaults.COMMAND_INFO_WAN),
+	ASUS_DSLN14U_COMMAND_INFO_ADSL(Page.ASUS_N14U, StringFieldEditor.class, AsusDslN14UReader.Defaults.COMMAND_INFO_ADSL),
+	ASUS_DSLN14U_COMMAND_INFO_WAN(Page.ASUS_N14U, StringFieldEditor.class),
+	DLINK_2750_COMMAND_INFO_ADSL_STATUS(Page.DLINK_2750, StringFieldEditor.class, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_STATUS),
+	DLINK_2750_COMMAND_INFO_ADSL_SNR(Page.DLINK_2750, StringFieldEditor.class, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR),
 
 	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(DataTable.Defaults.GUI_TABLE_MAX_ITEMS), 4),
 	GUI_CONSOLE_MAX_CHARS(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), 6),

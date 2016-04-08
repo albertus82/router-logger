@@ -4,7 +4,11 @@ public enum Page {
 	GENERAL(GeneralPreferencePage.class),
 	ROUTER(RouterPreferencePage.class),
 	APPEARANCE(AppearancePreferencePage.class),
-	CONSOLE(ConsolePreferencePage.class, Page.APPEARANCE);
+	CONSOLE(ConsolePreferencePage.class, Page.APPEARANCE),
+	TPLINK_8970(TpLink8970PreferencePage.class, Page.ROUTER),
+	ASUS_N12E(AsusN12EPreferencePage.class, Page.ROUTER),
+	ASUS_N14U(AsusN14UPreferencePage.class, Page.ROUTER),
+	DLINK_2750(DLink2750PreferencePage.class, Page.ROUTER);
 	// NETWORK("lbl.preferences.network", NetworkPreferencePage.class),
 	// SOURCE("lbl.preferences.source", SourcePreferencePage.class),
 	// DESTINATION("lbl.preferences.destination",
