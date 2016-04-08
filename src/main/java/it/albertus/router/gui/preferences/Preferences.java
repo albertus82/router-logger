@@ -29,9 +29,13 @@ public class Preferences {
 		final Map<Page, PreferenceNode> preferenceNodes = new EnumMap<Page, PreferenceNode>(Page.class);
 		for (final Page page : Page.values()) {
 			final PreferenceNode preferenceNode = new PreferenceNode(page.getNodeId(), Resources.get(page.getResourceKey()), null, page.getPageClass().getName());
+			if (page.getParent() != null) {
+				preferenceNodes.get(page.getParent()).add(preferenceNode);
+			}
+			else {
+				preferenceManager.addToRoot(preferenceNode);
+			}
 			preferenceNodes.put(page, preferenceNode);
-			preferenceManager.addToRoot(preferenceNode);
-//			preferenceNode.add(new PreferenceNode(page.getNodeId(), Resources.get(page.getResourceKey()), null, page.getPageClass().getName()));
 		}
 
 		final PreferenceStore preferenceStore = new PreferenceStore(RouterLoggerConfiguration.FILE_NAME);
