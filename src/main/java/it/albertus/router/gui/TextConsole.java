@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Text;
 
 public class TextConsole extends Console {
 
-	protected interface Defaults {
+	public interface Defaults {
 		int GUI_CONSOLE_MAX_CHARS = 100000;
 	}
 

@@ -15,7 +15,7 @@ import java.util.TreeSet;
 
 public class RouterLoggerConfiguration extends Configuration {
 
-	private interface Defaults {
+	public interface Defaults {
 		boolean THRESHOLDS_SPLIT = false;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
@@ -29,6 +29,8 @@ public class RouterLoggerConfiguration extends Configuration {
 	public static RouterLoggerConfiguration getInstance() {
 		return Singleton.CONFIGURATION;
 	}
+
+	public static final String FILE_NAME = "routerlogger.cfg";
 
 	private Thresholds thresholds;
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
@@ -48,7 +50,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	private RouterLoggerConfiguration() {
 		/* Caricamento della configurazione... */
-		super("routerlogger.cfg");
+		super(FILE_NAME);
 		init();
 	}
 

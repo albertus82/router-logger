@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class AsusDslN14UReader extends Reader {
 
-	private interface Defaults {
+	public interface Defaults {
 		String COMMAND_INFO_ADSL = "tcapi show Info_Adsl";
 	}
 

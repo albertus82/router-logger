@@ -27,7 +27,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	private static final float SASH_MAGNIFICATION_FACTOR = 1.5f;
 
-	protected interface Defaults extends RouterLoggerEngine.Defaults {
+	public interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_START_MINIMIZED = false;
 	}
 

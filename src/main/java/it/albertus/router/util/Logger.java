@@ -33,7 +33,7 @@ public class Logger {
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
-	private interface Defaults {
+	public interface Defaults {
 		boolean DEBUG = false;
 	}
 

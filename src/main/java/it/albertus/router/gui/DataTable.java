@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class DataTable {
 
-	private interface Defaults {
+	public interface Defaults {
 		int GUI_TABLE_MAX_ITEMS = 2000;
 		boolean GUI_TABLE_COLUMNS_PACK = false;
 	}

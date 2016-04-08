@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class TpLink8970Reader extends Reader {
 
-	private interface Defaults {
+	public interface Defaults {
 		String COMMAND_INFO_ADSL = "adsl show info";
 	}
 

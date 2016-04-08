@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class DatabaseWriter extends Writer {
 
-	private interface Defaults {
+	public interface Defaults {
 		String TABLE_NAME = "router_log";
 		String COLUMN_NAME_PREFIX = "rl_";
 		String TIMESTAMP_COLUMN_TYPE = "TIMESTAMP";

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class AsusDslN12EReader extends Reader {
 
-	private interface Defaults {
+	public interface Defaults {
 		String COMMAND_INFO_ADSL = "show wan adsl";
 		String COMMAND_INFO_WAN = "show wan interface";
 	}

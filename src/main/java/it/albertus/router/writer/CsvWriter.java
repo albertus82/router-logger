@@ -18,7 +18,7 @@ public class CsvWriter extends Writer {
 
 	private static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
 
-	private interface Defaults {
+	public interface Defaults {
 		NewLine NEW_LINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";

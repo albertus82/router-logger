@@ -15,7 +15,7 @@ import org.apache.commons.net.telnet.TelnetClient;
 
 public abstract class Reader {
 
-	private interface Defaults {
+	public interface Defaults {
 		String ROUTER_ADDRESS = "192.168.1.1";
 		int ROUTER_PORT = 23;
 		int SOCKET_TIMEOUT_IN_MILLIS = 30000;

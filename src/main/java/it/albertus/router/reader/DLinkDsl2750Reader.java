@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class DLinkDsl2750Reader extends Reader {
 
-	private interface Defaults {
+	public interface Defaults {
 		String COMMAND_INFO_ADSL_STATUS = "adsl status";
 		String COMMAND_INFO_ADSL_SNR = "adsl snr";
 	}

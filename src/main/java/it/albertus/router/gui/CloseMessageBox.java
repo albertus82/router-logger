@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class CloseMessageBox {
 
-	private interface Defaults {
+	public interface Defaults {
 		boolean GUI_CONFIRM_CLOSE = false;
 	}
 

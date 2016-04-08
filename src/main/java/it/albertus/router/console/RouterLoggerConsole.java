@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class RouterLoggerConsole extends RouterLoggerEngine {
 
-	protected interface Defaults extends RouterLoggerEngine.Defaults {
+	public interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean CONSOLE_ANIMATION = true;
 	}
 

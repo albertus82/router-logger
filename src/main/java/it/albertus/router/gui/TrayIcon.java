@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class TrayIcon {
 
-	private interface Defaults {
+	public interface Defaults {
 		boolean GUI_MINIMIZE_TRAY = true;
 		boolean GUI_TRAY_TOOLTIP = true;
 	}

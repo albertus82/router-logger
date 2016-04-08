@@ -9,6 +9,7 @@ import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.DisconnectSelectionListener;
 import it.albertus.router.gui.listener.EditMenuBarArmListener;
+import it.albertus.router.gui.listener.PreferencesSelectionListener;
 import it.albertus.router.gui.listener.RestartSelectionListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Resources;
@@ -44,6 +45,10 @@ public class MenuBar {
 	private final MenuItem connectionMenuHeader;
 	private final MenuItem connectionConnectItem;
 	private final MenuItem connectionDisconnectItem;
+
+	private final Menu toolsMenu;
+	private final MenuItem toolsMenuHeader;
+	private final MenuItem toolsPreferencesMenuItem;
 
 	private final Menu helpMenu;
 	private final MenuItem helpMenuHeader;
@@ -114,6 +119,16 @@ public class MenuBar {
 		connectionDisconnectItem = new MenuItem(connectionMenu, SWT.PUSH);
 		connectionDisconnectItem.setText(Resources.get("lbl.menu.item.disconnect"));
 		connectionDisconnectItem.addSelectionListener(new DisconnectSelectionListener(gui));
+
+		/* Tools */
+		toolsMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		toolsMenuHeader = new MenuItem(bar, SWT.CASCADE);
+		toolsMenuHeader.setText(Resources.get("lbl.menu.header.tools"));
+		toolsMenuHeader.setMenu(toolsMenu);
+
+		toolsPreferencesMenuItem = new MenuItem(toolsMenu, SWT.PUSH);
+		toolsPreferencesMenuItem.setText(Resources.get("lbl.menu.item.preferences"));
+		toolsPreferencesMenuItem.addSelectionListener(new PreferencesSelectionListener(gui));
 
 		/* Help */
 		helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
@@ -186,6 +201,18 @@ public class MenuBar {
 
 	public MenuItem getConnectionDisconnectItem() {
 		return connectionDisconnectItem;
+	}
+
+	public Menu getToolsMenu() {
+		return toolsMenu;
+	}
+
+	public MenuItem getToolsMenuHeader() {
+		return toolsMenuHeader;
+	}
+
+	public MenuItem getToolsPreferencesMenuItem() {
+		return toolsPreferencesMenuItem;
 	}
 
 	public Menu getHelpMenu() {
