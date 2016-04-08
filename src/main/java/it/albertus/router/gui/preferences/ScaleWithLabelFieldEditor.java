@@ -11,14 +11,14 @@ public class ScaleWithLabelFieldEditor extends ScaleFieldEditor {
 
 	private final Text text;
 
-	public Text getText() {
+	public Text getTextControl() {
 		return text;
 	}
 
 	public ScaleWithLabelFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = new Text(parent, SWT.READ_ONLY | SWT.BORDER | SWT.TRAIL);
-		GridDataFactory.swtDefaults().hint(30, SWT.DEFAULT).applyTo(text); // TODO Remove hint asap!
+		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(text);
 	}
 
 	@Override

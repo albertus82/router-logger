@@ -11,23 +11,16 @@ import it.albertus.router.gui.TrayIcon;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.util.Logger;
 
+import java.util.Locale;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 
 /*
  ##### RouterLogger ## Uncomment properties to enable custom settings #####
-
- ### General ###
- #logger.iterations=-1
- #logger.interval.normal.ms=5000
- #logger.interval.fast.ms=1000
- #logger.hysteresis.ms=10000
- #logger.retry.count=3
- #logger.retry.interval.ms=30000
- #logger.error.log.destination.path=C:/Router/Logs
- #language=en
 
  ### Network ###
  #socket.timeout.ms=30000
@@ -89,23 +82,20 @@ import org.eclipse.jface.preference.StringFieldEditor;
  #threshold.rate.down=downstreamCurrRate lt 2500
  */
 	
-
 public enum Preference {
 	ROUTER_USERNAME(Page.ROUTER, StringFieldEditor.class),
 	ROUTER_PASSWORD(Page.ROUTER, StringFieldEditor.class),
 	ROUTER_ADDRESS(Page.ROUTER, StringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
 	ROUTER_PORT(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
 
-	LOGGER_ITERATIONS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), new int[] {0, Integer.MAX_VALUE, 1, 1000}),
-	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] {0, 15000, 10, 1000}),
-	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] {0, 15000, 10, 1000}),
-//	LOGGER_HYSTERESIS_MS 
-//	LOGGER_RETRY_COUNT 
-//	LOGGER_RETRY_INTERVAL_MS 
-//	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
-//	LANGUAGE 
-	
-	
+	LOGGER_ITERATIONS(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 10, 1000 }),
+	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 10, 1000 }),
+	LOGGER_HYSTERESIS_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	LOGGER_RETRY_COUNT(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
+	LANGUAGE(Page.GENERAL, StringFieldEditor.class, Locale.getDefault().getLanguage()),
 
 	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(DataTable.Defaults.GUI_TABLE_MAX_ITEMS), 4),
 	GUI_TABLE_COLUMNS_PACK(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(DataTable.Defaults.GUI_TABLE_COLUMNS_PACK)),
