@@ -1,28 +1,47 @@
 package it.albertus.router.gui.preferences;
 
 public enum Page {
-	GENERAL("general", "lbl.preferences.general", GeneralPreferencePage.class),
-	ROUTER("router", "lbl.preferences.router", RouterPreferencePage.class),
-	APPEARANCE("appearance", "lbl.preferences.appearance", AppearancePreferencePage.class);
+	GENERAL(GeneralPreferencePage.class),
+	ROUTER(RouterPreferencePage.class),
+	APPEARANCE(AppearancePreferencePage.class),
+	CONSOLE(ConsolePreferencePage.class, Page.APPEARANCE);
 	// NETWORK("lbl.preferences.network", NetworkPreferencePage.class),
-	// CONSOLE("lbl.preferences.console", ConsolePreferencePage.class),
-	// GUI("lbl.preferences.gui", GuiPreferencePage.class),
 	// SOURCE("lbl.preferences.source", SourcePreferencePage.class),
 	// DESTINATION("lbl.preferences.destination",
 	// DestinationPreferencePage.class);
+
+	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 
 	private final String nodeId;
 	private final String resourceKey;
 	private final Class<? extends RouterLoggerPreferencePage> pageClass;
 	private final Page parent;
 
+	private Page(final Class<? extends RouterLoggerPreferencePage> pageClass) {
+		this(null, null, pageClass, null);
+	}
+
+	private Page(final Class<? extends RouterLoggerPreferencePage> pageClass, final Page parent) {
+		this(null, null, pageClass, parent);
+	}
+
 	private Page(final String nodeId, final String resourceKey, final Class<? extends RouterLoggerPreferencePage> pageClass) {
 		this(nodeId, resourceKey, pageClass, null);
 	}
 
 	private Page(final String nodeId, final String resourceKey, final Class<? extends RouterLoggerPreferencePage> pageClass, final Page parent) {
-		this.nodeId = nodeId;
-		this.resourceKey = resourceKey;
+		if (nodeId != null && !nodeId.isEmpty()) {
+			this.nodeId = nodeId;
+		}
+		else {
+			this.nodeId = name().toLowerCase().replace('_', '.');
+		}
+		if (resourceKey != null && !resourceKey.isEmpty()) {
+			this.resourceKey = resourceKey;
+		}
+		else {
+			this.resourceKey = RESOURCE_KEY_PREFIX + this.nodeId;
+		}
 		this.pageClass = pageClass;
 		this.parent = parent;
 	}
