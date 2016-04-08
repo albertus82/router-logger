@@ -22,11 +22,6 @@ import org.eclipse.jface.preference.StringFieldEditor;
 /*
  ##### RouterLogger ## Uncomment properties to enable custom settings #####
 
- ### Network ###
- #socket.timeout.ms=30000
- #connection.timeout.ms=20000
- #telnet.newline.characters=CRLF
-
  ### Source ## TpLink8970Reader: TP-Link TD-W8970 V1 ## AsusDslN12EReader: ASUS DSL-N12E ## AsusDslN14UReader: ASUS DSL-N14U ## DLinkDsl2750Reader: D-Link DSL-2750B ## Specify your Reader's fully qualified class name for customized logging ###
  reader.class.name=TpLink8970Reader
  #reader.class.name=AsusDslN12EReader
@@ -88,6 +83,10 @@ public enum Preference {
 	ROUTER_ADDRESS(Page.ROUTER, StringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
 	ROUTER_PORT(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
 
+	SOCKET_TIMEOUT_MS(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	CONNECTION_TIMEOUT_MS(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	TELNET_NEWLINE_CHARACTERS(Page.ROUTER, StringFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS),
+
 	LOGGER_ITERATIONS(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 10, 1000 }),
 	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 10, 1000 }),
@@ -95,15 +94,15 @@ public enum Preference {
 	LOGGER_RETRY_COUNT(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
-	LANGUAGE(Page.GENERAL, StringFieldEditor.class, Locale.getDefault().getLanguage()),
+	LANGUAGE(Page.GENERAL, StringFieldEditor.class, Locale.getDefault().getLanguage()), // TODO Combo
 
 	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(DataTable.Defaults.GUI_TABLE_MAX_ITEMS), 4),
+	GUI_CONSOLE_MAX_CHARS(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), 6),
 	GUI_TABLE_COLUMNS_PACK(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(DataTable.Defaults.GUI_TABLE_COLUMNS_PACK)),
 	GUI_MINIMIZE_TRAY(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(TrayIcon.Defaults.GUI_MINIMIZE_TRAY)),
 	GUI_START_MINIMIZED(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),
 	GUI_TRAY_TOOLTIP(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP)),
 	GUI_CONFIRM_CLOSE(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
-	GUI_CONSOLE_MAX_CHARS(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), 6),
 	GUI_IMPORTANT_KEYS(Page.APPEARANCE, StringFieldEditor.class),
 	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR),
 
