@@ -1,24 +1,26 @@
 package it.albertus.router.gui.preferences;
 
 import it.albertus.router.engine.RouterLoggerConfiguration.Thresholds;
+import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class ThresholdsFieldEditor extends ListEditor {
 
-	public ThresholdsFieldEditor(String name, String labelText, Composite parent) {
+	public ThresholdsFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 	}
 
@@ -49,7 +51,7 @@ public class ThresholdsFieldEditor extends ListEditor {
 
 		// Store...
 		if (getList() != null) {
-			for (String item : getList().getItems()) {
+			for (final String item : getList().getItems()) {
 				final String name = Thresholds.CFG_PREFIX + '.' + item.substring(0, item.indexOf('='));
 				final String value = item.substring(item.indexOf('=') + 1);
 				getPreferenceStore().setValue(name, value);
@@ -58,77 +60,65 @@ public class ThresholdsFieldEditor extends ListEditor {
 	}
 
 	@Override
+	@Deprecated
 	protected String createList(String[] items) {
 		return null;
 	}
 
 	@Override
 	protected String getNewInputObject() {
-		final ThresholdDialog dialog = new ThresholdDialog(getShell());
-		dialog.create();
-		if (dialog.open() == Window.OK) {
-			return dialog.getId() + '=' + dialog.getExpression();
+		final ThresholdDialog thresholdDialog = new ThresholdDialog(getShell());
+		thresholdDialog.create();
+		if (thresholdDialog.open() == Window.OK) {
+			return thresholdDialog.getIdentifier() + '=' + thresholdDialog.getExpression();
 		}
 		return null;
 	}
 
 	@Override
-	protected String[] parseString(String stringList) {
+	@Deprecated
+	protected String[] parseString(final String stringList) {
 		return new String[] {};
 	}
 
 	public class ThresholdDialog extends TitleAreaDialog {
-		private Text textId; // TODO impedire ' ' e '='
+		private Text textIdentifier;
 		private Text textExpression;
-		private String id;
+		private String identifier;
 		private String expression;
 
-		public ThresholdDialog(Shell parentShell) {
-			super(parentShell);
+		public ThresholdDialog(final Shell parent) {
+			super(parent);
 		}
 
 		@Override
 		public void create() {
 			super.create();
-			setTitle("Title");
-			setMessage("Message", IMessageProvider.INFORMATION);
+			setTitle(Resources.get("lbl.preferences.thresholds.expressions.title"));
+			setMessage(Resources.get("lbl.preferences.thresholds.expressions.message"), IMessageProvider.INFORMATION);
 		}
 
 		@Override
-		protected Control createDialogArea(Composite parent) {
-			Composite area = (Composite) super.createDialogArea(parent);
-			Composite container = new Composite(area, SWT.NONE);
-			container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			GridLayout layout = new GridLayout(2, false);
-			container.setLayout(layout);
+		protected Composite createDialogArea(final Composite parent) {
+			final Composite area = (Composite) super.createDialogArea(parent);
+			final Composite container = new Composite(area, SWT.NONE);
+			GridDataFactory.fillDefaults().grab(true, true).applyTo(container);
+			GridLayoutFactory.swtDefaults().numColumns(2).equalWidth(false).applyTo(container);
 
-			createFirstName(container);
-			createLastName(container);
+			final Label labelName = new Label(container, SWT.NONE);
+			labelName.setText(Resources.get("lbl.preferences.thresholds.expressions.identifier"));
+
+			textIdentifier = new Text(container, SWT.BORDER);
+			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textIdentifier);
+			textIdentifier.addVerifyListener(new IdentifierVerifyListener());
+
+			final Label labelExpression = new Label(container, SWT.NONE);
+			labelExpression.setText(Resources.get("lbl.preferences.thresholds.expressions.expression"));
+
+			textExpression = new Text(container, SWT.BORDER);
+			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textExpression);
 
 			return area;
-		}
-
-		private void createFirstName(Composite container) {
-			Label lbtFirstName = new Label(container, SWT.NONE);
-			lbtFirstName.setText("ID");
-
-			GridData dataFirstName = new GridData();
-			dataFirstName.grabExcessHorizontalSpace = true;
-			dataFirstName.horizontalAlignment = GridData.FILL;
-
-			textId = new Text(container, SWT.BORDER);
-			textId.setLayoutData(dataFirstName);
-		}
-
-		private void createLastName(Composite container) {
-			Label lbtLastName = new Label(container, SWT.NONE);
-			lbtLastName.setText("Expression");
-
-			GridData dataLastName = new GridData();
-			dataLastName.grabExcessHorizontalSpace = true;
-			dataLastName.horizontalAlignment = GridData.FILL;
-			textExpression = new Text(container, SWT.BORDER);
-			textExpression.setLayoutData(dataLastName);
 		}
 
 		@Override
@@ -136,23 +126,30 @@ public class ThresholdsFieldEditor extends ListEditor {
 			return true;
 		}
 
-		private void saveInput() {
-			id = textId.getText();
-			expression = textExpression.getText();
-		}
-
 		@Override
 		protected void okPressed() {
-			saveInput();
+			identifier = textIdentifier.getText();
+			expression = textExpression.getText();
 			super.okPressed();
 		}
 
-		public String getId() {
-			return id;
+		public String getIdentifier() {
+			return identifier;
 		}
 
 		public String getExpression() {
 			return expression;
+		}
+
+		private class IdentifierVerifyListener implements VerifyListener {
+			private static final String REGEX_IDENTIFIER = "[0-9A-Za-z\\.]*";
+
+			@Override
+			public void verifyText(final VerifyEvent ve) {
+				if (!ve.text.matches(REGEX_IDENTIFIER)) {
+					ve.doit = false;
+				}
+			}
 		}
 	}
 
