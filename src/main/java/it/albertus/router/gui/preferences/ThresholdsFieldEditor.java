@@ -60,12 +60,6 @@ public class ThresholdsFieldEditor extends ListEditor {
 	}
 
 	@Override
-	@Deprecated
-	protected String createList(String[] items) {
-		return null;
-	}
-
-	@Override
 	protected String getNewInputObject() {
 		final ThresholdDialog thresholdDialog = new ThresholdDialog(getShell());
 		thresholdDialog.create();
@@ -73,12 +67,6 @@ public class ThresholdsFieldEditor extends ListEditor {
 			return thresholdDialog.getIdentifier() + '=' + thresholdDialog.getExpression();
 		}
 		return null;
-	}
-
-	@Override
-	@Deprecated
-	protected String[] parseString(final String stringList) {
-		return new String[] {};
 	}
 
 	public class ThresholdDialog extends TitleAreaDialog {
@@ -107,6 +95,7 @@ public class ThresholdsFieldEditor extends ListEditor {
 
 			final Label labelName = new Label(container, SWT.NONE);
 			labelName.setText(Resources.get("lbl.preferences.thresholds.expressions.identifier"));
+			GridDataFactory.swtDefaults().applyTo(labelName);
 
 			textIdentifier = new Text(container, SWT.BORDER);
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textIdentifier);
@@ -114,6 +103,7 @@ public class ThresholdsFieldEditor extends ListEditor {
 
 			final Label labelExpression = new Label(container, SWT.NONE);
 			labelExpression.setText(Resources.get("lbl.preferences.thresholds.expressions.expression"));
+			GridDataFactory.swtDefaults().applyTo(labelExpression);
 
 			textExpression = new Text(container, SWT.BORDER);
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textExpression);
@@ -151,6 +141,18 @@ public class ThresholdsFieldEditor extends ListEditor {
 				}
 			}
 		}
+	}
+
+	@Override
+	@Deprecated
+	protected String[] parseString(final String stringList) {
+		return new String[] {};
+	}
+
+	@Override
+	@Deprecated
+	protected String createList(final String[] items) {
+		return null;
 	}
 
 }
