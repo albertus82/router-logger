@@ -35,6 +35,8 @@ import org.eclipse.jface.preference.StringFieldEditor;
  */
 
 public enum Preference {
+	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), getLanguageOptions()),
+
 	READER_CLASS_NAME(Page.READER, StringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
 	ROUTER_USERNAME(Page.READER, StringFieldEditor.class),
 	ROUTER_PASSWORD(Page.READER, StringFieldEditor.class),
@@ -52,7 +54,6 @@ public enum Preference {
 	LOGGER_RETRY_COUNT(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
-	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), getLanguageOptions()),
 
 	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, StringFieldEditor.class, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
 	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, StringFieldEditor.class),
@@ -113,10 +114,9 @@ public enum Preference {
 
 	private static String[][] getLanguageOptions() {
 		final int length = Resources.Language.values().length;
-		final String[][] options = new String[length][2];
+		final String[][] options = new String[length][];
 		for (int index = 0; index < length; index++) {
-			options[index][0] = Resources.Language.values()[index].getLocale().getDisplayLanguage(Resources.Language.values()[index].getLocale());
-			options[index][1] = Resources.Language.values()[index].getLocale().getLanguage();
+			options[index] = new String[] { Resources.Language.values()[index].getLocale().getDisplayLanguage(Resources.Language.values()[index].getLocale()), Resources.Language.values()[index].getLocale().getLanguage() };
 		}
 		return options;
 	}
