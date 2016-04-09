@@ -14,6 +14,8 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
+import it.albertus.router.writer.CsvWriter;
+import it.albertus.router.writer.DatabaseWriter;
 
 import java.util.Locale;
 
@@ -27,28 +29,8 @@ import org.eclipse.jface.preference.StringFieldEditor;
  ##### RouterLogger ## Uncomment properties to enable custom settings #####
 
  ### Destination ## CsvWriter: CSV ## DatabaseWriter: database ## Specify your Writer's fully qualified class name for customized logging ###
- #writer.class.name=CsvWriter
- #writer.class.name=DatabaseWriter
- #writer.class.name=
-
- ### CSV ###
- #csv.destination.path=C:/Router/Logs
- #csv.newline.characters=CRLF
- #csv.field.separator=;
- #csv.field.separator.replacement=,
 
  ### Database ###
- #database.driver.class.name=oracle.jdbc.OracleDriver
- #database.url=jdbc:oracle:thin:@localhost:1521:XE
- #database.username=routerlogger
- #database.password=routerlogger
- #database.table.name=router_log
- #database.connection.validation.timeout.ms=2000
- #database.timestamp.column.type=TIMESTAMP
- #database.response.column.type=INTEGER
- #database.info.column.type=VARCHAR(250)
- #database.column.name.prefix=rl_
- #database.column.name.max.length=30
 
  ### Thresholds (key, type, value) ###
  #thresholds.split=false
@@ -60,15 +42,15 @@ import org.eclipse.jface.preference.StringFieldEditor;
  */
 	
 public enum Preference {
-	READER_CLASS_NAME(Page.ROUTER, StringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
-	ROUTER_USERNAME(Page.ROUTER, StringFieldEditor.class),
-	ROUTER_PASSWORD(Page.ROUTER, StringFieldEditor.class),
-	ROUTER_ADDRESS(Page.ROUTER, StringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
-	ROUTER_PORT(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
+	READER_CLASS_NAME(Page.READER, StringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
+	ROUTER_USERNAME(Page.READER, StringFieldEditor.class),
+	ROUTER_PASSWORD(Page.READER, StringFieldEditor.class),
+	ROUTER_ADDRESS(Page.READER, StringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
+	ROUTER_PORT(Page.READER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
 
-	SOCKET_TIMEOUT_MS(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	CONNECTION_TIMEOUT_MS(Page.ROUTER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	TELNET_NEWLINE_CHARACTERS(Page.ROUTER, StringFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS),
+	SOCKET_TIMEOUT_MS(Page.READER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	CONNECTION_TIMEOUT_MS(Page.READER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
+	TELNET_NEWLINE_CHARACTERS(Page.READER, StringFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS),
 
 	LOGGER_ITERATIONS(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 10, 1000 }),
@@ -102,7 +84,26 @@ public enum Preference {
 	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
 	CONSOLE_SHOW_KEYS(Page.CONSOLE, StringFieldEditor.class),
 	CONSOLE_SHOW_KEYS_SEPARATOR(Page.CONSOLE, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR),
-	CONSOLE_DEBUG(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(Logger.Defaults.DEBUG));
+	CONSOLE_DEBUG(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(Logger.Defaults.DEBUG)),
+
+	WRITER_CLASS_NAME(Page.WRITER, StringFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()),
+
+	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
+	CSV_NEWLINE_CHARACTERS(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name()),
+	CSV_FIELD_SEPARATOR(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
+	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
+
+	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, StringFieldEditor.class),
+	DATABASE_URL(Page.DATABASE, StringFieldEditor.class),
+	DATABASE_USERNAME(Page.DATABASE, StringFieldEditor.class),
+	DATABASE_PASSWORD(Page.DATABASE, StringFieldEditor.class),
+	DATABASE_TABLE_NAME(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.TABLE_NAME),
+	DATABASE_CONNECTION_VALIDATION_TIMEOUT_MS(Page.DATABASE, IntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS), 5),
+	DATABASE_TIMESTAMP_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.TIMESTAMP_COLUMN_TYPE),
+	DATABASE_RESPONSE_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE),
+	DATABASE_INFO_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.INFO_COLUMN_TYPE),
+	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX),
+	DATABASE_COLUMN_NAME_MAX_LENGTH(Page.DATABASE, IntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH), 2);
 
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 
