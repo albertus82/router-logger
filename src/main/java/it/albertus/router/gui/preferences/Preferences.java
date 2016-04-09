@@ -4,6 +4,7 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.resources.Resources.Language;
+import it.albertus.router.util.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -62,8 +63,8 @@ public class Preferences {
 			configurationInputStream = openConfigurationInputStream();
 			preferenceStore.load(configurationInputStream);
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		catch (IOException ioe) {
+			Logger.getInstance().log(ioe);
 		}
 		finally {
 			try {
@@ -84,8 +85,8 @@ public class Preferences {
 				configurationOutputStream = openConfigurationOutputStream();
 				preferenceStore.save(configurationOutputStream, null);
 			}
-			catch (IOException e) {
-				e.printStackTrace();
+			catch (IOException ioe) {
+				Logger.getInstance().log(ioe);
 			}
 			finally {
 				try {
@@ -95,10 +96,15 @@ public class Preferences {
 			}
 
 			// Reload RouterLogger configuration...
-			final Language language = Resources.getLanguage();
-			RouterLoggerConfiguration.getInstance().reload();
-			if (!language.equals(Resources.getLanguage())) {
-				gui.getMenuBar().updateTexts();
+			try {
+				final Language language = Resources.getLanguage();
+				RouterLoggerConfiguration.getInstance().reload();
+				if (!language.equals(Resources.getLanguage())) {
+					gui.getMenuBar().updateTexts();
+				}
+			}
+			catch (final Exception exception) {
+				Logger.getInstance().log(exception);
 			}
 		}
 	}

@@ -3,6 +3,9 @@ package it.albertus.router.gui.preferences;
 import it.albertus.router.engine.RouterLoggerConfiguration.Thresholds;
 import it.albertus.router.resources.Resources;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -32,10 +35,14 @@ public class ThresholdsFieldEditor extends ListEditor {
 	@Override
 	protected void doLoad() {
 		if (getList() != null) {
+			final Set<String> thresholds = new TreeSet<String>();
 			for (final String preferenceName : getPreferenceStore().preferenceNames()) {
 				if (preferenceName.startsWith(Thresholds.CFG_PREFIX + '.')) {
-					getList().add(preferenceName.substring(preferenceName.indexOf('.') + 1) + '=' + getPreferenceStore().getString(preferenceName));
+					thresholds.add(preferenceName.substring(preferenceName.indexOf('.') + 1) + '=' + getPreferenceStore().getString(preferenceName));
 				}
+			}
+			for (final String threshold : thresholds) {
+				getList().add(threshold);
 			}
 		}
 	}
