@@ -11,7 +11,8 @@ public enum Page {
 	DLINK_2750(DLink2750PreferencePage.class, Page.READER),
 	WRITER(WriterPreferencePage.class),
 	CSV(CsvPreferencePage.class, Page.WRITER),
-	DATABASE(DatabasePreferencePage.class, Page.WRITER);
+	DATABASE(DatabasePreferencePage.class, Page.WRITER),
+	THRESHOLDS(ThresholdsPreferencePage.class);
 
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 

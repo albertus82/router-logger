@@ -30,15 +30,9 @@ import org.eclipse.jface.preference.StringFieldEditor;
 
  ### Destination ## CsvWriter: CSV ## DatabaseWriter: database ## Specify your Writer's fully qualified class name for customized logging ###
 
- ### Database ###
-
  ### Thresholds (key, type, value) ###
- #thresholds.split=false
- #thresholds.excluded=rate.down
- #thresholds.excluded.separator=,
  #threshold.snr.down=downstreamNoiseMargin lt 100
  #threshold.rate.down=downstreamCurrRate lt 2500
- 
  */
 	
 public enum Preference {
@@ -53,8 +47,8 @@ public enum Preference {
 	TELNET_NEWLINE_CHARACTERS(Page.READER, StringFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS),
 
 	LOGGER_ITERATIONS(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 10, 1000 }),
-	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 10, 1000 }),
+	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
+	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
 	LOGGER_HYSTERESIS_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_COUNT(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
@@ -103,7 +97,11 @@ public enum Preference {
 	DATABASE_RESPONSE_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE),
 	DATABASE_INFO_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.INFO_COLUMN_TYPE),
 	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX),
-	DATABASE_COLUMN_NAME_MAX_LENGTH(Page.DATABASE, IntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH), 2);
+	DATABASE_COLUMN_NAME_MAX_LENGTH(Page.DATABASE, IntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH), 2),
+
+	THRESHOLDS_SPLIT(Page.THRESHOLDS, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
+	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, StringFieldEditor.class),
+	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR);
 
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 

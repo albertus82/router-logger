@@ -10,11 +10,11 @@ public class ReaderPreferencePage extends BasePreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
-		final Label header = new Label(getFieldEditorParent(), SWT.READ_ONLY | SWT.WRAP);
+		final Label header = new Label(getFieldEditorParent(), SWT.WRAP);
 		header.setText(Resources.get("lbl.preferences.reader.header"));
 		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).applyTo(header);
 		final Label separator = new Label(getFieldEditorParent(), SWT.HORIZONTAL | SWT.SEPARATOR);
-		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 0).applyTo(separator);
+		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).applyTo(separator);
 		super.createFieldEditors();
 	}
 
