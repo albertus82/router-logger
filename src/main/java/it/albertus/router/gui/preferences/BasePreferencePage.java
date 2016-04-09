@@ -4,6 +4,7 @@ import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -89,6 +90,9 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		}
 		else if (clazz.equals(BooleanFieldEditor.class)) {
 			fe = new BooleanFieldEditor(name, labelText, parent);
+		}
+		else if (clazz.equals(ComboFieldEditor.class)) {
+			fe = new ComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
 		}
 		else if (clazz.equals(ScaleFieldEditor.class)) {
 			int[] data = (int[]) preference.getFieldEditorData();

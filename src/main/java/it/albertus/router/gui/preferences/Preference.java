@@ -16,25 +16,23 @@ import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
+import it.albertus.util.NewLine;
 
 import java.util.Locale;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 
 /*
- ##### RouterLogger ## Uncomment properties to enable custom settings #####
-
- ### Destination ## CsvWriter: CSV ## DatabaseWriter: database ## Specify your Writer's fully qualified class name for customized logging ###
-
  ### Thresholds (key, type, value) ###
  #threshold.snr.down=downstreamNoiseMargin lt 100
  #threshold.rate.down=downstreamCurrRate lt 2500
  */
-	
+
 public enum Preference {
 	READER_CLASS_NAME(Page.READER, StringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
 	ROUTER_USERNAME(Page.READER, StringFieldEditor.class),
@@ -44,7 +42,7 @@ public enum Preference {
 
 	SOCKET_TIMEOUT_MS(Page.READER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	CONNECTION_TIMEOUT_MS(Page.READER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	TELNET_NEWLINE_CHARACTERS(Page.READER, StringFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS),
+	TELNET_NEWLINE_CHARACTERS(Page.READER, ComboFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, getNewLineOptions()),
 
 	LOGGER_ITERATIONS(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithTextFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
@@ -83,7 +81,7 @@ public enum Preference {
 	WRITER_CLASS_NAME(Page.WRITER, StringFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()),
 
 	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
-	CSV_NEWLINE_CHARACTERS(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name()),
+	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), getNewLineOptions()),
 	CSV_FIELD_SEPARATOR(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
 
@@ -102,6 +100,15 @@ public enum Preference {
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, StringFieldEditor.class),
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR);
+
+	private static String[][] getNewLineOptions() {
+		final int length = NewLine.values().length;
+		final String[][] names = new String[length][2];
+		for (int index = 0; index < length; index++) {
+			names[index][0] = names[index][1] = NewLine.values()[index].name();
+		}
+		return names;
+	}
 
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 
