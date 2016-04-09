@@ -28,12 +28,6 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 
-/*
- ### Thresholds (key, type, value) ###
- #threshold.snr.down=downstreamNoiseMargin lt 100
- #threshold.rate.down=downstreamCurrRate lt 2500
- */
-
 public enum Preference {
 	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), getLanguageOptions()),
 
