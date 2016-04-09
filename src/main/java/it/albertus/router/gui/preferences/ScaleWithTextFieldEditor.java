@@ -22,8 +22,7 @@ public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 	public ScaleWithTextFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = new Text(parent, SWT.BORDER | SWT.TRAIL);
-		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(text); // TODO
-																					// Width
+		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(text); // TODO Width
 		text.setTextLimit(Integer.toString(max).length());
 		text.addFocusListener(new TextFocusListener(min, max));
 		text.addVerifyListener(new TextVerifyListener());
