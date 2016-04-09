@@ -70,12 +70,11 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		final Class<? extends FieldEditor> clazz = preference.getFieldEditorClass();
 
 		if (clazz.equals(StringFieldEditor.class)) {
+			final StringFieldEditor sfe = new StringFieldEditor(name, labelText, parent);
 			if (preference.getFieldEditorData() instanceof Integer) {
-				fe = new StringFieldEditor(name, labelText, (Integer) preference.getFieldEditorData(), parent);
+				sfe.setTextLimit((Integer) preference.getFieldEditorData());
 			}
-			else {
-				fe = new StringFieldEditor(name, labelText, parent);
-			}
+			fe = sfe;
 		}
 		else if (clazz.equals(IntegerFieldEditor.class)) {
 			if (preference.getFieldEditorData() instanceof Integer) {
