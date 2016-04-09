@@ -4,15 +4,16 @@ public enum Page {
 	GENERAL(GeneralPreferencePage.class),
 	READER(ReaderPreferencePage.class),
 	APPEARANCE(AppearancePreferencePage.class),
-	CONSOLE(ConsolePreferencePage.class, Page.APPEARANCE),
-	TPLINK_8970(TpLink8970PreferencePage.class, Page.READER),
-	ASUS_N12E(AsusN12EPreferencePage.class, Page.READER),
-	ASUS_N14U(AsusN14UPreferencePage.class, Page.READER),
-	DLINK_2750(DLink2750PreferencePage.class, Page.READER),
+	CONSOLE(ConsolePreferencePage.class, APPEARANCE),
+	TPLINK_8970(TpLink8970PreferencePage.class, READER),
+	ASUS_N12E(AsusN12EPreferencePage.class, READER),
+	ASUS_N14U(AsusN14UPreferencePage.class, READER),
+	DLINK_2750(DLink2750PreferencePage.class, READER),
 	WRITER(WriterPreferencePage.class),
-	CSV(CsvPreferencePage.class, Page.WRITER),
-	DATABASE(DatabasePreferencePage.class, Page.WRITER),
-	THRESHOLDS(ThresholdsPreferencePage.class);
+	CSV(CsvPreferencePage.class, WRITER),
+	DATABASE(DatabasePreferencePage.class, WRITER),
+	THRESHOLDS(ThresholdsPreferencePage.class),
+	EXPRESSIONS(ExpressionsPreferencePage.class, THRESHOLDS);
 
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 

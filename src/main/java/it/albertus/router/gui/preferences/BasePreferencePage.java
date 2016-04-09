@@ -102,6 +102,9 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 			int[] data = (int[]) preference.getFieldEditorData();
 			fe = new ScaleWithTextFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
 		}
+		else if (clazz.equals(ThresholdsFieldEditor.class)) {
+			fe = new ThresholdsFieldEditor(name, labelText, parent);
+		}
 
 		return fe;
 	}

@@ -21,6 +21,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.window.Window;
 
 public class Preferences {
 
@@ -76,7 +77,7 @@ public class Preferences {
 		preferenceDialog.setPreferenceStore(preferenceStore);
 
 		// Open configuration dialog...
-		if (preferenceDialog.open() == 0) {
+		if (preferenceDialog.open() == Window.OK) {
 			// Save configuration file...
 			OutputStream configurationOutputStream = null;
 			try {

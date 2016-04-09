@@ -101,7 +101,9 @@ public enum Preference {
 
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, StringFieldEditor.class),
-	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR);
+	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR),
+
+	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, ThresholdsFieldEditor.class);
 
 	private static String[][] getNewLineOptions() {
 		final int length = NewLine.values().length;

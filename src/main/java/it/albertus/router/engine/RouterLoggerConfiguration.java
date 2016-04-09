@@ -95,7 +95,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	public abstract class Thresholds {
 
-		protected static final String CFG_PREFIX = "threshold";
+		public static final String CFG_PREFIX = "threshold";
 
 		protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
 
