@@ -143,6 +143,24 @@ public class MenuBar {
 		gui.getShell().setMenuBar(bar);
 	}
 
+	public void updateTexts() {
+		fileMenuHeader.setText(Resources.get("lbl.menu.header.file"));
+		fileRestartItem.setText(Resources.get("lbl.menu.item.restart"));
+		fileExitItem.setText(Resources.get("lbl.menu.item.exit"));
+		editMenuHeader.setText(Resources.get("lbl.menu.header.edit"));
+		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
+		editDeleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + GuiUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
+		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
+		editClearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+		connectionMenuHeader.setText(Resources.get("lbl.menu.header.connection"));
+		connectionConnectItem.setText(Resources.get("lbl.menu.item.connect"));
+		connectionDisconnectItem.setText(Resources.get("lbl.menu.item.disconnect"));
+		toolsMenuHeader.setText(Resources.get("lbl.menu.header.tools"));
+		toolsPreferencesMenuItem.setText(Resources.get("lbl.menu.item.preferences"));
+		helpMenuHeader.setText(Resources.get("lbl.menu.header.help"));
+		helpAboutItem.setText(Resources.get("lbl.menu.item.about"));
+	}
+
 	public Menu getBar() {
 		return bar;
 	}

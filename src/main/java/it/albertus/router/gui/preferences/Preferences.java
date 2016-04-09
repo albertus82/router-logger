@@ -3,6 +3,7 @@ package it.albertus.router.gui.preferences;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Resources.Language;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,9 +24,16 @@ import org.eclipse.jface.preference.PreferenceStore;
 
 public class Preferences {
 
+	private final RouterLoggerGui gui;
+
 	public Preferences(final RouterLoggerGui gui) {
+		this.gui = gui;
+	}
+
+	public void open() {
 		final PreferenceManager preferenceManager = new PreferenceManager();
 
+		// Pages creation...
 		final Map<Page, PreferenceNode> preferenceNodes = new EnumMap<Page, PreferenceNode>(Page.class);
 		for (final Page page : Page.values()) {
 			final PreferenceNode preferenceNode = new PreferenceNode(page.getNodeId(), Resources.get(page.getResourceKey()), null, page.getPageClass().getName());
@@ -86,7 +94,11 @@ public class Preferences {
 			}
 
 			// Reload RouterLogger configuration...
+			final Language language = Resources.getLanguage();
 			RouterLoggerConfiguration.getInstance().reload();
+			if (!language.equals(Resources.getLanguage())) {
+				gui.getMenuBar().updateTexts();
+			}
 		}
 	}
 

@@ -16,7 +16,7 @@ public class PreferencesSelectionListener extends SelectionAdapter {
 
 	@Override
 	public void widgetSelected(SelectionEvent e) {
-		new Preferences(gui);
+		new Preferences(gui).open();
 	}
 
 }
