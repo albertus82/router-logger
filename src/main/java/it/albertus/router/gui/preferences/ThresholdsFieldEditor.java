@@ -77,6 +77,9 @@ public class ThresholdsFieldEditor extends ListEditor {
 	}
 
 	public class ThresholdDialog extends TitleAreaDialog {
+		private static final int TEXT_LIMIT = 0xFF;
+		private static final String REGEX_IDENTIFIER = "[0-9A-Za-z\\.]*";
+
 		private Text textIdentifier;
 		private Text textExpression;
 		private String identifier;
@@ -106,6 +109,7 @@ public class ThresholdsFieldEditor extends ListEditor {
 
 			textIdentifier = new Text(container, SWT.BORDER);
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textIdentifier);
+			textIdentifier.setTextLimit(TEXT_LIMIT);
 			textIdentifier.addVerifyListener(new IdentifierVerifyListener());
 
 			final Label labelExpression = new Label(container, SWT.NONE);
@@ -114,6 +118,7 @@ public class ThresholdsFieldEditor extends ListEditor {
 
 			textExpression = new Text(container, SWT.BORDER);
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textExpression);
+			textExpression.setTextLimit(TEXT_LIMIT);
 
 			return area;
 		}
@@ -139,8 +144,6 @@ public class ThresholdsFieldEditor extends ListEditor {
 		}
 
 		private class IdentifierVerifyListener implements VerifyListener {
-			private static final String REGEX_IDENTIFIER = "[0-9A-Za-z\\.]*";
-
 			@Override
 			public void verifyText(final VerifyEvent ve) {
 				if (!ve.text.matches(REGEX_IDENTIFIER)) {
