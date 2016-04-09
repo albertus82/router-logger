@@ -47,8 +47,8 @@ public enum Preference {
 	TELNET_NEWLINE_CHARACTERS(Page.READER, StringFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS),
 
 	LOGGER_ITERATIONS(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
-	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithLabelFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
+	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithTextFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
+	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithTextFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
 	LOGGER_HYSTERESIS_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_COUNT(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
