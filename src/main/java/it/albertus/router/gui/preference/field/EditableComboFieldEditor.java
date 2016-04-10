@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2000, 2013 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Remy Chi Jian Suen <remy.suen@gmail.com> - Bug 214392 missing implementation of ComboFieldEditor.setEnabled
+ *     Albertus82 (http://github.com/Albertus82) - Editable Combo (could not subclass due to some private methods)
+ *******************************************************************************/
 package it.albertus.router.gui.preference.field;
 
 import org.eclipse.core.runtime.Assert;
@@ -22,7 +34,7 @@ public class EditableComboFieldEditor extends FieldEditor {
 		init(name, labelText);
 		Assert.isTrue(checkArray(entryNamesAndValues));
 		fEntryNamesAndValues = entryNamesAndValues;
-		createControl(parent);		
+		createControl(parent);
 	}
 
 	private boolean checkArray(String[][] table) {
@@ -44,16 +56,17 @@ public class EditableComboFieldEditor extends FieldEditor {
 			Control control = getLabelControl();
 			int left = numColumns;
 			if (control != null) {
-				((GridData)control.getLayoutData()).horizontalSpan = 1;
+				((GridData) control.getLayoutData()).horizontalSpan = 1;
 				left = left - 1;
 			}
-			((GridData)fCombo.getLayoutData()).horizontalSpan = left;
-		} else {
+			((GridData) fCombo.getLayoutData()).horizontalSpan = left;
+		}
+		else {
 			Control control = getLabelControl();
 			if (control != null) {
-				((GridData)control.getLayoutData()).horizontalSpan = 1;
+				((GridData) control.getLayoutData()).horizontalSpan = 1;
 			}
-			((GridData)fCombo.getLayoutData()).horizontalSpan = 1;			
+			((GridData) fCombo.getLayoutData()).horizontalSpan = 1;
 		}
 	}
 
@@ -106,24 +119,24 @@ public class EditableComboFieldEditor extends FieldEditor {
 			for (int i = 0; i < fEntryNamesAndValues.length; i++) {
 				fCombo.add(fEntryNamesAndValues[i][0], i);
 			}
-			
+
 			fCombo.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
-					updateValue();					
+					updateValue();
 				}
 			});
-			
+
 			fCombo.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					updateValue();	
+					updateValue();
 				}
 			});
 		}
 		return fCombo;
 	}
-	
+
 	protected void updateValue() {
 		String oldValue = fValue;
 		String name = fCombo.getText();
@@ -131,7 +144,7 @@ public class EditableComboFieldEditor extends FieldEditor {
 		setPresentsDefaultValue(false);
 		fireValueChanged(VALUE, oldValue, fValue);
 	}
-	
+
 	private String getValueForName(String name) {
 		for (int i = 0; i < fEntryNamesAndValues.length; i++) {
 			String[] entry = fEntryNamesAndValues[i];
@@ -140,9 +153,8 @@ public class EditableComboFieldEditor extends FieldEditor {
 			}
 		}
 		return name; // Value not present in the array.
-//		return fEntryNamesAndValues[0][0];
 	}
-	
+
 	private void updateComboForValue(String value) {
 		fValue = value;
 		for (int i = 0; i < fEntryNamesAndValues.length; i++) {
@@ -151,11 +163,7 @@ public class EditableComboFieldEditor extends FieldEditor {
 				return;
 			}
 		}
-//		if (fEntryNamesAndValues.length > 0) {
-//			fValue = fEntryNamesAndValues[0][1];
-//			fCombo.setText(fEntryNamesAndValues[0][0]);
-			fCombo.setText(value);
-//		}
+		fCombo.setText(value);
 	}
 
 	@Override
