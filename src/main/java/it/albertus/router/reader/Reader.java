@@ -237,7 +237,6 @@ public abstract class Reader {
 	 * @param password l'array di caratteri da inviare al server Telnet
 	 *        (tipicamente una password).
 	 * @throws IOException in caso di errore nella comunicazione con il server.
-	 * @throws NullPointerException se il parametro fornito &egrave; null.
 	 */
 	protected void writeToTelnet(final char[] password) throws IOException {
 		final OutputStream out = telnet.getOutputStream();
