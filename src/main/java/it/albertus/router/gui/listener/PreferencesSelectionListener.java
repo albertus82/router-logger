@@ -1,7 +1,7 @@
 package it.albertus.router.gui.listener;
 
 import it.albertus.router.gui.RouterLoggerGui;
-import it.albertus.router.gui.preferences.Preferences;
+import it.albertus.router.gui.preference.Preferences;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

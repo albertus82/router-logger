@@ -1,10 +1,10 @@
-package it.albertus.router.gui.preferences.page;
+package it.albertus.router.gui.preference.page;
 
-import it.albertus.router.gui.preferences.Preference;
-import it.albertus.router.gui.preferences.field.FormattedIntegerFieldEditor;
-import it.albertus.router.gui.preferences.field.FormattedStringFieldEditor;
-import it.albertus.router.gui.preferences.field.ScaleFormattedIntegerFieldEditor;
-import it.albertus.router.gui.preferences.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.Preference;
+import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
+import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
+import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
+import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.layout.GridDataFactory;

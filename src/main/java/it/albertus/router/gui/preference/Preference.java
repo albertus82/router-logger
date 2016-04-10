@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preferences;
+package it.albertus.router.gui.preference;
 
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.engine.RouterLoggerConfiguration;
@@ -8,11 +8,11 @@ import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
-import it.albertus.router.gui.preferences.field.FormattedIntegerFieldEditor;
-import it.albertus.router.gui.preferences.field.FormattedStringFieldEditor;
-import it.albertus.router.gui.preferences.field.ScaleFormattedIntegerFieldEditor;
-import it.albertus.router.gui.preferences.field.ThresholdsFieldEditor;
-import it.albertus.router.gui.preferences.page.Page;
+import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
+import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
+import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
+import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.page.Page;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;

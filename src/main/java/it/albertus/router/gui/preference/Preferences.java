@@ -1,8 +1,8 @@
-package it.albertus.router.gui.preferences;
+package it.albertus.router.gui.preference;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.RouterLoggerGui;
-import it.albertus.router.gui.preferences.page.Page;
+import it.albertus.router.gui.preference.page.Page;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.resources.Resources.Language;
 import it.albertus.router.util.Logger;

@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preferences.field;
+package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.resources.Resources;
 
