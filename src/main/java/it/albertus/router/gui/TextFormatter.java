@@ -10,7 +10,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
-public class TextFormatter {
+public final class TextFormatter {
+
+	private TextFormatter() {}
 
 	private static final char SAMPLE_CHAR = '9';
 
