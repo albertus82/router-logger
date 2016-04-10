@@ -9,7 +9,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -34,13 +33,8 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 
 	protected Text createTextControl(final Composite parent) {
 		final Text text = new Text(parent, SWT.BORDER | SWT.TRAIL);
-
-		final Font font = text.getFont();
-		TextFormatter.setBoldFontStyle(text);
-		final int widthHint = TextFormatter.getWidthHint(text, Integer.toString(getMaximum()).length());
-		text.setFont(font);
+		final int widthHint = TextFormatter.getWidthHint(text, Integer.toString(getMaximum()).length(), SWT.BOLD);
 		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(widthHint, SWT.DEFAULT).applyTo(text);
-
 		text.setTextLimit(Integer.toString(getMaximum()).length());
 		text.addFocusListener(new TextFocusListener());
 		text.addVerifyListener(new TextVerifyListener());
@@ -54,7 +48,7 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 
 	@Override
 	public int getNumberOfControls() {
-		return 3;
+		return super.getNumberOfControls() + 1;
 	}
 
 	@Override

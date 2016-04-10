@@ -3,6 +3,7 @@ package it.albertus.router.gui.preference.field;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -10,7 +11,7 @@ import org.eclipse.swt.widgets.Text;
 
 public class TextFormatter {
 
-	private static final String SAMPLE_CHAR = "9";
+	private static final char SAMPLE_CHAR = '9';
 
 	private static final FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 
@@ -52,21 +53,39 @@ public class TextFormatter {
 		text.setFont(fontRegistry.get("customProperty"));
 	}
 
-	public static int getWidthHint(final Text text, final int size) {
-		return getWidthHint(text, size, SAMPLE_CHAR);
+	public static int getWidthHint(final Text text, final int size, final int weight) {
+		return getWidthHint(text, size, weight, Character.toString(SAMPLE_CHAR));
 	}
 
-	public static int getWidthHint(final Text text, final int size, final String string) {
+	public static int getWidthHint(final Text text, final int size, final int weight, final char character) {
+		return getWidthHint(text, size, weight, Character.toString(character));
+	}
+
+	public static int getWidthHint(final Text text, final int weight, final String string) {
+		return getWidthHint(text, 1, weight, string);
+	}
+
+	private static int getWidthHint(final Text text, final int size, final int weight, final String string) {
 		int widthHint = SWT.DEFAULT;
-		final GC gc = new GC(text);
-		try {
-			final Point extent = gc.textExtent(string);
-			widthHint = size * extent.x;
+		if (text != null && !text.isDisposed()) {
+			final Font font = text.getFont(); // Backup initial font.
+			if (weight == SWT.BOLD) {
+				setBoldFontStyle(text);
+			}
+			else {
+				setNormalFontStyle(text);
+			}
+			final GC gc = new GC(text);
+			try {
+				final Point extent = gc.textExtent(string);
+				widthHint = (int) (size * extent.x * 1.1);
+			}
+			finally {
+				gc.dispose();
+			}
+			text.setFont(font); // Restore initial font.
 		}
-		finally {
-			gc.dispose();
-		}
-		return (int) (widthHint * 1.1); // Correction factor (for OS X).
+		return widthHint;
 	}
 
 }
