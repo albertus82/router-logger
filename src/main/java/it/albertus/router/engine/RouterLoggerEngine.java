@@ -54,10 +54,10 @@ public abstract class RouterLoggerEngine {
 	}
 
 	protected void setStatus(RouterLoggerStatus status) {
-		_setStatus(status);
+		doSetStatus(status);
 	}
 
-	private final void _setStatus(RouterLoggerStatus status) {
+	private final void doSetStatus(RouterLoggerStatus status) {
 		this.previousStatus = this.currentStatus;
 		this.currentStatus = status;
 	}
@@ -287,19 +287,19 @@ public abstract class RouterLoggerEngine {
 			}
 
 			if (importantThresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-				_setStatus(RouterLoggerStatus.WARNING); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
+				doSetStatus(RouterLoggerStatus.WARNING); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
 				}
 			}
 			else if (!allThresholdsReached.isEmpty()) {
-				_setStatus(RouterLoggerStatus.INFO); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
+				doSetStatus(RouterLoggerStatus.INFO); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 			}
 			else {
-				_setStatus(RouterLoggerStatus.OK); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
+				doSetStatus(RouterLoggerStatus.OK); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 			}
 
-			showInfo(info, allThresholdsReached); /* Aggiorna la GUI */
+			showInfo(info, allThresholdsReached); /* Aggiorna l'interfaccia */
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iteration != iterations) {

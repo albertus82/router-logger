@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preferences;
 
+import it.albertus.router.resources.Resources;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.swt.SWT;
@@ -14,6 +16,7 @@ import org.eclipse.swt.widgets.Text;
 public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 
 	private final Text text;
+	private final TextFormatter formatter;
 
 	public Text getTextControl() {
 		return text;
@@ -22,6 +25,7 @@ public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 	public ScaleWithTextFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = new Text(parent, SWT.BORDER | SWT.TRAIL);
+		formatter = new TextFormatter(text);
 		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(text); // TODO Width
 		text.setTextLimit(Integer.toString(max).length());
 		text.addFocusListener(new TextFocusListener(min, max));
@@ -47,12 +51,20 @@ public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 	@Override
 	protected void doLoad() {
 		super.doLoad();
+		text.setToolTipText(Resources.get("lbl.preferences.default.value", Integer.toString(getPreferenceStore().getDefaultInt(getPreferenceName()))));
 		updateText();
 	}
 
+	private void setText(final int value) {
+		if (text != null && !text.isDisposed() && formatter != null) {
+			text.setText(Integer.toString(value));
+			formatter.updateFontStyle(getPreferenceStore().getDefaultInt(getPreferenceName()));
+		}
+	}
+
 	private void updateText() {
-		if (scale != null && !scale.isDisposed() && text != null && !text.isDisposed()) {
-			text.setText(Integer.toString(scale.getSelection()));
+		if (scale != null && !scale.isDisposed()) {
+			setText(scale.getSelection());
 		}
 	}
 
@@ -99,7 +111,7 @@ public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 				if (textValue < min) {
 					textValue = min;
 				}
-				text.setText(Integer.toString(textValue));
+				setText(textValue);
 				scale.setSelection(textValue);
 			}
 			catch (final Exception e) {}
