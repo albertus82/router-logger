@@ -241,13 +241,15 @@ public abstract class Reader {
 	 */
 	protected void writeToTelnet(final char[] password) throws IOException {
 		final OutputStream out = telnet.getOutputStream();
-		for (final char character : password) {
-			if (character == '\n' || character == '\r') {
-				break;
+		if (password != null) {
+			for (final char character : password) {
+				if (character == '\n' || character == '\r') {
+					break;
+				}
+				out.write(character);
 			}
-			out.write(character);
+			out.flush();
 		}
-		out.flush();
 		// Thread.sleep(50);
 		for (final char character : NewLine.getEnum(configuration.getString("telnet.newline.characters", Defaults.TELNET_NEWLINE_CHARACTERS)).toCharArray()) {
 			out.write(character);
