@@ -54,4 +54,8 @@ public class TextFormatter {
 		text.setFont(fontRegistry.get("customProperty"));
 	}
 
+	public Text getText() {
+		return text;
+	}
+
 }
