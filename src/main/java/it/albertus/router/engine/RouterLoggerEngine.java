@@ -268,7 +268,7 @@ public abstract class RouterLoggerEngine {
 		long hysteresis = 0;
 
 		// Iterazione...
-		for (final int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS); (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
+		for (int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS); (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			final long timeBeforeRead = System.currentTimeMillis();
 			final RouterData info = reader.readInfo();
 			final long timeAfterRead = System.currentTimeMillis();
@@ -302,7 +302,7 @@ public abstract class RouterLoggerEngine {
 			showInfo(info, allThresholdsReached); /* Aggiorna l'interfaccia */
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
-			if (iteration != iterations) {
+			if (iterations <= 0 || iteration < iterations) {
 				long waitTimeInMillis;
 				if (RouterLoggerStatus.WARNING.equals(currentStatus)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
@@ -318,6 +318,7 @@ public abstract class RouterLoggerEngine {
 					Thread.sleep(waitTimeInMillis);
 				}
 			}
+			iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
 		}
 	}
 
