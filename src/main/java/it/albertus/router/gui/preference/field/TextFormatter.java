@@ -66,7 +66,7 @@ public class TextFormatter {
 		finally {
 			gc.dispose();
 		}
-		return widthHint;
+		return (int) (widthHint * 1.1); // Correction factor (for OS X).
 	}
 
 }
