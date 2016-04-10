@@ -25,7 +25,7 @@ public class WriterPreferencePage extends BasePreferencePage {
 		return Page.WRITER;
 	}
 
-	public enum WriterClass {
+	protected enum WriterClass {
 		CSV(CsvWriter.DESTINATION_KEY, CsvWriter.class),
 		DATABASE(DatabaseWriter.DESTINATION_KEY, DatabaseWriter.class);
 

@@ -14,6 +14,7 @@ import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.page.BasePreferencePage;
+import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
 import it.albertus.router.gui.preference.page.Page;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
@@ -88,7 +89,7 @@ public enum Preference {
 	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
 
-	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, FormattedStringFieldEditor.class),
+	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, EditableComboFieldEditor.class, DatabasePreferencePage.getDatabaseComboOptions()),
 	DATABASE_URL(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_USERNAME(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_PASSWORD(Page.DATABASE, FormattedStringFieldEditor.class),
@@ -117,6 +118,10 @@ public enum Preference {
 
 	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass) {
 		this(null, null, page, fieldEditorClass, null, null);
+	}
+
+	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass, final Object fieldEditorData) {
+		this(null, null, page, fieldEditorClass, null, fieldEditorData);
 	}
 
 	private Preference(final String configurationKey, final Page page, final Class<? extends FieldEditor> fieldEditorClass) {

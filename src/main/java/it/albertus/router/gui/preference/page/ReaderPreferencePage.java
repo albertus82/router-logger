@@ -27,7 +27,7 @@ public class ReaderPreferencePage extends BasePreferencePage {
 		return Page.READER;
 	}
 
-	public enum ReaderClass {
+	protected enum ReaderClass {
 		TPLINK_8970(TpLink8970Reader.DEVICE_MODEL_KEY, TpLink8970Reader.class),
 		ASUS_N12E(AsusDslN12EReader.DEVICE_MODEL_KEY, AsusDslN12EReader.class),
 		ASUS_N14U(AsusDslN14UReader.DEVICE_MODEL_KEY, AsusDslN14UReader.class),
