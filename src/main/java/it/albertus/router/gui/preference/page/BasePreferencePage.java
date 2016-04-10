@@ -7,6 +7,7 @@ import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.resources.Resources;
+import it.albertus.util.NewLine;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -101,7 +102,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		}
 		else if (EditableComboFieldEditor.class.equals(clazz)) {
 			fe = new EditableComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
-		}		
+		}
 		else if (ScaleFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();
 			fe = new ScaleFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
@@ -115,6 +116,15 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		}
 
 		return fe;
+	}
+
+	public static String[][] getNewLineComboOptions() {
+		final int length = NewLine.values().length;
+		final String[][] options = new String[length][2];
+		for (int index = 0; index < length; index++) {
+			options[index][0] = options[index][1] = NewLine.values()[index].name();
+		}
+		return options;
 	}
 
 }

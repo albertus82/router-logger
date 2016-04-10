@@ -44,4 +44,14 @@ public class WriterPreferencePage extends BasePreferencePage {
 		}
 	}
 
+	public static String[][] getWriterComboOptions() {
+		final int length = WriterClass.values().length;
+		final String[][] options = new String[length][2];
+		for (int index = 0; index < length; index++) {
+			options[index][0] = Resources.get(WriterClass.values()[index].getResourceKey());
+			options[index][1] = WriterClass.values()[index].getWriterClass().getSimpleName();
+		}
+		return options;
+	}
+
 }

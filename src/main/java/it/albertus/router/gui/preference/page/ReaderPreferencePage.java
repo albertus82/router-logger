@@ -48,4 +48,14 @@ public class ReaderPreferencePage extends BasePreferencePage {
 		}
 	}
 
+	public static String[][] getReaderComboOptions() {
+		final int length = ReaderClass.values().length;
+		final String[][] options = new String[length][2];
+		for (int index = 0; index < length; index++) {
+			options[index][0] = Resources.get(ReaderClass.values()[index].getResourceKey());
+			options[index][1] = ReaderClass.values()[index].getReaderClass().getSimpleName();
+		}
+		return options;
+	}
+
 }

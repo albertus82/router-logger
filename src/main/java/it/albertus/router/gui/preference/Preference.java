@@ -13,19 +13,19 @@ import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.page.BasePreferencePage;
+import it.albertus.router.gui.preference.page.GeneralPreferencePage;
 import it.albertus.router.gui.preference.page.Page;
-import it.albertus.router.gui.preference.page.ReaderPreferencePage.ReaderClass;
-import it.albertus.router.gui.preference.page.WriterPreferencePage.WriterClass;
+import it.albertus.router.gui.preference.page.ReaderPreferencePage;
+import it.albertus.router.gui.preference.page.WriterPreferencePage;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
-import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
-import it.albertus.util.NewLine;
 
 import java.util.Locale;
 
@@ -35,9 +35,9 @@ import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 
 public enum Preference {
-	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), getLanguageOptions()),
+	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), GeneralPreferencePage.getLanguageComboOptions()),
 
-	READER_CLASS_NAME(Page.READER, EditableComboFieldEditor.class, TpLink8970Reader.class.getSimpleName(), getReaderClassOptions()),
+	READER_CLASS_NAME(Page.READER, EditableComboFieldEditor.class, TpLink8970Reader.class.getSimpleName(), ReaderPreferencePage.getReaderComboOptions()),
 	ROUTER_USERNAME(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_PASSWORD(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
@@ -45,7 +45,7 @@ public enum Preference {
 
 	SOCKET_TIMEOUT_MS(Page.READER, FormattedIntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	CONNECTION_TIMEOUT_MS(Page.READER, FormattedIntegerFieldEditor.class, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	TELNET_NEWLINE_CHARACTERS(Page.READER, ComboFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, getNewLineOptions()),
+	TELNET_NEWLINE_CHARACTERS(Page.READER, ComboFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, BasePreferencePage.getNewLineComboOptions()),
 
 	LOGGER_ITERATIONS(Page.GENERAL, FormattedIntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleFormattedIntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
@@ -81,10 +81,10 @@ public enum Preference {
 
 	GUI_CONFIRM_CLOSE(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
 
-	WRITER_CLASS_NAME(Page.WRITER, EditableComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), getWriterClassOptions()),
+	WRITER_CLASS_NAME(Page.WRITER, EditableComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), WriterPreferencePage.getWriterComboOptions()),
 
 	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
-	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), getNewLineOptions()),
+	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), BasePreferencePage.getNewLineComboOptions()),
 	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
 
@@ -105,44 +105,6 @@ public enum Preference {
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR),
 
 	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, ThresholdsFieldEditor.class);
-
-	private static String[][] getNewLineOptions() {
-		final int length = NewLine.values().length;
-		final String[][] options = new String[length][2];
-		for (int index = 0; index < length; index++) {
-			options[index][0] = options[index][1] = NewLine.values()[index].name();
-		}
-		return options;
-	}
-
-	private static String[][] getLanguageOptions() {
-		final int length = Resources.Language.values().length;
-		final String[][] options = new String[length][];
-		for (int index = 0; index < length; index++) {
-			options[index] = new String[] { Resources.Language.values()[index].getLocale().getDisplayLanguage(Resources.Language.values()[index].getLocale()), Resources.Language.values()[index].getLocale().getLanguage() };
-		}
-		return options;
-	}
-
-	private static String[][] getReaderClassOptions() {
-		final int length = ReaderClass.values().length;
-		final String[][] options = new String[length][2];
-		for (int index = 0; index < length; index++) {
-			options[index][0] = Resources.get(ReaderClass.values()[index].getResourceKey());
-			options[index][1] = ReaderClass.values()[index].getReaderClass().getSimpleName();
-		}
-		return options;
-	}
-
-	private static String[][] getWriterClassOptions() {
-		final int length = WriterClass.values().length;
-		final String[][] options = new String[length][2];
-		for (int index = 0; index < length; index++) {
-			options[index][0] = Resources.get(WriterClass.values()[index].getResourceKey());
-			options[index][1] = WriterClass.values()[index].getWriterClass().getSimpleName();
-		}
-		return options;
-	}
 
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 
