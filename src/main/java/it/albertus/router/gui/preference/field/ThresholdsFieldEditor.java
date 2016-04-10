@@ -76,7 +76,7 @@ public class ThresholdsFieldEditor extends ListEditor {
 		return null;
 	}
 
-	public class ThresholdDialog extends TitleAreaDialog {
+	protected class ThresholdDialog extends TitleAreaDialog {
 		private static final int TEXT_LIMIT = 0xFF;
 		private static final String REGEX_IDENTIFIER = "[0-9A-Za-z\\.]*";
 
