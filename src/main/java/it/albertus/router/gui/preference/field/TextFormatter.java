@@ -17,7 +17,7 @@ public class TextFormatter {
 	}
 
 	public void updateFontStyle(final String defaultValue) {
-		if (text != null && text.getFont() != null && text.getFont().getFontData() != null && text.getFont().getFontData().length != 0) {
+		if (text != null && !text.isDisposed() && text.getFont() != null && !text.getFont().isDisposed() && text.getFont().getFontData() != null && text.getFont().getFontData().length != 0) {
 			if (!defaultValue.equals(text.getText())) {
 				if (text.getFont().getFontData()[0].getStyle() != SWT.BOLD) {
 					setBoldFontStyle();
