@@ -72,15 +72,15 @@ public class EditableComboFieldEditor extends FieldEditor {
 
 	@Override
 	protected void doFillIntoGrid(final Composite parent, final int numColumns) {
-		int comboC = 1;
+		int comboColumns = 1;
 		if (numColumns > 1) {
-			comboC = numColumns - 1;
+			comboColumns = numColumns - 1;
 		}
 		final Label label = getLabelControl(parent);
 		GridDataFactory.swtDefaults().applyTo(label);
 
 		final Combo combo = getComboBoxControl(parent);
-		GridDataFactory.swtDefaults().span(comboC, 1).align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(combo);
+		GridDataFactory.swtDefaults().span(comboColumns, 1).align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(combo);
 		combo.setFont(parent.getFont());
 	}
 
