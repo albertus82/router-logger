@@ -23,7 +23,8 @@ public class TpLink8970Reader extends Reader {
 		String COMMAND_INFO_ADSL = "adsl show info";
 	}
 
-	private static final String DEVICE_MODEL = "TP-Link TD-W8970 V1";
+	public static final String DEVICE_MODEL_KEY = "lbl.device.model.tplink.8970";
+
 	private static final String COMMAND_PROMPT = "#";
 	private static final String LOGIN_PROMPT = ":";
 
@@ -81,7 +82,7 @@ public class TpLink8970Reader extends Reader {
 
 	@Override
 	public String getDeviceModel() {
-		return DEVICE_MODEL;
+		return Resources.get(DEVICE_MODEL_KEY);
 	}
 
 }

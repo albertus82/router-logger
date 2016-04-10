@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +24,8 @@ public class AsusDslN14UReader extends Reader {
 		String COMMAND_INFO_ADSL = "tcapi show Info_Adsl";
 	}
 
-	private static final String DEVICE_MODEL = "ASUS DSL-N14U";
+	public static final String DEVICE_MODEL_KEY = "lbl.device.model.asus.n14u";
+
 	private static final String COMMAND_PROMPT = "# ";
 	private static final String LOGIN_PROMPT = ": ";
 	private static final String NODE_PREFIX = "Node:";
@@ -91,7 +93,7 @@ public class AsusDslN14UReader extends Reader {
 
 	@Override
 	public String getDeviceModel() {
-		return DEVICE_MODEL;
+		return Resources.get(DEVICE_MODEL_KEY);
 	}
 
 }

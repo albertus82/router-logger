@@ -1,14 +1,19 @@
 package it.albertus.router.gui.preference.page;
 
+import it.albertus.router.reader.AsusDslN12EReader;
+import it.albertus.router.reader.AsusDslN14UReader;
+import it.albertus.router.reader.DLinkDsl2750Reader;
+import it.albertus.router.reader.TpLink8970Reader;
+
 public enum Page {
 	GENERAL(GeneralPreferencePage.class),
 	READER(ReaderPreferencePage.class),
 	APPEARANCE(AppearancePreferencePage.class),
 	CONSOLE(ConsolePreferencePage.class, APPEARANCE),
-	TPLINK_8970(TpLink8970PreferencePage.class, READER),
-	ASUS_N12E(AsusN12EPreferencePage.class, READER),
-	ASUS_N14U(AsusN14UPreferencePage.class, READER),
-	DLINK_2750(DLink2750PreferencePage.class, READER),
+	TPLINK_8970(TpLink8970Reader.DEVICE_MODEL_KEY, TpLink8970PreferencePage.class, READER),
+	ASUS_N12E(AsusDslN12EReader.DEVICE_MODEL_KEY, AsusN12EPreferencePage.class, READER),
+	ASUS_N14U(AsusDslN14UReader.DEVICE_MODEL_KEY, AsusN14UPreferencePage.class, READER),
+	DLINK_2750(DLinkDsl2750Reader.DEVICE_MODEL_KEY, DLink2750PreferencePage.class, READER),
 	WRITER(WriterPreferencePage.class),
 	CSV(CsvPreferencePage.class, WRITER),
 	DATABASE(DatabasePreferencePage.class, WRITER),
@@ -28,6 +33,14 @@ public enum Page {
 
 	private Page(final Class<? extends BasePreferencePage> pageClass, final Page parent) {
 		this(null, null, pageClass, parent);
+	}
+
+	private Page(final String resourceKey, final Class<? extends BasePreferencePage> pageClass) {
+		this(null, resourceKey, pageClass, null);
+	}
+
+	private Page(final String resourceKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
+		this(null, resourceKey, pageClass, parent);
 	}
 
 	private Page(final String nodeId, final String resourceKey, final Class<? extends BasePreferencePage> pageClass) {

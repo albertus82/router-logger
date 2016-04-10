@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +25,8 @@ public class AsusDslN12EReader extends Reader {
 		String COMMAND_INFO_WAN = "show wan interface";
 	}
 
-	private static final String DEVICE_MODEL = "ASUS DSL-N12E";
+	public static final String DEVICE_MODEL_KEY = "lbl.device.model.asus.n12e";
+
 	private static final String COMMAND_PROMPT = "$";
 	private static final String LOGIN_PROMPT = ": ";
 
@@ -92,7 +94,7 @@ public class AsusDslN12EReader extends Reader {
 
 	@Override
 	public String getDeviceModel() {
-		return DEVICE_MODEL;
+		return Resources.get(DEVICE_MODEL_KEY);
 	}
 
 }

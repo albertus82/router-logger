@@ -1,5 +1,10 @@
 package it.albertus.router.gui.preference.page;
 
+import it.albertus.router.reader.AsusDslN12EReader;
+import it.albertus.router.reader.AsusDslN14UReader;
+import it.albertus.router.reader.DLinkDsl2750Reader;
+import it.albertus.router.reader.Reader;
+import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.SWT;
@@ -18,6 +23,29 @@ public class ReaderPreferencePage extends BasePreferencePage {
 	@Override
 	protected Page getPage() {
 		return Page.READER;
+	}
+
+	public enum ReaderClass {
+		TPLINK_8970(TpLink8970Reader.DEVICE_MODEL_KEY, TpLink8970Reader.class),
+		ASUS_N12E(AsusDslN12EReader.DEVICE_MODEL_KEY, AsusDslN12EReader.class),
+		ASUS_N14U(AsusDslN14UReader.DEVICE_MODEL_KEY, AsusDslN14UReader.class),
+		DLINK_2750(DLinkDsl2750Reader.DEVICE_MODEL_KEY, DLinkDsl2750Reader.class);
+
+		private final String resourceKey;
+		private final Class<? extends Reader> readerClass;
+
+		private ReaderClass(final String resourceKey, final Class<? extends Reader> readerClass) {
+			this.resourceKey = resourceKey;
+			this.readerClass = readerClass;
+		}
+
+		public String getResourceKey() {
+			return resourceKey;
+		}
+
+		public Class<? extends Reader> getReaderClass() {
+			return readerClass;
+		}
 	}
 
 }

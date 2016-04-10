@@ -16,6 +16,8 @@ import java.util.Date;
 
 public class CsvWriter extends Writer {
 
+	public static final String DESTINATION_KEY = "lbl.writer.destination.csv";
+
 	private static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	public interface Defaults {

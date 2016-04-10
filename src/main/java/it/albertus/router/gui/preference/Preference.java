@@ -8,11 +8,14 @@ import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
+import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.page.Page;
+import it.albertus.router.gui.preference.page.ReaderPreferencePage.ReaderClass;
+import it.albertus.router.gui.preference.page.WriterPreferencePage.WriterClass;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -34,7 +37,7 @@ import org.eclipse.jface.preference.FieldEditor;
 public enum Preference {
 	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), getLanguageOptions()),
 
-	READER_CLASS_NAME(Page.READER, FormattedStringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
+	READER_CLASS_NAME(Page.READER, EditableComboFieldEditor.class, TpLink8970Reader.class.getSimpleName(), getReaderClassOptions()),
 	ROUTER_USERNAME(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_PASSWORD(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
@@ -78,7 +81,7 @@ public enum Preference {
 
 	GUI_CONFIRM_CLOSE(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
 
-	WRITER_CLASS_NAME(Page.WRITER, FormattedStringFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()),
+	WRITER_CLASS_NAME(Page.WRITER, EditableComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), getWriterClassOptions()),
 
 	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
 	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), getNewLineOptions()),
@@ -117,6 +120,26 @@ public enum Preference {
 		final String[][] options = new String[length][];
 		for (int index = 0; index < length; index++) {
 			options[index] = new String[] { Resources.Language.values()[index].getLocale().getDisplayLanguage(Resources.Language.values()[index].getLocale()), Resources.Language.values()[index].getLocale().getLanguage() };
+		}
+		return options;
+	}
+
+	private static String[][] getReaderClassOptions() {
+		final int length = ReaderClass.values().length;
+		final String[][] options = new String[length][2];
+		for (int index = 0; index < length; index++) {
+			options[index][0] = Resources.get(ReaderClass.values()[index].getResourceKey());
+			options[index][1] = ReaderClass.values()[index].getReaderClass().getSimpleName();
+		}
+		return options;
+	}
+
+	private static String[][] getWriterClassOptions() {
+		final int length = WriterClass.values().length;
+		final String[][] options = new String[length][2];
+		for (int index = 0; index < length; index++) {
+			options[index][0] = Resources.get(WriterClass.values()[index].getResourceKey());
+			options[index][1] = WriterClass.values()[index].getWriterClass().getSimpleName();
 		}
 		return options;
 	}

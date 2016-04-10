@@ -14,6 +14,8 @@ import java.util.Map;
 
 public class DatabaseWriter extends Writer {
 
+	public static final String DESTINATION_KEY = "lbl.writer.destination.database";
+
 	public interface Defaults {
 		String TABLE_NAME = "router_log";
 		String COLUMN_NAME_PREFIX = "rl_";

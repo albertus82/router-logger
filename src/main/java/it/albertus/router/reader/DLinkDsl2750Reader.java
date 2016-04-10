@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Resources;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -20,7 +21,8 @@ public class DLinkDsl2750Reader extends Reader {
 		String COMMAND_INFO_ADSL_SNR = "adsl snr";
 	}
 
-	private static final String DEVICE_MODEL = "D-Link DSL-2750B";
+	public static final String DEVICE_MODEL_KEY = "lbl.device.model.dlink.2750b";
+
 	private static final String COMMAND_PROMPT = "TBS>>";
 	private static final String LOGIN_PROMPT = ":";
 
@@ -59,7 +61,7 @@ public class DLinkDsl2750Reader extends Reader {
 
 	@Override
 	public String getDeviceModel() {
-		return DEVICE_MODEL;
+		return Resources.get(DEVICE_MODEL_KEY);
 	}
 
 }
