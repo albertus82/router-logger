@@ -23,8 +23,11 @@ public class DatabasePreferencePage extends BasePreferencePage {
 	}
 
 	protected enum DatabaseDriverClass {
+		DB2("com.ibm.db2.jcc.DB2Driver"),
 		MYSQL("com.mysql.jdbc.Driver"),
-		ORACLE("oracle.jdbc.OracleDriver");
+		ORACLE("oracle.jdbc.OracleDriver"),
+		POSTGRESQL("org.postgresql.Driver"),
+		SQLSERVER("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
 		private final String driverClassName;
 
