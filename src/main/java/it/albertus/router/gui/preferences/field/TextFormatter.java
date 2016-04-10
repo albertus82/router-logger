@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preferences;
+package it.albertus.router.gui.preferences.field;
 
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;

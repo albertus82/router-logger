@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preferences;
+package it.albertus.router.gui.preferences.page;
 
 public class AsusN12EPreferencePage extends BasePreferencePage {
 

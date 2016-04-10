@@ -1,5 +1,9 @@
-package it.albertus.router.gui.preferences;
+package it.albertus.router.gui.preferences.page;
 
+import it.albertus.router.gui.preferences.Preference;
+import it.albertus.router.gui.preferences.field.FormattedStringFieldEditor;
+import it.albertus.router.gui.preferences.field.ScaleWithFormattedTextFieldEditor;
+import it.albertus.router.gui.preferences.field.ThresholdsFieldEditor;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.layout.GridDataFactory;
