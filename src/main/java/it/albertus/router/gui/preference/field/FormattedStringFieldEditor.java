@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.router.gui.TextFormatter;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.preference.StringFieldEditor;

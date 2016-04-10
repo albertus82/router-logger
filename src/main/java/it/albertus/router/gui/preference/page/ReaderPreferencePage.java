@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
+import it.albertus.router.gui.TextFormatter;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -16,6 +17,7 @@ public class ReaderPreferencePage extends BasePreferencePage {
 	@Override
 	protected Control createHeader() {
 		final Label header = new Label(getFieldEditorParent(), SWT.WRAP);
+		TextFormatter.setBoldFontStyle(header);
 		header.setText(Resources.get("lbl.preferences.reader.header"));
 		return header;
 	}

@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preference.field;
+package it.albertus.router.gui;
 
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 public class TextFormatter {
@@ -35,47 +36,47 @@ public class TextFormatter {
 		updateFontStyle(text, String.valueOf(defaultValue));
 	}
 
-	public static void setNormalFontStyle(final Text text) {
-		final FontData fontData = text.getFont().getFontData()[0];
+	public static void setNormalFontStyle(final Control control) {
+		final FontData fontData = control.getFont().getFontData()[0];
 		if (!fontRegistry.hasValueFor("defaultProperty")) {
 			fontData.setStyle(SWT.NORMAL);
 			fontRegistry.put("defaultProperty", new FontData[] { fontData });
 		}
-		text.setFont(fontRegistry.get("defaultProperty"));
+		control.setFont(fontRegistry.get("defaultProperty"));
 	}
 
-	public static void setBoldFontStyle(final Text text) {
-		final FontData fontData = text.getFont().getFontData()[0];
+	public static void setBoldFontStyle(final Control control) {
+		final FontData fontData = control.getFont().getFontData()[0];
 		if (!fontRegistry.hasValueFor("customProperty")) {
 			fontData.setStyle(SWT.BOLD);
 			fontRegistry.put("customProperty", new FontData[] { fontData });
 		}
-		text.setFont(fontRegistry.get("customProperty"));
+		control.setFont(fontRegistry.get("customProperty"));
 	}
 
-	public static int getWidthHint(final Text text, final int size, final int weight) {
-		return getWidthHint(text, size, weight, Character.toString(SAMPLE_CHAR));
+	public static int getWidthHint(final Control control, final int size, final int weight) {
+		return getWidthHint(control, size, weight, Character.toString(SAMPLE_CHAR));
 	}
 
-	public static int getWidthHint(final Text text, final int size, final int weight, final char character) {
-		return getWidthHint(text, size, weight, Character.toString(character));
+	public static int getWidthHint(final Control control, final int size, final int weight, final char character) {
+		return getWidthHint(control, size, weight, Character.toString(character));
 	}
 
-	public static int getWidthHint(final Text text, final int weight, final String string) {
-		return getWidthHint(text, 1, weight, string);
+	public static int getWidthHint(final Control control, final int weight, final String string) {
+		return getWidthHint(control, 1, weight, string);
 	}
 
-	private static int getWidthHint(final Text text, final int multiplier, final int weight, final String string) {
+	private static int getWidthHint(final Control control, final int multiplier, final int weight, final String string) {
 		int widthHint = SWT.DEFAULT;
-		if (text != null && !text.isDisposed()) {
-			final Font font = text.getFont(); // Backup initial font.
+		if (control != null && !control.isDisposed()) {
+			final Font font = control.getFont(); // Backup initial font.
 			if (weight == SWT.BOLD) {
-				setBoldFontStyle(text);
+				setBoldFontStyle(control);
 			}
 			else {
-				setNormalFontStyle(text);
+				setNormalFontStyle(control);
 			}
-			final GC gc = new GC(text);
+			final GC gc = new GC(control);
 			try {
 				final Point extent = gc.textExtent(string);
 				widthHint = (int) (multiplier * extent.x * 1.1);
@@ -83,7 +84,7 @@ public class TextFormatter {
 			finally {
 				gc.dispose();
 			}
-			text.setFont(font); // Restore initial font.
+			control.setFont(font); // Restore initial font.
 		}
 		return widthHint;
 	}

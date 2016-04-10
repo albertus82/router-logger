@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
+import it.albertus.router.gui.TextFormatter;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
@@ -14,6 +15,7 @@ public class WriterPreferencePage extends BasePreferencePage {
 	@Override
 	protected Control createHeader() {
 		final Label header = new Label(getFieldEditorParent(), SWT.WRAP);
+		TextFormatter.setBoldFontStyle(header);
 		header.setText(Resources.get("lbl.preferences.writer.header"));
 		return header;
 	}
