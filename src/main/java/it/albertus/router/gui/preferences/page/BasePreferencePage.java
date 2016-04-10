@@ -2,7 +2,7 @@ package it.albertus.router.gui.preferences.page;
 
 import it.albertus.router.gui.preferences.Preference;
 import it.albertus.router.gui.preferences.field.FormattedStringFieldEditor;
-import it.albertus.router.gui.preferences.field.ScaleWithFormattedTextFieldEditor;
+import it.albertus.router.gui.preferences.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preferences.field.ThresholdsFieldEditor;
 import it.albertus.router.resources.Resources;
 
@@ -101,9 +101,9 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 			int[] data = (int[]) preference.getFieldEditorData();
 			fe = new ScaleFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
 		}
-		else if (ScaleWithFormattedTextFieldEditor.class.equals(clazz)) {
+		else if (ScaleFormattedIntegerFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();
-			fe = new ScaleWithFormattedTextFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
+			fe = new ScaleFormattedIntegerFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
 		}
 		else if (ThresholdsFieldEditor.class.equals(clazz)) {
 			fe = new ThresholdsFieldEditor(name, labelText, parent);

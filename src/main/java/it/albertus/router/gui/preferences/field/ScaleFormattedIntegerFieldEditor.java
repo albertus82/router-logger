@@ -13,7 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-public class ScaleWithFormattedTextFieldEditor extends ScaleFieldEditor {
+public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 
 	private final Text text;
 	private final TextFormatter formatter;
@@ -22,7 +22,7 @@ public class ScaleWithFormattedTextFieldEditor extends ScaleFieldEditor {
 		return text;
 	}
 
-	public ScaleWithFormattedTextFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
+	public ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = new Text(parent, SWT.BORDER | SWT.TRAIL);
 		formatter = new TextFormatter(text);
