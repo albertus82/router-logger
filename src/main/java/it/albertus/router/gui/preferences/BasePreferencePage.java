@@ -69,14 +69,14 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		final Composite parent = getFieldEditorParent();
 		final Class<? extends FieldEditor> clazz = preference.getFieldEditorClass();
 
-		if (clazz.equals(StringFieldEditor.class)) {
-			final StringFieldEditor sfe = new StringFieldEditor(name, labelText, parent);
+		if (StringFieldEditor.class.equals(clazz) || FormattedStringFieldEditor.class.equals(clazz)) {
+			final FormattedStringFieldEditor sfe = new FormattedStringFieldEditor(name, labelText, parent);
 			if (preference.getFieldEditorData() instanceof Integer) {
 				sfe.setTextLimit((Integer) preference.getFieldEditorData());
 			}
 			fe = sfe;
 		}
-		else if (clazz.equals(IntegerFieldEditor.class)) {
+		else if (IntegerFieldEditor.class.equals(clazz)) {
 			if (preference.getFieldEditorData() instanceof Integer) {
 				fe = new IntegerFieldEditor(name, labelText, parent, (Integer) preference.getFieldEditorData());
 			}
@@ -84,24 +84,24 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 				fe = new IntegerFieldEditor(name, labelText, parent);
 			}
 		}
-		else if (clazz.equals(DirectoryFieldEditor.class)) {
+		else if (DirectoryFieldEditor.class.equals(clazz)) {
 			fe = new DirectoryFieldEditor(name, labelText, parent);
 		}
-		else if (clazz.equals(BooleanFieldEditor.class)) {
+		else if (BooleanFieldEditor.class.equals(clazz)) {
 			fe = new BooleanFieldEditor(name, labelText, parent);
 		}
-		else if (clazz.equals(ComboFieldEditor.class)) {
+		else if (ComboFieldEditor.class.equals(clazz)) {
 			fe = new ComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
 		}
-		else if (clazz.equals(ScaleFieldEditor.class)) {
+		else if (ScaleFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();
 			fe = new ScaleFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
 		}
-		else if (clazz.equals(ScaleWithTextFieldEditor.class)) {
+		else if (ScaleWithFormattedTextFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();
-			fe = new ScaleWithTextFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
+			fe = new ScaleWithFormattedTextFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
 		}
-		else if (clazz.equals(ThresholdsFieldEditor.class)) {
+		else if (ThresholdsFieldEditor.class.equals(clazz)) {
 			fe = new ThresholdsFieldEditor(name, labelText, parent);
 		}
 

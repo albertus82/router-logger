@@ -26,15 +26,14 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 
 public enum Preference {
 	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), getLanguageOptions()),
 
-	READER_CLASS_NAME(Page.READER, StringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
-	ROUTER_USERNAME(Page.READER, StringFieldEditor.class),
-	ROUTER_PASSWORD(Page.READER, StringFieldEditor.class),
-	ROUTER_ADDRESS(Page.READER, StringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
+	READER_CLASS_NAME(Page.READER, FormattedStringFieldEditor.class, TpLink8970Reader.class.getSimpleName()),
+	ROUTER_USERNAME(Page.READER, FormattedStringFieldEditor.class),
+	ROUTER_PASSWORD(Page.READER, FormattedStringFieldEditor.class),
+	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
 	ROUTER_PORT(Page.READER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
 
 	SOCKET_TIMEOUT_MS(Page.READER, IntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
@@ -42,21 +41,21 @@ public enum Preference {
 	TELNET_NEWLINE_CHARACTERS(Page.READER, ComboFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, getNewLineOptions()),
 
 	LOGGER_ITERATIONS(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithTextFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
-	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithTextFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
+	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleWithFormattedTextFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
+	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, ScaleWithFormattedTextFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS), new int[] { 0, 15000, 1, 1000 }),
 	LOGGER_HYSTERESIS_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_COUNT(Page.GENERAL, IntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, IntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
 
-	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, StringFieldEditor.class, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
-	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, StringFieldEditor.class),
-	ASUS_DSLN12E_COMMAND_INFO_ADSL(Page.ASUS_N12E, StringFieldEditor.class, AsusDslN12EReader.Defaults.COMMAND_INFO_ADSL),
-	ASUS_DSLN12E_COMMAND_INFO_WAN(Page.ASUS_N12E, StringFieldEditor.class, AsusDslN12EReader.Defaults.COMMAND_INFO_WAN),
-	ASUS_DSLN14U_COMMAND_INFO_ADSL(Page.ASUS_N14U, StringFieldEditor.class, AsusDslN14UReader.Defaults.COMMAND_INFO_ADSL),
-	ASUS_DSLN14U_COMMAND_INFO_WAN(Page.ASUS_N14U, StringFieldEditor.class),
-	DLINK_2750_COMMAND_INFO_ADSL_STATUS(Page.DLINK_2750, StringFieldEditor.class, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_STATUS),
-	DLINK_2750_COMMAND_INFO_ADSL_SNR(Page.DLINK_2750, StringFieldEditor.class, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR),
+	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, FormattedStringFieldEditor.class, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
+	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, FormattedStringFieldEditor.class),
+	ASUS_DSLN12E_COMMAND_INFO_ADSL(Page.ASUS_N12E, FormattedStringFieldEditor.class, AsusDslN12EReader.Defaults.COMMAND_INFO_ADSL),
+	ASUS_DSLN12E_COMMAND_INFO_WAN(Page.ASUS_N12E, FormattedStringFieldEditor.class, AsusDslN12EReader.Defaults.COMMAND_INFO_WAN),
+	ASUS_DSLN14U_COMMAND_INFO_ADSL(Page.ASUS_N14U, FormattedStringFieldEditor.class, AsusDslN14UReader.Defaults.COMMAND_INFO_ADSL),
+	ASUS_DSLN14U_COMMAND_INFO_WAN(Page.ASUS_N14U, FormattedStringFieldEditor.class),
+	DLINK_2750_COMMAND_INFO_ADSL_STATUS(Page.DLINK_2750, FormattedStringFieldEditor.class, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_STATUS),
+	DLINK_2750_COMMAND_INFO_ADSL_SNR(Page.DLINK_2750, FormattedStringFieldEditor.class, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR),
 
 	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(DataTable.Defaults.GUI_TABLE_MAX_ITEMS), 4),
 	GUI_CONSOLE_MAX_CHARS(Page.APPEARANCE, IntegerFieldEditor.class, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), 6),
@@ -65,37 +64,37 @@ public enum Preference {
 	GUI_START_MINIMIZED(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),
 	GUI_TRAY_TOOLTIP(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP)),
 	GUI_CONFIRM_CLOSE(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
-	GUI_IMPORTANT_KEYS(Page.APPEARANCE, StringFieldEditor.class),
-	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR),
+	GUI_IMPORTANT_KEYS(Page.APPEARANCE, FormattedStringFieldEditor.class),
+	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR),
 
 	CONSOLE_ANIMATION(Page.CONSOLE, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConsole.Defaults.CONSOLE_ANIMATION)),
 	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
-	CONSOLE_SHOW_KEYS(Page.CONSOLE, StringFieldEditor.class),
-	CONSOLE_SHOW_KEYS_SEPARATOR(Page.CONSOLE, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR),
+	CONSOLE_SHOW_KEYS(Page.CONSOLE, FormattedStringFieldEditor.class),
+	CONSOLE_SHOW_KEYS_SEPARATOR(Page.CONSOLE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR),
 	CONSOLE_DEBUG(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(Logger.Defaults.DEBUG)),
 
-	WRITER_CLASS_NAME(Page.WRITER, StringFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()),
+	WRITER_CLASS_NAME(Page.WRITER, FormattedStringFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()),
 
 	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
 	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), getNewLineOptions()),
-	CSV_FIELD_SEPARATOR(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
-	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, StringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
+	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
+	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
 
-	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, StringFieldEditor.class),
-	DATABASE_URL(Page.DATABASE, StringFieldEditor.class),
-	DATABASE_USERNAME(Page.DATABASE, StringFieldEditor.class),
-	DATABASE_PASSWORD(Page.DATABASE, StringFieldEditor.class),
-	DATABASE_TABLE_NAME(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.TABLE_NAME),
+	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, FormattedStringFieldEditor.class),
+	DATABASE_URL(Page.DATABASE, FormattedStringFieldEditor.class),
+	DATABASE_USERNAME(Page.DATABASE, FormattedStringFieldEditor.class),
+	DATABASE_PASSWORD(Page.DATABASE, FormattedStringFieldEditor.class),
+	DATABASE_TABLE_NAME(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.TABLE_NAME),
 	DATABASE_CONNECTION_VALIDATION_TIMEOUT_MS(Page.DATABASE, IntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS), 5),
-	DATABASE_TIMESTAMP_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.TIMESTAMP_COLUMN_TYPE),
-	DATABASE_RESPONSE_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE),
-	DATABASE_INFO_COLUMN_TYPE(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.INFO_COLUMN_TYPE),
-	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, StringFieldEditor.class, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX),
+	DATABASE_TIMESTAMP_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.TIMESTAMP_COLUMN_TYPE),
+	DATABASE_RESPONSE_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE),
+	DATABASE_INFO_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.INFO_COLUMN_TYPE),
+	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX),
 	DATABASE_COLUMN_NAME_MAX_LENGTH(Page.DATABASE, IntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH), 2),
 
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
-	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, StringFieldEditor.class),
-	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, StringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR),
+	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, FormattedStringFieldEditor.class),
+	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR),
 
 	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, ThresholdsFieldEditor.class);
 

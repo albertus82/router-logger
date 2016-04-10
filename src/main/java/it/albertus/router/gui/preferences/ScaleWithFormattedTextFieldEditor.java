@@ -13,7 +13,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
+public class ScaleWithFormattedTextFieldEditor extends ScaleFieldEditor {
 
 	private final Text text;
 	private final TextFormatter formatter;
@@ -22,7 +22,7 @@ public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 		return text;
 	}
 
-	public ScaleWithTextFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
+	public ScaleWithFormattedTextFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = new Text(parent, SWT.BORDER | SWT.TRAIL);
 		formatter = new TextFormatter(text);
@@ -55,20 +55,20 @@ public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 		updateText();
 	}
 
-	private void setText(final int value) {
+	protected void setText(final int value) {
 		if (text != null && !text.isDisposed() && formatter != null) {
 			text.setText(Integer.toString(value));
 			formatter.updateFontStyle(getPreferenceStore().getDefaultInt(getPreferenceName()));
 		}
 	}
 
-	private void updateText() {
+	protected void updateText() {
 		if (scale != null && !scale.isDisposed()) {
 			setText(scale.getSelection());
 		}
 	}
 
-	private class TextVerifyListener implements VerifyListener {
+	protected class TextVerifyListener implements VerifyListener {
 		@Override
 		public void verifyText(final VerifyEvent ve) {
 			final String oldText = text.getText();
@@ -92,7 +92,7 @@ public class ScaleWithTextFieldEditor extends ScaleFieldEditor {
 		}
 	}
 
-	private class TextFocusListener extends FocusAdapter {
+	protected class TextFocusListener extends FocusAdapter {
 		private final int min;
 		private final int max;
 
