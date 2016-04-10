@@ -65,7 +65,7 @@ public class TextFormatter {
 		return getWidthHint(text, 1, weight, string);
 	}
 
-	private static int getWidthHint(final Text text, final int size, final int weight, final String string) {
+	private static int getWidthHint(final Text text, final int multiplier, final int weight, final String string) {
 		int widthHint = SWT.DEFAULT;
 		if (text != null && !text.isDisposed()) {
 			final Font font = text.getFont(); // Backup initial font.
@@ -78,7 +78,7 @@ public class TextFormatter {
 			final GC gc = new GC(text);
 			try {
 				final Point extent = gc.textExtent(string);
-				widthHint = (int) (size * extent.x * 1.1);
+				widthHint = (int) (multiplier * extent.x * 1.1);
 			}
 			finally {
 				gc.dispose();
