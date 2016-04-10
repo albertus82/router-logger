@@ -24,12 +24,23 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 
 	public ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
-		text = new Text(parent, SWT.BORDER | SWT.TRAIL);
+		text = createTextControl(parent);
 		formatter = new TextFormatter(text);
+	}
+
+	public ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
+		super(name, labelText, parent);
+		text = createTextControl(parent);
+		formatter = new TextFormatter(text);
+	}
+
+	protected Text createTextControl(final Composite parent) {
+		final Text text = new Text(parent, SWT.BORDER | SWT.TRAIL);
 		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(text); // TODO Width
-		text.setTextLimit(Integer.toString(max).length());
-		text.addFocusListener(new TextFocusListener(min, max));
+		text.setTextLimit(Integer.toString(getMaximum()).length());
+		text.addFocusListener(new TextFocusListener());
 		text.addVerifyListener(new TextVerifyListener());
+		return text;
 	}
 
 	@Override
@@ -51,20 +62,26 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 	@Override
 	protected void doLoad() {
 		super.doLoad();
-		text.setToolTipText(Resources.get("lbl.preferences.default.value", Integer.toString(getPreferenceStore().getDefaultInt(getPreferenceName()))));
+		setToolTipText(getPreferenceStore().getDefaultInt(getPreferenceName()));
 		updateText();
 	}
 
-	protected void setText(final int value) {
-		if (text != null && !text.isDisposed() && formatter != null) {
-			text.setText(Integer.toString(value));
-			formatter.updateFontStyle(getPreferenceStore().getDefaultInt(getPreferenceName()));
+	protected void setToolTipText(final int defaultValue) {
+		if (text != null && !text.isDisposed() && defaultValue != 0) {
+			text.setToolTipText(Resources.get("lbl.preferences.default.value", defaultValue));
 		}
 	}
 
 	protected void updateText() {
 		if (scale != null && !scale.isDisposed()) {
 			setText(scale.getSelection());
+		}
+	}
+
+	protected void setText(final int value) {
+		if (text != null && !text.isDisposed() && formatter != null) {
+			text.setText(Integer.toString(value));
+			formatter.updateFontStyle(getPreferenceStore().getDefaultInt(getPreferenceName()));
 		}
 	}
 
@@ -93,23 +110,15 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 	}
 
 	protected class TextFocusListener extends FocusAdapter {
-		private final int min;
-		private final int max;
-
-		private TextFocusListener(int min, int max) {
-			this.min = min;
-			this.max = max;
-		}
-
 		@Override
 		public void focusLost(final FocusEvent fe) {
 			try {
 				int textValue = Integer.parseInt(text.getText());
-				if (textValue > max) {
-					textValue = max;
+				if (textValue > getMaximum()) {
+					textValue = getMaximum();
 				}
-				if (textValue < min) {
-					textValue = min;
+				if (textValue < getMinimum()) {
+					textValue = getMinimum();
 				}
 				setText(textValue);
 				scale.setSelection(textValue);

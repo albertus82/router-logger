@@ -14,16 +14,25 @@ public class FormattedStringFieldEditor extends StringFieldEditor {
 		formatter = new TextFormatter(getTextControl());
 	}
 
+	public FormattedStringFieldEditor(String name, String labelText, int width, Composite parent) {
+		super(name, labelText, width, parent);
+		formatter = new TextFormatter(getTextControl());
+	}
+
+	public FormattedStringFieldEditor(String name, String labelText, int width, int strategy, Composite parent) {
+		super(name, labelText, width, strategy, parent);
+		formatter = new TextFormatter(getTextControl());
+	}
+
 	@Override
 	protected void doLoad() {
 		super.doLoad();
-		final String defaultValue = getPreferenceStore().getDefaultString(getPreferenceName());
-		setToolTipText(defaultValue);
+		setToolTipText(getPreferenceStore().getDefaultString(getPreferenceName()));
 		updateFontStyle();
 	}
 
 	protected void setToolTipText(final String defaultValue) {
-		if (getTextControl() != null && defaultValue != null && !defaultValue.isEmpty()) {
+		if (getTextControl() != null && !getTextControl().isDisposed() && defaultValue != null && !defaultValue.isEmpty()) {
 			getTextControl().setToolTipText(Resources.get("lbl.preferences.default.value", defaultValue));
 		}
 	}

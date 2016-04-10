@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preferences.page;
 
 import it.albertus.router.gui.preferences.Preference;
+import it.albertus.router.gui.preferences.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preferences.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preferences.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preferences.field.ThresholdsFieldEditor;
@@ -80,12 +81,12 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 			}
 			fe = sfe;
 		}
-		else if (IntegerFieldEditor.class.equals(clazz)) {
+		else if (IntegerFieldEditor.class.equals(clazz) || FormattedIntegerFieldEditor.class.equals(clazz)) {
 			if (preference.getFieldEditorData() instanceof Integer) {
-				fe = new IntegerFieldEditor(name, labelText, parent, (Integer) preference.getFieldEditorData());
+				fe = new FormattedIntegerFieldEditor(name, labelText, parent, (Integer) preference.getFieldEditorData());
 			}
 			else {
-				fe = new IntegerFieldEditor(name, labelText, parent);
+				fe = new FormattedIntegerFieldEditor(name, labelText, parent);
 			}
 		}
 		else if (DirectoryFieldEditor.class.equals(clazz)) {
