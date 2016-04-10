@@ -27,14 +27,14 @@ import org.eclipse.swt.widgets.Label;
 
 public class EditableComboFieldEditor extends FieldEditor {
 
-	private Combo fCombo;
-	private String fValue;
-	private final String[][] fEntryNamesAndValues;
+	private Combo combo;
+	private String value;
+	private final String[][] entryNamesAndValues;
 
 	public EditableComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		init(name, labelText);
 		Assert.isTrue(checkArray(entryNamesAndValues));
-		fEntryNamesAndValues = entryNamesAndValues;
+		this.entryNamesAndValues = entryNamesAndValues;
 		createControl(parent);
 	}
 
@@ -60,13 +60,13 @@ public class EditableComboFieldEditor extends FieldEditor {
 				((GridData) label.getLayoutData()).horizontalSpan = 1;
 				left = left - 1;
 			}
-			((GridData) fCombo.getLayoutData()).horizontalSpan = left;
+			((GridData) combo.getLayoutData()).horizontalSpan = left;
 		}
 		else {
 			if (label != null) {
 				((GridData) label.getLayoutData()).horizontalSpan = 1;
 			}
-			((GridData) fCombo.getLayoutData()).horizontalSpan = 1;
+			((GridData) combo.getLayoutData()).horizontalSpan = 1;
 		}
 	}
 
@@ -96,11 +96,11 @@ public class EditableComboFieldEditor extends FieldEditor {
 
 	@Override
 	protected void doStore() {
-		if (fValue == null) {
+		if (value == null) {
 			getPreferenceStore().setToDefault(getPreferenceName());
 			return;
 		}
-		getPreferenceStore().setValue(getPreferenceName(), fValue);
+		getPreferenceStore().setValue(getPreferenceName(), value);
 	}
 
 	@Override
@@ -109,41 +109,41 @@ public class EditableComboFieldEditor extends FieldEditor {
 	}
 
 	protected Combo getComboBoxControl(final Composite parent) {
-		if (fCombo == null) {
-			fCombo = new Combo(parent, SWT.NONE);
-			fCombo.setFont(parent.getFont());
-			for (int i = 0; i < fEntryNamesAndValues.length; i++) {
-				fCombo.add(fEntryNamesAndValues[i][0], i);
+		if (combo == null) {
+			combo = new Combo(parent, SWT.NONE);
+			combo.setFont(parent.getFont());
+			for (int i = 0; i < entryNamesAndValues.length; i++) {
+				combo.add(entryNamesAndValues[i][0], i);
 			}
 
-			fCombo.addSelectionListener(new SelectionAdapter() {
+			combo.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent evt) {
 					updateValue();
 				}
 			});
 
-			fCombo.addFocusListener(new FocusAdapter() {
+			combo.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
 					updateValue();
 				}
 			});
 		}
-		return fCombo;
+		return combo;
 	}
 
 	protected void updateValue() {
-		final String oldValue = fValue;
-		final String name = fCombo.getText();
-		fValue = getValueForName(name);
+		final String oldValue = value;
+		final String name = combo.getText();
+		value = getValueForName(name);
 		setPresentsDefaultValue(false);
-		fireValueChanged(VALUE, oldValue, fValue);
+		fireValueChanged(VALUE, oldValue, value);
 	}
 
 	protected String getValueForName(final String name) {
-		for (int i = 0; i < fEntryNamesAndValues.length; i++) {
-			final String[] entry = fEntryNamesAndValues[i];
+		for (int i = 0; i < entryNamesAndValues.length; i++) {
+			final String[] entry = entryNamesAndValues[i];
 			if (name.equals(entry[0])) {
 				return entry[1];
 			}
@@ -152,14 +152,14 @@ public class EditableComboFieldEditor extends FieldEditor {
 	}
 
 	protected void updateComboForValue(final String value) {
-		fValue = value;
-		for (int i = 0; i < fEntryNamesAndValues.length; i++) {
-			if (value.equals(fEntryNamesAndValues[i][1])) {
-				fCombo.setText(fEntryNamesAndValues[i][0]);
+		this.value = value;
+		for (int i = 0; i < entryNamesAndValues.length; i++) {
+			if (value.equals(entryNamesAndValues[i][1])) {
+				combo.setText(entryNamesAndValues[i][0]);
 				return;
 			}
 		}
-		fCombo.setText(value);
+		combo.setText(value);
 	}
 
 	@Override
@@ -169,11 +169,11 @@ public class EditableComboFieldEditor extends FieldEditor {
 	}
 
 	protected String getValue() {
-		return fValue;
+		return value;
 	}
 
 	protected String[][] getEntryNamesAndValues() {
-		return fEntryNamesAndValues;
+		return entryNamesAndValues;
 	}
 
 }
