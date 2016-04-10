@@ -174,7 +174,7 @@ public abstract class RouterLoggerEngine {
 				setStatus(RouterLoggerStatus.AUTHENTICATING);
 				boolean loggedIn = false;
 				try {
-					loggedIn = reader.login(configuration.getString("router.username"), configuration.getString("router.password").toCharArray()); // TODO
+					loggedIn = reader.login(configuration.getString("router.username"), configuration.contains("router.password") ? configuration.getString("router.password").toCharArray() : null); // TODO
 				}
 				catch (Exception e) {
 					logger.log(e);

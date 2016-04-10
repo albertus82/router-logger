@@ -5,6 +5,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.util.ThreadUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class DummyReader extends Reader {
 	@Override
 	public boolean login(final String username, final char[] password) {
 		out.println("Username: " + username);
-		out.println("Password: " + String.valueOf(password));
+		out.println("Password: " + (password != null ? String.valueOf(password) : Arrays.toString(password)));
 		if (AUTHENTICATION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(AUTHENTICATION_TIME_IN_MILLIS);
 		}
