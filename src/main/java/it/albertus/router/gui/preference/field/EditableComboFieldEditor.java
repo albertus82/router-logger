@@ -29,21 +29,21 @@ public class EditableComboFieldEditor extends FieldEditor {
 
 	private Combo fCombo;
 	private String fValue;
-	private String[][] fEntryNamesAndValues;
+	private final String[][] fEntryNamesAndValues;
 
-	public EditableComboFieldEditor(String name, String labelText, String[][] entryNamesAndValues, Composite parent) {
+	public EditableComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		init(name, labelText);
 		Assert.isTrue(checkArray(entryNamesAndValues));
 		fEntryNamesAndValues = entryNamesAndValues;
 		createControl(parent);
 	}
 
-	private boolean checkArray(String[][] table) {
+	protected boolean checkArray(final String[][] table) {
 		if (table == null) {
 			return false;
 		}
 		for (int i = 0; i < table.length; i++) {
-			String[] array = table[i];
+			final String[] array = table[i];
 			if (array == null || array.length != 2) {
 				return false;
 			}
@@ -52,7 +52,7 @@ public class EditableComboFieldEditor extends FieldEditor {
 	}
 
 	@Override
-	protected void adjustForNumColumns(int numColumns) {
+	protected void adjustForNumColumns(final int numColumns) {
 		final Label label = getLabelControl();
 		if (numColumns > 1) {
 			int left = numColumns;
@@ -71,7 +71,7 @@ public class EditableComboFieldEditor extends FieldEditor {
 	}
 
 	@Override
-	protected void doFillIntoGrid(Composite parent, int numColumns) {
+	protected void doFillIntoGrid(final Composite parent, final int numColumns) {
 		int comboC = 1;
 		if (numColumns > 1) {
 			comboC = numColumns - 1;
@@ -108,7 +108,7 @@ public class EditableComboFieldEditor extends FieldEditor {
 		return 2;
 	}
 
-	private Combo getComboBoxControl(Composite parent) {
+	protected Combo getComboBoxControl(final Composite parent) {
 		if (fCombo == null) {
 			fCombo = new Combo(parent, SWT.NONE);
 			fCombo.setFont(parent.getFont());
@@ -134,16 +134,16 @@ public class EditableComboFieldEditor extends FieldEditor {
 	}
 
 	protected void updateValue() {
-		String oldValue = fValue;
-		String name = fCombo.getText();
+		final String oldValue = fValue;
+		final String name = fCombo.getText();
 		fValue = getValueForName(name);
 		setPresentsDefaultValue(false);
 		fireValueChanged(VALUE, oldValue, fValue);
 	}
 
-	private String getValueForName(String name) {
+	protected String getValueForName(final String name) {
 		for (int i = 0; i < fEntryNamesAndValues.length; i++) {
-			String[] entry = fEntryNamesAndValues[i];
+			final String[] entry = fEntryNamesAndValues[i];
 			if (name.equals(entry[0])) {
 				return entry[1];
 			}
@@ -151,7 +151,7 @@ public class EditableComboFieldEditor extends FieldEditor {
 		return name; // Value not present in the array.
 	}
 
-	private void updateComboForValue(String value) {
+	protected void updateComboForValue(final String value) {
 		fValue = value;
 		for (int i = 0; i < fEntryNamesAndValues.length; i++) {
 			if (value.equals(fEntryNamesAndValues[i][1])) {
@@ -163,9 +163,17 @@ public class EditableComboFieldEditor extends FieldEditor {
 	}
 
 	@Override
-	public void setEnabled(boolean enabled, Composite parent) {
+	public void setEnabled(final boolean enabled, final Composite parent) {
 		super.setEnabled(enabled, parent);
 		getComboBoxControl(parent).setEnabled(enabled);
+	}
+
+	protected String getValue() {
+		return fValue;
+	}
+
+	protected String[][] getEntryNamesAndValues() {
+		return fEntryNamesAndValues;
 	}
 
 }
