@@ -9,6 +9,7 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -16,7 +17,6 @@ import org.eclipse.swt.widgets.Text;
 public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 
 	private final Text text;
-	private final TextFormatter formatter;
 
 	public Text getTextControl() {
 		return text;
@@ -25,18 +25,22 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 	public ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = createTextControl(parent);
-		formatter = new TextFormatter(text);
 	}
 
 	public ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 		text = createTextControl(parent);
-		formatter = new TextFormatter(text);
 	}
 
 	protected Text createTextControl(final Composite parent) {
 		final Text text = new Text(parent, SWT.BORDER | SWT.TRAIL);
-		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).applyTo(text); // TODO Width
+
+		final Font font = text.getFont();
+		TextFormatter.setBoldFontStyle(text);
+		final int widthHint = TextFormatter.getWidthHint(text, Integer.toString(getMaximum()).length());
+		text.setFont(font);
+		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(widthHint, SWT.DEFAULT).applyTo(text);
+
 		text.setTextLimit(Integer.toString(getMaximum()).length());
 		text.addFocusListener(new TextFocusListener());
 		text.addVerifyListener(new TextVerifyListener());
@@ -79,9 +83,9 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 	}
 
 	protected void setText(final int value) {
-		if (text != null && !text.isDisposed() && formatter != null) {
+		if (text != null && !text.isDisposed()) {
 			text.setText(Integer.toString(value));
-			formatter.updateFontStyle(getPreferenceStore().getDefaultInt(getPreferenceName()));
+			TextFormatter.updateFontStyle(text, getPreferenceStore().getDefaultInt(getPreferenceName()));
 		}
 	}
 

@@ -7,16 +7,12 @@ import org.eclipse.swt.widgets.Composite;
 
 public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
-	private final TextFormatter formatter;
-
 	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int textLimit) {
 		super(name, labelText, parent, textLimit);
-		formatter = new TextFormatter(getTextControl());
 	}
 
 	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
-		formatter = new TextFormatter(getTextControl());
 	}
 
 	@Override
@@ -40,9 +36,7 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
 	protected void updateFontStyle() {
 		final int defaultValue = getPreferenceStore().getDefaultInt(getPreferenceName());
-		if (formatter != null) {
-			formatter.updateFontStyle(defaultValue);
-		}
+		TextFormatter.updateFontStyle(getTextControl(), defaultValue);
 	}
 
 }
