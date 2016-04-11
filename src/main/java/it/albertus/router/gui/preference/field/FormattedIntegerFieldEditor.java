@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
+import it.albertus.router.gui.preference.field.listener.IntegerVerifyListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -10,11 +11,16 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
 	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int textLimit) {
 		super(name, labelText, parent, textLimit);
-		setErrorMessage(Resources.get("err.preferences.integer"));
+		init();
 	}
 
 	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
+		init();
+	}
+
+	protected void init() {
+		getTextControl().addVerifyListener(new IntegerVerifyListener());
 		setErrorMessage(Resources.get("err.preferences.integer"));
 	}
 

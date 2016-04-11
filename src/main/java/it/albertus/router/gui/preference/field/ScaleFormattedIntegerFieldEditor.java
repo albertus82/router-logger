@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
+import it.albertus.router.gui.preference.field.listener.IntegerVerifyListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -8,8 +9,6 @@ import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -38,7 +37,7 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(widthHint, SWT.DEFAULT).applyTo(text);
 		text.setTextLimit(Integer.toString(getMaximum()).length());
 		text.addFocusListener(new TextFocusListener());
-		text.addVerifyListener(new TextVerifyListener());
+		text.addVerifyListener(new IntegerVerifyListener());
 		return text;
 	}
 
@@ -84,30 +83,6 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 		}
 	}
 
-	protected class TextVerifyListener implements VerifyListener {
-		@Override
-		public void verifyText(final VerifyEvent ve) {
-			final String oldText = text.getText();
-			final String newText = oldText.substring(0, ve.start) + ve.text + oldText.substring(ve.end);
-
-			if (!oldText.equals(newText)) {
-				if (!isNumeric(newText.trim()) && newText.trim().length() > 0) {
-					ve.doit = false;
-				}
-			}
-		}
-
-		private boolean isNumeric(final String string) {
-			try {
-				Integer.parseInt(string);
-				return true;
-			}
-			catch (final Exception e) {
-				return false;
-			}
-		}
-	}
-
 	protected class TextFocusListener extends FocusAdapter {
 		@Override
 		public void focusLost(final FocusEvent fe) {
@@ -122,7 +97,9 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 				setText(textValue);
 				scale.setSelection(textValue);
 			}
-			catch (final Exception e) {}
+			catch (final RuntimeException re) {
+				setText(scale.getSelection());
+			}
 		}
 	}
 
