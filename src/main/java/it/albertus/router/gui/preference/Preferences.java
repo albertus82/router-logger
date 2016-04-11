@@ -74,7 +74,7 @@ public class Preferences {
 			catch (Exception e) {}
 		}
 
-		final PreferenceDialog preferenceDialog = new PreferenceDialog(gui.getShell(), preferenceManager);
+		final PreferenceDialog preferenceDialog = new ConfigurationDialog(gui.getShell(), preferenceManager);
 
 		preferenceDialog.setPreferenceStore(preferenceStore);
 

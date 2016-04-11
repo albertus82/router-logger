@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Display;
 public class Images {
 
 	/* Icona principale dell'applicazione (in vari formati) */
-	static final Image[] MAIN_ICONS = loadIcons("main.ico");
+	public static final Image[] MAIN_ICONS = loadIcons("main.ico");
 
 	/* Icone base per l'area di notifica (16x16) */
 	static final Image TRAY_ICON_ACTIVE = Images.MAIN_ICONS[2];
