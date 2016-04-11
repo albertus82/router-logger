@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.router.gui.preference.Preference;
+import it.albertus.router.gui.preference.field.ClassComboFieldEditor;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
@@ -116,6 +117,9 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		}
 		else if (EditableComboFieldEditor.class.equals(clazz)) {
 			fe = new EditableComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+		}
+		else if (ClassComboFieldEditor.class.equals(clazz)) {
+			fe = new ClassComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
 		}
 		else if (ScaleFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();

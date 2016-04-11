@@ -133,6 +133,10 @@ public class EditableComboFieldEditor extends FieldEditor {
 		return combo;
 	}
 
+	protected Combo getComboBoxControl() {
+		return combo;
+	}
+
 	protected void updateValue() {
 		final String oldValue = value;
 		final String name = combo.getText();

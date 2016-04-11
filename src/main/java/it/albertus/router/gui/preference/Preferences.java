@@ -118,7 +118,7 @@ public class Preferences {
 				}
 
 				// Check if restart is required...
-				if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getSimpleName().equals(configuration.getString(Preference.READER_CLASS_NAME.getConfigurationKey())) || gui.getWriter() == null || !gui.getWriter().getClass().getSimpleName().equals(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey())))) {
+				if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getSimpleName().equals(configuration.getString(Preference.READER_CLASS_NAME.getConfigurationKey())) || gui.getWriter() == null || !gui.getWriter().getClass().getSimpleName().equals(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey(), Preference.WRITER_CLASS_NAME.getDefaultValue())))) {
 					restartRequired = true;	
 				}
 			}
