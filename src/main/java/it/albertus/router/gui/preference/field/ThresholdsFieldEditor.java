@@ -12,7 +12,6 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -24,7 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class ThresholdsFieldEditor extends ListEditor {
+public class ThresholdsFieldEditor extends LocalizedListEditor {
 
 	public ThresholdsFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
