@@ -5,6 +5,7 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
+import it.albertus.router.gui.preference.Preferences;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.SashForm;
@@ -43,7 +45,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	public static void start() {
 		try {
 			// Creazione finestra applicazione...
-			final Display display = new Display();
+			final Display display = Display.getDefault();
 			final RouterLoggerGui routerLogger = newInstance(display);
 			final Shell shell = routerLogger.getShell();
 			shell.open();
@@ -83,23 +85,28 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			instance = new RouterLoggerGui(display);
 		}
 		catch (final Exception exception) {
-			fatalError(display, exception);
+			showError(display, exception);
 		}
 		catch (final ExceptionInInitializerError exception) {
-			fatalError(display, exception.getCause() != null ? exception.getCause() : exception);
+			showError(display, exception.getCause() != null ? exception.getCause() : exception);
 		}
 		return instance;
 	}
 
-	private static void fatalError(final Display display, final Throwable throwable) {
+	private static void showError(final Display display, final Throwable throwable) {
 		final Shell shell = new Shell(display);
-		final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+		final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
 		messageBox.setText(Resources.get("lbl.window.title"));
-		messageBox.setMessage(ExceptionUtils.getUIMessage(throwable));
-		messageBox.open();
-		shell.dispose();
-		display.dispose();
-		System.exit(1);
+		messageBox.setMessage(ExceptionUtils.getUIMessage(throwable) + ' ' + Resources.get("lbl.preferences.edit"));
+		if (messageBox.open() == SWT.NO || new Preferences(shell).open() != Window.OK) {
+			shell.dispose();
+			display.dispose();
+			System.exit(1);
+		}
+		else {
+			shell.dispose();
+			start();
+		}
 	}
 
 	private RouterLoggerGui(final Display display) {

@@ -24,16 +24,24 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 
 public class Preferences {
 
 	private final RouterLoggerGui gui;
+	private final Shell parentShell;
 
 	public Preferences(final RouterLoggerGui gui) {
 		this.gui = gui;
+		this.parentShell = gui.getShell();
 	}
 
-	public void open() {
+	public Preferences(final Shell parentShell) {
+		this.gui = null;
+		this.parentShell = parentShell;
+	}
+
+	public int open() {
 		final PreferenceManager preferenceManager = new PreferenceManager();
 
 		// Pages creation...
@@ -74,12 +82,13 @@ public class Preferences {
 			catch (Exception e) {}
 		}
 
-		final PreferenceDialog preferenceDialog = new ConfigurationDialog(gui.getShell(), preferenceManager);
+		final PreferenceDialog preferenceDialog = new ConfigurationDialog(parentShell, preferenceManager);
 
 		preferenceDialog.setPreferenceStore(preferenceStore);
 
 		// Open configuration dialog...
-		if (preferenceDialog.open() == Window.OK) {
+		final int returnCode = preferenceDialog.open();
+		if (returnCode == Window.OK) {
 			// Save configuration file...
 			OutputStream configurationOutputStream = null;
 			try {
@@ -100,7 +109,7 @@ public class Preferences {
 			try {
 				final Language language = Resources.getLanguage();
 				RouterLoggerConfiguration.getInstance().reload();
-				if (!language.equals(Resources.getLanguage())) {
+				if (gui != null && !language.equals(Resources.getLanguage())) {
 					gui.getMenuBar().updateTexts();
 				}
 			}
@@ -108,6 +117,7 @@ public class Preferences {
 				Logger.getInstance().log(exception);
 			}
 		}
+		return returnCode;
 	}
 
 	private InputStream openConfigurationInputStream() throws IOException {
@@ -139,6 +149,10 @@ public class Preferences {
 		}
 		outputStream = new BufferedOutputStream(new FileOutputStream(config));
 		return outputStream;
+	}
+
+	public Shell getParentShell() {
+		return parentShell;
 	}
 
 }
