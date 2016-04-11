@@ -9,6 +9,8 @@ import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -37,6 +39,7 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).hint(widthHint, SWT.DEFAULT).applyTo(text);
 		text.setTextLimit(Integer.toString(getMaximum()).length());
 		text.addFocusListener(new TextFocusListener());
+		text.addKeyListener(new TextKeyListener());
 		text.addVerifyListener(new IntegerVerifyListener());
 		return text;
 	}
@@ -80,6 +83,13 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 		if (text != null && !text.isDisposed()) {
 			text.setText(Integer.toString(value));
 			TextFormatter.updateFontStyle(text, getPreferenceStore().getDefaultInt(getPreferenceName()));
+		}
+	}
+
+	protected class TextKeyListener extends KeyAdapter {
+		@Override
+		public void keyReleased(final KeyEvent ke) {
+			TextFormatter.updateFontStyle((Text) ke.widget, getPreferenceStore().getDefaultInt(getPreferenceName()));
 		}
 	}
 
