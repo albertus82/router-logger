@@ -10,10 +10,18 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
 	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int textLimit) {
 		super(name, labelText, parent, textLimit);
+		setErrorMessage(Resources.get("err.preferences.integer"));
 	}
 
 	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
+		setErrorMessage(Resources.get("err.preferences.integer"));
+	}
+
+	@Override
+	public void setValidRange(final int min, final int max) {
+		super.setValidRange(min, max);
+		setErrorMessage(Resources.get("err.preferences.integer.range", min, max));
 	}
 
 	@Override

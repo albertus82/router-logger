@@ -12,10 +12,12 @@ public class LocalizedDirectoryFieldEditor extends DirectoryFieldEditor {
 
 	public LocalizedDirectoryFieldEditor() {
 		super();
+		setErrorMessage(Resources.get("err.preferences.directory"));
 	}
 
 	public LocalizedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
+		setErrorMessage(Resources.get("err.preferences.directory"));
 	}
 
 	@Override
