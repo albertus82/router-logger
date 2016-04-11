@@ -34,8 +34,8 @@ public abstract class RouterLoggerEngine {
 
 	protected final Console out = getConsole();
 
-	protected final Reader reader;
-	protected final Writer writer;
+	private Reader reader;
+	private Writer writer;
 
 	protected volatile boolean exit = false;
 	protected Thread shutdownHook;
@@ -62,7 +62,7 @@ public abstract class RouterLoggerEngine {
 		this.currentStatus = status;
 	}
 
-	private Reader initReader() {
+	protected Reader initReader() {
 		final String configurationKey = "reader.class.name";
 		String readerClassName = StringUtils.trimToEmpty(configuration.getString(configurationKey));
 
@@ -87,7 +87,7 @@ public abstract class RouterLoggerEngine {
 		return reader;
 	}
 
-	private Writer initWriter() {
+	protected Writer initWriter() {
 		final String configurationKey = "writer.class.name";
 		String writerClassName = configuration.getString(configurationKey, Defaults.WRITER_CLASS.getName()).trim();
 
@@ -364,8 +364,16 @@ public abstract class RouterLoggerEngine {
 		return reader;
 	}
 
+	protected void setReader(Reader reader) {
+		this.reader = reader;
+	}
+
 	public Writer getWriter() {
 		return writer;
+	}
+
+	protected void setWriter(Writer writer) {
+		this.writer = writer;
 	}
 
 }

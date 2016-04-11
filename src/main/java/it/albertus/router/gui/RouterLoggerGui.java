@@ -1,5 +1,6 @@
 package it.albertus.router.gui;
 
+import it.albertus.router.engine.ConfigurationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
@@ -95,16 +96,28 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
 		final Shell shell = new Shell(display);
-		final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
-		messageBox.setText(Resources.get("lbl.window.title"));
-		messageBox.setMessage(ExceptionUtils.getUIMessage(throwable) + ' ' + Resources.get("lbl.preferences.edit"));
-		if (messageBox.open() == SWT.NO || new Preferences(shell).open() != Window.OK) {
+		final int buttonId = openErrorMessageBox(shell, throwable);
+		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open() != Window.OK) {
 			shell.dispose();
 			display.dispose();
 			System.exit(1);
 		}
 		shell.dispose();
 		return newInstance(display);
+	}
+
+	private static int openErrorMessageBox(final Shell shell, final Throwable throwable) {
+		final MessageBox messageBox;
+		if (throwable instanceof ConfigurationException) {
+			messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		}
+		else {
+			messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+		}
+		messageBox.setText(Resources.get("lbl.window.title"));
+		messageBox.setMessage(ExceptionUtils.getUIMessage(throwable) + ' ' + Resources.get("lbl.preferences.edit"));
+		final int buttonId = messageBox.open();
+		return buttonId;
 	}
 
 	private RouterLoggerGui(final Display display) {
@@ -245,11 +258,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				catch (InterruptedException e) {}
 				afterOuterLoop();
 				configuration.reload();
+				resetReaderWriter();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
 				if (shell != null && !shell.isDisposed()) {
 					try {
 						shell.getDisplay().syncExec(new Runnable() {
+							@Override
 							public void run() {
 								getConsole().getText().setText("");
 								dataTable.reset();
@@ -264,30 +279,28 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}, "resetThread").start();
 	}
 
-	public void restart() {
-		disconnect(true);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					updateThread.join();
-				}
-				catch (InterruptedException e) {}
-				afterOuterLoop();
-				if (shell != null && !shell.isDisposed()) {
-					try {
-						shell.getDisplay().syncExec(new Runnable() {
-							public void run() {
-								shell.dispose();
-								start();
-							}
-						});
+	protected void resetReaderWriter() {
+		try {
+			setReader(initReader());
+			setWriter(initWriter());
+		}
+		catch (final Throwable throwable) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					final int buttonId = openErrorMessageBox(shell, throwable);
+					if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open() != Window.OK) {
+						final Display display = shell.getDisplay();
+						shell.dispose();
+						display.dispose();
+						System.exit(1);
 					}
-					catch (SWTException se) {}
+					else {
+						resetReaderWriter();
+					}
 				}
-				
-			}
-		}, "restartThread").start();
+			});
+		}
 	}
 
 	@Override
