@@ -57,7 +57,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	protected void addSeparator() {
 		final Label separator = new Label(getFieldEditorParent(), SWT.HORIZONTAL | SWT.SEPARATOR);
-		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).applyTo(separator);
+		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).grab(true, false).applyTo(separator);
 	}
 
 	@Override
