@@ -30,6 +30,7 @@ public class Preferences {
 
 	private final RouterLoggerGui gui;
 	private final Shell parentShell;
+	private boolean restartRequired = false;
 
 	public Preferences(final RouterLoggerGui gui) {
 		this.gui = gui;
@@ -108,9 +109,17 @@ public class Preferences {
 			// Reload RouterLogger configuration...
 			try {
 				final Language language = Resources.getLanguage();
-				RouterLoggerConfiguration.getInstance().reload();
+				final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+				configuration.reload();
+
+				// Update language...
 				if (gui != null && !language.equals(Resources.getLanguage())) {
 					gui.getMenuBar().updateTexts();
+				}
+
+				// Check if restart is required...
+				if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getSimpleName().equals(configuration.getString(Preference.READER_CLASS_NAME.getConfigurationKey())) || gui.getWriter() == null || !gui.getWriter().getClass().getSimpleName().equals(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey())))) {
+					restartRequired = true;	
 				}
 			}
 			catch (final Exception exception) {
@@ -153,6 +162,10 @@ public class Preferences {
 
 	public Shell getParentShell() {
 		return parentShell;
+	}
+
+	public boolean isRestartRequired() {
+		return restartRequired;
 	}
 
 }

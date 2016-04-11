@@ -360,4 +360,12 @@ public abstract class RouterLoggerEngine {
 		this.iteration = iteration;
 	}
 
+	public Reader getReader() {
+		return reader;
+	}
+
+	public Writer getWriter() {
+		return writer;
+	}
+
 }

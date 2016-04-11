@@ -2,10 +2,13 @@ package it.albertus.router.gui.listener;
 
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.Preferences;
+import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.MessageBox;
 
 public class PreferencesSelectionListener extends SelectionAdapter {
 
@@ -23,6 +26,14 @@ public class PreferencesSelectionListener extends SelectionAdapter {
 		}
 		catch (final Exception e) {
 			Logger.getInstance().log(e);
+		}
+		if (preferences.isRestartRequired()) {
+			final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+			messageBox.setText(Resources.get("lbl.window.title"));
+			messageBox.setMessage(Resources.get("lbl.preferences.restart"));
+			if (messageBox.open() == SWT.YES) {
+				gui.restart();
+			}
 		}
 	}
 

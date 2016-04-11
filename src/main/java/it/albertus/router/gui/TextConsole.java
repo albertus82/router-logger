@@ -35,7 +35,7 @@ public class TextConsole extends Console {
 	}
 
 	public void init(final Composite parent, final Object layoutData) {
-		if (this.scrollable == null) {
+		if (this.scrollable == null || this.scrollable.isDisposed()) {
 			createText(parent);
 			scrollable.setLayoutData(layoutData);
 			scrollable.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));

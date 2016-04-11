@@ -85,15 +85,15 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			instance = new RouterLoggerGui(display);
 		}
 		catch (final Exception exception) {
-			showError(display, exception);
+			instance = showError(display, exception);
 		}
 		catch (final ExceptionInInitializerError exception) {
-			showError(display, exception.getCause() != null ? exception.getCause() : exception);
+			instance = showError(display, exception.getCause() != null ? exception.getCause() : exception);
 		}
 		return instance;
 	}
 
-	private static void showError(final Display display, final Throwable throwable) {
+	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
 		final Shell shell = new Shell(display);
 		final MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
 		messageBox.setText(Resources.get("lbl.window.title"));
@@ -103,10 +103,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			display.dispose();
 			System.exit(1);
 		}
-		else {
-			shell.dispose();
-			start();
-		}
+		shell.dispose();
+		return newInstance(display);
 	}
 
 	private RouterLoggerGui(final Display display) {
@@ -264,6 +262,32 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				}
 			}
 		}, "resetThread").start();
+	}
+
+	public void restart() {
+		disconnect(true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					updateThread.join();
+				}
+				catch (InterruptedException e) {}
+				afterOuterLoop();
+				if (shell != null && !shell.isDisposed()) {
+					try {
+						shell.getDisplay().syncExec(new Runnable() {
+							public void run() {
+								shell.dispose();
+								start();
+							}
+						});
+					}
+					catch (SWTException se) {}
+				}
+				
+			}
+		}, "restartThread").start();
 	}
 
 	@Override
