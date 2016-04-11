@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.engine.RouterLoggerConfiguration.Thresholds;
+import it.albertus.router.gui.Images;
 import it.albertus.router.resources.Resources;
 
 import java.util.Set;
@@ -87,6 +88,13 @@ public class ThresholdsFieldEditor extends ListEditor {
 
 		public ThresholdDialog(final Shell parent) {
 			super(parent);
+		}
+
+		@Override
+		protected void configureShell(Shell newShell) {
+			super.configureShell(newShell);
+			newShell.setText(Resources.get("lbl.preferences.thresholds.expressions.title"));
+			newShell.setImages(Images.MAIN_ICONS);
 		}
 
 		@Override
