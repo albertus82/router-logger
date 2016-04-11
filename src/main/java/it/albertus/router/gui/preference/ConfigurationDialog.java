@@ -6,6 +6,7 @@ import it.albertus.router.resources.Resources;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
@@ -25,8 +26,12 @@ public class ConfigurationDialog extends PreferenceDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setText(Resources.get("lbl.button.ok"));
-		getButton(IDialogConstants.CANCEL_ID).setText(Resources.get("lbl.button.cancel"));
+
+		final Button okButton = getButton(IDialogConstants.OK_ID);
+		okButton.setText(Resources.get("lbl.button.ok"));
+
+		final Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
+		cancelButton.setText(Resources.get("lbl.button.cancel"));
 	}
 
 }

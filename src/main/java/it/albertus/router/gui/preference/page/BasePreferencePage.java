@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -29,6 +30,18 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	public BasePreferencePage() {
 		super(GRID);
+	}
+
+	@Override
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+
+		final Button defaultsButton = getDefaultsButton();
+		defaultsButton.setText(Resources.get("lbl.preferences.button.defaults"));
+		defaultsButton.setToolTipText(Resources.get("lbl.preferences.button.defaults.tooltip"));
+
+		final Button applyButton = getApplyButton();
+		applyButton.setText(Resources.get("lbl.button.apply"));
 	}
 
 	/** Viene aggiunto automaticamente un separatore tra il testo e i campi. */

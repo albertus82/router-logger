@@ -7,6 +7,7 @@ import it.albertus.router.resources.Resources;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -17,6 +18,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -129,6 +131,17 @@ public class ThresholdsFieldEditor extends ListEditor {
 			textExpression.setTextLimit(TEXT_LIMIT);
 
 			return area;
+		}
+
+		@Override
+		protected void createButtonsForButtonBar(Composite parent) {
+			super.createButtonsForButtonBar(parent);
+
+			final Button okButton = getButton(IDialogConstants.OK_ID);
+			okButton.setText(Resources.get("lbl.button.ok"));
+
+			final Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
+			cancelButton.setText(Resources.get("lbl.button.cancel"));
 		}
 
 		@Override
