@@ -4,6 +4,7 @@ import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
+import it.albertus.router.gui.preference.field.LocalizedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.resources.Resources;
@@ -104,8 +105,8 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 				fe = new FormattedIntegerFieldEditor(name, labelText, parent);
 			}
 		}
-		else if (DirectoryFieldEditor.class.equals(clazz)) {
-			fe = new DirectoryFieldEditor(name, labelText, parent);
+		else if (DirectoryFieldEditor.class.equals(clazz) || LocalizedDirectoryFieldEditor.class.equals(clazz)) {
+			fe = new LocalizedDirectoryFieldEditor(name, labelText, parent);
 		}
 		else if (BooleanFieldEditor.class.equals(clazz)) {
 			fe = new BooleanFieldEditor(name, labelText, parent);
