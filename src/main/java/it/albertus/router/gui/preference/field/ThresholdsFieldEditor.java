@@ -86,12 +86,12 @@ public class ThresholdsFieldEditor extends ListEditor {
 		private String identifier;
 		private String expression;
 
-		public ThresholdDialog(final Shell parent) {
-			super(parent);
+		public ThresholdDialog(final Shell parentShell) {
+			super(parentShell);
 		}
 
 		@Override
-		protected void configureShell(Shell newShell) {
+		protected void configureShell(final Shell newShell) {
 			super.configureShell(newShell);
 			newShell.setText(Resources.get("lbl.preferences.thresholds.expressions.title"));
 			newShell.setImages(Images.MAIN_ICONS);
