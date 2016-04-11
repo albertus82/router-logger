@@ -14,12 +14,12 @@ public class LocalizedDirectoryFieldEditor extends DirectoryFieldEditor {
 		super();
 	}
 
-	public LocalizedDirectoryFieldEditor(String name, String labelText, Composite parent) {
+	public LocalizedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 	}
 
 	@Override
-	protected Button getChangeControl(Composite parent) {
+	protected Button getChangeControl(final Composite parent) {
 		final Button browseButton = super.getChangeControl(parent);
 		if (!localized) {
 			browseButton.setText(Resources.get("lbl.preferences.directory.button.browse"));
