@@ -59,7 +59,6 @@ public class DataTable {
 	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	private final boolean packColumns = configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK);
 
 	private final Table table;
 
@@ -223,7 +222,7 @@ public class DataTable {
 									// Tutte le altre colonne...
 									for (String key : info.keySet()) {
 										column = new TableColumn(table, SWT.NONE);
-										column.setText(packColumns ? " " : key);
+										column.setText(configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK) ? " " : key);
 										column.setToolTipText(key);
 									}
 								}
@@ -271,7 +270,7 @@ public class DataTable {
 									}
 									iterationTableItem.setText(originalIteration);
 
-									if (packColumns) {
+									if (configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK)) {
 										table.getColumn(2).setWidth(table.getColumn(0).getWidth());
 										final String[] stringArray = new String[info.keySet().size()];
 										final TableColumn[] columns = table.getColumns();
