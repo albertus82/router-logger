@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -11,14 +12,19 @@ public class ReaderComboFieldEditor extends ValidatedComboFieldEditor {
 	}
 
 	@Override
-	protected void refreshValidState() {
+	protected boolean checkState() {
 		try {
 			Class.forName(RouterLoggerEngine.getReaderClassName(getValue()));
-			setValid(true);
+			return true;
 		}
 		catch (final Throwable throwable) {
-			setValid(false);
+			return false;
 		}
+	}
+
+	@Override
+	public String getErrorMessage() {
+		return Resources.get("err.preferences.combo.class.reader");
 	}
 
 }

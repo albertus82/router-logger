@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor {
 
 	private boolean valid = true;
+	private String errorMessage = null;
 
 	public ValidatedComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
@@ -23,8 +24,31 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		return valid;
 	}
 
-	public void setValid(boolean valid) {
+	protected void setValid(boolean valid) {
 		this.valid = valid;
+	}
+
+	@Override
+	protected void refreshValidState() {
+		setValid(checkState());
+		if (getErrorMessage() != null && !getErrorMessage().isEmpty()) {
+			if (isValid()) {
+				clearErrorMessage();
+			}
+			else {
+				showErrorMessage(getErrorMessage());
+			}
+		}
+	}
+
+	protected abstract boolean checkState();
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(final String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 }
