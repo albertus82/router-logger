@@ -39,6 +39,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		else if (args[0].trim().equalsIgnoreCase(ARG_CONSOLE)) {
 			/* Start RouterLogger in console */
 			final RouterLoggerConsole routerLogger = new RouterLoggerConsole();
+			routerLogger.initReaderAndWriter();
 			routerLogger.beforeOuterLoop();
 			routerLogger.outerLoop();
 			routerLogger.afterOuterLoop();

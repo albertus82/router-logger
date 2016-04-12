@@ -52,6 +52,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			final Shell shell = routerLogger.getShell();
 			shell.open();
 
+			// Inizializzazione Reader & Writer
+			routerLogger.initReaderAndWriter();
+
 			// Stampa del messaggio di benvenuto...
 			routerLogger.beforeOuterLoop();
 
@@ -98,7 +101,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
-		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.findByConfigurationKey(((ConfigurationException)throwable).getKey()).getPage()) != Window.OK) {
+		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
 			shell.dispose();
 			display.dispose();
 			System.exit(1);
@@ -263,7 +266,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				catch (InterruptedException e) {}
 				afterOuterLoop();
 				configuration.reload();
-				resetReaderWriter();
+				initReaderAndWriter();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
 				if (shell != null && !shell.isDisposed()) {
@@ -284,24 +287,24 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}, "resetThread").start();
 	}
 
-	protected void resetReaderWriter() {
+	@Override
+	protected void initReaderAndWriter() {
 		try {
-			setReader(initReader());
-			setWriter(initWriter());
+			super.initReaderAndWriter();
 		}
 		catch (final Throwable throwable) {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
 					final int buttonId = openErrorMessageBox(shell, throwable);
-					if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException)throwable).getKey()).getPage()) != Window.OK) {
+					if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
 						final Display display = shell.getDisplay();
 						shell.dispose();
 						display.dispose();
 						System.exit(1);
 					}
 					else {
-						resetReaderWriter();
+						initReaderAndWriter();
 					}
 				}
 			});

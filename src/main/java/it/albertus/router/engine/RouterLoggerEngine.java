@@ -62,7 +62,7 @@ public abstract class RouterLoggerEngine {
 		this.currentStatus = status;
 	}
 
-	protected Reader initReader() {
+	protected Reader createReader() {
 		final String configurationKey = "reader.class.name";
 		final String readerClassName = getReaderClassName(StringUtils.trimToEmpty(configuration.getString(configurationKey)));
 
@@ -80,7 +80,7 @@ public abstract class RouterLoggerEngine {
 		return reader;
 	}
 
-	protected Writer initWriter() {
+	protected Writer createWriter() {
 		final String configurationKey = "writer.class.name";
 		String writerClassName = getWriterClassName(configuration.getString(configurationKey, RouterLoggerEngine.Defaults.WRITER_CLASS.getName()).trim());
 
@@ -348,12 +348,14 @@ public abstract class RouterLoggerEngine {
 	public RouterLoggerEngine() {
 		// Inizializzazione del Logger...
 		logger.init(out);
+	}
 
+	protected void initReaderAndWriter() {
 		// Inizializzazione del Reader...
-		setReader(initReader());
+		setReader(createReader());
 
 		// Inizializzazione del Writer...
-		setWriter(initWriter());
+		setWriter(createWriter());
 	}
 
 	protected abstract Console getConsole();
