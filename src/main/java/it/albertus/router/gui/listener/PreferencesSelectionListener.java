@@ -27,9 +27,6 @@ public class PreferencesSelectionListener extends SelectionAdapter {
 		catch (final Exception e) {
 			Logger.getInstance().log(e);
 		}
-		if (preferences.isLanguageChanged()) {
-			gui.getMenuBar().updateTexts();
-		}
 		if (preferences.isRestartRequired()) {
 			final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 			messageBox.setText(Resources.get("lbl.window.title"));

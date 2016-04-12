@@ -197,4 +197,15 @@ public enum Preference {
 		return fieldEditorData;
 	}
 
+	public static Preference findByConfigurationKey(final String configurationKey) {
+		if (configurationKey != null) {
+			for (final Preference preference : Preference.values()) {
+				if (preference.configurationKey.equals(configurationKey)) {
+					return preference;
+				}
+			}
+		}
+		return null;
+	}
+
 }

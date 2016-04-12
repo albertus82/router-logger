@@ -26,7 +26,6 @@ public class Preferences {
 	private final RouterLoggerGui gui;
 	private final Shell parentShell;
 	private boolean restartRequired = false;
-	private boolean languageChanged = false;
 
 	public Preferences(final RouterLoggerGui gui) {
 		this.gui = gui;
@@ -39,6 +38,10 @@ public class Preferences {
 	}
 
 	public int open() {
+		return open(null);
+	}
+
+	public int open(final Page selectedPage) {
 		final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 		final PreferenceManager preferenceManager = new PreferenceManager();
@@ -85,6 +88,10 @@ public class Preferences {
 
 		preferenceDialog.setPreferenceStore(preferenceStore);
 
+		if (selectedPage != null) {
+			preferenceDialog.setSelectedNode(selectedPage.getNodeId());
+		}
+
 		final Language language = Resources.getLanguage();
 
 		// Open configuration dialog...
@@ -117,8 +124,8 @@ public class Preferences {
 		}
 
 		// Check if must update texts...
-		if (!language.equals(Resources.getLanguage())) {
-			languageChanged = true;
+		if (gui != null && !language.equals(Resources.getLanguage())) {
+			gui.getMenuBar().updateTexts();
 		}
 
 		// Check if restart is required...
@@ -137,10 +144,6 @@ public class Preferences {
 
 	public boolean isRestartRequired() {
 		return restartRequired;
-	}
-
-	public final boolean isLanguageChanged() {
-		return languageChanged;
 	}
 
 }

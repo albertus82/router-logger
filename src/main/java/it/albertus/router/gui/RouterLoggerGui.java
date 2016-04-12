@@ -6,6 +6,7 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
+import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.Preferences;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -97,7 +98,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
-		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open() != Window.OK) {
+		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.findByConfigurationKey(((ConfigurationException)throwable).getKey()).getPage()) != Window.OK) {
 			shell.dispose();
 			display.dispose();
 			System.exit(1);
@@ -293,7 +294,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				@Override
 				public void run() {
 					final int buttonId = openErrorMessageBox(shell, throwable);
-					if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open() != Window.OK) {
+					if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException)throwable).getKey()).getPage()) != Window.OK) {
 						final Display display = shell.getDisplay();
 						shell.dispose();
 						display.dispose();
