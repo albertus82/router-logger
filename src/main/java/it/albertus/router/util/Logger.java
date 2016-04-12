@@ -12,7 +12,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -131,9 +130,15 @@ public class Logger {
 			try {
 				logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
 			}
-			catch (URISyntaxException use) {
-				/* Nella peggiore delle ipotesi, scrive nella directory del profilo dell'utente */
-				logFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			catch (final Exception e1) {
+				try {
+					/* In caso di problemi, scrive nella directory del profilo dell'utente */
+					logFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				}
+				catch (final Exception e2) {
+					/* Nella peggiore delle ipotesi, scrive nella directory corrente */
+					logFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				}
 			}
 		}
 		final BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));

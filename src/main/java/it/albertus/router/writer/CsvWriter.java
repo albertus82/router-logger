@@ -9,7 +9,6 @@ import it.albertus.util.StringUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,9 +49,15 @@ public class CsvWriter extends Writer {
 			try {
 				csvFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
-			catch (URISyntaxException use) {
-				/* Nella peggiore delle ipotesi, scrive nella directory del profilo dell'utente */
-				csvFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			catch (final Exception e1) {
+				try {
+					/* In caso di problemi, scrive nella directory del profilo dell'utente */
+					csvFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				}
+				catch (final Exception e2) {
+					/* Nella peggiore delle ipotesi, scrive nella directory corrente */
+					csvFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				}
 			}
 		}
 
