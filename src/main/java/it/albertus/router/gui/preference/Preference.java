@@ -9,6 +9,7 @@ import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
+import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
@@ -35,7 +36,6 @@ import java.util.Locale;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 
 public enum Preference {
@@ -57,7 +57,7 @@ public enum Preference {
 	LOGGER_HYSTERESIS_MS(Page.GENERAL, FormattedIntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_COUNT(Page.GENERAL, FormattedIntegerFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, FormattedIntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, DirectoryFieldEditor.class),
+	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, FormattedDirectoryFieldEditor.class, Logger.Defaults.DIRECTORY, false),
 
 	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, FormattedStringFieldEditor.class, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
 	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, FormattedStringFieldEditor.class),
@@ -87,7 +87,7 @@ public enum Preference {
 
 	WRITER_CLASS_NAME(Page.WRITER, WriterComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), WriterPreferencePage.getWriterComboOptions()),
 
-	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
+	CSV_DESTINATION_PATH(Page.CSV, FormattedDirectoryFieldEditor.class, CsvWriter.Defaults.DIRECTORY, false),
 	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), BasePreferencePage.getNewLineComboOptions()),
 	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR, false),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, false),

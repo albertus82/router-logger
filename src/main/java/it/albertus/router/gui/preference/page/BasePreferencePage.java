@@ -4,10 +4,10 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
+import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
-import it.albertus.router.gui.preference.field.LocalizedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
@@ -132,7 +132,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		final Class<? extends FieldEditor> clazz = preference.getFieldEditorClass();
 
 		if (StringFieldEditor.class.equals(clazz) || FormattedStringFieldEditor.class.equals(clazz)) {
-			final FormattedStringFieldEditor sfe = new FormattedStringFieldEditor(name, labelText, parent);
+			final StringFieldEditor sfe = new FormattedStringFieldEditor(name, labelText, parent);
 			if (preference.getFieldEditorData() instanceof Boolean) {
 				sfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
 			}
@@ -146,8 +146,12 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 				fe = new FormattedIntegerFieldEditor(name, labelText, parent);
 			}
 		}
-		else if (DirectoryFieldEditor.class.equals(clazz) || LocalizedDirectoryFieldEditor.class.equals(clazz)) {
-			fe = new LocalizedDirectoryFieldEditor(name, labelText, parent);
+		else if (DirectoryFieldEditor.class.equals(clazz) || FormattedDirectoryFieldEditor.class.equals(clazz)) {
+			final DirectoryFieldEditor dfe = new FormattedDirectoryFieldEditor(name, labelText, parent);
+			if (preference.getFieldEditorData() instanceof Boolean) {
+				dfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
+			}
+			fe = dfe;
 		}
 		else if (BooleanFieldEditor.class.equals(clazz)) {
 			fe = new BooleanFieldEditor(name, labelText, parent);
@@ -170,11 +174,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		else if (IterationsComboFieldEditor.class.equals(clazz)) {
 			fe = new IterationsComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
 		}
-		else if (ScaleFieldEditor.class.equals(clazz)) {
-			int[] data = (int[]) preference.getFieldEditorData();
-			fe = new ScaleFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
-		}
-		else if (ScaleFormattedIntegerFieldEditor.class.equals(clazz)) {
+		else if (ScaleFieldEditor.class.equals(clazz) || ScaleFormattedIntegerFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();
 			fe = new ScaleFormattedIntegerFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
 		}

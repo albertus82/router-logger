@@ -21,6 +21,7 @@ public class CsvWriter extends Writer {
 
 	public interface Defaults {
 		NewLine NEW_LINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
+		String DIRECTORY = getDefaultDirectory();
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
@@ -46,19 +47,7 @@ public class CsvWriter extends Writer {
 			csvFile = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 		}
 		else {
-			try {
-				csvFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
-			}
-			catch (final Exception e1) {
-				try {
-					/* In caso di problemi, scrive nella directory del profilo dell'utente */
-					csvFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
-				}
-				catch (final Exception e2) {
-					/* Nella peggiore delle ipotesi, scrive nella directory corrente */
-					csvFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
-				}
-			}
+			csvFile = getDefaultFile();
 		}
 
 		try {
@@ -148,6 +137,35 @@ public class CsvWriter extends Writer {
 				logger.log(ioe);
 			}
 		}
+	}
+
+	private static File getDefaultFile() {
+		File csvFile;
+		try {
+			csvFile = new File(new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+		}
+		catch (final Exception e1) {
+			try {
+				/* In caso di problemi, scrive nella directory del profilo dell'utente */
+				csvFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			}
+			catch (final Exception e2) {
+				/* Nella peggiore delle ipotesi, scrive nella directory corrente */
+				csvFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			}
+		}
+		return csvFile;
+	}
+
+	private static String getDefaultDirectory() {
+		String directory;
+		try {
+			directory = getDefaultFile().getParentFile().getCanonicalPath();
+		}
+		catch (Exception e) {
+			directory = getDefaultFile().getParentFile().getPath();
+		}
+		return directory;
 	}
 
 }

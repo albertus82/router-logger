@@ -34,6 +34,7 @@ public class Logger {
 
 	public interface Defaults {
 		boolean DEBUG = false;
+		String DIRECTORY = getDefaultDirectory();
 	}
 
 	// Lazy initialization...
@@ -127,19 +128,7 @@ public class Logger {
 			logFile = new File(logDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
 		}
 		else {
-			try {
-				logFile = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
-			}
-			catch (final Exception e1) {
-				try {
-					/* In caso di problemi, scrive nella directory del profilo dell'utente */
-					logFile = new File(System.getProperty("user.home") + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
-				}
-				catch (final Exception e2) {
-					/* Nella peggiore delle ipotesi, scrive nella directory corrente */
-					logFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
-				}
-			}
+			logFile = getDefaultFile();
 		}
 		final BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
 		final String base = new Date().toString() + " - ";
@@ -147,6 +136,35 @@ public class Logger {
 		logFileWriter.write(StringUtils.trimToEmpty(text));
 		logFileWriter.newLine();
 		logFileWriter.close();
+	}
+
+	private static File getDefaultFile() {
+		File logFile;
+		try {
+			logFile = new File(new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+		}
+		catch (final Exception e1) {
+			try {
+				/* In caso di problemi, scrive nella directory del profilo dell'utente */
+				logFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+			}
+			catch (final Exception e2) {
+				/* Nella peggiore delle ipotesi, scrive nella directory corrente */
+				logFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+			}
+		}
+		return logFile;
+	}
+
+	private static String getDefaultDirectory() {
+		String directory;
+		try {
+			directory = getDefaultFile().getParentFile().getCanonicalPath();
+		}
+		catch (Exception e) {
+			directory = getDefaultFile().getParentFile().getPath();
+		}
+		return directory;
 	}
 
 }
