@@ -24,19 +24,20 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		return valid;
 	}
 
-	protected void setValid(boolean valid) {
+	protected void setValid(final boolean valid) {
 		this.valid = valid;
 	}
 
 	@Override
 	protected void refreshValidState() {
 		setValid(checkState());
-		if (getErrorMessage() != null && !getErrorMessage().isEmpty()) {
+		final String errorMessage = getErrorMessage();
+		if (errorMessage != null && !errorMessage.isEmpty()) {
 			if (isValid()) {
 				clearErrorMessage();
 			}
 			else {
-				showErrorMessage(getErrorMessage());
+				showErrorMessage(errorMessage);
 			}
 		}
 	}
@@ -47,8 +48,8 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		return errorMessage;
 	}
 
-	public void setErrorMessage(final String errorMessage) {
-		this.errorMessage = errorMessage;
+	public void setErrorMessage(final String message) {
+		this.errorMessage = message;
 	}
 
 }
