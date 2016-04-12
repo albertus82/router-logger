@@ -117,7 +117,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		if (throwable instanceof ConfigurationException) {
 			final ConfigurationException ce = (ConfigurationException) throwable;
 			style = SWT.ICON_WARNING | SWT.YES | SWT.NO;
-			message = Resources.get("err.invalid.cfg", ce.getKey()) + ' ' + Resources.get("lbl.preferences.edit");
+			String propertyName = ce.getKey();
+			try {
+				propertyName = Resources.get(Preference.findByConfigurationKey(ce.getKey()).getResourceKey());
+			}
+			catch (Exception e) {}
+			message = Resources.get("err.invalid.cfg", propertyName) + ' ' + Resources.get("lbl.preferences.edit");
 		}
 		else {
 			style = SWT.ICON_ERROR;
