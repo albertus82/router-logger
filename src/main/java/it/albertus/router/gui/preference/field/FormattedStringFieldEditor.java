@@ -10,14 +10,17 @@ public class FormattedStringFieldEditor extends StringFieldEditor {
 
 	public FormattedStringFieldEditor(String name, String labelText, Composite parent) {
 		super(name, labelText, parent);
+		setErrorMessage(Resources.get("err.preferences.string"));
 	}
 
 	public FormattedStringFieldEditor(String name, String labelText, int width, Composite parent) {
 		super(name, labelText, width, parent);
+		setErrorMessage(Resources.get("err.preferences.string"));
 	}
 
 	public FormattedStringFieldEditor(String name, String labelText, int width, int strategy, Composite parent) {
 		super(name, labelText, width, strategy, parent);
+		setErrorMessage(Resources.get("err.preferences.string"));
 	}
 
 	@Override

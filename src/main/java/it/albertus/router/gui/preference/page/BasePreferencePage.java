@@ -95,8 +95,8 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 		if (StringFieldEditor.class.equals(clazz) || FormattedStringFieldEditor.class.equals(clazz)) {
 			final FormattedStringFieldEditor sfe = new FormattedStringFieldEditor(name, labelText, parent);
-			if (preference.getFieldEditorData() instanceof Integer) {
-				sfe.setTextLimit((Integer) preference.getFieldEditorData());
+			if (preference.getFieldEditorData() instanceof Boolean) {
+				sfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
 			}
 			fe = sfe;
 		}

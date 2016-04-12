@@ -43,7 +43,7 @@ public enum Preference {
 	READER_CLASS_NAME(Page.READER, ReaderComboFieldEditor.class, ReaderPreferencePage.getReaderComboOptions()),
 	ROUTER_USERNAME(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_PASSWORD(Page.READER, FormattedStringFieldEditor.class),
-	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
+	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS, false),
 	ROUTER_PORT(Page.READER, FormattedIntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
 
 	SOCKET_TIMEOUT_MS(Page.READER, FormattedIntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
@@ -74,12 +74,12 @@ public enum Preference {
 	GUI_START_MINIMIZED(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),
 	GUI_TRAY_TOOLTIP(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP)),
 	GUI_IMPORTANT_KEYS(Page.APPEARANCE, FormattedStringFieldEditor.class),
-	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR),
+	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR, false),
 
 	CONSOLE_ANIMATION(Page.CONSOLE, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConsole.Defaults.CONSOLE_ANIMATION)),
 	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
 	CONSOLE_SHOW_KEYS(Page.CONSOLE, FormattedStringFieldEditor.class),
-	CONSOLE_SHOW_KEYS_SEPARATOR(Page.CONSOLE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR),
+	CONSOLE_SHOW_KEYS_SEPARATOR(Page.CONSOLE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR, false),
 	CONSOLE_DEBUG(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(Logger.Defaults.DEBUG)),
 
 	GUI_CONFIRM_CLOSE(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
@@ -88,24 +88,24 @@ public enum Preference {
 
 	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
 	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), BasePreferencePage.getNewLineComboOptions()),
-	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
-	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
+	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR, false),
+	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, false),
 
 	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, DatabaseComboFieldEditor.class, DatabasePreferencePage.getDatabaseComboOptions()),
 	DATABASE_URL(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_USERNAME(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_PASSWORD(Page.DATABASE, FormattedStringFieldEditor.class),
-	DATABASE_TABLE_NAME(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.TABLE_NAME),
+	DATABASE_TABLE_NAME(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.TABLE_NAME, false),
 	DATABASE_CONNECTION_VALIDATION_TIMEOUT_MS(Page.DATABASE, FormattedIntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS), 5),
-	DATABASE_TIMESTAMP_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.TIMESTAMP_COLUMN_TYPE),
-	DATABASE_RESPONSE_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE),
-	DATABASE_INFO_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.INFO_COLUMN_TYPE),
-	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX),
+	DATABASE_TIMESTAMP_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.TIMESTAMP_COLUMN_TYPE, false),
+	DATABASE_RESPONSE_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE, false),
+	DATABASE_INFO_COLUMN_TYPE(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.INFO_COLUMN_TYPE, false),
+	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, FormattedStringFieldEditor.class, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX, false),
 	DATABASE_COLUMN_NAME_MAX_LENGTH(Page.DATABASE, FormattedIntegerFieldEditor.class, Integer.toString(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH), 2),
 
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, FormattedStringFieldEditor.class),
-	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR),
+	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR, false),
 
 	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, ThresholdsFieldEditor.class);
 
