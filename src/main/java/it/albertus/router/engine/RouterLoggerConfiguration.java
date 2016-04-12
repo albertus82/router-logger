@@ -88,7 +88,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			load();
 		}
 		catch (IOException ioe) {
-			throw new ConfigurationException(ioe);
+			throw new RuntimeException(ioe);
 		}
 		init();
 	}
@@ -245,7 +245,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getLong(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -255,7 +255,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getLong(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -265,7 +265,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getInt(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -275,7 +275,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getInt(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -285,7 +285,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getShort(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -295,7 +295,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getShort(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -305,7 +305,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getByte(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -315,7 +315,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getByte(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -325,7 +325,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getFloat(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -335,7 +335,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getFloat(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -345,7 +345,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getDouble(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -355,7 +355,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getDouble(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -365,7 +365,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getChar(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
@@ -375,7 +375,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			return super.getChar(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 

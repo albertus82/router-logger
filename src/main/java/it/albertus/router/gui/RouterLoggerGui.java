@@ -107,17 +107,21 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	private static int openErrorMessageBox(final Shell shell, final Throwable throwable) {
-		final MessageBox messageBox;
+		final int style;
+		final String message;
 		if (throwable instanceof ConfigurationException) {
-			messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
+			final ConfigurationException ce = (ConfigurationException) throwable;
+			style = SWT.ICON_WARNING | SWT.YES | SWT.NO;
+			message = Resources.get("err.invalid.cfg", ce.getKey()) + ' ' + Resources.get("lbl.preferences.edit");
 		}
 		else {
-			messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+			style = SWT.ICON_ERROR;
+			message = ExceptionUtils.getUIMessage(throwable);
 		}
+		final MessageBox messageBox = new MessageBox(shell, style);
 		messageBox.setText(Resources.get("lbl.window.title"));
-		messageBox.setMessage(ExceptionUtils.getUIMessage(throwable) + ' ' + Resources.get("lbl.preferences.edit"));
-		final int buttonId = messageBox.open();
-		return buttonId;
+		messageBox.setMessage(message);
+		return messageBox.open();
 	}
 
 	private RouterLoggerGui(final Display display) {

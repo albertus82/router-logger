@@ -127,7 +127,7 @@ public class CsvWriter extends Writer {
 				return newLine.toString();
 			}
 			else {
-				throw new ConfigurationException(Resources.get("err.invalid.cfg", cfgKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+				throw new ConfigurationException(Resources.get("err.invalid.cfg", cfgKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), cfgKey);
 			}
 		}
 	}

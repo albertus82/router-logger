@@ -69,7 +69,7 @@ public abstract class RouterLoggerEngine {
 		try {
 			Class.forName(readerClassName); // Default package.
 		}
-		catch (ClassNotFoundException e) {
+		catch (final Throwable throwable) {
 			readerClassName = Reader.class.getPackage().getName() + '.' + readerClassName;
 		}
 
@@ -77,11 +77,11 @@ public abstract class RouterLoggerEngine {
 		try {
 			reader = (Reader) Class.forName(readerClassName).newInstance();
 		}
-		catch (RuntimeException re) {
+		catch (final RuntimeException re) {
 			throw re;
 		}
-		catch (Throwable t) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), t);
+		catch (final Throwable throwable) {
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
 		}
 		reader.init(out);
 		return reader;
@@ -94,7 +94,7 @@ public abstract class RouterLoggerEngine {
 		try {
 			Class.forName(writerClassName); // Default package.
 		}
-		catch (ClassNotFoundException e) {
+		catch (final Throwable throwable) {
 			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
 		}
 
@@ -102,11 +102,11 @@ public abstract class RouterLoggerEngine {
 		try {
 			writer = (Writer) Class.forName(writerClassName).newInstance();
 		}
-		catch (RuntimeException re) {
+		catch (final RuntimeException re) {
 			throw re;
 		}
-		catch (Throwable t) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), t);
+		catch (final Throwable throwable) {
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
 		}
 		writer.init(out);
 		return writer;
@@ -344,10 +344,10 @@ public abstract class RouterLoggerEngine {
 		logger.init(out);
 
 		// Inizializzazione del Reader...
-		reader = initReader();
+		setReader(initReader());
 
 		// Inizializzazione del Writer...
-		writer = initWriter();
+		setWriter(initWriter());
 	}
 
 	protected abstract Console getConsole();

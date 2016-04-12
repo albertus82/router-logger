@@ -36,14 +36,23 @@ public class DatabaseWriter extends Writer {
 	private final int connectionValidationTimeoutInMillis;
 
 	public DatabaseWriter() {
-		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME) || !configuration.contains(CFG_KEY_DB_URL) || !configuration.contains(CFG_KEY_DB_USERNAME) || !configuration.contains(CFG_KEY_DB_PASSWORD)) {
-			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME)) {
+			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_DRIVER_CLASS_NAME);
+		}
+		if (!configuration.contains(CFG_KEY_DB_URL)) {
+			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_URL);
+		}
+		if (!configuration.contains(CFG_KEY_DB_USERNAME)) {
+			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_USERNAME);
+		}
+		if (!configuration.contains(CFG_KEY_DB_PASSWORD)) {
+			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_PASSWORD);
 		}
 		try {
 			Class.forName(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME));
 		}
 		catch (ClassNotFoundException e) {
-			throw new ConfigurationException(Resources.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e);
+			throw new ConfigurationException(Resources.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e, CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
 		connectionValidationTimeoutInMillis = configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS);
 	}

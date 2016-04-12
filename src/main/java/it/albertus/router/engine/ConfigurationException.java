@@ -2,18 +2,27 @@ package it.albertus.router.engine;
 
 public class ConfigurationException extends IllegalArgumentException {
 
-	private static final long serialVersionUID = -7927744373178072220L;
+	private static final long serialVersionUID = -1878141960506568155L;
 
-	public ConfigurationException(String message, Throwable cause) {
+	private final String key;
+
+	public ConfigurationException(final String message, final Throwable cause, final String key) {
 		super(message, cause);
+		this.key = key;
 	}
 
-	public ConfigurationException(String s) {
-		super(s);
+	public ConfigurationException(final String message, final String key) {
+		super(message);
+		this.key = key;
 	}
 
-	public ConfigurationException(Throwable cause) {
+	public ConfigurationException(final Throwable cause, final String key) {
 		super(cause);
+		this.key = key;
+	}
+
+	public String getKey() {
+		return key;
 	}
 
 }
