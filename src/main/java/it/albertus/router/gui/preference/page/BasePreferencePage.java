@@ -1,13 +1,15 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.router.gui.preference.Preference;
-import it.albertus.router.gui.preference.field.ClassComboFieldEditor;
+import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.LocalizedDirectoryFieldEditor;
+import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 
@@ -118,8 +120,14 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		else if (EditableComboFieldEditor.class.equals(clazz)) {
 			fe = new EditableComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
 		}
-		else if (ClassComboFieldEditor.class.equals(clazz)) {
-			fe = new ClassComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+		else if (ReaderComboFieldEditor.class.equals(clazz)) {
+			fe = new ReaderComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+		}
+		else if (WriterComboFieldEditor.class.equals(clazz)) {
+			fe = new WriterComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+		}
+		else if (DatabaseComboFieldEditor.class.equals(clazz)) {
+			fe = new DatabaseComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
 		}
 		else if (ScaleFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();

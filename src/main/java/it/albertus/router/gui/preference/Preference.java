@@ -8,12 +8,13 @@ import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
-import it.albertus.router.gui.preference.field.ClassComboFieldEditor;
-import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
+import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
+import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.gui.preference.page.BasePreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
@@ -39,7 +40,7 @@ import org.eclipse.jface.preference.FieldEditor;
 public enum Preference {
 	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), GeneralPreferencePage.getLanguageComboOptions()),
 
-	READER_CLASS_NAME(Page.READER, ClassComboFieldEditor.class, ReaderPreferencePage.getReaderComboOptions()),
+	READER_CLASS_NAME(Page.READER, ReaderComboFieldEditor.class, ReaderPreferencePage.getReaderComboOptions()),
 	ROUTER_USERNAME(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_PASSWORD(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS),
@@ -83,14 +84,14 @@ public enum Preference {
 
 	GUI_CONFIRM_CLOSE(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
 
-	WRITER_CLASS_NAME(Page.WRITER, ClassComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), WriterPreferencePage.getWriterComboOptions()),
+	WRITER_CLASS_NAME(Page.WRITER, WriterComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), WriterPreferencePage.getWriterComboOptions()),
 
 	CSV_DESTINATION_PATH(Page.CSV, DirectoryFieldEditor.class),
 	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), BasePreferencePage.getNewLineComboOptions()),
 	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT),
 
-	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, EditableComboFieldEditor.class, DatabasePreferencePage.getDatabaseComboOptions()),
+	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, DatabaseComboFieldEditor.class, DatabasePreferencePage.getDatabaseComboOptions()),
 	DATABASE_URL(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_USERNAME(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_PASSWORD(Page.DATABASE, FormattedStringFieldEditor.class),

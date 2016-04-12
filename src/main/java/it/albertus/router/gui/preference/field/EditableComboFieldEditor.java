@@ -176,6 +176,10 @@ public class EditableComboFieldEditor extends FieldEditor {
 		return value;
 	}
 
+	protected void setValue(final String value) {
+		this.value = value;
+	}
+
 	protected String[][] getEntryNamesAndValues() {
 		return entryNamesAndValues;
 	}

@@ -64,14 +64,7 @@ public abstract class RouterLoggerEngine {
 
 	protected Reader initReader() {
 		final String configurationKey = "reader.class.name";
-		String readerClassName = StringUtils.trimToEmpty(configuration.getString(configurationKey));
-
-		try {
-			Class.forName(readerClassName); // Default package.
-		}
-		catch (final Throwable throwable) {
-			readerClassName = Reader.class.getPackage().getName() + '.' + readerClassName;
-		}
+		final String readerClassName = getReaderClassName(StringUtils.trimToEmpty(configuration.getString(configurationKey)));
 
 		final Reader reader;
 		try {
@@ -89,14 +82,7 @@ public abstract class RouterLoggerEngine {
 
 	protected Writer initWriter() {
 		final String configurationKey = "writer.class.name";
-		String writerClassName = configuration.getString(configurationKey, Defaults.WRITER_CLASS.getName()).trim();
-
-		try {
-			Class.forName(writerClassName); // Default package.
-		}
-		catch (final Throwable throwable) {
-			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
-		}
+		String writerClassName = getWriterClassName(configuration.getString(configurationKey, RouterLoggerEngine.Defaults.WRITER_CLASS.getName()).trim());
 
 		final Writer writer;
 		try {
@@ -110,6 +96,26 @@ public abstract class RouterLoggerEngine {
 		}
 		writer.init(out);
 		return writer;
+	}
+
+	public static String getReaderClassName(String readerClassName) {
+		try {
+			Class.forName(readerClassName); // Default package.
+		}
+		catch (final Throwable throwable) {
+			readerClassName = Reader.class.getPackage().getName() + '.' + readerClassName;
+		}
+		return readerClassName;
+	}
+
+	public static String getWriterClassName(String writerClassName) {
+		try {
+			Class.forName(writerClassName); // Default package.
+		}
+		catch (final Throwable throwable) {
+			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
+		}
+		return writerClassName;
 	}
 
 	/** Stampa il messaggio di benvenuto e registra un listener per CTRL+C. */
