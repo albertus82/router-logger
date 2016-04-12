@@ -52,16 +52,29 @@ public class CsvWriter extends Writer {
 
 		try {
 			// Scrittura header CSV (solo se il file non esiste gia')...
+			String path;
+			try {
+				path = csvFile.getCanonicalPath();
+			}
+			catch (Exception e1) {
+				try {
+					path = csvFile.getAbsolutePath();
+				}
+				catch (Exception e2) {
+					path = csvFile.getPath();
+				}
+			}
+
 			if (!csvFile.exists()) {
 				closeOutputFile();
 				logFileWriter = new FileWriter(csvFile); // Crea nuovo file.
-				out.println(Resources.get("msg.logging.to.file", csvFile.getAbsolutePath()), true);
+				out.println(Resources.get("msg.logging.to.file", path), true);
 				logFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (logFileWriter == null) {
 				logFileWriter = new FileWriter(csvFile, true); // Apre file esistente.
-				out.println(Resources.get("msg.logging.to.file", csvFile.getAbsolutePath()), true);
+				out.println(Resources.get("msg.logging.to.file", path), true);
 			}
 			logFileWriter.append(buildCsvRow(info));
 			logFileWriter.flush();
@@ -162,8 +175,13 @@ public class CsvWriter extends Writer {
 		try {
 			directory = getDefaultFile().getParentFile().getCanonicalPath();
 		}
-		catch (Exception e) {
-			directory = getDefaultFile().getParentFile().getPath();
+		catch (Exception e1) {
+			try {
+				directory = getDefaultFile().getParentFile().getAbsolutePath();
+			}
+			catch (Exception e2) {
+				directory = getDefaultFile().getParentFile().getPath();
+			}
 		}
 		return directory;
 	}

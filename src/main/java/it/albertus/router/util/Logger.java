@@ -161,8 +161,13 @@ public class Logger {
 		try {
 			directory = getDefaultFile().getParentFile().getCanonicalPath();
 		}
-		catch (Exception e) {
-			directory = getDefaultFile().getParentFile().getPath();
+		catch (Exception e1) {
+			try {
+				directory = getDefaultFile().getParentFile().getAbsolutePath();
+			}
+			catch (Exception e2) {
+				directory = getDefaultFile().getParentFile().getPath();
+			}
 		}
 		return directory;
 	}
