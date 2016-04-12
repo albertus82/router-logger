@@ -65,7 +65,7 @@ public class CsvWriter extends Writer {
 				}
 			}
 
-			if (!csvFile.exists()) {
+			if (!csvFile.exists()) { // TODO
 				closeOutputFile();
 				logFileWriter = new FileWriter(csvFile); // Crea nuovo file.
 				out.println(Resources.get("msg.logging.to.file", path), true);
