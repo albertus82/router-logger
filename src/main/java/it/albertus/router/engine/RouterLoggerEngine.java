@@ -270,7 +270,7 @@ public abstract class RouterLoggerEngine {
 		out.println();
 	}
 
-	private void innerLoop() throws IOException, InterruptedException {
+	protected void innerLoop() throws IOException, InterruptedException {
 		long hysteresis = 0;
 
 		// Iterazione...

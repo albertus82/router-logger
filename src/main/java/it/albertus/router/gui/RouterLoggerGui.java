@@ -13,6 +13,7 @@ import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ExceptionUtils;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -151,6 +152,14 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	@Override
+	protected void innerLoop() throws IOException, InterruptedException {
+		if (dataTable != null && dataTable.getTable() != null && !dataTable.getTable().isDisposed()) {
+			setIteration(dataTable.getIteration() + 1);
+		}
+		super.innerLoop();
+	}
+
+	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
 		/* Aggiunta riga nella tabella a video */
 		dataTable.addRow(getIteration(), info, thresholdsReached);
@@ -223,9 +232,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	public void connect() {
 		if (canConnect()) {
 			exit = false;
-			if (dataTable != null && dataTable.getTable() != null && !dataTable.getTable().isDisposed()) {
-				setIteration(dataTable.getIteration() + 1);
-			}
 			updateThread = new Thread("updateThread") {
 				@Override
 				public void run() {
