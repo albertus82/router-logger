@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
@@ -19,18 +20,29 @@ public final class TextFormatter {
 	private static final FontRegistry fontRegistry = JFaceResources.getFontRegistry();
 
 	public static void updateFontStyle(final Text text, final String defaultValue) {
-		if (text != null && !text.isDisposed() && text.getFont() != null && !text.getFont().isDisposed() && text.getFont().getFontData() != null && text.getFont().getFontData().length != 0) {
+		if (checkControl(text)) {
 			if (!defaultValue.equals(text.getText())) {
-				if (text.getFont().getFontData()[0].getStyle() != SWT.BOLD) {
-					setBoldFontStyle(text);
-				}
+				setBoldFontStyle(text);
 			}
 			else {
-				if (text.getFont().getFontData()[0].getStyle() != SWT.NORMAL) {
-					setNormalFontStyle(text);
-				}
+				setNormalFontStyle(text);
 			}
 		}
+	}
+
+	public static void updateFontStyle(final Combo combo, final String defaultValue, final String actualValue) {
+		if (checkControl(combo)) {
+			if (!defaultValue.equals(actualValue)) {
+				setBoldFontStyle(combo);
+			}
+			else {
+				setNormalFontStyle(combo);
+			}
+		}
+	}
+
+	private static boolean checkControl(final Control control) {
+		return control != null && !control.isDisposed() && control.getFont() != null && !control.getFont().isDisposed() && control.getFont().getFontData() != null && control.getFont().getFontData().length != 0;
 	}
 
 	/** Calls {@code updateFontStyle(String.valueOf(defaultValue))}. */
@@ -39,21 +51,25 @@ public final class TextFormatter {
 	}
 
 	public static void setNormalFontStyle(final Control control) {
-		final FontData fontData = control.getFont().getFontData()[0];
-		if (!fontRegistry.hasValueFor("defaultProperty")) {
-			fontData.setStyle(SWT.NORMAL);
-			fontRegistry.put("defaultProperty", new FontData[] { fontData });
+		if (control.getFont().getFontData()[0].getStyle() != SWT.NORMAL) {
+			final FontData fontData = control.getFont().getFontData()[0];
+			if (!fontRegistry.hasValueFor("defaultProperty")) {
+				fontData.setStyle(SWT.NORMAL);
+				fontRegistry.put("defaultProperty", new FontData[] { fontData });
+			}
+			control.setFont(fontRegistry.get("defaultProperty"));
 		}
-		control.setFont(fontRegistry.get("defaultProperty"));
 	}
 
 	public static void setBoldFontStyle(final Control control) {
-		final FontData fontData = control.getFont().getFontData()[0];
-		if (!fontRegistry.hasValueFor("customProperty")) {
-			fontData.setStyle(SWT.BOLD);
-			fontRegistry.put("customProperty", new FontData[] { fontData });
+		if (control.getFont().getFontData()[0].getStyle() != SWT.BOLD) {
+			final FontData fontData = control.getFont().getFontData()[0];
+			if (!fontRegistry.hasValueFor("customProperty")) {
+				fontData.setStyle(SWT.BOLD);
+				fontRegistry.put("customProperty", new FontData[] { fontData });
+			}
+			control.setFont(fontRegistry.get("customProperty"));
 		}
-		control.setFont(fontRegistry.get("customProperty"));
 	}
 
 	public static int getWidthHint(final Control control, final int size, final int weight) {

@@ -6,6 +6,7 @@ import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
+import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
 import it.albertus.router.gui.preference.field.LocalizedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
@@ -165,6 +166,9 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		}
 		else if (DatabaseComboFieldEditor.class.equals(clazz)) {
 			fe = new DatabaseComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+		}
+		else if (IterationsComboFieldEditor.class.equals(clazz)) {
+			fe = new IterationsComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
 		}
 		else if (ScaleFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();
