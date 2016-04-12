@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
@@ -11,7 +12,11 @@ import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
 import it.albertus.util.NewLine;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -20,6 +25,7 @@ import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
@@ -34,6 +40,37 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	public BasePreferencePage() {
 		super(GRID);
+	}
+
+	@Override
+	protected void performApply() {
+		super.performApply();
+
+		// Save configuration file...
+		final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+
+		OutputStream configurationOutputStream = null;
+		try {
+			configurationOutputStream = configuration.openConfigurationOutputStream();
+			((PreferenceStore) getPreferenceStore()).save(configurationOutputStream, null);
+		}
+		catch (IOException ioe) {
+			Logger.getInstance().log(ioe);
+		}
+		finally {
+			try {
+				configurationOutputStream.close();
+			}
+			catch (final Exception exception) {}
+		}
+
+		// Reload RouterLogger configuration...
+		try {
+			configuration.reload();
+		}
+		catch (final Exception exception) {
+			Logger.getInstance().log(exception);
+		}
 	}
 
 	@Override

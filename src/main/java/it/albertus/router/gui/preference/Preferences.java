@@ -1,21 +1,16 @@
 package it.albertus.router.gui.preference;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.page.Page;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.resources.Resources.Language;
 import it.albertus.router.util.Logger;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -31,6 +26,7 @@ public class Preferences {
 	private final RouterLoggerGui gui;
 	private final Shell parentShell;
 	private boolean restartRequired = false;
+	private boolean languageChanged = false;
 
 	public Preferences(final RouterLoggerGui gui) {
 		this.gui = gui;
@@ -43,6 +39,8 @@ public class Preferences {
 	}
 
 	public int open() {
+		final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+
 		final PreferenceManager preferenceManager = new PreferenceManager();
 
 		// Pages creation...
@@ -70,7 +68,7 @@ public class Preferences {
 		// Load configuration file...
 		InputStream configurationInputStream = null;
 		try {
-			configurationInputStream = openConfigurationInputStream();
+			configurationInputStream = configuration.openConfigurationInputStream();
 			preferenceStore.load(configurationInputStream);
 		}
 		catch (IOException ioe) {
@@ -87,13 +85,16 @@ public class Preferences {
 
 		preferenceDialog.setPreferenceStore(preferenceStore);
 
+		final Language language = Resources.getLanguage();
+
 		// Open configuration dialog...
 		final int returnCode = preferenceDialog.open();
+
 		if (returnCode == Window.OK) {
 			// Save configuration file...
 			OutputStream configurationOutputStream = null;
 			try {
-				configurationOutputStream = openConfigurationOutputStream();
+				configurationOutputStream = configuration.openConfigurationOutputStream();
 				preferenceStore.save(configurationOutputStream, null);
 			}
 			catch (IOException ioe) {
@@ -103,61 +104,31 @@ public class Preferences {
 				try {
 					configurationOutputStream.close();
 				}
-				catch (Exception e) {}
+				catch (final Exception exception) {}
 			}
 
 			// Reload RouterLogger configuration...
 			try {
-				final Language language = Resources.getLanguage();
-				final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 				configuration.reload();
-
-				// Update language...
-				if (gui != null && !language.equals(Resources.getLanguage())) {
-					gui.getMenuBar().updateTexts();
-				}
-
-				// Check if restart is required...
-				if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getSimpleName().equals(configuration.getString(Preference.READER_CLASS_NAME.getConfigurationKey())) || gui.getWriter() == null || !gui.getWriter().getClass().getSimpleName().equals(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey(), Preference.WRITER_CLASS_NAME.getDefaultValue())))) {
-					restartRequired = true;	
-				}
 			}
 			catch (final Exception exception) {
 				Logger.getInstance().log(exception);
 			}
 		}
+
+		// Check if must update texts...
+		if (!language.equals(Resources.getLanguage())) {
+			languageChanged = true;
+		}
+
+		// Check if restart is required...
+		final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(Preference.READER_CLASS_NAME.getConfigurationKey()));
+		final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey(), Preference.WRITER_CLASS_NAME.getDefaultValue()));
+		if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
+			restartRequired = true;
+		}
+
 		return returnCode;
-	}
-
-	private InputStream openConfigurationInputStream() throws IOException {
-		final InputStream inputStream;
-		File config = null;
-		try {
-			config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + RouterLoggerConfiguration.FILE_NAME);
-		}
-		catch (URISyntaxException use) {
-			throw new IOException(use);
-		}
-		if (config != null && config.exists()) {
-			inputStream = new BufferedInputStream(new FileInputStream(config));
-		}
-		else {
-			inputStream = getClass().getResourceAsStream('/' + RouterLoggerConfiguration.FILE_NAME);
-		}
-		return inputStream;
-	}
-
-	private OutputStream openConfigurationOutputStream() throws IOException {
-		final OutputStream outputStream;
-		File config = null;
-		try {
-			config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + RouterLoggerConfiguration.FILE_NAME);
-		}
-		catch (URISyntaxException use) {
-			throw new IOException(use);
-		}
-		outputStream = new BufferedOutputStream(new FileOutputStream(config));
-		return outputStream;
 	}
 
 	public Shell getParentShell() {
@@ -166,6 +137,10 @@ public class Preferences {
 
 	public boolean isRestartRequired() {
 		return restartRequired;
+	}
+
+	public final boolean isLanguageChanged() {
+		return languageChanged;
 	}
 
 }
