@@ -6,6 +6,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,13 +30,14 @@ public class CsvWriter extends Writer {
 	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 
-	private FileWriter logFileWriter = null;
+	private BufferedWriter csvFileWriter = null;
+	private File csvFile = null;
 
 	@Override
 	public synchronized void saveInfo(final RouterData info) {
 		// Selezione del percorso e nome del file di destinazione...
 		final String csvDestinationDir = configuration.getString("csv.destination.path");
-		File csvFile;
+		File file;
 		if (StringUtils.isNotBlank(csvDestinationDir)) {
 			File logDestDir = new File(csvDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
@@ -44,42 +46,48 @@ public class CsvWriter extends Writer {
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
 			}
-			csvFile = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			file = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 		}
 		else {
-			csvFile = getDefaultFile();
+			file = getDefaultFile();
 		}
 
 		try {
-			// Scrittura header CSV (solo se il file non esiste gia')...
 			String path;
 			try {
-				path = csvFile.getCanonicalPath();
+				path = file.getCanonicalPath();
 			}
 			catch (Exception e1) {
 				try {
-					path = csvFile.getAbsolutePath();
+					path = file.getAbsolutePath();
 				}
 				catch (Exception e2) {
-					path = csvFile.getPath();
+					path = file.getPath();
 				}
 			}
 
-			if (!csvFile.exists()) { // TODO
+			if (!file.equals(this.csvFile)) {
 				closeOutputFile();
-				logFileWriter = new FileWriter(csvFile); // Crea nuovo file.
-				out.println(Resources.get("msg.logging.to.file", path), true);
-				logFileWriter.append(buildCsvHeader(info));
+				this.csvFile = file;
 			}
 
-			if (logFileWriter == null) {
-				logFileWriter = new FileWriter(csvFile, true); // Apre file esistente.
+			if (!file.exists()) {
+				// Create new file...
+				closeOutputFile();
+				csvFileWriter = new BufferedWriter(new FileWriter(file));
+				out.println(Resources.get("msg.logging.to.file", path), true);
+				csvFileWriter.append(buildCsvHeader(info));
+			}
+
+			if (csvFileWriter == null) {
+				// Open existing file...
+				csvFileWriter = new BufferedWriter(new FileWriter(file, true));
 				out.println(Resources.get("msg.logging.to.file", path), true);
 			}
-			logFileWriter.append(buildCsvRow(info));
-			logFileWriter.flush();
+			csvFileWriter.append(buildCsvRow(info));
+			csvFileWriter.flush();
 		}
-		catch (IOException ioe) {
+		catch (final IOException ioe) {
 			logger.log(ioe);
 			closeOutputFile();
 		}
@@ -94,7 +102,7 @@ public class CsvWriter extends Writer {
 		final String fieldSeparator = getFieldSeparator();
 
 		final StringBuilder header = new StringBuilder(Resources.get("lbl.column.timestamp.text")).append(fieldSeparator);
-		header.append(Resources.get("lbl.column.response.time.text")).append(fieldSeparator); // Tempo di risposta.
+		header.append(Resources.get("lbl.column.response.time.text")).append(fieldSeparator); // Response time
 		for (String field : info.getData().keySet()) {
 			header.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
@@ -106,7 +114,7 @@ public class CsvWriter extends Writer {
 		final String fieldSeparator = getFieldSeparator();
 
 		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(info.getTimestamp())).append(fieldSeparator);
-		row.append(info.getResponseTime()).append(fieldSeparator); // Tempo di risposta.
+		row.append(info.getResponseTime()).append(fieldSeparator); // Response time
 		for (String field : info.getData().values()) {
 			row.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
 		}
@@ -140,11 +148,11 @@ public class CsvWriter extends Writer {
 	}
 
 	private void closeOutputFile() {
-		if (logFileWriter != null) {
+		if (csvFileWriter != null) {
 			try {
 				out.println(Resources.get("msg.closing.output.file"), true);
-				logFileWriter.close();
-				logFileWriter = null;
+				csvFileWriter.close();
+				csvFileWriter = null;
 			}
 			catch (IOException ioe) {
 				logger.log(ioe);
@@ -159,11 +167,11 @@ public class CsvWriter extends Writer {
 		}
 		catch (final Exception e1) {
 			try {
-				/* In caso di problemi, scrive nella directory del profilo dell'utente */
+				// In caso di problemi, scrive nella directory del profilo dell'utente
 				csvFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
 			catch (final Exception e2) {
-				/* Nella peggiore delle ipotesi, scrive nella directory corrente */
+				// Nella peggiore delle ipotesi, scrive nella directory corrente
 				csvFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
 			}
 		}
