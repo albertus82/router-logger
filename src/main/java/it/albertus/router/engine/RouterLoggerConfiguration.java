@@ -3,6 +3,7 @@ package it.albertus.router.engine;
 import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
+import it.albertus.util.ConfigurationException;
 import it.albertus.util.StringUtils;
 
 import java.util.HashSet;

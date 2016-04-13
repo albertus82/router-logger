@@ -1,8 +1,8 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.engine.ConfigurationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
+import it.albertus.util.ConfigurationException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

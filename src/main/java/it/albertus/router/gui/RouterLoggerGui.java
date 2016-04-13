@@ -1,6 +1,5 @@
 package it.albertus.router.gui;
 
-import it.albertus.router.engine.ConfigurationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
@@ -11,6 +10,7 @@ import it.albertus.router.gui.preference.Preferences;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.util.ConfigurationException;
 import it.albertus.util.ExceptionUtils;
 
 import java.io.IOException;

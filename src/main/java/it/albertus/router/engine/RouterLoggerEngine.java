@@ -5,6 +5,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
+import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
 import it.albertus.util.Version;

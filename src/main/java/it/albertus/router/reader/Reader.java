@@ -1,10 +1,10 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.ConfigurationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 
