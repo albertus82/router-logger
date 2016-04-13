@@ -38,6 +38,7 @@ public abstract class RouterLoggerEngine {
 	private Reader reader;
 	private Writer writer;
 
+	private volatile boolean interruptible = false;
 	protected volatile boolean exit = false;
 	protected Thread shutdownHook;
 
@@ -153,6 +154,7 @@ public abstract class RouterLoggerEngine {
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
 				out.println(Resources.get("msg.wait.reconnection", index, retries, retryIntervalInMillis), true);
 				try {
+					interruptible = true;
 					Thread.sleep(retryIntervalInMillis);
 				}
 				catch (InterruptedException ie) {
@@ -160,12 +162,16 @@ public abstract class RouterLoggerEngine {
 					exit = true;
 					continue;
 				}
+				finally {
+					interruptible = false;
+				}
 			}
 
 			/* Avvio della procedura... */
 			final boolean connected;
 			try {
 				setStatus(RouterLoggerStatus.CONNECTING);
+				interruptible = true;
 				connected = reader.connect();
 			}
 			catch (RuntimeException re) {
@@ -175,16 +181,23 @@ public abstract class RouterLoggerEngine {
 				setStatus(RouterLoggerStatus.ERROR);
 				continue;
 			}
+			finally {
+				interruptible = false;
+			}
 
 			// Log in...
 			if (connected && !exit) {
 				setStatus(RouterLoggerStatus.AUTHENTICATING);
 				boolean loggedIn = false;
 				try {
+					interruptible = true;
 					loggedIn = reader.login(configuration.getString("router.username"), configuration.contains("router.password") ? configuration.getString("router.password").toCharArray() : null); // TODO
 				}
 				catch (Exception e) {
 					logger.log(e);
+				}
+				finally {
+					interruptible = false;
 				}
 
 				// Loop...
@@ -322,7 +335,9 @@ public abstract class RouterLoggerEngine {
 				waitTimeInMillis = waitTimeInMillis - (System.currentTimeMillis() - timeAfterRead);
 
 				if (waitTimeInMillis > 0L) {
+					interruptible = true;
 					Thread.sleep(waitTimeInMillis);
+					interruptible = false;
 				}
 			}
 			iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS);
@@ -383,6 +398,10 @@ public abstract class RouterLoggerEngine {
 
 	protected void setWriter(Writer writer) {
 		this.writer = writer;
+	}
+
+	protected boolean isInterruptible() {
+		return interruptible;
 	}
 
 }

@@ -254,7 +254,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		if (canDisconnect() || force) {
 			setStatus(RouterLoggerStatus.DISCONNECTING);
 			exit = true;
-			updateThread.interrupt();
+			if (isInterruptible()) {
+				try {
+					updateThread.interrupt();
+				}
+				catch (final SecurityException se) {}
+			}
 		}
 		else {
 			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
