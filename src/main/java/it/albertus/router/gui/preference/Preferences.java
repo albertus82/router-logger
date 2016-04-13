@@ -72,7 +72,9 @@ public class Preferences {
 		InputStream configurationInputStream = null;
 		try {
 			configurationInputStream = configuration.openConfigurationInputStream();
-			preferenceStore.load(configurationInputStream);
+			if (configurationInputStream != null) {
+				preferenceStore.load(configurationInputStream);
+			}
 		}
 		catch (IOException ioe) {
 			Logger.getInstance().log(ioe);

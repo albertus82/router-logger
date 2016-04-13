@@ -5,15 +5,6 @@ import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
 import it.albertus.util.StringUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -91,45 +82,10 @@ public class RouterLoggerConfiguration extends Configuration {
 		}
 	}
 
+	@Override
 	public void reload() {
-		try {
-			load();
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
+		super.reload();
 		init();
-	}
-
-	public InputStream openConfigurationInputStream() throws IOException {
-		final InputStream inputStream;
-		File config = null;
-		try {
-			config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + FILE_NAME);
-		}
-		catch (URISyntaxException use) {
-			throw new IOException(use);
-		}
-		if (config != null && config.exists()) {
-			inputStream = new BufferedInputStream(new FileInputStream(config));
-		}
-		else {
-			inputStream = getClass().getResourceAsStream('/' + FILE_NAME);
-		}
-		return inputStream;
-	}
-
-	public OutputStream openConfigurationOutputStream() throws IOException {
-		final OutputStream outputStream;
-		File config = null;
-		try {
-			config = new File(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + FILE_NAME);
-		}
-		catch (URISyntaxException use) {
-			throw new IOException(use);
-		}
-		outputStream = new BufferedOutputStream(new FileOutputStream(config));
-		return outputStream;
 	}
 
 	public abstract class Thresholds {

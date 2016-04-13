@@ -26,6 +26,7 @@ public class Logger {
 		FILE;
 	}
 
+	private static final String FILE_EXTENSION = ".log";
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
@@ -125,7 +126,7 @@ public class Logger {
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
 			}
-			logFile = new File(logDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+			logFile = new File(logDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 		}
 		else {
 			logFile = getDefaultFile();
@@ -141,16 +142,16 @@ public class Logger {
 	private static File getDefaultFile() {
 		File logFile;
 		try {
-			logFile = new File(new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+			logFile = new File(new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 		}
 		catch (final Exception e1) {
 			try {
 				/* In caso di problemi, scrive nella directory del profilo dell'utente */
-				logFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+				logFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 			}
 			catch (final Exception e2) {
 				/* Nella peggiore delle ipotesi, scrive nella directory corrente */
-				logFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".log");
+				logFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 			}
 		}
 		return logFile;

@@ -27,6 +27,7 @@ public class CsvWriter extends Writer {
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
 
+	private static final String FILE_EXTENSION = ".csv";
 	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 
@@ -46,7 +47,7 @@ public class CsvWriter extends Writer {
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
 			}
-			file = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			file = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 		}
 		else {
 			file = getDefaultFile();
@@ -163,16 +164,16 @@ public class CsvWriter extends Writer {
 	private static File getDefaultFile() {
 		File csvFile;
 		try {
-			csvFile = new File(new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+			csvFile = new File(new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 		}
 		catch (final Exception e1) {
 			try {
 				// In caso di problemi, scrive nella directory del profilo dell'utente
-				csvFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				csvFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 			}
 			catch (final Exception e2) {
 				// Nella peggiore delle ipotesi, scrive nella directory corrente
-				csvFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + ".csv");
+				csvFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
 			}
 		}
 		return csvFile;
