@@ -10,6 +10,7 @@ import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
 import it.albertus.router.gui.preference.field.ComboFieldEditor;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
+import it.albertus.router.gui.preference.field.FormattedComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
@@ -49,7 +50,7 @@ public enum Preference {
 
 	SOCKET_TIMEOUT_MS(Page.READER, FormattedIntegerFieldEditor.class, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
 	CONNECTION_TIMEOUT_MS(Page.READER, FormattedIntegerFieldEditor.class, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS), Integer.toString(Integer.MAX_VALUE).length() - 1),
-	TELNET_NEWLINE_CHARACTERS(Page.READER, ComboFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, BasePreferencePage.getNewLineComboOptions()),
+	TELNET_NEWLINE_CHARACTERS(Page.READER, FormattedComboFieldEditor.class, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, BasePreferencePage.getNewLineComboOptions()),
 
 	LOGGER_ITERATIONS(Page.GENERAL, IterationsComboFieldEditor.class, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS)),
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, ScaleFormattedIntegerFieldEditor.class, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS), new int[] { 0, 100000, 1, 5000 }),
@@ -88,7 +89,7 @@ public enum Preference {
 	WRITER_CLASS_NAME(Page.WRITER, WriterComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), WriterPreferencePage.getWriterComboOptions()),
 
 	CSV_DESTINATION_PATH(Page.CSV, FormattedDirectoryFieldEditor.class, CsvWriter.Defaults.DIRECTORY, false),
-	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEWLINE.name(), BasePreferencePage.getNewLineComboOptions()),
+	CSV_NEWLINE_CHARACTERS(Page.CSV, FormattedComboFieldEditor.class, CsvWriter.Defaults.NEWLINE.name(), BasePreferencePage.getNewLineComboOptions()),
 	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR, false),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, false),
 
