@@ -21,7 +21,7 @@ public class CsvWriter extends Writer {
 	private static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	public interface Defaults {
-		NewLine NEW_LINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
+		NewLine NEWLINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
 		String DIRECTORY = getDefaultDirectory();
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
@@ -36,24 +36,24 @@ public class CsvWriter extends Writer {
 
 	@Override
 	public synchronized void saveInfo(final RouterData info) {
-		// Selezione del percorso e nome del file di destinazione...
-		final String csvDestinationDir = configuration.getString("csv.destination.path");
-		File file;
-		if (StringUtils.isNotBlank(csvDestinationDir)) {
-			File logDestDir = new File(csvDestinationDir.trim());
-			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException(Resources.get("err.invalid.path", logDestDir));
-			}
-			if (!logDestDir.exists()) {
-				logDestDir.mkdirs();
-			}
-			file = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
-		}
-		else {
-			file = getDefaultFile();
-		}
-
 		try {
+			// Selezione del percorso e nome del file di destinazione...
+			final String csvDestinationDir = configuration.getString("csv.destination.path");
+			final File file;
+			if (StringUtils.isNotBlank(csvDestinationDir)) {
+				final File logDestDir = new File(csvDestinationDir.trim());
+				if (logDestDir.exists() && !logDestDir.isDirectory()) {
+					throw new RuntimeException(Resources.get("err.invalid.path", logDestDir));
+				}
+				if (!logDestDir.exists()) {
+					logDestDir.mkdirs();
+				}
+				file = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+			}
+			else {
+				file = getDefaultFile();
+			}
+
 			String path;
 			try {
 				path = file.getCanonicalPath();
@@ -88,8 +88,8 @@ public class CsvWriter extends Writer {
 			csvFileWriter.append(buildCsvRow(info));
 			csvFileWriter.flush();
 		}
-		catch (final IOException ioe) {
-			logger.log(ioe);
+		catch (final Exception exception) {
+			logger.log(exception);
 			closeOutputFile();
 		}
 	}
@@ -135,7 +135,7 @@ public class CsvWriter extends Writer {
 		final String cfgKey = "csv.newline.characters";
 		final String cfg = configuration.getString(cfgKey);
 		if (cfg == null || cfg.length() == 0) {
-			return Defaults.NEW_LINE.toString();
+			return Defaults.NEWLINE.toString();
 		}
 		else {
 			final NewLine newLine = NewLine.getEnum(cfg);

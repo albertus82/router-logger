@@ -61,63 +61,69 @@ public class DatabaseWriter extends Writer {
 	public synchronized void saveInfo(final RouterData data) {
 		final Map<String, String> info = data.getData();
 
-		// Connessione al database...
 		try {
-			if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
-				connection = DriverManager.getConnection(configuration.getString(CFG_KEY_DB_URL), configuration.getString(CFG_KEY_DB_USERNAME), configuration.getString(CFG_KEY_DB_PASSWORD));
-				connection.setAutoCommit(true);
-			}
-		}
-		catch (SQLException se) {
-			throw new RuntimeException(se);
-		}
-
-		// Verifica esistenza tabella ed eventuale creazione...
-		final String tableName = getTableName();
-		if (!tableExists(tableName)) {
-			out.println(Resources.get("msg.creating.database.table", tableName), true);
-			createTable(tableName, info);
-		}
-
-		// Inserimento dati...
-		if (showMessage) {
-			out.println(Resources.get("msg.logging.into.database", tableName), true);
-			showMessage = false;
-		}
-
-		Map<Integer, String> columns = new HashMap<Integer, String>();
-		
-		StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(getTimestampColumnName());
-		dml.append(", ").append(getResponseTimeColumnName());
-		int index = 3;
-		for (String key : info.keySet()) {
-			columns.put(index++, key);
-			dml.append(", ").append(getColumnName(key));
-		}
-		dml.append(") VALUES (?, ?");
-		for (int i = 0; i < info.size(); i++) {
-			dml.append(", ?");
-		}
-		dml.append(')');
-
-		PreparedStatement insert = null;
-		try {
-			insert = connection.prepareStatement(dml.toString());
-			insert.setTimestamp(1, new Timestamp(data.getTimestamp().getTime()));
-			insert.setInt(2, data.getResponseTime());
-			for (int parameterIndex : columns.keySet()) {
-				insert.setString(parameterIndex, info.get(columns.get(parameterIndex)));
-			}
-			insert.executeUpdate();
-		}
-		catch (SQLException se) {
-			logger.log(se);
-		}
-		finally {
+			// Connessione al database...
 			try {
-				insert.close();
+				if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
+					connection = DriverManager.getConnection(configuration.getString(CFG_KEY_DB_URL), configuration.getString(CFG_KEY_DB_USERNAME), configuration.getString(CFG_KEY_DB_PASSWORD));
+					connection.setAutoCommit(true);
+				}
 			}
-			catch (Exception e) {}
+			catch (SQLException se) {
+				throw new RuntimeException(se);
+			}
+
+			// Verifica esistenza tabella ed eventuale creazione...
+			final String tableName = getTableName();
+			if (!tableExists(tableName)) {
+				out.println(Resources.get("msg.creating.database.table", tableName), true);
+				createTable(tableName, info);
+			}
+
+			// Inserimento dati...
+			if (showMessage) {
+				out.println(Resources.get("msg.logging.into.database", tableName), true);
+				showMessage = false;
+			}
+
+			Map<Integer, String> columns = new HashMap<Integer, String>();
+
+			StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(getTimestampColumnName());
+			dml.append(", ").append(getResponseTimeColumnName());
+			int index = 3;
+			for (String key : info.keySet()) {
+				columns.put(index++, key);
+				dml.append(", ").append(getColumnName(key));
+			}
+			dml.append(") VALUES (?, ?");
+			for (int i = 0; i < info.size(); i++) {
+				dml.append(", ?");
+			}
+			dml.append(')');
+
+			PreparedStatement insert = null;
+			try {
+				insert = connection.prepareStatement(dml.toString());
+				insert.setTimestamp(1, new Timestamp(data.getTimestamp().getTime()));
+				insert.setInt(2, data.getResponseTime());
+				for (int parameterIndex : columns.keySet()) {
+					insert.setString(parameterIndex, info.get(columns.get(parameterIndex)));
+				}
+				insert.executeUpdate();
+			}
+			catch (SQLException se) {
+				logger.log(se);
+			}
+			finally {
+				try {
+					insert.close();
+				}
+				catch (Exception e) {}
+			}
+		}
+		catch (final ConfigurationException ce) {
+			logger.log(ce);
+			closeDatabaseConnection();
 		}
 	}
 
@@ -156,7 +162,7 @@ public class DatabaseWriter extends Writer {
 
 		// Creazione tabella...
 		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(getTimestampColumnName()).append(' ').append(timestampColumnType);
-		ddl.append(", ").append(getResponseTimeColumnName()).append(' ').append(responseTimeColumnType); // Tempo di risposta.
+		ddl.append(", ").append(getResponseTimeColumnName()).append(' ').append(responseTimeColumnType); // Response time
 		for (String key : info.keySet()) {
 			ddl.append(", ").append(getColumnName(key)).append(' ').append(infoColumnType);
 		}
@@ -183,7 +189,7 @@ public class DatabaseWriter extends Writer {
 	}
 
 	private String getColumnName(String name) {
-		name = configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name; 
+		name = configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name;
 		name = name.replaceAll("[^A-Za-z0-9_]+", "");
 		final int maxLength = configuration.getInt("database.column.name.max.length", Defaults.COLUMN_NAME_MAX_LENGTH);
 		if (name.length() > maxLength) {

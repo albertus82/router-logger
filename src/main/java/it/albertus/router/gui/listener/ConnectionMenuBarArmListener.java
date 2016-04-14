@@ -1,6 +1,7 @@
 package it.albertus.router.gui.listener;
 
 import it.albertus.router.gui.RouterLoggerGui;
+import it.albertus.util.ConfigurationException;
 
 import org.eclipse.swt.events.ArmEvent;
 import org.eclipse.swt.events.ArmListener;
@@ -21,7 +22,14 @@ public class ConnectionMenuBarArmListener implements ArmListener {
 	@Override
 	public void widgetArmed(ArmEvent e) {
 		final MenuItem connectMenuItem = gui.getMenuBar().getConnectionConnectItem();
-		connectMenuItem.setEnabled(gui.canConnect());
+		boolean connectEnabled;
+		try {
+			connectEnabled = gui.canConnect();
+		}
+		catch (final ConfigurationException ce) {
+			connectEnabled = false;
+		}
+		connectMenuItem.setEnabled(connectEnabled);
 
 		final MenuItem disconnectMenuItem = gui.getMenuBar().getConnectionDisconnectItem();
 		disconnectMenuItem.setEnabled(gui.canDisconnect());

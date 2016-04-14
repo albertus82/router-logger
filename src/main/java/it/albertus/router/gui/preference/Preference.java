@@ -88,7 +88,7 @@ public enum Preference {
 	WRITER_CLASS_NAME(Page.WRITER, WriterComboFieldEditor.class, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), WriterPreferencePage.getWriterComboOptions()),
 
 	CSV_DESTINATION_PATH(Page.CSV, FormattedDirectoryFieldEditor.class, CsvWriter.Defaults.DIRECTORY, false),
-	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEW_LINE.name(), BasePreferencePage.getNewLineComboOptions()),
+	CSV_NEWLINE_CHARACTERS(Page.CSV, ComboFieldEditor.class, CsvWriter.Defaults.NEWLINE.name(), BasePreferencePage.getNewLineComboOptions()),
 	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR, false),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, false),
 

@@ -56,32 +56,32 @@ public abstract class Reader {
 		try {
 			routerAddress = configuration.getString(CFG_KEY_ROUTER_ADDRESS, Defaults.ROUTER_ADDRESS).trim();
 		}
-		catch (RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re, CFG_KEY_ROUTER_ADDRESS);
+		catch (final Exception exception) {
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_ADDRESS);
 		}
 
 		final int routerPort;
 		try {
 			routerPort = configuration.getInt(CFG_KEY_ROUTER_PORT, Defaults.ROUTER_PORT);
 		}
-		catch (RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re, CFG_KEY_ROUTER_PORT);
+		catch (final Exception exception) {
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_PORT);
 		}
 
 		final int connectionTimeoutInMillis;
 		try {
 			connectionTimeoutInMillis = configuration.getInt(CFG_KEY_CONNECTION_TIMEOUT_MS, Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
 		}
-		catch (RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re, CFG_KEY_CONNECTION_TIMEOUT_MS);
+		catch (final Exception exception) {
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_CONNECTION_TIMEOUT_MS);
 		}
 
 		final int socketTimeoutInMillis;
 		try {
 			socketTimeoutInMillis = configuration.getInt(CFG_KEY_SOCKET_TIMEOUT_MS, Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 		}
-		catch (RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), re, CFG_KEY_SOCKET_TIMEOUT_MS);
+		catch (final Exception exception) {
+			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_SOCKET_TIMEOUT_MS);
 		}
 
 		/* Connessione... */

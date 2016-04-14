@@ -50,6 +50,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			// Creazione finestra applicazione...
 			final Display display = Display.getDefault();
 			final RouterLoggerGui routerLogger = newInstance(display);
+			if (routerLogger == null) {
+				display.dispose();
+				return;
+			}
 			final Shell shell = routerLogger.getShell();
 			shell.open();
 
@@ -104,8 +108,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		final int buttonId = openErrorMessageBox(shell, throwable);
 		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
 			shell.dispose();
-			display.dispose();
-			System.exit(1);
+			return null;
 		}
 		shell.dispose();
 		return newInstance(display);
@@ -167,7 +170,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
 		/* Aggiunta riga nella tabella a video */
-		dataTable.addRow(getIteration(), info, thresholdsReached);
+		try {
+			dataTable.addRow(getIteration(), info, thresholdsReached);
+		}
+		catch (ConfigurationException ce) {
+			logger.log(ce);
+		}
 
 		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
 		if (trayIcon != null) {
@@ -235,12 +243,25 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	/** Avvia il ciclo. */
 	public void connect() {
-		if (canConnect()) {
+		boolean connect;
+		try {
+			connect = canConnect();
+		}
+		catch (final ConfigurationException ce) {
+			logger.log(ce);
+			return;
+		}
+		if (connect) {
 			exit = false;
 			updateThread = new Thread("updateThread") {
 				@Override
 				public void run() {
-					outerLoop();
+					try {
+						outerLoop();
+					}
+					catch (final Exception exception) {
+						logger.log(exception);
+					}
 				}
 			};
 			updateThread.start();
@@ -279,7 +300,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				try {
 					updateThread.join();
 				}
-				catch (InterruptedException e) {}
+				catch (final InterruptedException ie) {}
+				catch (final Exception e) {
+					logger.log(e);
+				}
 				afterOuterLoop();
 				configuration.reload();
 				initReaderAndWriter();

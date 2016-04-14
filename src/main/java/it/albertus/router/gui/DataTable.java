@@ -193,6 +193,7 @@ public class DataTable {
 		if (table != null && !table.isDisposed() && data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();
 			final String timestamp = DATE_FORMAT_TABLE_GUI.format(data.getTimestamp());
+			final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 			try {
 				table.getDisplay().syncExec(new Runnable() {
 					@Override
@@ -287,7 +288,6 @@ public class DataTable {
 								}
 
 								// Limitatore righe in tabella...
-								final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 								if (table.getItemCount() > maxItems) {
 									table.remove(maxItems);
 								}
