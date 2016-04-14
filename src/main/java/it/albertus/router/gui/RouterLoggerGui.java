@@ -46,15 +46,16 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	/** Entry point for GUI version */
 	public static void start() {
+		final Display display = Display.getDefault();
+
+		// Creazione finestra applicazione...
+		final RouterLoggerGui routerLogger = newInstance(display);
+		if (routerLogger == null) {
+			display.dispose();
+			return;
+		}
+		final Shell shell = routerLogger.getShell();
 		try {
-			// Creazione finestra applicazione...
-			final Display display = Display.getDefault();
-			final RouterLoggerGui routerLogger = newInstance(display);
-			if (routerLogger == null) {
-				display.dispose();
-				return;
-			}
-			final Shell shell = routerLogger.getShell();
 			shell.open();
 
 			// Inizializzazione Reader & Writer
@@ -84,13 +85,16 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			// Stampa del messaggio di commiato...
 			routerLogger.afterOuterLoop();
 		}
-		catch (final Exception e) {
-			Logger.getInstance().log(e);
+		catch (final Throwable throwable) {
+			Logger.getInstance().log(throwable);
+			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), throwable);
+			shell.dispose();
+			display.dispose();
 		}
 	}
 
 	private static RouterLoggerGui newInstance(final Display display) {
-		RouterLoggerGui instance = null;
+		RouterLoggerGui instance;
 		try {
 			instance = new RouterLoggerGui(display);
 		}
@@ -120,11 +124,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		if (throwable instanceof ConfigurationException) {
 			final ConfigurationException ce = (ConfigurationException) throwable;
 			style = SWT.ICON_WARNING | SWT.YES | SWT.NO;
-			String propertyName = ce.getKey();
+			String propertyName;
 			try {
 				propertyName = Resources.get(Preference.findByConfigurationKey(ce.getKey()).getResourceKey());
 			}
-			catch (Exception e) {}
+			catch (final Exception e) {
+				propertyName = ce.getKey();
+			}
 			message = Resources.get("err.invalid.cfg", propertyName) + ' ' + Resources.get("lbl.preferences.edit");
 		}
 		else {
