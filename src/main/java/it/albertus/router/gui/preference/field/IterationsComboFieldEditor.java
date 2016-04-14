@@ -35,4 +35,47 @@ public class IterationsComboFieldEditor extends ValidatedComboFieldEditor {
 		return Integer.toString(getPreferenceStore().getDefaultInt(getPreferenceName()));
 	}
 
+	@Override
+	protected void doLoad() {
+		super.doLoad();
+		updateComboText();
+	}
+
+	@Override
+	protected void updateValue() {
+		updateComboText();
+		super.updateValue();
+	}
+
+	@Override
+	protected String getValue() {
+		try {
+			return Integer.valueOf(super.getValue()).toString();
+		}
+		catch (final Exception exception) {
+			return super.getValue();
+		}
+	}
+
+	@Override
+	protected void setValue(final String value) {
+		try {
+			super.setValue(Integer.valueOf(value).toString());
+		}
+		catch (final Exception exception) {
+			super.setValue(value);
+		}
+	}
+
+	protected void updateComboText() {
+		try {
+			final String oldText = getComboBoxControl().getText();
+			final String newText = getNameForValue(Integer.valueOf(oldText).toString());
+			if (!newText.equals(oldText)) {
+				getComboBoxControl().setText(newText);
+			}
+		}
+		catch (final Exception exception) {}
+	}
+
 }
