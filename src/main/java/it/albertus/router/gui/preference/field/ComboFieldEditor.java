@@ -228,27 +228,27 @@ public class ComboFieldEditor extends FieldEditor {
 		getComboBoxControl(parent).setEnabled(enabled);
 	}
 
-	protected final Combo getComboBoxControl() {
+	protected Combo getComboBoxControl() {
 		return fCombo;
 	}
 
-	protected final void setComboBoxControl(Combo combo) {
+	protected void setComboBoxControl(final Combo combo) {
 		this.fCombo = combo;
 	}
 
-	protected final String getValue() {
+	protected String getValue() {
 		return fValue;
 	}
 
-	protected final void setValue(String value) {
+	protected void setValue(final String value) {
 		this.fValue = value;
 	}
 
-	protected final String[][] getEntryNamesAndValues() {
+	protected String[][] getEntryNamesAndValues() {
 		return fEntryNamesAndValues;
 	}
 
-	protected final void setEntryNamesAndValues(String[][] entryNamesAndValues) {
+	protected void setEntryNamesAndValues(final String[][] entryNamesAndValues) {
 		this.fEntryNamesAndValues = entryNamesAndValues;
 	}
 
