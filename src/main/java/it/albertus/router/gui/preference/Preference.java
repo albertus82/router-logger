@@ -8,6 +8,7 @@ import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
+import it.albertus.router.gui.preference.field.ComboFieldEditor;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
@@ -35,7 +36,6 @@ import it.albertus.router.writer.DatabaseWriter;
 import java.util.Locale;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 
 public enum Preference {

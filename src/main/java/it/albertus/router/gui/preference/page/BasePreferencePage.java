@@ -2,6 +2,7 @@ package it.albertus.router.gui.preference.page;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.preference.Preference;
+import it.albertus.router.gui.preference.field.ComboFieldEditor;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
@@ -21,7 +22,6 @@ import java.io.OutputStream;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
