@@ -93,11 +93,11 @@ public class TextConsole extends Console {
 
 		// Actual print...
 		if (scrollable != null && !scrollable.isDisposed()) {
-			if (scrollable.getDisplay().equals(Display.getCurrent())) {
-				doPrint(toPrint);
-			}
-			else {
-				try {
+			try {
+				if (scrollable.getDisplay().equals(Display.getCurrent())) {
+					doPrint(toPrint);
+				}
+				else {
 					scrollable.getDisplay().syncExec(new Runnable() {
 						@Override
 						public void run() {
@@ -105,10 +105,10 @@ public class TextConsole extends Console {
 						}
 					});
 				}
-				catch (SWTException se) {
-					failSafePrint(toPrint);
-					updatePosition(toPrint);
-				}
+			}
+			catch (final SWTException se) {
+				failSafePrint(toPrint);
+				updatePosition(toPrint);
 			}
 		}
 		else {
