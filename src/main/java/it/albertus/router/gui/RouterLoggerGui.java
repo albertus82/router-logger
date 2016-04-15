@@ -84,10 +84,15 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			display.dispose();
 
 			// Attende che il thread completi il rilascio risorse...
-			try {
-				routerLogger.updateThread.join();
+			if (routerLogger.updateThread != null) {
+				try {
+					routerLogger.updateThread.join();
+				}
+				catch (final InterruptedException ie) {}
+				catch (final Exception e) {
+					Logger.getInstance().log(e);
+				}
 			}
-			catch (final Exception e) {}
 
 			// Stampa del messaggio di commiato...
 			routerLogger.afterOuterLoop();
@@ -109,6 +114,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
+		Logger.getInstance().log(throwable);
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
 		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
@@ -116,7 +122,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			return null;
 		}
 		shell.dispose();
-		return newInstance(display);
+		return newInstance(display); // Retry after configuration reload
 	}
 
 	private static int openErrorMessageBox(final Shell shell, final Throwable throwable) {
@@ -241,7 +247,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canConnect() {
-		return (RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
+		return (getReader() != null && getWriter() != null && RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
 	}
 
 	public boolean canDisconnect() {
@@ -250,34 +256,39 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	/** Avvia il ciclo. */
 	public void connect() {
-		boolean connect;
-		try {
-			connect = canConnect();
-		}
-		catch (final ConfigurationException ce) {
-			logger.log(ce);
-			return;
-		}
-		if (connect) {
-			exit = false;
-			updateThread = new Thread("updateThread") {
-				@Override
-				public void run() {
-					try {
-						outerLoop();
+		if (getReader() != null && getWriter() != null) {
+			boolean connect;
+			try {
+				connect = canConnect();
+			}
+			catch (final Exception exception) {
+				logger.log(exception);
+				return;
+			}
+			finally {
+				release();
+			}
+			if (connect) {
+				exit = false;
+				updateThread = new Thread("updateThread") {
+					@Override
+					public void run() {
+						try {
+							outerLoop();
+						}
+						catch (final Exception exception) {
+							logger.log(exception);
+						}
+						finally {
+							release();
+						}
 					}
-					catch (final Exception exception) {
-						logger.log(exception);
-					}
-					finally {
-						release();
-					}
-				}
-			};
-			updateThread.start();
-		}
-		else {
-			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
+				};
+				updateThread.start();
+			}
+			else {
+				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
+			}
 		}
 	}
 
@@ -307,16 +318,17 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				try {
-					updateThread.join();
-				}
-				catch (final InterruptedException ie) {}
-				catch (final Exception e) {
-					logger.log(e);
+				if (updateThread != null) {
+					try {
+						updateThread.join();
+					}
+					catch (final InterruptedException ie) {}
+					catch (final Exception e) {
+						logger.log(e);
+					}
 				}
 				afterOuterLoop();
 				configuration.reload();
-				initReaderAndWriter();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
 				new GuiThreadExecutor(shell) {
@@ -324,6 +336,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					public void run() {
 						getConsole().clear();
 						dataTable.reset();
+						initReaderAndWriter();
 						beforeOuterLoop();
 						connect();
 					}
@@ -338,21 +351,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			super.initReaderAndWriter();
 		}
 		catch (final Throwable throwable) {
-			new GuiThreadExecutor(shell) {
-				@Override
-				public void run() {
-					final int buttonId = openErrorMessageBox(shell, throwable);
-					if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
-						final Display display = shell.getDisplay();
-						shell.dispose();
-						display.dispose();
-						System.exit(1);
-					}
-					else {
-						initReaderAndWriter();
-					}
-				}
-			}.start();
+			final int buttonId = openErrorMessageBox(shell, throwable);
+			if (buttonId != SWT.OK && buttonId != SWT.NO && new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) == Window.OK) {
+				initReaderAndWriter();
+			}
 		}
 	}
 

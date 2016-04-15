@@ -122,17 +122,19 @@ public abstract class RouterLoggerEngine {
 
 	/** Stampa il messaggio di benvenuto e registra un listener per CTRL+C. */
 	protected void beforeOuterLoop() {
-		welcome();
+		if (reader != null && writer != null) {
+			welcome();
 
-		// Gestione chiusura console (CTRL+C)...
-		shutdownHook = new Thread("shutdownHook") {
-			@Override
-			public void run() {
-				reader.disconnect();
-				release();
-			}
-		};
-		Runtime.getRuntime().addShutdownHook(shutdownHook);
+			// Gestione chiusura console (CTRL+C)...
+			shutdownHook = new Thread("shutdownHook") {
+				@Override
+				public void run() {
+					reader.disconnect();
+					release();
+				}
+			};
+			Runtime.getRuntime().addShutdownHook(shutdownHook);
+		}
 	}
 
 	/** Rimuove il listener per CTRL+C e stampa il messaggio di commiato. */
