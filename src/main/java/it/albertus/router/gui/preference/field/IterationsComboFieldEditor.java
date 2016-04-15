@@ -48,7 +48,7 @@ public class IterationsComboFieldEditor extends ValidatedComboFieldEditor {
 	}
 
 	@Override
-	protected String getValue() {
+	public String getValue() {
 		try {
 			return Integer.valueOf(super.getValue()).toString();
 		}

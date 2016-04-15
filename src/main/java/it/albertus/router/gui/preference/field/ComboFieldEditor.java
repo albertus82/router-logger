@@ -236,7 +236,7 @@ public class ComboFieldEditor extends FieldEditor {
 		this.fCombo = combo;
 	}
 
-	protected String getValue() {
+	public String getValue() {
 		return fValue;
 	}
 
