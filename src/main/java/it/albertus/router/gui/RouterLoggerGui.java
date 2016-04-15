@@ -57,13 +57,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		try {
 			shell.open();
 
-			// Inizializzazione Reader & Writer
-			routerLogger.initReaderAndWriter();
-
-			// Stampa del messaggio di benvenuto...
-			routerLogger.beforeOuterLoop();
-
-			// Avvio thread di interrogazione router...
 			routerLogger.connect();
 
 			while (!shell.isDisposed()) {
@@ -256,6 +249,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	/** Avvia il ciclo. */
 	public void connect() {
+		// Reader & Writer initialization...
+		initReaderAndWriter();
+
+		// Print welcome message...
+		beforeOuterLoop();
+
+		// Avvia thread di interrogazione router...
 		if (getReader() != null && getWriter() != null) {
 			boolean connect;
 			try {
@@ -336,8 +336,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					public void run() {
 						getConsole().clear();
 						dataTable.reset();
-						initReaderAndWriter();
-						beforeOuterLoop();
 						connect();
 					}
 				}.start();
@@ -351,6 +349,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			super.initReaderAndWriter();
 		}
 		catch (final Throwable throwable) {
+			setReader(null);
+			setWriter(null);
 			final int buttonId = openErrorMessageBox(shell, throwable);
 			if (buttonId != SWT.OK && buttonId != SWT.NO && new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) == Window.OK) {
 				initReaderAndWriter();
