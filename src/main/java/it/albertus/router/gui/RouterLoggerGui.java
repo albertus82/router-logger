@@ -55,8 +55,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 		final Shell shell = routerLogger.getShell();
 		try {
+			// Apre la finestra principale...
 			shell.open();
 
+			// Avvia il ciclo di interrogazione...
 			routerLogger.connect();
 
 			while (!shell.isDisposed()) {
@@ -77,15 +79,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			display.dispose();
 
 			// Attende che il thread completi il rilascio risorse...
-			if (routerLogger.updateThread != null) {
-				try {
-					routerLogger.updateThread.join();
-				}
-				catch (final InterruptedException ie) {}
-				catch (final Exception e) {
-					Logger.getInstance().log(e);
-				}
-			}
+			routerLogger.joinUpdateThread();
 
 			// Stampa del messaggio di commiato...
 			routerLogger.afterOuterLoop();
@@ -318,15 +312,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				if (updateThread != null) {
-					try {
-						updateThread.join();
-					}
-					catch (final InterruptedException ie) {}
-					catch (final Exception e) {
-						logger.log(e);
-					}
-				}
+				joinUpdateThread();
 				afterOuterLoop();
 				configuration.reload();
 				setIteration(FIRST_ITERATION);
@@ -354,6 +340,18 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			final int buttonId = openErrorMessageBox(shell, throwable);
 			if (buttonId != SWT.OK && buttonId != SWT.NO && new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) == Window.OK) {
 				initReaderAndWriter();
+			}
+		}
+	}
+
+	private void joinUpdateThread() {
+		if (updateThread != null) {
+			try {
+				updateThread.join();
+			}
+			catch (final InterruptedException ie) {}
+			catch (final Exception e) {
+				logger.log(e);
 			}
 		}
 	}
