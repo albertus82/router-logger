@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2013 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Remy Chi Jian Suen <remy.suen@gmail.com> - Bug 214392 missing implementation of ComboFieldEditor.setEnabled
- *     Albertus82 (http://github.com/albertus82) - Added getters, setters and protected method access modifiers
  *******************************************************************************/
 package it.albertus.router.gui.preference.field;
 
-
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -236,7 +234,7 @@ public class ComboFieldEditor extends FieldEditor {
 		this.fCombo = combo;
 	}
 
-	public String getValue() {
+	protected String getValue() {
 		return fValue;
 	}
 
