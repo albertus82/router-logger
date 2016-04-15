@@ -7,9 +7,7 @@ import it.albertus.util.NewLine;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Text;
 
@@ -51,37 +49,35 @@ public class TextConsole extends Console {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
+	public void clear() {
+		getText().setText("");
+	}
+
 	protected void failSafePrint(final String value) {
 		System.out.print(value);
+		updatePosition(value);
 	}
 
 	protected void doPrint(final String value) {
+		int maxChars;
 		try {
-			int maxChars;
-			try {
-				maxChars = configuration.getInt("gui.console.max.chars");
-			}
-			catch (final Exception exception) {
-				maxChars = Defaults.GUI_CONSOLE_MAX_CHARS;
-			}
-			if (getText().getCharCount() < maxChars) {
-				getText().append(value);
-			}
-			else {
-				getText().setText(value.startsWith(NEWLINE) ? value.substring(NEWLINE.length()) : value);
-			}
-			getText().setTopIndex(getText().getLineCount() - 1);
+			maxChars = configuration.getInt("gui.console.max.chars");
 		}
-		catch (SWTException se) {
-			failSafePrint(value);
+		catch (final Exception exception) {
+			maxChars = Defaults.GUI_CONSOLE_MAX_CHARS;
 		}
-		finally {
-			updatePosition(value);
+		if (getText().getCharCount() < maxChars) {
+			getText().append(value);
 		}
+		else {
+			getText().setText(value.startsWith(NEWLINE) ? value.substring(NEWLINE.length()) : value);
+		}
+		getText().setTopIndex(getText().getLineCount() - 1);
+		updatePosition(value);
 	}
 
 	@Override
-	public void print(final String value) {
+	public void print(String value) {
 		// Dealing with null argument...
 		final String toPrint;
 		if (value == null) {
@@ -92,29 +88,17 @@ public class TextConsole extends Console {
 		}
 
 		// Actual print...
-		if (scrollable != null && !scrollable.isDisposed()) {
-			try {
-				if (scrollable.getDisplay().equals(Display.getCurrent())) {
-					doPrint(toPrint);
-				}
-				else {
-					scrollable.getDisplay().syncExec(new Runnable() {
-						@Override
-						public void run() {
-							doPrint(toPrint);
-						}
-					});
-				}
+		new GuiThreadExecutor(scrollable) {
+			@Override
+			protected void run() {
+				doPrint(toPrint);
 			}
-			catch (final SWTException se) {
+
+			@Override
+			protected void onError(final Throwable throwable) {
 				failSafePrint(toPrint);
-				updatePosition(toPrint);
 			}
-		}
-		else {
-			failSafePrint(toPrint);
-			updatePosition(toPrint);
-		}
+		}.start();
 	}
 
 	@Override

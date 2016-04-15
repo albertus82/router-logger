@@ -20,7 +20,6 @@ import java.util.TreeMap;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -85,11 +84,17 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			// Stampa del messaggio di commiato...
 			routerLogger.afterOuterLoop();
 		}
-		catch (final Throwable throwable) {
-			Logger.getInstance().log(throwable);
-			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), throwable);
+		catch (final Exception exception) {
+			Logger.getInstance().log(exception);
+			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
 			shell.dispose();
 			display.dispose();
+			routerLogger.exit = true;
+		}
+		catch (final Throwable throwable) {
+			shell.dispose();
+			display.dispose();
+			routerLogger.exit = true;
 		}
 	}
 
@@ -315,20 +320,15 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				initReaderAndWriter();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
-				if (shell != null && !shell.isDisposed()) {
-					try {
-						shell.getDisplay().syncExec(new Runnable() {
-							@Override
-							public void run() {
-								getConsole().getText().setText("");
-								dataTable.reset();
-								beforeOuterLoop();
-								connect();
-							}
-						});
+				new GuiThreadExecutor(shell) {
+					@Override
+					public void run() {
+						getConsole().clear();
+						dataTable.reset();
+						beforeOuterLoop();
+						connect();
 					}
-					catch (SWTException se) {}
-				}
+				}.start();
 			}
 		}, "resetThread").start();
 	}
@@ -339,7 +339,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			super.initReaderAndWriter();
 		}
 		catch (final Throwable throwable) {
-			shell.getDisplay().syncExec(new Runnable() {
+			new GuiThreadExecutor(shell) {
 				@Override
 				public void run() {
 					final int buttonId = openErrorMessageBox(shell, throwable);
@@ -353,7 +353,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 						initReaderAndWriter();
 					}
 				}
-			});
+			}.start();
 		}
 	}
 
