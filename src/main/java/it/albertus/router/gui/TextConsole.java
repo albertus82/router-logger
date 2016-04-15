@@ -95,7 +95,7 @@ public class TextConsole extends Console {
 			}
 
 			@Override
-			protected void onError(final Throwable throwable) {
+			protected void onError(final Exception exception) {
 				failSafePrint(toPrint);
 			}
 		}.start();

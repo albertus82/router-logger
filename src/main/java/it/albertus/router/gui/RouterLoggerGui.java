@@ -71,7 +71,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					display.sleep();
 				}
 			}
-
+		}
+		catch (final Exception exception) {
+			Logger.getInstance().log(exception);
+			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
+		}
+		finally {
 			// Segnala al thread che deve terminare il loop immediatamente.
 			routerLogger.disconnect(true);
 
@@ -79,22 +84,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			display.dispose();
 
 			// Attende che il thread completi il rilascio risorse...
-			routerLogger.updateThread.join();
+			try {
+				routerLogger.updateThread.join();
+			}
+			catch (final Exception e) {}
 
 			// Stampa del messaggio di commiato...
 			routerLogger.afterOuterLoop();
-		}
-		catch (final Exception exception) {
-			Logger.getInstance().log(exception);
-			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
-			shell.dispose();
-			display.dispose();
-			routerLogger.exit = true;
-		}
-		catch (final Throwable throwable) {
-			shell.dispose();
-			display.dispose();
-			routerLogger.exit = true;
 		}
 	}
 
@@ -272,6 +268,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					}
 					catch (final Exception exception) {
 						logger.log(exception);
+					}
+					finally {
+						release();
 					}
 				}
 			};
