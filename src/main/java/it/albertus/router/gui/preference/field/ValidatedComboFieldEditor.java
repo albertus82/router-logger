@@ -18,6 +18,7 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 
 	@Override
 	protected void updateValue() {
+		cleanComboText();
 		super.updateValue();
 		boolean oldValue = valid;
 		refreshValidState();
@@ -53,12 +54,18 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		super.doLoad();
 		setToolTipText(getNameForValue(getDefaultValue()));
 		updateFontStyle();
+		cleanComboText();
 	}
 
 	@Override
 	protected void doLoadDefault() {
 		super.doLoadDefault();
 		updateFontStyle();
+	}
+
+	@Override
+	protected void updateComboForValue(final String value) {
+		super.updateComboForValue(cleanValue(value));
 	}
 
 	protected String getDefaultValue() {
@@ -78,14 +85,18 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		}
 	}
 
-	protected String getNameForValue(final String value) {
-		for (int i = 0; i < getEntryNamesAndValues().length; i++) {
-			final String[] entry = getEntryNamesAndValues()[i];
-			if (value.equals(entry[1])) {
-				return entry[0];
-			}
+	/** Trims value (from configuration file) to empty. */
+	protected String cleanValue(final String value) {
+		return value != null ? value.trim() : "";
+	}
+
+	/** Trims combo text and tries to associate it with an existing entry. */
+	protected void cleanComboText() {
+		final String oldText = getComboBoxControl().getText();
+		final String newText = getNameForValue(oldText.trim());
+		if (!newText.equals(oldText)) {
+			getComboBoxControl().setText(newText);
 		}
-		return value; // Name not present in the array.
 	}
 
 	public String getErrorMessage() {

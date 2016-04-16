@@ -69,9 +69,7 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 
 	@Override
 	protected String getValueForName(final String name) {
-		final String[][] entryNamesAndValues = getEntryNamesAndValues();
-		for (int i = 0; i < entryNamesAndValues.length; i++) {
-			final String[] entry = entryNamesAndValues[i];
+		for (final String[] entry : getEntryNamesAndValues()) {
 			if (name.equals(entry[0])) {
 				return entry[1];
 			}
@@ -79,18 +77,19 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 		return name; // Value not present in the array.
 	}
 
+	protected String getNameForValue(final String value) {
+		for (final String[] entry : getEntryNamesAndValues()) {
+			if (value.equals(entry[1])) {
+				return entry[0];
+			}
+		}
+		return value; // Name not present in the array.
+	}
+
 	@Override
 	protected void updateComboForValue(final String value) {
 		setValue(value);
-		final Combo combo = getComboBoxControl();
-		final String[][] entryNamesAndValues = getEntryNamesAndValues();
-		for (int i = 0; i < entryNamesAndValues.length; i++) {
-			if (value.equals(entryNamesAndValues[i][1])) {
-				combo.setText(entryNamesAndValues[i][0]);
-				return;
-			}
-		}
-		combo.setText(value);
+		getComboBoxControl().setText(getNameForValue(value));
 	}
 
 }

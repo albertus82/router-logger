@@ -35,16 +35,15 @@ public class IterationsComboFieldEditor extends ValidatedComboFieldEditor {
 		return Integer.toString(getPreferenceStore().getDefaultInt(getPreferenceName()));
 	}
 
+	/** Trims value and converts it to integer (removes trailing zeros). */
 	@Override
-	protected void doLoad() {
-		super.doLoad();
-		updateComboText();
-	}
-
-	@Override
-	protected void updateValue() {
-		updateComboText();
-		super.updateValue();
+	protected String cleanValue(String value) {
+		value = super.cleanValue(value);
+		try {
+			value = Integer.valueOf(super.getValue()).toString();
+		}
+		catch (final Exception exception) {}
+		return value;
 	}
 
 	@Override
@@ -67,15 +66,18 @@ public class IterationsComboFieldEditor extends ValidatedComboFieldEditor {
 		}
 	}
 
-	protected void updateComboText() {
+	/** Trims combo text and converts it to integer (removes trailing zeros). */
+	@Override
+	protected void cleanComboText() {
+		final String oldText = getComboBoxControl().getText();
+		String newText = oldText.trim().toLowerCase();
 		try {
-			final String oldText = getComboBoxControl().getText();
-			final String newText = getNameForValue(Integer.valueOf(oldText).toString());
-			if (!newText.equals(oldText)) {
-				getComboBoxControl().setText(newText);
-			}
+			newText = getNameForValue(Integer.valueOf(newText).toString());
 		}
 		catch (final Exception exception) {}
+		if (!newText.equals(oldText)) {
+			getComboBoxControl().setText(newText);
+		}
 	}
 
 }
