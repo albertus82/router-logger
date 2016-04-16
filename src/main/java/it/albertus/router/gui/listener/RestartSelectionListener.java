@@ -22,7 +22,7 @@ public class RestartSelectionListener extends SelectionAdapter {
 		messageBox.setMessage(Resources.get("msg.confirm.restart.message"));
 		messageBox.setText(Resources.get("msg.confirm.restart.text"));
 		if (messageBox.open() == SWT.YES) {
-			gui.reset();
+			gui.restart();
 		}
 	}
 

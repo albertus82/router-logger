@@ -35,7 +35,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		boolean GUI_START_MINIMIZED = false;
 	}
 
-	private Thread updateThread;
+	private Thread pollingThread;
 
 	private final Shell shell;
 	private final DataTable dataTable;
@@ -79,7 +79,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			display.dispose();
 
 			// Attende che il thread completi il rilascio risorse...
-			routerLogger.joinUpdateThread();
+			routerLogger.joinPollingThread();
 
 			// Stampa del messaggio di commiato...
 			routerLogger.afterOuterLoop();
@@ -264,7 +264,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			}
 			if (connect) {
 				exit = false;
-				updateThread = new Thread("updateThread") {
+				pollingThread = new Thread("pollingThread") {
 					@Override
 					public void run() {
 						try {
@@ -278,7 +278,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 						}
 					}
 				};
-				updateThread.start();
+				pollingThread.start();
 			}
 			else {
 				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
@@ -292,7 +292,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			exit = true;
 			if (isInterruptible()) {
 				try {
-					updateThread.interrupt();
+					pollingThread.interrupt();
 				}
 				catch (final SecurityException se) {}
 			}
@@ -307,12 +307,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		disconnect(false);
 	}
 
-	public void reset() {
+	public void restart() {
 		disconnect(true);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				joinUpdateThread();
+				joinPollingThread();
 				afterOuterLoop();
 				configuration.reload();
 				setIteration(FIRST_ITERATION);
@@ -331,23 +331,29 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	@Override
 	protected void initReaderAndWriter() {
-		try {
-			super.initReaderAndWriter();
-		}
-		catch (final Throwable throwable) {
-			setReader(null);
-			setWriter(null);
-			final int buttonId = openErrorMessageBox(shell, throwable);
-			if (buttonId != SWT.OK && buttonId != SWT.NO && new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) == Window.OK) {
-				initReaderAndWriter();
+		do {
+			try {
+				super.initReaderAndWriter();
+			}
+			catch (final ConfigurationException ce) {
+				// Reset Reader & Writer...
+				setReader(null);
+				setWriter(null);
+
+				// Open Preferences dialog...
+				final int buttonId = openErrorMessageBox(shell, ce);
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
+					return;
+				}
 			}
 		}
+		while (getReader() == null || getWriter() == null);
 	}
 
-	private void joinUpdateThread() {
-		if (updateThread != null) {
+	private void joinPollingThread() {
+		if (pollingThread != null) {
 			try {
-				updateThread.join();
+				pollingThread.join();
 			}
 			catch (final InterruptedException ie) {}
 			catch (final Exception e) {

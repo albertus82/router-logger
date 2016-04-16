@@ -32,7 +32,7 @@ public class PreferencesSelectionListener extends SelectionAdapter {
 			messageBox.setText(Resources.get("lbl.window.title"));
 			messageBox.setMessage(Resources.get("lbl.preferences.restart"));
 			if (messageBox.open() == SWT.YES) {
-				gui.reset();
+				gui.restart();
 			}
 		}
 	}

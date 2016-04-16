@@ -133,7 +133,7 @@ public class Preferences {
 		// Check if restart is required...
 		final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(Preference.READER_CLASS_NAME.getConfigurationKey()));
 		final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey(), Preference.WRITER_CLASS_NAME.getDefaultValue()));
-		if (gui != null && (gui.getReader() != null && !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() != null && !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
+		if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
 			restartRequired = true;
 		}
 

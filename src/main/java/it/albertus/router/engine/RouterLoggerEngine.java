@@ -66,14 +66,11 @@ public abstract class RouterLoggerEngine {
 
 	protected Reader createReader() {
 		final String configurationKey = "reader.class.name";
-		final String readerClassName = getReaderClassName(StringUtils.trimToEmpty(configuration.getString(configurationKey)));
+		final String readerClassName = getReaderClassName(configuration.getString(configurationKey));
 
 		final Reader reader;
 		try {
 			reader = (Reader) Class.forName(readerClassName).newInstance();
-		}
-		catch (final RuntimeException re) {
-			throw re;
 		}
 		catch (final Throwable throwable) {
 			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
@@ -84,14 +81,11 @@ public abstract class RouterLoggerEngine {
 
 	protected Writer createWriter() {
 		final String configurationKey = "writer.class.name";
-		String writerClassName = getWriterClassName(configuration.getString(configurationKey, RouterLoggerEngine.Defaults.WRITER_CLASS.getName()).trim());
+		final String writerClassName = getWriterClassName(configuration.getString(configurationKey, RouterLoggerEngine.Defaults.WRITER_CLASS.getName()));
 
 		final Writer writer;
 		try {
 			writer = (Writer) Class.forName(writerClassName).newInstance();
-		}
-		catch (final RuntimeException re) {
-			throw re;
 		}
 		catch (final Throwable throwable) {
 			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
@@ -102,7 +96,8 @@ public abstract class RouterLoggerEngine {
 
 	public static String getReaderClassName(String readerClassName) {
 		try {
-			Class.forName(readerClassName); // Default package.
+			readerClassName = StringUtils.trimToEmpty(readerClassName);
+			Class.forName(readerClassName);
 		}
 		catch (final Throwable throwable) {
 			readerClassName = Reader.class.getPackage().getName() + '.' + readerClassName;
@@ -112,7 +107,8 @@ public abstract class RouterLoggerEngine {
 
 	public static String getWriterClassName(String writerClassName) {
 		try {
-			Class.forName(writerClassName); // Default package.
+			writerClassName = StringUtils.trimToEmpty(writerClassName);
+			Class.forName(writerClassName);
 		}
 		catch (final Throwable throwable) {
 			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
