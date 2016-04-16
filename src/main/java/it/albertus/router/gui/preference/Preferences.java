@@ -10,7 +10,6 @@ import it.albertus.router.util.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -59,7 +58,7 @@ public class Preferences {
 			preferenceNodes.put(page, preferenceNode);
 		}
 
-		final PreferenceStore preferenceStore = new PreferenceStore(RouterLoggerConfiguration.FILE_NAME);
+		final PreferenceStore preferenceStore = new PreferenceStore(configuration.getFile().getPath());
 
 		// Set default values...
 		for (final Preference preference : Preference.values()) {
@@ -76,14 +75,14 @@ public class Preferences {
 				preferenceStore.load(configurationInputStream);
 			}
 		}
-		catch (IOException ioe) {
+		catch (final IOException ioe) {
 			Logger.getInstance().log(ioe);
 		}
 		finally {
 			try {
 				configurationInputStream.close();
 			}
-			catch (Exception e) {}
+			catch (final Exception e) {}
 		}
 
 		final PreferenceDialog preferenceDialog = new ConfigurationDialog(parentShell, preferenceManager);
@@ -100,23 +99,7 @@ public class Preferences {
 		final int returnCode = preferenceDialog.open();
 
 		if (returnCode == Window.OK) {
-			// Save configuration file...
-			OutputStream configurationOutputStream = null;
-			try {
-				configurationOutputStream = configuration.openConfigurationOutputStream();
-				preferenceStore.save(configurationOutputStream, null);
-			}
-			catch (IOException ioe) {
-				Logger.getInstance().log(ioe);
-			}
-			finally {
-				try {
-					configurationOutputStream.close();
-				}
-				catch (final Exception exception) {}
-			}
-
-			// Reload RouterLogger configuration...
+			// Reload RouterLogger configuration (saved by PreferenceStore on OK)...
 			try {
 				configuration.reload();
 			}

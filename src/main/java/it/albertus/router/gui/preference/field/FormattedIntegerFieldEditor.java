@@ -4,8 +4,10 @@ import it.albertus.router.gui.TextFormatter;
 import it.albertus.router.gui.preference.field.listener.IntegerVerifyListener;
 import it.albertus.router.resources.Resources;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
@@ -32,13 +34,25 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
 	@Override
 	protected void doLoad() {
-		super.doLoad();
-		setToolTipText(getPreferenceStore().getDefaultInt(getPreferenceName()));
+		final Text text = getTextControl();
+		if (text != null && !text.isDisposed()) {
+			int value;
+			try {
+				value = Integer.parseInt(getPreferenceStore().getString(getPreferenceName()).trim());
+			}
+			catch (final Exception e) {
+				value = IPreferenceStore.INT_DEFAULT_DEFAULT;
+			}
+			final String valueText = Integer.toString(value);
+			text.setText(valueText);
+			oldValue = valueText;
+			setToolTipText(getPreferenceStore().getDefaultInt(getPreferenceName()));
+		}
 		updateFontStyle();
 	}
 
 	protected void setToolTipText(final int defaultValue) {
-		if (getTextControl() != null && !getTextControl().isDisposed() && defaultValue != 0) {
+		if (defaultValue != 0) {
 			getTextControl().setToolTipText(Resources.get("lbl.preferences.default.value", defaultValue));
 		}
 	}
