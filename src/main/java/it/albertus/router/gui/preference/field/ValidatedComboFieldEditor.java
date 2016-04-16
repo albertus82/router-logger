@@ -27,15 +27,6 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 	}
 
 	@Override
-	public boolean isValid() {
-		return valid;
-	}
-
-	protected void setValid(final boolean valid) {
-		this.valid = valid;
-	}
-
-	@Override
 	protected void refreshValidState() {
 		setValid(checkState());
 		final String errorMessage = getErrorMessage();
@@ -66,6 +57,15 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 	@Override
 	protected void updateComboForValue(final String value) {
 		super.updateComboForValue(cleanValue(value));
+	}
+
+	@Override
+	public boolean isValid() {
+		return valid;
+	}
+
+	protected void setValid(final boolean valid) {
+		this.valid = valid;
 	}
 
 	protected String getDefaultValue() {

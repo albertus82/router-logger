@@ -59,12 +59,10 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 		return combo;
 	}
 
-	protected void updateValue() {
-		final String oldValue = getValue();
-		final String name = getComboBoxControl().getText();
-		setValue(getValueForName(name));
-		setPresentsDefaultValue(false);
-		fireValueChanged(VALUE, oldValue, getValue());
+	@Override
+	protected void updateComboForValue(final String value) {
+		setValue(value);
+		getComboBoxControl().setText(getNameForValue(value));
 	}
 
 	@Override
@@ -86,10 +84,12 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 		return value; // Name not present in the array.
 	}
 
-	@Override
-	protected void updateComboForValue(final String value) {
-		setValue(value);
-		getComboBoxControl().setText(getNameForValue(value));
+	protected void updateValue() {
+		final String oldValue = getValue();
+		final String name = getComboBoxControl().getText();
+		setValue(getValueForName(name));
+		setPresentsDefaultValue(false);
+		fireValueChanged(VALUE, oldValue, getValue());
 	}
 
 }
