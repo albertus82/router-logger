@@ -2,30 +2,37 @@ package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.resources.Resources;
 
+import java.sql.Driver;
+
 import org.eclipse.swt.widgets.Composite;
 
 public class DatabaseComboFieldEditor extends ValidatedComboFieldEditor {
 
 	public DatabaseComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
+		setErrorMessage(Resources.get("err.preferences.combo.class.database.invalid"));
 	}
 
 	@Override
 	protected boolean checkState() {
-		try {
-			if (getValue() != null && !getValue().isEmpty()) {
-				Class.forName(getValue());
+		if (getValue() != null && !getValue().isEmpty()) {
+			try {
+				if (Driver.class.isAssignableFrom(Class.forName(getValue()))) {
+					return true;
+				}
+				else {
+					setErrorMessage(Resources.get("err.preferences.combo.class.database.invalid"));
+					return false;
+				}
 			}
+			catch (final Throwable throwable) {
+				setErrorMessage(Resources.get("err.preferences.combo.class.database.missing"));
+				return false;
+			}
+		}
+		else {
 			return true;
 		}
-		catch (final Throwable throwable) {
-			return false;
-		}
-	}
-
-	@Override
-	public String getErrorMessage() {
-		return Resources.get("err.preferences.combo.class.database");
 	}
 
 }
