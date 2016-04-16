@@ -41,17 +41,15 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 			for (int i = 0; i < entryNamesAndValues.length; i++) {
 				combo.add(entryNamesAndValues[i][0], i);
 			}
-
 			combo.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent evt) {
+				public void widgetSelected(final SelectionEvent se) {
 					updateValue();
 				}
 			});
-
 			combo.addFocusListener(new FocusAdapter() {
 				@Override
-				public void focusLost(FocusEvent e) {
+				public void focusLost(final FocusEvent fe) {
 					updateValue();
 				}
 			});
