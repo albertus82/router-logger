@@ -6,6 +6,8 @@ import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -23,6 +25,7 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
 	protected void init() {
 		getTextControl().addVerifyListener(new IntegerVerifyListener());
+		getTextControl().addFocusListener(new IntegerFocusListener());
 		setErrorMessage(Resources.get("err.preferences.integer"));
 	}
 
@@ -66,6 +69,23 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 	protected void updateFontStyle() {
 		final int defaultValue = getPreferenceStore().getDefaultInt(getPreferenceName());
 		TextFormatter.updateFontStyle(getTextControl(), defaultValue);
+	}
+
+	/** Removes trailing zeros when the field loses the focus */
+	protected class IntegerFocusListener extends FocusAdapter {
+		@Override
+		public void focusLost(final FocusEvent fe) {
+			final Text text = (Text) fe.widget;
+			final String oldText = text.getText();
+			try {
+				final String newText = Integer.toString(Integer.parseInt(oldText));
+				if (!oldText.equals(newText)) {
+					text.setText(newText);
+				}
+				valueChanged();
+			}
+			catch (final Exception e) {}
+		}
 	}
 
 }

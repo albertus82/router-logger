@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.router.gui.preference.field.listener.TrimVerifyListener;
 import it.albertus.router.resources.Resources;
 
 import java.sql.Driver;
@@ -10,6 +11,7 @@ public class DatabaseComboFieldEditor extends ValidatedComboFieldEditor {
 
 	public DatabaseComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
+		getComboBoxControl().addVerifyListener(new TrimVerifyListener());
 		setErrorMessage(Resources.get("err.preferences.combo.class.database.invalid"));
 	}
 
