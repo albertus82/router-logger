@@ -23,12 +23,6 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 		init();
 	}
 
-	protected void init() {
-		getTextControl().addVerifyListener(new IntegerVerifyListener());
-		getTextControl().addFocusListener(new IntegerFocusListener());
-		setErrorMessage(Resources.get("err.preferences.integer"));
-	}
-
 	@Override
 	public void setValidRange(final int min, final int max) {
 		super.setValidRange(min, max);
@@ -54,16 +48,22 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 		updateFontStyle();
 	}
 
-	protected void setToolTipText(final int defaultValue) {
-		if (defaultValue != 0) {
-			getTextControl().setToolTipText(Resources.get("lbl.preferences.default.value", defaultValue));
-		}
-	}
-
 	@Override
 	protected void valueChanged() {
 		super.valueChanged();
 		updateFontStyle();
+	}
+
+	protected void init() {
+		getTextControl().addVerifyListener(new IntegerVerifyListener());
+		getTextControl().addFocusListener(new IntegerFocusListener());
+		setErrorMessage(Resources.get("err.preferences.integer"));
+	}
+
+	protected void setToolTipText(final int defaultValue) {
+		if (defaultValue != 0) {
+			getTextControl().setToolTipText(Resources.get("lbl.preferences.default.value", defaultValue));
+		}
 	}
 
 	protected void updateFontStyle() {
