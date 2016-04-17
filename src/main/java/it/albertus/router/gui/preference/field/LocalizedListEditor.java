@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class LocalizedListEditor extends ListEditor {
 
-	private boolean localized = false;
+	private boolean localized = true; // true only after super constructors!
 
 	public LocalizedListEditor() {
 		super();
@@ -21,7 +21,7 @@ public abstract class LocalizedListEditor extends ListEditor {
 	@Override
 	public Composite getButtonBoxControl(final Composite parent) {
 		final Composite buttonBox = super.getButtonBoxControl(parent);
-		if (!localized) {
+		if (!localized) { // enters only when called from super constructors!
 			final Button addButton = getAddButton();
 			addButton.setText(Resources.get("lbl.preferences.list.button.add"));
 
@@ -33,7 +33,6 @@ public abstract class LocalizedListEditor extends ListEditor {
 
 			final Button downButton = getDownButton();
 			downButton.setText(Resources.get("lbl.preferences.list.button.down"));
-			localized = true;
 		}
 		return buttonBox;
 	}

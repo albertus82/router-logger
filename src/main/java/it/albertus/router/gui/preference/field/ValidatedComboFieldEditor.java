@@ -3,10 +3,14 @@ package it.albertus.router.gui.preference.field;
 import it.albertus.router.gui.TextFormatter;
 import it.albertus.router.resources.Resources;
 
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor {
 
+	private boolean listenerAdded = true;  // true only after super constructors!
 	private boolean valid = true;
 	private String errorMessage = null;
 
@@ -62,6 +66,23 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 	@Override
 	public boolean isValid() {
 		return valid;
+	}
+
+	@Override
+	protected Combo getComboBoxControl(Composite parent) {
+		final Combo combo = super.getComboBoxControl(parent);
+		if (!listenerAdded) { // enters only when called from super constructors!
+			combo.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					ValidatedComboFieldEditor.super.updateValue();
+					boolean oldValue = valid;
+					refreshValidState();
+					fireValueChanged(IS_VALID, oldValue, valid);
+				}
+			});
+		}
+		return combo;
 	}
 
 	protected void setValid(final boolean valid) {
