@@ -52,7 +52,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			}
 			catch (final Throwable throwable) {
 				routerLogger.release();
-				throwable.printStackTrace(System.err);
+				throwable.printStackTrace();
 			}
 			finally {
 				routerLogger.removeShutdownHook();
