@@ -29,7 +29,8 @@ public class DummyReader extends Reader {
 			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
 		}
 		if (Math.random() > (100.0 - CONNECTION_ERROR_PERCENTAGE) / 100.0) {
-			throw new RuntimeException(Resources.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE));
+			logger.log(Resources.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE));
+			return false;
 		}
 		return true;
 	}

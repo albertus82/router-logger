@@ -47,7 +47,7 @@ public abstract class Reader {
 	 * @return <tt>true</tt> se la connessione &egrave; riuscita, <tt>false</tt>
 	 *         altrimenti.
 	 * 
-	 * @throws IllegalArgumentException se i parametri di connessione non sono
+	 * @throws ConfigurationException se i parametri di connessione non sono
 	 *         validi.
 	 */
 	public boolean connect() {
