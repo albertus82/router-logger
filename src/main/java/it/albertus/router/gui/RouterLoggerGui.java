@@ -69,6 +69,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			Logger.getInstance().log(exception);
 			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
 		}
+		catch (final Throwable throwable) {
+			display.dispose();
+			Logger.getInstance().log(throwable);
+		}
 		finally {
 			routerLogger.disconnect(true);
 			display.dispose();
@@ -254,11 +258,26 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							outerLoop();
 						}
 						catch (final Exception exception) {
-							release();
 							logger.log(exception);
+							try {
+								getReader().disconnect();
+							}
+							catch (final Exception e) {}
+							release();
 						}
 						catch (final Throwable throwable) {
+							new GuiThreadExecutor(RouterLoggerGui.this.shell) {
+								@Override
+								protected void run() {
+									getWidget().getDisplay().dispose();
+								}
+							}.start();
 							release();
+							logger.log(throwable);
+							try {
+								getReader().disconnect();
+							}
+							catch (final Exception e) {}
 						}
 					}
 				};

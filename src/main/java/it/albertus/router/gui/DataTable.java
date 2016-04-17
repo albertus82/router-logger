@@ -9,7 +9,6 @@ import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.util.Logger;
 import it.albertus.util.NewLine;
 
 import java.text.DateFormat;
@@ -123,7 +122,6 @@ public class DataTable {
 
 	/** Copies the current selection to the clipboard. */
 	public void copy() {
-		final Logger logger = Logger.getInstance();
 		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
 			if (table.getSelectionCount() > 1) {
 				System.gc(); // La copia puo' richiedere molta memoria!
@@ -136,26 +134,18 @@ public class DataTable {
 			}
 			data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
 
-			try {
-				// Dati selezionati (ogni TableItem rappresenta una riga)...
-				for (final TableItem item : table.getSelection()) {
-					for (int i = 0; i < table.getColumnCount(); i++) {
-						data.append(item.getText(i)).append(FIELD_SEPARATOR);
-					}
-					data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
+			// Dati selezionati (ogni TableItem rappresenta una riga)...
+			for (final TableItem item : table.getSelection()) {
+				for (int i = 0; i < table.getColumnCount(); i++) {
+					data.append(item.getText(i)).append(FIELD_SEPARATOR);
 				}
+				data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
+			}
 
-				// Inserimento dati negli appunti...
-				final Clipboard clipboard = new Clipboard(table.getDisplay());
-				clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
-				clipboard.dispose();
-			}
-			catch (final OutOfMemoryError oome) {
-				data = null;
-				System.gc(); // Libera memoria il piu' possibile.
-				logger.log(oome);
-				table.getShell().dispose();
-			}
+			// Inserimento dati negli appunti...
+			final Clipboard clipboard = new Clipboard(table.getDisplay());
+			clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
+			clipboard.dispose();
 		}
 	}
 
