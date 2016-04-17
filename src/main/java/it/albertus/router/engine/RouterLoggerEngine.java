@@ -97,7 +97,7 @@ public abstract class RouterLoggerEngine {
 	public static String getReaderClassName(String readerClassName) {
 		try {
 			readerClassName = StringUtils.trimToEmpty(readerClassName);
-			Class.forName(readerClassName);
+			Class.forName(readerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
 		catch (final Throwable throwable) {
 			readerClassName = Reader.class.getPackage().getName() + '.' + readerClassName;
@@ -108,7 +108,7 @@ public abstract class RouterLoggerEngine {
 	public static String getWriterClassName(String writerClassName) {
 		try {
 			writerClassName = StringUtils.trimToEmpty(writerClassName);
-			Class.forName(writerClassName);
+			Class.forName(writerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
 		catch (final Throwable throwable) {
 			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
