@@ -18,7 +18,7 @@ public class WriterComboFieldEditor extends ValidatedComboFieldEditor {
 	@Override
 	protected boolean checkState() {
 		try {
-			final Class<?> writerClass = Class.forName(RouterLoggerEngine.getWriterClassName(getValue()));
+			final Class<?> writerClass = Class.forName(RouterLoggerEngine.getWriterClassName(getValue()), false, this.getClass().getClassLoader());
 			if (Writer.class.isAssignableFrom(writerClass) && !Modifier.isAbstract(writerClass.getModifiers())) {
 				return true;
 			}

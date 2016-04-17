@@ -10,6 +10,7 @@ import it.albertus.router.util.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public class Preferences {
 
 	private final RouterLoggerGui gui;
 	private final Shell parentShell;
+	private final Map<Page, PreferenceNode> preferenceNodes = new EnumMap<Page, PreferenceNode>(Page.class);
 	private boolean restartRequired = false;
 
 	public Preferences(final RouterLoggerGui gui) {
@@ -46,7 +48,6 @@ public class Preferences {
 		final PreferenceManager preferenceManager = new PreferenceManager();
 
 		// Pages creation...
-		final Map<Page, PreferenceNode> preferenceNodes = new EnumMap<Page, PreferenceNode>(Page.class);
 		for (final Page page : Page.values()) {
 			final PreferenceNode preferenceNode = new PreferenceNode(page.getNodeId(), Resources.get(page.getResourceKey()), null, page.getPageClass().getName());
 			if (page.getParent() != null) {
@@ -99,7 +100,7 @@ public class Preferences {
 		final int returnCode = preferenceDialog.open();
 
 		if (returnCode == Window.OK) {
-			// Reload RouterLogger configuration (saved by PreferenceStore on OK)...
+			// Reload configuration (autosaved by PreferenceStore on OK button)...
 			try {
 				configuration.reload();
 			}
@@ -118,9 +119,10 @@ public class Preferences {
 		final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey(), Preference.WRITER_CLASS_NAME.getDefaultValue()));
 		if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
 			try {
-				Class.forName(configuredReaderClassName);
-				Class.forName(configuredWriterClassName);
-				restartRequired = true;
+				// Check if configured classes are valid...
+				Class.forName(configuredReaderClassName, false, this.getClass().getClassLoader());
+				Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
+				restartRequired = true; // Restart dialog will be shown.
 			}
 			catch (final Throwable t) {}
 		}
@@ -132,8 +134,11 @@ public class Preferences {
 		return parentShell;
 	}
 
+	public Map<Page, PreferenceNode> getPreferenceNodes() {
+		return Collections.unmodifiableMap(preferenceNodes);
+	}
+
 	public boolean isRestartRequired() {
 		return restartRequired;
 	}
-
 }

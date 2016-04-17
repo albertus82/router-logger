@@ -104,7 +104,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		Logger.getInstance().log(throwable);
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
-		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.findByConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
+		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.forConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
 			shell.dispose();
 			return null;
 		}
@@ -120,7 +120,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			style = SWT.ICON_WARNING | SWT.YES | SWT.NO;
 			String propertyName;
 			try {
-				propertyName = Resources.get(Preference.findByConfigurationKey(ce.getKey()).getResourceKey());
+				propertyName = Resources.get(Preference.forConfigurationKey(ce.getKey()).getResourceKey());
 			}
 			catch (final Exception e) {
 				propertyName = ce.getKey();
@@ -342,7 +342,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, ce);
-				if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.findByConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.forConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
 					return;
 				}
 			}

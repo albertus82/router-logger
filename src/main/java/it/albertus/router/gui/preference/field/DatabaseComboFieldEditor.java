@@ -19,7 +19,7 @@ public class DatabaseComboFieldEditor extends ValidatedComboFieldEditor {
 	protected boolean checkState() {
 		if (getValue() != null && !getValue().isEmpty()) {
 			try {
-				final Class<?> driverClass = Class.forName(getValue());
+				final Class<?> driverClass = Class.forName(getValue(), false, this.getClass().getClassLoader());
 				if (Driver.class.isAssignableFrom(driverClass) && !Driver.class.equals(driverClass)) {
 					return true;
 				}
