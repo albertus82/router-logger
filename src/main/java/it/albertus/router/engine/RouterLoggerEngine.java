@@ -116,31 +116,38 @@ public abstract class RouterLoggerEngine {
 		return writerClassName;
 	}
 
-	/** Stampa il messaggio di benvenuto e registra un listener per CTRL+C. */
-	protected void beforeOuterLoop() {
-		if (reader != null && writer != null) {
-			welcome();
-
-			// Gestione chiusura console (CTRL+C)...
-			shutdownHook = new Thread("shutdownHook") {
-				@Override
-				public void run() {
-					reader.disconnect();
-					release();
-				}
-			};
-			Runtime.getRuntime().addShutdownHook(shutdownHook);
-		}
+	protected void beforeConnect() {
+		printWelcome();
+		initReaderAndWriter();
+		printDeviceModel();
 	}
 
-	/** Rimuove il listener per CTRL+C e stampa il messaggio di commiato. */
-	protected void afterOuterLoop() {
+	/** Registers a shutdown hook (which can detect CTRL+C press). */
+	protected void addShutdownHook() {
+		// Gestione chiusura console (CTRL+C)...
+		shutdownHook = new Thread("shutdownHook") {
+			@Override
+			public void run() {
+				if (reader != null) {
+					reader.disconnect();
+				}
+				release();
+			}
+		};
+		Runtime.getRuntime().addShutdownHook(shutdownHook);
+	}
+
+	/** Unregisters the shutdown hook. */
+	protected void removeShutdownHook() {
 		if (shutdownHook != null) {
 			try {
 				Runtime.getRuntime().removeShutdownHook(shutdownHook);
 			}
 			catch (Exception e) {}
 		}
+	}
+
+	protected void printGoodbye() {
 		out.println(Resources.get("msg.bye"), true);
 	}
 
@@ -263,22 +270,26 @@ public abstract class RouterLoggerEngine {
 		}
 	}
 
-	private void welcome() {
+	/** Prints a welcome message. */
+	protected void printWelcome() {
 		final Version version = Version.getInstance();
 		out.println(Resources.get("msg.welcome", Resources.get("msg.application.name"), Resources.get("msg.version", version.getNumber(), version.getDate()), Resources.get("msg.website")));
 		out.println();
 		out.println(Resources.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
 
-		if (StringUtils.isNotBlank(reader.getDeviceModel())) {
-			out.println(Resources.get("msg.device.model", reader.getDeviceModel().trim()));
-		}
 		if (!configuration.getThresholds().isEmpty()) {
 			out.println(Resources.get("msg.thresholds", configuration.getThresholds()));
 		}
 		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
 			out.println(Resources.get("msg.settings", configuration));
 		}
+	}
 
+	/** Prints the device model name, if available. */
+	protected void printDeviceModel() {
+		if (reader != null && reader.getDeviceModel() != null && !reader.getDeviceModel().trim().isEmpty()) {
+			out.println(Resources.get("msg.device.model", reader.getDeviceModel().trim()));
+		}
 		out.println();
 	}
 

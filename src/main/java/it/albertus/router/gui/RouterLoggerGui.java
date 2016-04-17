@@ -55,12 +55,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 		final Shell shell = routerLogger.getShell();
 		try {
-			// Apre la finestra principale...
 			shell.open();
-
-			// Avvia il ciclo di interrogazione...
+			routerLogger.addShutdownHook();
+			routerLogger.beforeConnect();
 			routerLogger.connect();
-
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
@@ -72,17 +70,11 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
 		}
 		finally {
-			// Segnala al thread che deve terminare il loop immediatamente.
 			routerLogger.disconnect(true);
-
-			// Distrugge la GUI...
 			display.dispose();
-
-			// Attende che il thread completi il rilascio risorse...
 			routerLogger.joinPollingThread();
-
-			// Stampa del messaggio di commiato...
-			routerLogger.afterOuterLoop();
+			routerLogger.removeShutdownHook();
+			routerLogger.printGoodbye();
 		}
 	}
 
@@ -243,12 +235,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	/** Avvia il ciclo. */
 	public void connect() {
-		// Reader & Writer initialization...
-		initReaderAndWriter();
-
-		// Print welcome message...
-		beforeOuterLoop();
-
 		// Avvia thread di interrogazione router...
 		if (getReader() != null && getWriter() != null) {
 			boolean connect;
@@ -259,9 +245,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				logger.log(exception);
 				return;
 			}
-			finally {
-				release();
-			}
 			if (connect) {
 				exit = false;
 				pollingThread = new Thread("pollingThread") {
@@ -271,10 +254,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							outerLoop();
 						}
 						catch (final Exception exception) {
-							logger.log(exception);
-						}
-						finally {
 							release();
+							logger.log(exception);
 						}
 					}
 				};
@@ -294,7 +275,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				try {
 					pollingThread.interrupt();
 				}
-				catch (final SecurityException se) {}
+				catch (final SecurityException se) {
+					logger.log(se);
+				}
 			}
 		}
 		else {
@@ -302,7 +285,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 	}
 
-	/** Interrompe il ciclo e forza la disconnessione. */
+	/** Interrupts polling thread and disconnect. */
 	public void disconnect() {
 		disconnect(false);
 	}
@@ -313,7 +296,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			@Override
 			public void run() {
 				joinPollingThread();
-				afterOuterLoop();
 				configuration.reload();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
@@ -322,6 +304,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					public void run() {
 						getConsole().clear();
 						dataTable.reset();
+						beforeConnect();
 						connect();
 					}
 				}.start();

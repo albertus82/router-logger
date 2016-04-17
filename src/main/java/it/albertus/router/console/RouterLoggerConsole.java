@@ -4,6 +4,7 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
 import it.albertus.util.TerminalConsole;
 import it.albertus.util.Version;
 
@@ -22,7 +23,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 
 	/** Entry point for console version */
 	public static void start(final String args[]) {
-		/* Controlli sui parametri */
+		// Check arguments...
 		if (args[0].trim().equalsIgnoreCase(ARG_HELP)) {
 			final Version version = Version.getInstance();
 			System.out.println(Resources.get("msg.welcome", Resources.get("msg.application.name"), Resources.get("msg.version", version.getNumber(), version.getDate()), Resources.get("msg.website")));
@@ -37,12 +38,21 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			System.out.println(Resources.get("err.try.help", ARG_HELP));
 		}
 		else if (args[0].trim().equalsIgnoreCase(ARG_CONSOLE)) {
-			/* Start RouterLogger in console */
+			// Start RouterLogger in console...
 			final RouterLoggerConsole routerLogger = new RouterLoggerConsole();
-			routerLogger.initReaderAndWriter();
-			routerLogger.beforeOuterLoop();
-			routerLogger.outerLoop();
-			routerLogger.afterOuterLoop();
+			try {
+				routerLogger.addShutdownHook();
+				routerLogger.beforeConnect();
+				routerLogger.outerLoop();
+				routerLogger.printGoodbye();
+			}
+			catch (final Throwable throwable) {
+				routerLogger.release();
+				Logger.getInstance().log(throwable);
+			}
+			finally {
+				routerLogger.removeShutdownHook();
+			}
 		}
 		else {
 			System.err.println(Resources.get("err.unrecognized.option", args[0]));
