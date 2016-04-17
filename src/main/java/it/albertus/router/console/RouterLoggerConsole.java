@@ -46,9 +46,13 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				routerLogger.outerLoop();
 				routerLogger.printGoodbye();
 			}
+			catch (final Exception exception) {
+				routerLogger.release();
+				Logger.getInstance().log(exception);
+			}
 			catch (final Throwable throwable) {
 				routerLogger.release();
-				Logger.getInstance().log(throwable);
+				throwable.printStackTrace(System.err);
 			}
 			finally {
 				routerLogger.removeShutdownHook();

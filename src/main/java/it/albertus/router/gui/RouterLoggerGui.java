@@ -74,8 +74,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			display.dispose();
 			routerLogger.joinPollingThread();
 			routerLogger.removeShutdownHook();
-			routerLogger.printGoodbye();
 		}
+		routerLogger.printGoodbye();
 	}
 
 	private static RouterLoggerGui newInstance(final Display display) {
@@ -257,6 +257,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							release();
 							logger.log(exception);
 						}
+						catch (final Throwable throwable) {
+							release();
+						}
 					}
 				};
 				pollingThread.start();
@@ -326,6 +329,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, ce);
 				if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.forConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
+					logger.log(ce, Destination.CONSOLE);
 					return;
 				}
 			}
