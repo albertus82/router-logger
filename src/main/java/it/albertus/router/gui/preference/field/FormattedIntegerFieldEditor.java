@@ -4,7 +4,6 @@ import it.albertus.router.gui.TextFormatter;
 import it.albertus.router.gui.preference.field.listener.IntegerVerifyListener;
 import it.albertus.router.resources.Resources;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -33,19 +32,18 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 	protected void doLoad() {
 		final Text text = getTextControl();
 		if (text != null && !text.isDisposed()) {
-			int value;
+			setToolTipText(getPreferenceStore().getDefaultInt(getPreferenceName()));
+			String value;
 			try {
-				value = Integer.parseInt(getPreferenceStore().getString(getPreferenceName()).trim());
+				value = Integer.toString(Integer.parseInt(getPreferenceStore().getString(getPreferenceName()).trim()));
 			}
 			catch (final Exception e) {
-				value = IPreferenceStore.INT_DEFAULT_DEFAULT;
+				value = "";
 			}
-			final String valueText = Integer.toString(value);
-			text.setText(valueText);
-			oldValue = valueText;
-			setToolTipText(getPreferenceStore().getDefaultInt(getPreferenceName()));
+			text.setText(value);
+			oldValue = value;
+			updateFontStyle();
 		}
-		updateFontStyle();
 	}
 
 	@Override
