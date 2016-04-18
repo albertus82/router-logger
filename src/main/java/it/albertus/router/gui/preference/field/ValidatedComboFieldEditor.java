@@ -14,12 +14,7 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 
 	public ValidatedComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
-		getComboBoxControl().addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(final KeyEvent ke) {
-				validate();
-			}
-		});
+		getComboBoxControl().addKeyListener(new ValidateKeyListener());
 	}
 
 	protected abstract boolean checkState();
@@ -117,6 +112,13 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 
 	public void setErrorMessage(final String message) {
 		this.errorMessage = message;
+	}
+
+	protected class ValidateKeyListener extends KeyAdapter {
+		@Override
+		public void keyReleased(final KeyEvent ke) {
+			validate();
+		}
 	}
 
 }
