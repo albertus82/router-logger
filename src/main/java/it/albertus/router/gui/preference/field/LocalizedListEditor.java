@@ -8,14 +8,16 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class LocalizedListEditor extends ListEditor {
 
-	private boolean localized = true; // true only after super constructors!
+	private boolean localized; // becomes true only after super constructors!
 
 	public LocalizedListEditor() {
 		super();
+		localized = true;
 	}
 
 	public LocalizedListEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
+		localized = true;
 	}
 
 	@Override

@@ -9,15 +9,17 @@ import org.eclipse.swt.widgets.Composite;
 
 public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 
-	private boolean localized = true; // true only after super constructors!
+	private boolean localized; // becomes true only after super constructors!
 
 	public FormattedDirectoryFieldEditor() {
 		super();
+		localized = true;
 		setErrorMessage(Resources.get("err.preferences.directory"));
 	}
 
 	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
+		localized = true;
 		setErrorMessage(Resources.get("err.preferences.directory"));
 	}
 

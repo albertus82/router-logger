@@ -10,12 +10,13 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor {
 
-	private boolean listenerAdded = true;  // true only after super constructors!
+	private boolean keyListenerAdded; // becomes true only after super constructors!
 	private boolean valid = true;
-	private String errorMessage = null;
+	private String errorMessage;
 
 	public ValidatedComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
+		keyListenerAdded = true;
 	}
 
 	protected abstract boolean checkState();
@@ -69,9 +70,9 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 	}
 
 	@Override
-	protected Combo getComboBoxControl(Composite parent) {
+	protected Combo getComboBoxControl(final Composite parent) {
 		final Combo combo = super.getComboBoxControl(parent);
-		if (!listenerAdded) { // enters only when called from super constructors!
+		if (!keyListenerAdded) { // enters only when called from super constructors!
 			combo.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
