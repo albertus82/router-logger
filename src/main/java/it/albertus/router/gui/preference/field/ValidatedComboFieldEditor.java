@@ -75,7 +75,7 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		if (!keyListenerAdded) { // enters only when called from super constructors!
 			combo.addKeyListener(new KeyAdapter() {
 				@Override
-				public void keyReleased(KeyEvent e) {
+				public void keyReleased(final KeyEvent ke) {
 					ValidatedComboFieldEditor.super.updateValue();
 					boolean oldValue = valid;
 					refreshValidState();
