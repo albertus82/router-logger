@@ -5,18 +5,21 @@ import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor {
 
-	private boolean keyListenerAdded; // becomes true only after super constructors!
 	private boolean valid = true;
 	private String errorMessage;
 
 	public ValidatedComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
-		keyListenerAdded = true;
+		getComboBoxControl().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(final KeyEvent ke) {
+				validate();
+			}
+		});
 	}
 
 	protected abstract boolean checkState();
@@ -24,11 +27,8 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 	@Override
 	protected void updateValue() {
 		cleanComboText();
-		super.updateValue();
-		boolean oldValue = valid;
-		refreshValidState();
+		validate();
 		updateFontStyle();
-		fireValueChanged(IS_VALID, oldValue, valid);
 	}
 
 	@Override
@@ -69,23 +69,6 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		return valid;
 	}
 
-	@Override
-	protected Combo getComboBoxControl(final Composite parent) {
-		final Combo combo = super.getComboBoxControl(parent);
-		if (!keyListenerAdded) { // enters only when called from super constructors!
-			combo.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyReleased(final KeyEvent ke) {
-					ValidatedComboFieldEditor.super.updateValue();
-					boolean oldValue = valid;
-					refreshValidState();
-					fireValueChanged(IS_VALID, oldValue, valid);
-				}
-			});
-		}
-		return combo;
-	}
-
 	protected void setValid(final boolean valid) {
 		this.valid = valid;
 	}
@@ -105,6 +88,13 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		if (defaultValue != null && !defaultValue.isEmpty()) {
 			TextFormatter.updateFontStyle(getComboBoxControl(), defaultValue, getValue());
 		}
+	}
+
+	protected void validate() {
+		super.updateValue();
+		boolean oldValue = valid;
+		refreshValidState();
+		fireValueChanged(IS_VALID, oldValue, valid);
 	}
 
 	/** Trims value (from configuration file) to empty. */
