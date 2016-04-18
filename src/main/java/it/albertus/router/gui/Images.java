@@ -17,7 +17,7 @@ public class Images {
 	public static final Image[] MAIN_ICONS = loadIcons("main.ico");
 
 	/* Icone base per l'area di notifica (16x16) */
-	static final Image TRAY_ICON_ACTIVE = Images.MAIN_ICONS[2];
+	static final Image TRAY_ICON_ACTIVE = Images.MAIN_ICONS[1];
 	static final Image TRAY_ICON_INACTIVE = loadIcons("inactive.ico")[0];
 
 	/* Simboli in sovraimpressione per l'area di notifica (16x16, non utilizzabili da soli) */
