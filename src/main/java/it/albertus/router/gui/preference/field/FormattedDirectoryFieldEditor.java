@@ -9,25 +9,24 @@ import org.eclipse.swt.widgets.Composite;
 
 public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 
-	private boolean localized; // becomes true only after super constructors!
+	private boolean localized; // Don't set it to false explicitly!
 
 	public FormattedDirectoryFieldEditor() {
 		super();
-		localized = true;
 		setErrorMessage(Resources.get("err.preferences.directory"));
 	}
 
 	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
-		localized = true;
 		setErrorMessage(Resources.get("err.preferences.directory"));
 	}
 
 	@Override
 	protected Button getChangeControl(final Composite parent) {
 		final Button browseButton = super.getChangeControl(parent);
-		if (!localized) { // enters only when called from super constructors!
+		if (!localized) {
 			browseButton.setText(Resources.get("lbl.preferences.directory.button.browse"));
+			localized = true;
 		}
 		return browseButton;
 	}
