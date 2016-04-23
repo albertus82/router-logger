@@ -15,18 +15,18 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 ### Installazione e configurazione di base
 
-1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato ZIP o TAR.GZ, possibilmente la pi&ugrave; recente;
-2. scompattare il file ZIP in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
+1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz**, possibilmente la pi&ugrave; recente;
+2. scompattare l'archivio in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
 In ambiente **Windows** &egrave; sufficiente richiamare il file batch [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat) senza specificare altro; analogamente su **Linux** e **OS X** basta richiamare rispettivamente lo script shell [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh) o [**`routerlogger.command`**](src/main/scripts/routerlogger.command).
 
 Al primo avvio, sar&agrave; necessario specificare il modello di router e pochi altri parametri di connessione:
-  * Indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
-  * Porta Telnet del router, default: `23`.
-  * Nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
-  * Password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
+  * indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito);
+  * porta Telnet del router (predefinita: `23`);
+  * nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
+  * password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
 
 Una volta configurato, il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.  
 
@@ -273,6 +273,6 @@ Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della 
 
 ### Riconoscimenti
 
-Quest'applicazione include componenti realizzati da [Apache Software Foundation](lib/license/apache-2.0.txt) ed [Eclipse Foundation](lib/license/eclipse-1.0.txt).
+Quest'applicazione include componenti realizzati da [Apache Software Foundation](lib/license/apache-2.0.txt) e da [Eclipse Foundation](lib/license/eclipse-1.0.txt).
 
 L'icona dell'applicazione &egrave; stata realizzata da [Pedram Pourang](http://tsujan.deviantart.com) (licenza [GPL](http://www.gnu.org/licenses/gpl.html)) e prelevata da [DeviantArt](http://www.deviantart.com).
