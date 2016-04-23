@@ -18,9 +18,9 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz**, possibilmente la pi&ugrave; recente;
 2. scompattare l'archivio in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. avviare il programma eseguendo lo script di avvio:
-  * Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat);
-  * Linux: [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh);
-  * OS X: [**`routerlogger.command`**](src/main/scripts/routerlogger.command).
+  * Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
+  * Linux: [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh)
+  * OS X: [**`routerlogger.command`**](src/main/scripts/routerlogger.command)
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
