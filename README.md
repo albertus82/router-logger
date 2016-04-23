@@ -48,7 +48,9 @@ Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la lib
 * **URL di connessione**: URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
 * **Nome utente**: nome utente per accedere al database.
 * **Password**: password per accedere al database.
+
 Infine, impostare la seguente opzione nella scheda **Salvataggio**:
+
 * **Destinazione/Classe Writer**: [**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
 
 
