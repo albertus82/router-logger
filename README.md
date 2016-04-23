@@ -37,18 +37,19 @@ Una volta configurato, il programma si connetter&agrave; al router e inizier&agr
 
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file. Per attivare questo tipo di salvataggio non occorre configurare nulla: questa &egrave; la modalit&agrave; predefinita.
 
-Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa occorre acccedere alla configurazione (men&ugrave; **Strumenti**) e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
+Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa occorre accedere alla configurazione (men&ugrave; **Strumenti**) e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
 
 ##### Salvataggio su database relazionale
 
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
 Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi accedere alla configurazione  (men&ugrave; **Strumenti**) e compilare le seguenti opzioni nella scheda **Salvataggio > Database**:
-* **Nome classe driver** = nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
-* **URL di connessione** = URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
-* **Nome utente** = nome utente per accedere al database.
-* **Password** = password per accedere al database.
+
+* **Nome classe driver**: nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
+* **URL di connessione**: URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
+* **Nome utente**: nome utente per accedere al database.
+* **Password**: password per accedere al database.
 Infine, impostare la seguente opzione nella scheda **Salvataggio**:
-* **Destinazione/Classe Writer** =[**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
+* **Destinazione/Classe Writer**: [**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
 
 
 ### Modalit&agrave; riga di comando
