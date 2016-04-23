@@ -17,46 +17,53 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz**, possibilmente la pi&ugrave; recente;
 2. scompattare l'archivio in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
-3. avviare il programma eseguendo lo script di avvio:
+3. avviare il programma eseguendo lo script di avvio che, a seconda del sistema operativo, sar&agrave;:
   * Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
   * Linux: [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh)
   * OS X: [**`routerlogger.command`**](src/main/scripts/routerlogger.command)
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
-Al primo avvio, sar&agrave; necessario specificare il modello di router e pochi altri parametri di connessione:
-  * indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito);
-  * porta Telnet del router (predefinita: `23`);
-  * nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
-  * password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
+Al primo avvio, sar&agrave; necessario accedere alla configurazione per specificare il modello di router (**Disposntivo/Classe Reader**) e pochi altri parametri di connessione nella scheda **Router**:
+* **Nome utente**: username per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
+* **Password**: password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser);
+* **Indirizzo**: indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito);
+* **Porta Telnet**: porta Telnet del router (predefinita: `23`).
 
 Una volta configurato, il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.  
 
->&Egrave; disponibile anche un'opzione che consente di avviare l'applicazione in modalit&agrave; console (senza interfaccia grafica):
->* Windows: **`routerlogger.bat -c`**
->* Linux: **`routerlogger.sh -c`**
->* OS X: **`routerlogger.command -c`**
->in questo caso, prima del primo avvio, occorre modificare il file [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
-  * **`reader.class.name`**= Uno tra [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java), [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java), [`AsusDslN14UReader`](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java) e [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare.
-  * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito).
-  * **`router.port`**= porta Telnet del router, default: `23`.
-  * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser).
-  * **`router.password`**= password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
+##### Salvataggio su file CSV
 
-
-##### CSV
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file. Per attivare questo tipo di salvataggio non occorre configurare nulla: questa &egrave; la modalit&agrave; predefinita.
 
-Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa, occorre abilitare la propriet&agrave; **`csv.destination.path`** nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) (rimuovendo `#`) e assegnarle il valore desiderato (ad es.: `C:/Router/Logs`).
+Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa occorre acccedere alla configurazione e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
 
-##### Database
+##### Salvataggio su database relazionale
+
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
-Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi abilitare una serie di propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) (rimuovendo `#`) e assegnare ad esse il valore desiderato:
-* **`writer.class.name`**=[**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
-* **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
-* **`database.url`**= URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
-* **`database.username`**= nome utente per accedere al database.
-* **`database.password`**= password per accedere al database.
+Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi accedere alla configurazione e compilare le seguenti opzioni della scheda **Salvataggio > Database**:
+* **Nome classe driver** = nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
+* **URL di connessione** = URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
+* **Nome utente** = nome utente per accedere al database.
+* **Password** = password per accedere al database.
+Infine, impostare la seguente opzione nella scheda **Salvataggio**:
+* **Destinazione/Classe Writer** =[**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
+
+
+### Modalit&agrave; riga di comando
+
+&Egrave; disponibile un'opzione che consente di avviare l'applicazione in modalit&agrave; riga di comando (senza interfaccia grafica):
+
+* Windows: **`routerlogger.bat -c`**
+* Linux: **`routerlogger.sh -c`**
+* OS X: **`routerlogger.command -c`**
+
+In questo caso, prima del primo avvio, occorre modificare manualmente il file di configurazione [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
+* **`reader.class.name`**= Uno tra [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java), [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java), [`AsusDslN14UReader`](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java) e [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare;
+* **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito);
+* **`router.port`**= porta Telnet del router (predefinita: `23`);
+* **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
+* **`router.password`**= password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
 
 
 ### Configurazione avanzata
@@ -162,6 +169,10 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 
 ###### Database
 
+* **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
+* **`database.url`**= URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
+* **`database.username`**= nome utente per accedere al database.
+* **`database.password`**= password per accedere al database.
 * **`database.table.name`**= nome della tabella in cui saranno inseriti i dati (default: `router_log`).
 * **`database.connection.validation.timeout.ms`**= tempo di attesa massimo su richiesta di verifica della validit&agrave; della connessione al database, in millisecondi (default: `2000` ms).
 * **`database.timestamp.column.type`**= tipo di dato utilizzato per la colonna del *timestamp* in fase di creazione della tabella (default: `TIMESTAMP`).
