@@ -82,8 +82,8 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: `20000` ms).
 * **`telnet.newline.characters`**= specifica come inviare il comando di ritorno a capo al server; pu&ograve; assumere uno tra i seguenti valori:
   * **`CRLF`** (default): invia la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
-  * **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Linux).
-  * **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`, stile Macintosh).
+  * **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
+  * **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`).
 
 ##### Interfaccia grafica (GUI)
 
@@ -153,8 +153,8 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 * **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
 * **`csv.newline.characters`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati. Se questa propriet&agrave; non &egrave; presente (o &egrave; commentata), viene utilizzata la rappresentazione specifica della piattaforma su cui si esegue l'applicazione. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
   * **`CRLF`**: scrive la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
-  * **`LF`**: scrive il solo carattere `LF` (`0x0A`) (`\n`, stile Unix/Linux).
-  * **`CR`**: scrive il solo carattere `CR` (`0x0D`) (`\r`, stile Macintosh).
+  * **`LF`**: scrive il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
+  * **`CR`**: scrive il solo carattere `CR` (`0x0D`) (`\r`).
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
 * **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
 
