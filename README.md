@@ -24,7 +24,8 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
-Al primo avvio, sar&agrave; necessario accedere alla configurazione per specificare il modello di router (**Disposntivo/Classe Reader**) e pochi altri parametri di connessione nella scheda **Router**:
+Al primo avvio sar&agrave; necessario accedere alla configurazione per specificare il modello di router (**Dispositivo/Classe Reader**) e pochi altri parametri di connessione nella scheda **Router**:
+
 * **Nome utente**: username per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
 * **Password**: password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser);
 * **Indirizzo**: indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito);
@@ -36,12 +37,12 @@ Una volta configurato, il programma si connetter&agrave; al router e inizier&agr
 
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file. Per attivare questo tipo di salvataggio non occorre configurare nulla: questa &egrave; la modalit&agrave; predefinita.
 
-Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa occorre acccedere alla configurazione e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
+Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa occorre acccedere alla configurazione (men&ugrave; **Strumenti**) e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
 
 ##### Salvataggio su database relazionale
 
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
-Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi accedere alla configurazione e compilare le seguenti opzioni della scheda **Salvataggio > Database**:
+Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi accedere alla configurazione  (men&ugrave; **Strumenti**) e compilare le seguenti opzioni nella scheda **Salvataggio > Database**:
 * **Nome classe driver** = nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
 * **URL di connessione** = URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
 * **Nome utente** = nome utente per accedere al database.
