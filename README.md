@@ -52,7 +52,7 @@ Infine, impostare la seguente opzione nella scheda **Salvataggio**:
 * **Destinazione/Classe Writer**: [**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
 
 
-### Modalit&agrave; riga di comando
+### Interfaccia a riga di comando
 
 &Egrave; disponibile un'opzione che consente di avviare l'applicazione in modalit&agrave; riga di comando (senza interfaccia grafica):
 
