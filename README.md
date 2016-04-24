@@ -24,7 +24,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
-Al primo avvio sar&agrave; necessario accedere alla configurazione per specificare il modello di router (**Dispositivo/Classe Reader**) e pochi altri parametri di connessione nella scheda **Router**:
+Al primo avvio sar&agrave; necessario accedere alla configurazione, scheda **Router**, per specificare il modello di router (**Dispositivo/Classe Reader**) e pochi altri parametri di connessione:
 
 * **Nome utente**: username per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
 * **Password**: password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser);
