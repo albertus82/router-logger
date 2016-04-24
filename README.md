@@ -18,9 +18,9 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz**, possibilmente la pi&ugrave; recente;
 2. scompattare l'archivio in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. avviare il programma eseguendo lo script di avvio che, a seconda del sistema operativo, sar&agrave;:
-  * Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
-  * Linux: [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh)
-  * OS X: [**`routerlogger.command`**](src/main/scripts/routerlogger.command)
+	* Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
+	* Linux: [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh)
+	* OS X: [**`routerlogger.command`**](src/main/scripts/routerlogger.command)
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
@@ -94,9 +94,9 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`socket.timeout.ms`**= timeout del socket in millisecondi, ossia il tempo di inattivit&agrave; massimo durante la comunicazione con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: `30000` ms). Questo valore deve essere sempre maggiore dell'intervallo tra le richieste (`logger.interval.normal.ms`).
 * **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: `20000` ms).
 * **`telnet.newline.characters`**= specifica come inviare il comando di ritorno a capo al server; pu&ograve; assumere uno tra i seguenti valori:
-  * **`CRLF`** (default): invia la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
-  * **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
-  * **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`).
+	* **`CRLF`** (default): invia la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
+	* **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
+	* **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`).
 
 ##### Interfaccia grafica (GUI)
 
@@ -124,12 +124,12 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 La selezione del modello di modem router da interrogare si effettua configurando nel [`routerlogger.cfg`](src/main/config/routerlogger.cfg) la seguente propriet&agrave;:
 
 * **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem router le informazioni sullo stato della connessione tramite Telnet, e pu&ograve; assumere i valori seguenti:
-  * [**`TpLink8970Reader`**](src/main/java/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router **TP-Link TD-W8970 V1**.
-  * [**`AsusDslN12EReader`**](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router **ASUS DSL-N12E**.
-  * [**`AsusDslN14UReader`**](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java): lettura informazioni dal router **ASUS DSL-N14U**.
-  * [**`DLinkDsl2750Reader`**](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java): lettura informazioni dal router **D-Link DSL-2750B**.
-  * [**`DummyReader`**](src/main/java/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
-  * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
+	* [**`TpLink8970Reader`**](src/main/java/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router **TP-Link TD-W8970 V1**.
+	* [**`AsusDslN12EReader`**](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router **ASUS DSL-N12E**.
+	* [**`AsusDslN14UReader`**](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java): lettura informazioni dal router **ASUS DSL-N14U**.
+	* [**`DLinkDsl2750Reader`**](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java): lettura informazioni dal router **D-Link DSL-2750B**.
+	* [**`DummyReader`**](src/main/java/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
+	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
 ###### TP-Link TD-W8970 V1
 
@@ -156,18 +156,18 @@ La selezione del modello di modem router da interrogare si effettua configurando
 
 La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la seguente propriet&agrave;:
 * **`writer.class.name`**: identifica la classe che si occupa del salvataggio delle informazioni, e pu&ograve; assumere i valori seguenti:
-  * [**`CsvWriter`**](src/main/java/it/albertus/router/writer/CsvWriter.java): scrittura su file **CSV** (default).
-  * [**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java): scrittura su **database**.
-  * [**`DummyWriter`**](src/main/java/it/albertus/router/writer/DummyWriter.java): nessuna scrittura (utile a scopo di test).
-  * nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/main/java/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
+	* [**`CsvWriter`**](src/main/java/it/albertus/router/writer/CsvWriter.java): scrittura su file **CSV** (default).
+	* [**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java): scrittura su **database**.
+	* [**`DummyWriter`**](src/main/java/it/albertus/router/writer/DummyWriter.java): nessuna scrittura (utile a scopo di test).
+	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/main/java/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
 
 ###### CSV
 
 * **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
 * **`csv.newline.characters`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati. Se questa propriet&agrave; non &egrave; presente (o &egrave; commentata), viene utilizzata la rappresentazione specifica della piattaforma su cui si esegue l'applicazione. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
-  * **`CRLF`**: scrive la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
-  * **`LF`**: scrive il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
-  * **`CR`**: scrive il solo carattere `CR` (`0x0D`) (`\r`).
+	* **`CRLF`**: scrive la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
+	* **`LF`**: scrive il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
+	* **`CR`**: scrive il solo carattere `CR` (`0x0D`) (`\r`).
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
 * **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
 
@@ -202,12 +202,12 @@ Ogni soglia &egrave; costituita da una propriet&agrave; nel file [`routerlogger.
 dove:
 * **chiave**: chiave del parametro di interesse; deve corrispondere ad una chiave presente nella mappa delle informazioni estratte.
 * **operatore**: operatore relazionale (di confronto) che determina la condizione di raggiungimento:
-  * **`lt`** (oppure `<`): minore di...
-  * **`le`** (oppure `<=`): minore o uguale a...
-  * **`eq`** (oppure `=`, `==`): uguale a...
-  * **`ge`** (oppure `>=`): maggiore o uguale a...
-  * **`gt`** (oppure `>`): maggiore di...
-  * **`ne`** (oppure `<>`, `!=`, `^=`): diverso da...
+	* **`lt`** (oppure `<`): minore di...
+	* **`le`** (oppure `<=`): minore o uguale a...
+	* **`eq`** (oppure `=`, `==`): uguale a...
+	* **`ge`** (oppure `>=`): maggiore o uguale a...
+	* **`gt`** (oppure `>`): maggiore di...
+	* **`ne`** (oppure `<>`, `!=`, `^=`): diverso da...
 * **valore**: valore di soglia.
 
 Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applicazione che la propriet&agrave; riguarda una soglia.
