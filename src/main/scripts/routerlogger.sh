@@ -6,7 +6,7 @@ if [ "$1" = "" ]
   fi
 else
   if [ "$JAVA_HOME" != "" ]
-  then "$JAVA_HOME/bin/java" -Xms4m -Xmx8m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLogger $1 $2
-  else java -Xms4m -Xmx8m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLogger $1 $2
+  then "$JAVA_HOME/bin/java" -Xms4m -Xmx16m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLogger $1 $2
+  else java -Xms4m -Xmx16m -classpath "routerlogger.jar:lib/*" it.albertus.router.RouterLogger $1 $2
   fi
 fi
