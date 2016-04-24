@@ -51,7 +51,7 @@ Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la lib
 
 Infine, impostare la seguente opzione nella scheda **Salvataggio**:
 
-* **Destinazione/Classe Writer**: [**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
+* **Destinazione/Classe Writer**: [**Database**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
 
 
 ### Interfaccia a riga di comando
