@@ -14,8 +14,10 @@ public class ConnectSelectionListener extends SelectionAdapter {
 	}
 
 	@Override
-	public void widgetSelected(SelectionEvent e) {
-		gui.connect();
+	public void widgetSelected(final SelectionEvent se) {
+		if (gui.canConnect()) {
+			gui.connect();
+		}
 	}
 
 }
