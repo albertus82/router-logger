@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
+import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -10,17 +11,17 @@ public class FormattedStringFieldEditor extends StringFieldEditor {
 
 	public FormattedStringFieldEditor(String name, String labelText, Composite parent) {
 		super(name, labelText, parent);
-		setErrorMessage(Resources.get("err.preferences.string"));
+		init();
 	}
 
 	public FormattedStringFieldEditor(String name, String labelText, int width, Composite parent) {
 		super(name, labelText, width, parent);
-		setErrorMessage(Resources.get("err.preferences.string"));
+		init();
 	}
 
 	public FormattedStringFieldEditor(String name, String labelText, int width, int strategy, Composite parent) {
 		super(name, labelText, width, strategy, parent);
-		setErrorMessage(Resources.get("err.preferences.string"));
+		init();
 	}
 
 	@Override
@@ -47,6 +48,11 @@ public class FormattedStringFieldEditor extends StringFieldEditor {
 		if (defaultValue != null && !defaultValue.isEmpty()) {
 			TextFormatter.updateFontStyle(getTextControl(), defaultValue);
 		}
+	}
+
+	private void init() {
+		setErrorMessage(Resources.get("err.preferences.string"));
+		setTextLimit(Preference.DEFAULT_TEXT_LIMIT);
 	}
 
 }

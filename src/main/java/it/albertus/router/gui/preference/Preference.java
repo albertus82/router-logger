@@ -15,6 +15,7 @@ import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
+import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
@@ -43,7 +44,7 @@ public enum Preference {
 
 	READER_CLASS_NAME(Page.READER, ReaderComboFieldEditor.class, ReaderPreferencePage.getReaderComboOptions()),
 	ROUTER_USERNAME(Page.READER, FormattedStringFieldEditor.class),
-	ROUTER_PASSWORD(Page.READER, FormattedStringFieldEditor.class),
+	ROUTER_PASSWORD(Page.READER, PasswordFieldEditor.class),
 	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS, false),
 	ROUTER_PORT(Page.READER, FormattedIntegerFieldEditor.class, Integer.toString(Reader.Defaults.ROUTER_PORT), 5),
 
@@ -109,6 +110,8 @@ public enum Preference {
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR, false),
 
 	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, ThresholdsFieldEditor.class);
+
+	public static final int DEFAULT_TEXT_LIMIT = 0xFF;
 
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 

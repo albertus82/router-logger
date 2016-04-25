@@ -10,6 +10,7 @@ import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
+import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
@@ -137,6 +138,13 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 				sfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
 			}
 			fe = sfe;
+		}
+		else if (PasswordFieldEditor.class.equals(clazz)) {
+			final PasswordFieldEditor pfe = new PasswordFieldEditor(name, labelText, getFieldEditorParent());
+			if (preference.getFieldEditorData() instanceof Boolean) {
+				pfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
+			}
+			fe = pfe;
 		}
 		else if (IntegerFieldEditor.class.equals(clazz) || FormattedIntegerFieldEditor.class.equals(clazz)) {
 			if (preference.getFieldEditorData() instanceof Integer) {

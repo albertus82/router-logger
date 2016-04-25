@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
+import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -11,14 +12,10 @@ public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 
 	private boolean localized; // Do not set any value here!
 
-	public FormattedDirectoryFieldEditor() {
-		super();
-		setErrorMessage(Resources.get("err.preferences.directory"));
-	}
-
 	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 		setErrorMessage(Resources.get("err.preferences.directory"));
+		setTextLimit(Preference.DEFAULT_TEXT_LIMIT);
 	}
 
 	@Override

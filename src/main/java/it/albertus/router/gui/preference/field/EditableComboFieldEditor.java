@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.router.gui.preference.Preference;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -36,6 +38,7 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 		if (combo == null) {
 			combo = new Combo(parent, SWT.NONE);
 			setComboBoxControl(combo);
+			combo.setTextLimit(Preference.DEFAULT_TEXT_LIMIT);
 			combo.setFont(parent.getFont());
 			final String[][] entryNamesAndValues = getEntryNamesAndValues();
 			for (int i = 0; i < entryNamesAndValues.length; i++) {
