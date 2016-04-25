@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class LocalizedListEditor extends ListEditor {
 
-	private boolean localized; // Don't set it to false explicitly!
+	private boolean localized; // Do not set any value here!
 
 	public LocalizedListEditor() {
 		super();

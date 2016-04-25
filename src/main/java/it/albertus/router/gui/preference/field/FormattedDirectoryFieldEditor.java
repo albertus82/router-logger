@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 
-	private boolean localized; // Don't set it to false explicitly!
+	private boolean localized; // Do not set any value here!
 
 	public FormattedDirectoryFieldEditor() {
 		super();
