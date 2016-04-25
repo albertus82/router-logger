@@ -37,8 +37,8 @@ public class TextConsole extends Console {
 		if (this.scrollable == null || this.scrollable.isDisposed()) {
 			createText(parent);
 			scrollable.setLayoutData(layoutData);
-			scrollable.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
-			scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+			scrollable.setFont(JFaceResources.getTextFont());
+			scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
