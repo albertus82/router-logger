@@ -12,9 +12,9 @@ public class ClearMenuBarSelectionListener extends ClearSelectionListener {
 	}
 
 	@Override
-	public void widgetSelected(SelectionEvent e) {
+	public void widgetSelected(final SelectionEvent se) {
 		if (gui.canClearConsole()) {
-			if (confirm(Resources.get("msg.confirm.clear.console.text"), Resources.get("msg.confirm.clear.console.message")) && gui.canClearConsole()) {
+			if (confirm(Resources.get("msg.confirm.clear.console.text"), Resources.get("msg.confirm.clear.console.message"))) {
 				gui.getConsole().clear();
 			}
 		}
