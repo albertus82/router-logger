@@ -129,11 +129,10 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		FieldEditor fe = null;
 		final String name = preference.getConfigurationKey();
 		final String labelText = Resources.get(preference.getResourceKey());
-		final Composite parent = getFieldEditorParent();
 		final Class<? extends FieldEditor> clazz = preference.getFieldEditorClass();
 
 		if (StringFieldEditor.class.equals(clazz) || FormattedStringFieldEditor.class.equals(clazz)) {
-			final StringFieldEditor sfe = new FormattedStringFieldEditor(name, labelText, parent);
+			final StringFieldEditor sfe = new FormattedStringFieldEditor(name, labelText, getFieldEditorParent());
 			if (preference.getFieldEditorData() instanceof Boolean) {
 				sfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
 			}
@@ -141,49 +140,49 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		}
 		else if (IntegerFieldEditor.class.equals(clazz) || FormattedIntegerFieldEditor.class.equals(clazz)) {
 			if (preference.getFieldEditorData() instanceof Integer) {
-				fe = new FormattedIntegerFieldEditor(name, labelText, parent, (Integer) preference.getFieldEditorData());
+				fe = new FormattedIntegerFieldEditor(name, labelText, getFieldEditorParent(), (Integer) preference.getFieldEditorData());
 			}
 			else {
-				fe = new FormattedIntegerFieldEditor(name, labelText, parent);
+				fe = new FormattedIntegerFieldEditor(name, labelText, getFieldEditorParent());
 			}
 		}
 		else if (DirectoryFieldEditor.class.equals(clazz) || FormattedDirectoryFieldEditor.class.equals(clazz)) {
-			final DirectoryFieldEditor dfe = new FormattedDirectoryFieldEditor(name, labelText, parent);
+			final DirectoryFieldEditor dfe = new FormattedDirectoryFieldEditor(name, labelText, getFieldEditorParent());
 			if (preference.getFieldEditorData() instanceof Boolean) {
 				dfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
 			}
 			fe = dfe;
 		}
 		else if (BooleanFieldEditor.class.equals(clazz)) {
-			fe = new BooleanFieldEditor(name, labelText, parent);
+			fe = new BooleanFieldEditor(name, labelText, getFieldEditorParent());
 		}
 		else if (ComboFieldEditor.class.equals(clazz)) {
-			fe = new ComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+			fe = new ComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), getFieldEditorParent());
 		}
 		else if (FormattedComboFieldEditor.class.equals(clazz)) {
-			fe = new FormattedComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+			fe = new FormattedComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), getFieldEditorParent());
 		}
 		else if (EditableComboFieldEditor.class.equals(clazz)) {
-			fe = new EditableComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+			fe = new EditableComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), getFieldEditorParent());
 		}
 		else if (ReaderComboFieldEditor.class.equals(clazz)) {
-			fe = new ReaderComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+			fe = new ReaderComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), getFieldEditorParent());
 		}
 		else if (WriterComboFieldEditor.class.equals(clazz)) {
-			fe = new WriterComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+			fe = new WriterComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), getFieldEditorParent());
 		}
 		else if (DatabaseComboFieldEditor.class.equals(clazz)) {
-			fe = new DatabaseComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+			fe = new DatabaseComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), getFieldEditorParent());
 		}
 		else if (IterationsComboFieldEditor.class.equals(clazz)) {
-			fe = new IterationsComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), parent);
+			fe = new IterationsComboFieldEditor(name, labelText, (String[][]) preference.getFieldEditorData(), getFieldEditorParent());
 		}
 		else if (ScaleFieldEditor.class.equals(clazz) || ScaleFormattedIntegerFieldEditor.class.equals(clazz)) {
 			int[] data = (int[]) preference.getFieldEditorData();
-			fe = new ScaleFormattedIntegerFieldEditor(name, labelText, parent, data[0], data[1], data[2], data[3]);
+			fe = new ScaleFormattedIntegerFieldEditor(name, labelText, getFieldEditorParent(), data[0], data[1], data[2], data[3]);
 		}
 		else if (ThresholdsFieldEditor.class.equals(clazz)) {
-			fe = new ThresholdsFieldEditor(name, labelText, parent);
+			fe = new ThresholdsFieldEditor(name, labelText, getFieldEditorParent());
 		}
 
 		return fe;
