@@ -38,7 +38,9 @@ public class TextConsole extends Console {
 			createText(parent);
 			scrollable.setLayoutData(layoutData);
 			scrollable.setFont(JFaceResources.getTextFont());
-			scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+			if (SWT.getPlatform().toLowerCase().startsWith("win")) {
+				scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+			}
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
