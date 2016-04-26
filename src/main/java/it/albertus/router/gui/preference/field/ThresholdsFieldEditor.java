@@ -79,7 +79,7 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 	}
 
 	protected class ThresholdDialog extends TitleAreaDialog {
-		private static final int TEXT_LIMIT = 0xFF;
+		private static final int TEXT_LIMIT = 255;
 		private static final String REGEX_IDENTIFIER = "[0-9A-Za-z\\.]*";
 
 		private Text textIdentifier;
