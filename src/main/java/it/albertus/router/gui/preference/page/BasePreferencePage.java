@@ -32,6 +32,7 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -88,19 +89,9 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		applyButton.setText(Resources.get("lbl.button.apply"));
 	}
 
-	/** Viene aggiunto automaticamente un separatore tra il testo e i campi. */
-	protected Control createHeader() {
-		return null;
-	}
-
-	/** Non viene inserito alcun separatore tra i campi e il testo. */
-	protected Control createFooter() {
-		return null;
-	}
-
-	protected void addSeparator() {
-		final Label separator = new Label(getFieldEditorParent(), SWT.HORIZONTAL | SWT.SEPARATOR);
-		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).grab(true, false).applyTo(separator);
+	@Override
+	protected Point doComputeSize() {
+		return new Point(0, 0); // Disable risky auto-resize!
 	}
 
 	@Override
@@ -124,6 +115,21 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		if (footer != null) {
 			GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).applyTo(footer);
 		}
+	}
+
+	/** Viene aggiunto automaticamente un separatore tra il testo e i campi. */
+	protected Control createHeader() {
+		return null;
+	}
+
+	/** Non viene inserito alcun separatore tra i campi e il testo. */
+	protected Control createFooter() {
+		return null;
+	}
+
+	protected void addSeparator() {
+		final Label separator = new Label(getFieldEditorParent(), SWT.HORIZONTAL | SWT.SEPARATOR);
+		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).grab(true, false).applyTo(separator);
 	}
 
 	protected FieldEditor createFieldEditor(final Preference preference) {
