@@ -40,8 +40,6 @@ import org.eclipse.swt.widgets.Label;
 
 public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
-	protected static final float HEADER_MARGIN_FACTOR = 1.03f;
-
 	private Control header;
 
 	protected abstract Page getPage();
@@ -96,8 +94,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 	@Override
 	protected Point doComputeSize() {
 		if (header != null) {
-			final Point computedHeaderSize = header.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			return new Point((int) (computedHeaderSize.x * HEADER_MARGIN_FACTOR), computedHeaderSize.y);
+			return header.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		}
 		else {
 			return new Point(0, 0); // Disable risky unbounded auto-resize!
