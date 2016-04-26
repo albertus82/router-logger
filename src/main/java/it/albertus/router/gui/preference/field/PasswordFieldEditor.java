@@ -1,7 +1,8 @@
 package it.albertus.router.gui.preference.field;
 
-import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.resources.Resources;
+
+import java.util.prefs.Preferences;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
@@ -58,9 +59,9 @@ public class PasswordFieldEditor extends StringFieldEditor {
 		return textField;
 	}
 
-	private void init() {
+	protected void init() {
 		setErrorMessage(Resources.get("err.preferences.string"));
-		setTextLimit(Preference.DEFAULT_TEXT_LIMIT);
+		setTextLimit(Preferences.MAX_VALUE_LENGTH);
 	}
 
 	protected Text getTextField() {

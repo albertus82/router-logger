@@ -111,8 +111,6 @@ public enum Preference {
 
 	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, ThresholdsFieldEditor.class);
 
-	public static final int DEFAULT_TEXT_LIMIT = 0xFF;
-
 	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
 
 	private final String configurationKey;

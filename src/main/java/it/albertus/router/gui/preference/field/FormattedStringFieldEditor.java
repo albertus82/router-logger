@@ -1,8 +1,9 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
-import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.resources.Resources;
+
+import java.util.prefs.Preferences;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
@@ -50,9 +51,9 @@ public class FormattedStringFieldEditor extends StringFieldEditor {
 		}
 	}
 
-	private void init() {
+	protected void init() {
 		setErrorMessage(Resources.get("err.preferences.string"));
-		setTextLimit(Preference.DEFAULT_TEXT_LIMIT);
+		setTextLimit(Preferences.MAX_VALUE_LENGTH);
 	}
 
 }

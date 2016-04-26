@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 
-	protected static final int MAX_PATH = 260;
+	public static final int MAX_PATH = 255;
 
 	private boolean localized; // Do not set any value here!
 
