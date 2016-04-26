@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Label;
 
 public class EditableComboFieldEditor extends ComboFieldEditor {
 
+	private int textLimit = Preferences.MAX_VALUE_LENGTH;
+
 	public EditableComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
 	}
@@ -38,7 +40,6 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 		if (combo == null) {
 			combo = new Combo(parent, SWT.NONE);
 			setComboBoxControl(combo);
-			combo.setTextLimit(Preferences.MAX_VALUE_LENGTH);
 			combo.setFont(parent.getFont());
 			final String[][] entryNamesAndValues = getEntryNamesAndValues();
 			for (int i = 0; i < entryNamesAndValues.length; i++) {
@@ -56,6 +57,9 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 					updateValue();
 				}
 			});
+			if (textLimit > 0) {
+				combo.setTextLimit(textLimit);
+			}
 		}
 		return combo;
 	}
@@ -91,6 +95,13 @@ public class EditableComboFieldEditor extends ComboFieldEditor {
 		setValue(getValueForName(name));
 		setPresentsDefaultValue(false);
 		fireValueChanged(VALUE, oldValue, getValue());
+	}
+
+	public void setTextLimit(final int limit) {
+		textLimit = limit;
+		if (getComboBoxControl() != null) {
+			getComboBoxControl().setTextLimit(limit);
+		}
 	}
 
 }
