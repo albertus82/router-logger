@@ -40,6 +40,10 @@ import org.eclipse.swt.widgets.Label;
 
 public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
+	protected static final float HEADER_MARGIN_FACTOR = 1.03f;
+
+	private Control header;
+
 	protected abstract Page getPage();
 
 	public BasePreferencePage() {
@@ -91,13 +95,19 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	@Override
 	protected Point doComputeSize() {
-		return new Point(0, 0); // Disable risky auto-resize!
+		if (header != null) {
+			final Point computedHeaderSize = header.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			return new Point((int) (computedHeaderSize.x * HEADER_MARGIN_FACTOR), computedHeaderSize.y);
+		}
+		else {
+			return new Point(0, 0); // Disable risky unbounded auto-resize!
+		}
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		// Header
-		final Control header = createHeader();
+		header = createHeader();
 		if (header != null) {
 			GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).applyTo(header);
 			addSeparator();
@@ -109,21 +119,10 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 				addField(createFieldEditor(preference));
 			}
 		}
-
-		// Footer
-		final Control footer = createFooter();
-		if (footer != null) {
-			GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).applyTo(footer);
-		}
 	}
 
 	/** Viene aggiunto automaticamente un separatore tra il testo e i campi. */
 	protected Control createHeader() {
-		return null;
-	}
-
-	/** Non viene inserito alcun separatore tra i campi e il testo. */
-	protected Control createFooter() {
 		return null;
 	}
 
@@ -209,6 +208,10 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 			options[index][0] = options[index][1] = NewLine.values()[index].name();
 		}
 		return options;
+	}
+
+	public Control getHeader() {
+		return header;
 	}
 
 }
