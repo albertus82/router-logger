@@ -18,6 +18,7 @@ import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
 import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.gui.preference.page.BasePreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
@@ -75,12 +76,12 @@ public enum Preference {
 	GUI_MINIMIZE_TRAY(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(TrayIcon.Defaults.GUI_MINIMIZE_TRAY)),
 	GUI_START_MINIMIZED(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),
 	GUI_TRAY_TOOLTIP(Page.APPEARANCE, BooleanFieldEditor.class, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP)),
-	GUI_IMPORTANT_KEYS(Page.APPEARANCE, FormattedStringFieldEditor.class),
+	GUI_IMPORTANT_KEYS(Page.APPEARANCE, WrapStringFieldEditor.class),
 	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR, false),
 
 	CONSOLE_ANIMATION(Page.CONSOLE, BooleanFieldEditor.class, Boolean.toString(RouterLoggerConsole.Defaults.CONSOLE_ANIMATION)),
 	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
-	CONSOLE_SHOW_KEYS(Page.CONSOLE, FormattedStringFieldEditor.class),
+	CONSOLE_SHOW_KEYS(Page.CONSOLE, WrapStringFieldEditor.class),
 	CONSOLE_SHOW_KEYS_SEPARATOR(Page.CONSOLE, FormattedStringFieldEditor.class, RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR, false),
 	CONSOLE_DEBUG(Page.GENERAL, BooleanFieldEditor.class, Boolean.toString(Logger.Defaults.DEBUG)),
 

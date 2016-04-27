@@ -68,8 +68,4 @@ public class PasswordFieldEditor extends StringFieldEditor {
 		return textField;
 	}
 
-	protected void setTextField(final Text textField) {
-		this.textField = textField;
-	}
-
 }

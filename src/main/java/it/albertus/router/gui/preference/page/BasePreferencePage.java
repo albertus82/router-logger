@@ -14,6 +14,7 @@ import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -129,6 +130,14 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 				sfe.setEmptyStringAllowed((Boolean) preference.getFieldEditorData());
 			}
 			fe = sfe;
+		}
+		else if (WrapStringFieldEditor.class.equals(clazz)) {
+			if (preference.getFieldEditorData() instanceof Integer) {
+				fe = new WrapStringFieldEditor(name, labelText, getFieldEditorParent(), (Integer) preference.getFieldEditorData());
+			}
+			else {
+				fe = new WrapStringFieldEditor(name, labelText, getFieldEditorParent());
+			}
 		}
 		else if (PasswordFieldEditor.class.equals(clazz)) {
 			final PasswordFieldEditor pfe = new PasswordFieldEditor(name, labelText, getFieldEditorParent());
