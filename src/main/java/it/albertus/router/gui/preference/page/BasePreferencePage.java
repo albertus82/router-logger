@@ -32,7 +32,6 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -89,16 +88,6 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 		final Button applyButton = getApplyButton();
 		applyButton.setText(Resources.get("lbl.button.apply"));
-	}
-
-	@Override
-	protected Point doComputeSize() {
-		if (header != null) {
-			return header.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		}
-		else {
-			return new Point(0, 0); // Disable risky unbounded auto-resize!
-		}
 	}
 
 	@Override
