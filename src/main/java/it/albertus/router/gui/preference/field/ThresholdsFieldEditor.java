@@ -15,6 +15,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Button;
@@ -46,6 +48,13 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 			for (final String threshold : thresholds) {
 				getList().add(threshold);
 			}
+		}
+	}
+
+	@Override
+	public void store() {
+		if (getPreferenceStore() != null) {
+			doStore();
 		}
 	}
 
@@ -84,6 +93,8 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 
 		private Text textIdentifier;
 		private Text textExpression;
+		private Button okButton;
+		private Button cancelButton;
 		private String identifier;
 		private String expression;
 
@@ -129,6 +140,10 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textExpression);
 			textExpression.setTextLimit(TEXT_LIMIT);
 
+			final TextKeyListener textKeyListener = new TextKeyListener();
+			textIdentifier.addKeyListener(textKeyListener);
+			textExpression.addKeyListener(textKeyListener);
+
 			return area;
 		}
 
@@ -136,10 +151,11 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 		protected void createButtonsForButtonBar(Composite parent) {
 			super.createButtonsForButtonBar(parent);
 
-			final Button okButton = getButton(IDialogConstants.OK_ID);
+			okButton = getButton(IDialogConstants.OK_ID);
 			okButton.setText(Resources.get("lbl.button.ok"));
+			okButton.setEnabled(false);
 
-			final Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
+			cancelButton = getButton(IDialogConstants.CANCEL_ID);
 			cancelButton.setText(Resources.get("lbl.button.cancel"));
 		}
 
@@ -161,6 +177,22 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 
 		public String getExpression() {
 			return expression;
+		}
+
+		private class TextKeyListener extends KeyAdapter {
+			@Override
+			public void keyReleased(final KeyEvent ke) {
+				if (textIdentifier.getText().isEmpty() || textExpression.getText().trim().isEmpty()) {
+					if (okButton.isEnabled()) {
+						okButton.setEnabled(false);
+					}
+				}
+				else {
+					if (!okButton.isEnabled()) {
+						okButton.setEnabled(true);
+					}
+				}
+			}
 		}
 
 		private class IdentifierVerifyListener implements VerifyListener {
