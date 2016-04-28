@@ -20,11 +20,6 @@ public class WriterPreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	@Override
-	protected Page getPage() {
-		return Page.WRITER;
-	}
-
 	protected enum WriterClass {
 		CSV(CsvWriter.DESTINATION_KEY, CsvWriter.class),
 		DATABASE(DatabaseWriter.DESTINATION_KEY, DatabaseWriter.class);

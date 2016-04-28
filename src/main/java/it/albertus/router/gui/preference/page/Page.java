@@ -80,4 +80,15 @@ public enum Page {
 		return parent;
 	}
 
+	public static Page forClass(final Class<? extends BasePreferencePage> clazz) {
+		if (clazz != null) {
+			for (final Page page : Page.values()) {
+				if (clazz.equals(page.getPageClass())) {
+					return page;
+				}
+			}
+		}
+		return null;
+	}
+
 }

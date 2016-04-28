@@ -17,11 +17,6 @@ public class DatabasePreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	@Override
-	protected Page getPage() {
-		return Page.DATABASE;
-	}
-
 	protected enum DatabaseDriverClass {
 		DB2("com.ibm.db2.jcc.DB2Driver"),
 		MYSQL("com.mysql.jdbc.Driver"),

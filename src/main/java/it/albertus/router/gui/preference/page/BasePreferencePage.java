@@ -42,7 +42,9 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	private Control header;
 
-	protected abstract Page getPage();
+	protected Page getPage() {
+		return Page.forClass(getClass());
+	}
 
 	public BasePreferencePage() {
 		super(GRID);
@@ -102,7 +104,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 		// Fields
 		for (final Preference preference : Preference.values()) {
-			if (this.getPage().equals(preference.getPage())) {
+			if (getPage().equals(preference.getPage())) {
 				addField(createFieldEditor(preference));
 			}
 		}
