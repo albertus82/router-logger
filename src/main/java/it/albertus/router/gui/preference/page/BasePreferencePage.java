@@ -42,12 +42,12 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	private Control header;
 
-	protected Page getPage() {
-		return Page.forClass(getClass());
-	}
-
 	public BasePreferencePage() {
 		super(GRID);
+	}
+
+	public Page getPage() {
+		return Page.forClass(getClass());
 	}
 
 	@Override
