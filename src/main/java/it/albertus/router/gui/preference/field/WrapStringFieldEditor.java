@@ -36,6 +36,12 @@ public class WrapStringFieldEditor extends StringFieldEditor {
 		init();
 	}
 
+	public WrapStringFieldEditor(String name, String labelText, Composite parent, int height, int width) {
+		super(name, labelText, width, parent);
+		this.height = height;
+		init();
+	}
+
 	@Override
 	public Text getTextControl(final Composite parent) {
 		if (textField == null) {

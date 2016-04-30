@@ -116,7 +116,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			style = SWT.ICON_WARNING | SWT.YES | SWT.NO;
 			String propertyName;
 			try {
-				propertyName = Resources.get(Preference.forConfigurationKey(ce.getKey()).getResourceKey());
+				propertyName = Resources.get(Preference.forConfigurationKey(ce.getKey()).getLabelKey());
 			}
 			catch (final Exception e) {
 				propertyName = ce.getKey();

@@ -22,14 +22,13 @@ public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 	private String dialogMessage;
 
 	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
-		this(name, labelText, parent, null);
+		this(name, labelText, parent, MAX_PATH);
 	}
 
-	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent, final String dialogMessage) {
+	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent, final int textLimit) {
 		super(name, labelText, parent);
 		setErrorMessage(Resources.get("err.preferences.directory"));
-		setTextLimit(MAX_PATH);
-		this.dialogMessage = dialogMessage;
+		setTextLimit(textLimit);
 	}
 
 	@Override

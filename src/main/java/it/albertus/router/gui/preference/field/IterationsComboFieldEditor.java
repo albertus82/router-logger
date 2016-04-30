@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class IterationsComboFieldEditor extends ValidatedComboFieldEditor {
 
-	public IterationsComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
+	public IterationsComboFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, new String[][] { { Resources.get("lbl.preferences.iterations.infinite"), "0" } }, parent);
 		getComboBoxControl().setTextLimit(Integer.toString(Integer.MAX_VALUE).length() - 1);
 		getComboBoxControl().addVerifyListener(new LowercaseVerifyListener());

@@ -18,8 +18,7 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 	}
 
 	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
-		super(name, labelText, parent);
-		init();
+		this(name, labelText, parent, Integer.toString(Integer.MAX_VALUE).length() - 1);
 	}
 
 	@Override
