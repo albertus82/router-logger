@@ -43,7 +43,7 @@ import org.eclipse.jface.preference.FieldEditor;
 public enum Preference {
 	LANGUAGE(Page.GENERAL, ComboFieldEditor.class, Locale.getDefault().getLanguage(), GeneralPreferencePage.getLanguageComboOptions()),
 
-	READER_CLASS_NAME(Page.READER, ReaderComboFieldEditor.class, ReaderPreferencePage.getReaderComboOptions()),
+	READER_CLASS_NAME(Page.READER, ReaderComboFieldEditor.class, null, ReaderPreferencePage.getReaderComboOptions()),
 	ROUTER_USERNAME(Page.READER, FormattedStringFieldEditor.class),
 	ROUTER_PASSWORD(Page.READER, PasswordFieldEditor.class),
 	ROUTER_ADDRESS(Page.READER, FormattedStringFieldEditor.class, Reader.Defaults.ROUTER_ADDRESS, false),
@@ -94,7 +94,7 @@ public enum Preference {
 	CSV_FIELD_SEPARATOR(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR, false),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FormattedStringFieldEditor.class, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, false),
 
-	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, DatabaseComboFieldEditor.class, DatabasePreferencePage.getDatabaseComboOptions()),
+	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, DatabaseComboFieldEditor.class, null, DatabasePreferencePage.getDatabaseComboOptions()),
 	DATABASE_URL(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_USERNAME(Page.DATABASE, FormattedStringFieldEditor.class),
 	DATABASE_PASSWORD(Page.DATABASE, FormattedStringFieldEditor.class),
@@ -122,54 +122,38 @@ public enum Preference {
 	private final Object fieldEditorData;
 
 	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass) {
-		this(null, null, page, fieldEditorClass, null, null);
-	}
-
-	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass, final Object fieldEditorData) {
-		this(null, null, page, fieldEditorClass, null, fieldEditorData);
-	}
-
-	private Preference(final String configurationKey, final Page page, final Class<? extends FieldEditor> fieldEditorClass) {
-		this(configurationKey, null, page, fieldEditorClass, null, null);
-	}
-
-	private Preference(final String configurationKey, final String resourceKey, final Page page, final Class<? extends FieldEditor> fieldEditorClass) {
-		this(configurationKey, resourceKey, page, fieldEditorClass, null, null);
+		this(page, fieldEditorClass, null, null, null, null);
 	}
 
 	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue) {
-		this(null, null, page, fieldEditorClass, defaultValue, null);
-	}
-
-	private Preference(final String configurationKey, final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue) {
-		this(configurationKey, null, page, fieldEditorClass, defaultValue, null);
-	}
-
-	private Preference(final String configurationKey, final String resourceKey, final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue) {
-		this(configurationKey, resourceKey, page, fieldEditorClass, defaultValue, null);
+		this(page, fieldEditorClass, defaultValue, null, null, null);
 	}
 
 	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue, final Object fieldEditorData) {
-		this(null, null, page, fieldEditorClass, defaultValue, fieldEditorData);
+		this(page, fieldEditorClass, defaultValue, fieldEditorData, null, null);
 	}
 
-	private Preference(final String configurationKey, final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue, final Object fieldEditorData) {
-		this(configurationKey, null, page, fieldEditorClass, defaultValue, fieldEditorData);
+	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue, final Object fieldEditorData, final String configurationKey) {
+		this(page, fieldEditorClass, defaultValue, fieldEditorData, configurationKey, null);
 	}
 
-	private Preference(final String configurationKey, final String resourceKey, final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue, final Object fieldEditorData) {
+	private Preference(final Page page, final Class<? extends FieldEditor> fieldEditorClass, final String defaultValue, final Object fieldEditorData, final String configurationKey, final String resourceKey) {
+		// Configuration key...
 		if (configurationKey != null && !configurationKey.isEmpty()) {
 			this.configurationKey = configurationKey;
 		}
 		else {
 			this.configurationKey = name().toLowerCase().replace('_', '.');
 		}
+
+		// Resource key...
 		if (resourceKey != null && !resourceKey.isEmpty()) {
 			this.resourceKey = resourceKey;
 		}
 		else {
 			this.resourceKey = RESOURCE_KEY_PREFIX + this.configurationKey;
 		}
+
 		this.fieldEditorData = fieldEditorData;
 		this.defaultValue = defaultValue;
 		this.fieldEditorClass = fieldEditorClass;
