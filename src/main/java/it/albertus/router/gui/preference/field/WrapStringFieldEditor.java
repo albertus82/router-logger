@@ -23,10 +23,7 @@ public class WrapStringFieldEditor extends StringFieldEditor {
 
 	public static WrapStringFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
 		final WrapStringFieldEditor wsfe;
-		if (data != null && data.getTextHeight() != null && data.getTextWidth() != null) {
-			wsfe = new WrapStringFieldEditor(name, labelText, parent, data.getTextHeight(), data.getTextWidth());
-		}
-		else if (data != null && data.getTextHeight() != null) {
+		if (data != null && data.getTextHeight() != null) {
 			wsfe = new WrapStringFieldEditor(name, labelText, parent, data.getTextHeight());
 		}
 		else {
@@ -42,20 +39,12 @@ public class WrapStringFieldEditor extends StringFieldEditor {
 
 	private Text textField; // Do not set any value here!
 
-	protected WrapStringFieldEditor(String name, String labelText, Composite parent) {
-		super(name, labelText, parent);
-		this.height = DEFAULT_TEXT_HEIGHT;
-		init();
+	protected WrapStringFieldEditor(final String name, final String labelText, final Composite parent) {
+		this(name, labelText, parent, DEFAULT_TEXT_HEIGHT);
 	}
 
-	protected WrapStringFieldEditor(String name, String labelText, Composite parent, int height) {
+	protected WrapStringFieldEditor(final String name, final String labelText, final Composite parent, final int height) {
 		super(name, labelText, parent);
-		this.height = height;
-		init();
-	}
-
-	protected WrapStringFieldEditor(String name, String labelText, Composite parent, int height, int width) {
-		super(name, labelText, width, parent);
 		this.height = height;
 		init();
 	}
