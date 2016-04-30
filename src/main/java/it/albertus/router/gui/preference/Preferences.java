@@ -49,7 +49,7 @@ public class Preferences {
 
 		// Pages creation...
 		for (final Page page : Page.values()) {
-			final PreferenceNode preferenceNode = new PreferenceNode(page.getNodeId(), Resources.get(page.getResourceKey()), null, page.getPageClass().getName());
+			final PreferenceNode preferenceNode = new PreferenceNode(page.getNodeId(), Resources.get(page.getLabelKey()), null, page.getPageClass().getName());
 			if (page.getParent() != null) {
 				preferenceNodes.get(page.getParent()).add(preferenceNode);
 			}

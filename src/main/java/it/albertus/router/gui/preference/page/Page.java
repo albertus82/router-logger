@@ -20,10 +20,10 @@ public enum Page {
 	THRESHOLDS(ThresholdsPreferencePage.class),
 	EXPRESSIONS(ExpressionsPreferencePage.class, THRESHOLDS);
 
-	private static final String RESOURCE_KEY_PREFIX = "lbl.preferences.";
+	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
 	private final String nodeId;
-	private final String resourceKey;
+	private final String labelKey;
 	private final Class<? extends BasePreferencePage> pageClass;
 	private final Page parent;
 
@@ -35,30 +35,30 @@ public enum Page {
 		this(null, null, pageClass, parent);
 	}
 
-	private Page(final String resourceKey, final Class<? extends BasePreferencePage> pageClass) {
-		this(null, resourceKey, pageClass, null);
+	private Page(final String labelKey, final Class<? extends BasePreferencePage> pageClass) {
+		this(null, labelKey, pageClass, null);
 	}
 
-	private Page(final String resourceKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
-		this(null, resourceKey, pageClass, parent);
+	private Page(final String labelKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
+		this(null, labelKey, pageClass, parent);
 	}
 
-	private Page(final String nodeId, final String resourceKey, final Class<? extends BasePreferencePage> pageClass) {
-		this(nodeId, resourceKey, pageClass, null);
+	private Page(final String nodeId, final String labelKey, final Class<? extends BasePreferencePage> pageClass) {
+		this(nodeId, labelKey, pageClass, null);
 	}
 
-	private Page(final String nodeId, final String resourceKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
+	private Page(final String nodeId, final String labelKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
 		if (nodeId != null && !nodeId.isEmpty()) {
 			this.nodeId = nodeId;
 		}
 		else {
 			this.nodeId = name().toLowerCase().replace('_', '.');
 		}
-		if (resourceKey != null && !resourceKey.isEmpty()) {
-			this.resourceKey = resourceKey;
+		if (labelKey != null && !labelKey.isEmpty()) {
+			this.labelKey = labelKey;
 		}
 		else {
-			this.resourceKey = RESOURCE_KEY_PREFIX + this.nodeId;
+			this.labelKey = LABEL_KEY_PREFIX + this.nodeId;
 		}
 		this.pageClass = pageClass;
 		this.parent = parent;
@@ -68,8 +68,8 @@ public enum Page {
 		return nodeId;
 	}
 
-	public String getResourceKey() {
-		return resourceKey;
+	public String getLabelKey() {
+		return labelKey;
 	}
 
 	public Class<? extends BasePreferencePage> getPageClass() {
