@@ -35,8 +35,6 @@ public class WrapStringFieldEditor extends StringFieldEditor {
 		return wsfe;
 	}
 
-	private final int height;
-
 	private Text textField; // Do not set any value here!
 
 	protected WrapStringFieldEditor(final String name, final String labelText, final Composite parent) {
@@ -45,8 +43,9 @@ public class WrapStringFieldEditor extends StringFieldEditor {
 
 	protected WrapStringFieldEditor(final String name, final String labelText, final Composite parent, final int height) {
 		super(name, labelText, parent);
-		this.height = height;
-		init();
+		adjustTextHeight(height);
+		setErrorMessage(Resources.get("err.preferences.string"));
+		setTextLimit(Preferences.MAX_VALUE_LENGTH);
 	}
 
 	@Override
@@ -79,24 +78,14 @@ public class WrapStringFieldEditor extends StringFieldEditor {
 		return textField;
 	}
 
-	protected void adjustTextHeight() {
+	protected void adjustTextHeight(final int height) {
 		final GridData gd = (GridData) getTextControl().getLayoutData();
 		gd.heightHint = getTextControl().getLineHeight() * height;
 		gd.widthHint = 0;
 	}
 
-	protected void init() {
-		adjustTextHeight();
-		setErrorMessage(Resources.get("err.preferences.string"));
-		setTextLimit(Preferences.MAX_VALUE_LENGTH);
-	}
-
 	protected Text getTextField() {
 		return textField;
-	}
-
-	public int getHeight() {
-		return height;
 	}
 
 }
