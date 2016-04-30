@@ -26,8 +26,13 @@ public class PasswordFieldEditor extends StringFieldEditor {
 		else {
 			pfe = new PasswordFieldEditor(name, labelText, parent);
 		}
-		if (data != null && data.getEmptyStringAllowed() != null) {
-			pfe.setEmptyStringAllowed(data.getEmptyStringAllowed());
+		if (data != null) {
+			if (data.getEmptyStringAllowed() != null) {
+				pfe.setEmptyStringAllowed(data.getEmptyStringAllowed());
+			}
+			if (data.getTextLimit() != null) {
+				pfe.setTextLimit(data.getTextLimit());
+			}
 		}
 		return pfe;
 	}
