@@ -122,92 +122,30 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 	}
 
 	protected FieldEditor createFieldEditor(final Preference preference) {
-		FieldEditor fe = null;
+		final FieldEditor fe;
 		final String name = preference.getConfigurationKey();
 		final String labelText = Resources.get(preference.getLabelKey());
 		final FieldEditorData data = preference.getFieldEditorData();
 		final Class<? extends FieldEditor> clazz = preference.getFieldEditorClass();
 
 		if (StringFieldEditor.class.equals(clazz) || FormattedStringFieldEditor.class.equals(clazz)) {
-			final FormattedStringFieldEditor sfe;
-			if (data != null && data.getTextWidth() != null) {
-				sfe = new FormattedStringFieldEditor(name, labelText, data.getTextWidth(), getFieldEditorParent());
-			}
-			else {
-				sfe = new FormattedStringFieldEditor(name, labelText, getFieldEditorParent());
-			}
-			if (data != null && data.getEmptyStringAllowed() != null) {
-				sfe.setEmptyStringAllowed(data.getEmptyStringAllowed());
-			}
-			if (data != null && data.getTextLimit() != null) {
-				sfe.setTextLimit(data.getTextLimit());
-			}
-			fe = sfe;
+			fe = FormattedStringFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
 		}
 
 		else if (WrapStringFieldEditor.class.equals(clazz)) {
-			final WrapStringFieldEditor wsfe;
-			if (data != null && data.getTextHeight() != null && data.getTextWidth() != null) {
-				wsfe = new WrapStringFieldEditor(name, labelText, getFieldEditorParent(), data.getTextHeight(), data.getTextWidth());
-			}
-			else if (data != null && data.getTextHeight() != null) {
-				wsfe = new WrapStringFieldEditor(name, labelText, getFieldEditorParent(), data.getTextHeight());
-			}
-			else {
-				wsfe = new WrapStringFieldEditor(name, labelText, getFieldEditorParent());
-			}
-			if (data != null && data.getTextLimit() != null) {
-				wsfe.setTextLimit(data.getTextLimit());
-			}
-			fe = wsfe;
+			fe = WrapStringFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
 		}
 
 		else if (PasswordFieldEditor.class.equals(clazz)) {
-			final PasswordFieldEditor pfe;
-			if (data != null && data.getTextWidth() != null) {
-				pfe = new PasswordFieldEditor(name, labelText, data.getTextWidth(), getFieldEditorParent());
-			}
-			else {
-				pfe = new PasswordFieldEditor(name, labelText, getFieldEditorParent());
-			}
-			if (data != null && data.getEmptyStringAllowed() != null) {
-				pfe.setEmptyStringAllowed(data.getEmptyStringAllowed());
-			}
-			fe = pfe;
+			fe = PasswordFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
 		}
 
 		else if (IntegerFieldEditor.class.equals(clazz) || FormattedIntegerFieldEditor.class.equals(clazz)) {
-			final FormattedIntegerFieldEditor ife;
-			if (data != null && data.getTextLimit() != null) {
-				ife = new FormattedIntegerFieldEditor(name, labelText, getFieldEditorParent(), data.getTextLimit());
-			}
-			else {
-				ife = new FormattedIntegerFieldEditor(name, labelText, getFieldEditorParent());
-			}
-			if (data != null && data.getIntegerMinValidValue() != null && data.getIntegerMaxValidValue() != null) {
-				ife.setValidRange(data.getIntegerMinValidValue(), data.getIntegerMaxValidValue());
-			}
-			if (data != null && data.getEmptyStringAllowed() != null) {
-				ife.setEmptyStringAllowed(data.getEmptyStringAllowed());
-			}
-			fe = ife;
+			fe = FormattedIntegerFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
 		}
 
 		else if (DirectoryFieldEditor.class.equals(clazz) || FormattedDirectoryFieldEditor.class.equals(clazz)) {
-			final FormattedDirectoryFieldEditor dfe;
-			if (data != null && data.getTextLimit() != null) {
-				dfe = new FormattedDirectoryFieldEditor(name, labelText, getFieldEditorParent(), data.getTextLimit());
-			}
-			else {
-				dfe = new FormattedDirectoryFieldEditor(name, labelText, getFieldEditorParent());
-			}
-			if (data != null && data.getEmptyStringAllowed() != null) {
-				dfe.setEmptyStringAllowed(data.getEmptyStringAllowed());
-			}
-			if (data != null && data.getDirectoryDialogMessageKey() != null) {
-				dfe.setDialogMessage(Resources.get(data.getDirectoryDialogMessageKey()));
-			}
-			fe = dfe;
+			fe = FormattedDirectoryFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
 		}
 
 		else if (BooleanFieldEditor.class.equals(clazz)) {
@@ -243,24 +181,15 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		}
 
 		else if (ScaleFieldEditor.class.equals(clazz) || ScaleFormattedIntegerFieldEditor.class.equals(clazz)) {
-			final ScaleFormattedIntegerFieldEditor sfe = new ScaleFormattedIntegerFieldEditor(name, labelText, getFieldEditorParent());
-			if (data != null && data.getScaleMinimum() != null) {
-				sfe.setMinimum(data.getScaleMinimum());
-			}
-			if (data != null && data.getScaleMaximum() != null) {
-				sfe.setMaximum(data.getScaleMaximum());
-			}
-			if (data != null && data.getScaleIncrement() != null) {
-				sfe.setIncrement(data.getScaleIncrement());
-			}
-			if (data != null && data.getScalePageIncrement() != null) {
-				sfe.setPageIncrement(data.getScalePageIncrement());
-			}
-			fe = sfe;
+			fe = ScaleFormattedIntegerFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
 		}
 
 		else if (ThresholdsFieldEditor.class.equals(clazz)) {
 			fe = new ThresholdsFieldEditor(name, labelText, getFieldEditorParent());
+		}
+
+		else {
+			throw new IllegalStateException("Unsupported FieldEditor: " + clazz.getName());
 		}
 
 		return fe;

@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.router.gui.preference.FieldEditorData;
 import it.albertus.router.resources.Resources;
 
 import java.util.prefs.Preferences;
@@ -17,14 +18,28 @@ import org.eclipse.swt.widgets.Text;
 
 public class PasswordFieldEditor extends StringFieldEditor {
 
+	public static PasswordFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
+		final PasswordFieldEditor pfe;
+		if (data != null && data.getTextWidth() != null) {
+			pfe = new PasswordFieldEditor(name, labelText, data.getTextWidth(), parent);
+		}
+		else {
+			pfe = new PasswordFieldEditor(name, labelText, parent);
+		}
+		if (data != null && data.getEmptyStringAllowed() != null) {
+			pfe.setEmptyStringAllowed(data.getEmptyStringAllowed());
+		}
+		return pfe;
+	}
+
 	private Text textField; // Do not set any value here!
 
-	public PasswordFieldEditor(final String name, final String labelText, final Composite parent) {
+	protected PasswordFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 		init();
 	}
 
-	public PasswordFieldEditor(final String name, final String labelText, final int width, final Composite parent) {
+	protected PasswordFieldEditor(final String name, final String labelText, final int width, final Composite parent) {
 		super(name, labelText, width, parent);
 		init();
 	}

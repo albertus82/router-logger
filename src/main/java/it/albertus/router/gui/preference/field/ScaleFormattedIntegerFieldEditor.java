@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
+import it.albertus.router.gui.preference.FieldEditorData;
 import it.albertus.router.gui.preference.field.listener.IntegerVerifyListener;
 import it.albertus.router.resources.Resources;
 
@@ -17,18 +18,37 @@ import org.eclipse.swt.widgets.Text;
 
 public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 
+	public static ScaleFormattedIntegerFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
+		final ScaleFormattedIntegerFieldEditor sfe = new ScaleFormattedIntegerFieldEditor(name, labelText, parent);
+		if (data != null) {
+			if (data.getScaleMinimum() != null) {
+				sfe.setMinimum(data.getScaleMinimum());
+			}
+			if (data.getScaleMaximum() != null) {
+				sfe.setMaximum(data.getScaleMaximum());
+			}
+			if (data.getScaleIncrement() != null) {
+				sfe.setIncrement(data.getScaleIncrement());
+			}
+			if (data.getScalePageIncrement() != null) {
+				sfe.setPageIncrement(data.getScalePageIncrement());
+			}
+		}
+		return sfe;
+	}
+
 	private final Text text;
 
 	public Text getTextControl() {
 		return text;
 	}
 
-	public ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
+	protected ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = createTextControl(parent);
 	}
 
-	public ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
+	protected ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 		text = createTextControl(parent);
 	}

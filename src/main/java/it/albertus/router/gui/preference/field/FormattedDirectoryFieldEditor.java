@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
+import it.albertus.router.gui.preference.FieldEditorData;
 import it.albertus.router.resources.Resources;
 
 import java.io.File;
@@ -15,20 +16,32 @@ public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 
 	public static final int MAX_PATH = 255;
 
+	public static FormattedDirectoryFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
+		final FormattedDirectoryFieldEditor dfe = new FormattedDirectoryFieldEditor(name, labelText, parent);
+		if (data != null) {
+			if (data.getTextLimit() != null) {
+				dfe.setTextLimit(data.getTextLimit());
+			}
+			if (data.getEmptyStringAllowed() != null) {
+				dfe.setEmptyStringAllowed(data.getEmptyStringAllowed());
+			}
+			if (data.getDirectoryDialogMessageKey() != null) {
+				dfe.setDialogMessage(Resources.get(data.getDirectoryDialogMessageKey()));
+			}
+		}
+		return dfe;
+	}
+
 	private boolean localized; // Do not set any value here!
 
 	private File filterPath = null;
 
 	private String dialogMessage;
 
-	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
-		this(name, labelText, parent, MAX_PATH);
-	}
-
-	public FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent, final int textLimit) {
+	protected FormattedDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 		setErrorMessage(Resources.get("err.preferences.directory"));
-		setTextLimit(textLimit);
+		setTextLimit(MAX_PATH);
 	}
 
 	@Override
