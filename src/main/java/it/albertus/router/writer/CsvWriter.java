@@ -18,7 +18,11 @@ public class CsvWriter extends Writer {
 
 	public static final String DESTINATION_KEY = "lbl.writer.destination.csv";
 
-	private static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
+	protected static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
+	protected static final String FILE_EXTENSION = ".csv";
+
+	protected static final DateFormat dateFormatColumn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+	protected static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
 
 	public interface Defaults {
 		NewLine NEWLINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
@@ -26,10 +30,6 @@ public class CsvWriter extends Writer {
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
-
-	private static final String FILE_EXTENSION = ".csv";
-	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
 
 	private BufferedWriter csvFileWriter = null;
 	private File csvFile = null;
@@ -48,7 +48,7 @@ public class CsvWriter extends Writer {
 				if (!logDestDir.exists()) {
 					logDestDir.mkdirs();
 				}
-				file = new File(csvDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+				file = new File(csvDestinationDir.trim() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 			else {
 				file = getDefaultFile();
@@ -99,7 +99,7 @@ public class CsvWriter extends Writer {
 		closeOutputFile();
 	}
 
-	private String buildCsvHeader(final RouterData info) {
+	protected String buildCsvHeader(final RouterData info) {
 		final String fieldSeparator = getFieldSeparator();
 
 		final StringBuilder header = new StringBuilder(Resources.get("lbl.column.timestamp.text")).append(fieldSeparator);
@@ -111,10 +111,10 @@ public class CsvWriter extends Writer {
 		return header.toString();
 	}
 
-	private String buildCsvRow(final RouterData info) {
+	protected String buildCsvRow(final RouterData info) {
 		final String fieldSeparator = getFieldSeparator();
 
-		final StringBuilder row = new StringBuilder(DATE_FORMAT_LOG.format(info.getTimestamp())).append(fieldSeparator);
+		final StringBuilder row = new StringBuilder(dateFormatColumn.format(info.getTimestamp())).append(fieldSeparator);
 		row.append(info.getResponseTime()).append(fieldSeparator); // Response time
 		for (String field : info.getData().values()) {
 			row.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
@@ -123,15 +123,15 @@ public class CsvWriter extends Writer {
 		return row.toString();
 	}
 
-	private String getFieldSeparator() {
+	protected String getFieldSeparator() {
 		return configuration.getString("csv.field.separator", Defaults.FIELD_SEPARATOR);
 	}
 
-	private String getFieldSeparatorReplacement() {
+	protected String getFieldSeparatorReplacement() {
 		return configuration.getString("csv.field.separator.replacement", Defaults.FIELD_SEPARATOR_REPLACEMENT);
 	}
 
-	private String getRecordSeparator() {
+	protected String getRecordSeparator() {
 		final String cfgKey = "csv.newline.characters";
 		final String cfg = configuration.getString(cfgKey);
 		if (cfg == null || cfg.length() == 0) {
@@ -148,7 +148,7 @@ public class CsvWriter extends Writer {
 		}
 	}
 
-	private void closeOutputFile() {
+	protected void closeOutputFile() {
 		if (csvFileWriter != null) {
 			try {
 				out.println(Resources.get("msg.closing.output.file"), true);
@@ -161,25 +161,25 @@ public class CsvWriter extends Writer {
 		}
 	}
 
-	private static File getDefaultFile() {
+	protected static File getDefaultFile() {
 		File csvFile;
 		try {
-			csvFile = new File(new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+			csvFile = new File(new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 		}
 		catch (final Exception e1) {
 			try {
 				// In caso di problemi, scrive nella directory del profilo dell'utente
-				csvFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+				csvFile = new File(System.getProperty("user.home").toString() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 			catch (final Exception e2) {
 				// Nella peggiore delle ipotesi, scrive nella directory corrente
-				csvFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+				csvFile = new File(dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 		}
 		return csvFile;
 	}
 
-	private static String getDefaultDirectory() {
+	protected static String getDefaultDirectory() {
 		String directory;
 		try {
 			directory = getDefaultFile().getParentFile().getCanonicalPath();

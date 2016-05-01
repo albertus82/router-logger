@@ -13,16 +13,18 @@ import org.eclipse.swt.widgets.Text;
 
 public class TextConsole extends Console {
 
+	protected static final String newLine = NewLine.SYSTEM_LINE_SEPARATOR;
+
 	public interface Defaults {
 		int GUI_CONSOLE_MAX_CHARS = 100000;
 	}
 
 	private static class Singleton {
-		private static final TextConsole CONSOLE = new TextConsole();
+		private static final TextConsole instance = new TextConsole();
 	}
 
 	public static TextConsole getInstance() {
-		return Singleton.CONSOLE;
+		return Singleton.instance;
 	}
 
 	protected Scrollable scrollable = null;
@@ -47,8 +49,6 @@ public class TextConsole extends Console {
 		}
 	}
 
-	protected static final String NEWLINE = NewLine.SYSTEM_LINE_SEPARATOR;
-
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	public void clear() {
@@ -72,7 +72,7 @@ public class TextConsole extends Console {
 			getText().append(value);
 		}
 		else {
-			getText().setText(value.startsWith(NEWLINE) ? value.substring(NEWLINE.length()) : value);
+			getText().setText(value.startsWith(newLine) ? value.substring(newLine.length()) : value);
 		}
 		getText().setTopIndex(getText().getLineCount() - 1);
 		updatePosition(value);
@@ -110,61 +110,61 @@ public class TextConsole extends Console {
 
 	@Override
 	public void println() {
-		print(NEWLINE);
+		print(newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(String value) {
-		print(value + NEWLINE);
+		print(value + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(Object value) {
-		print(String.valueOf(value) + NEWLINE);
+		print(String.valueOf(value) + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(boolean value) {
-		print(String.valueOf(value) + NEWLINE);
+		print(String.valueOf(value) + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(char value) {
-		print(String.valueOf(value) + NEWLINE);
+		print(String.valueOf(value) + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(int value) {
-		print(String.valueOf(value) + NEWLINE);
+		print(String.valueOf(value) + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(long value) {
-		print(String.valueOf(value) + NEWLINE);
+		print(String.valueOf(value) + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(float value) {
-		print(String.valueOf(value) + NEWLINE);
+		print(String.valueOf(value) + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(double value) {
-		print(String.valueOf(value) + NEWLINE);
+		print(String.valueOf(value) + newLine);
 		newLine();
 	}
 
 	@Override
 	public void println(char array[]) {
-		print(String.valueOf(array) + NEWLINE);
+		print(String.valueOf(array) + newLine);
 		newLine();
 	}
 

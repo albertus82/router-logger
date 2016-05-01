@@ -13,8 +13,6 @@ import org.eclipse.swt.widgets.Text;
 
 public final class TextFormatter {
 
-	private TextFormatter() {}
-
 	private static final char SAMPLE_CHAR = '9';
 
 	private static final FontRegistry fontRegistry = JFaceResources.getFontRegistry();
@@ -45,7 +43,7 @@ public final class TextFormatter {
 		return control != null && !control.isDisposed() && control.getFont() != null && !control.getFont().isDisposed() && control.getFont().getFontData() != null && control.getFont().getFontData().length != 0;
 	}
 
-	/** Calls {@code updateFontStyle(String.valueOf(defaultValue))}. */
+	/** Calls {@code updateFontStyle(text, String.valueOf(defaultValue))}. */
 	public static void updateFontStyle(final Text text, final Object defaultValue) {
 		updateFontStyle(text, String.valueOf(defaultValue));
 	}
@@ -106,5 +104,8 @@ public final class TextFormatter {
 		}
 		return widthHint;
 	}
+
+	/** Instantiation not allowed. */
+	private TextFormatter() {}
 
 }

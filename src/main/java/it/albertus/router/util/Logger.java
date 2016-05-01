@@ -21,15 +21,16 @@ import java.util.Set;
 
 public class Logger {
 
+	protected static final String FILE_EXTENSION = ".log";
+	protected static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
+
+	protected static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+	protected static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
 	public enum Destination {
 		CONSOLE,
 		FILE;
 	}
-
-	private static final String FILE_EXTENSION = ".log";
-	private static final DateFormat DATE_FORMAT_FILE_NAME = new SimpleDateFormat("yyyyMMdd");
-	private static final DateFormat DATE_FORMAT_LOG = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
@@ -40,18 +41,18 @@ public class Logger {
 
 	// Lazy initialization...
 	private static class Singleton {
-		private static final Logger LOGGER = new Logger();
+		private static final Logger instance = new Logger();
 	}
 
 	public static Logger getInstance() {
-		return Singleton.LOGGER;
+		return Singleton.instance;
 	}
 
 	public void init(final Console console) {
 		this.out = console;
 	}
 
-	private Console out = TerminalConsole.getInstance(); // Fail-safe.
+	protected Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	public boolean isDebugEnabled() {
 		return configuration.getBoolean("console.debug", Defaults.DEBUG);
@@ -74,7 +75,7 @@ public class Logger {
 		}
 	}
 
-	private Set<Destination> getDestinations(final Destination... destinations) {
+	protected Set<Destination> getDestinations(final Destination... destinations) {
 		final Set<Destination> dest = new HashSet<Destination>();
 		if (destinations != null && destinations.length != 0) {
 			dest.addAll(Arrays.asList(destinations));
@@ -110,12 +111,12 @@ public class Logger {
 		}
 	}
 
-	private void logToConsole(final String text) {
-		final String base = DATE_FORMAT_LOG.format(new Date()) + ' ';
+	protected void logToConsole(final String text) {
+		final String base = dateFormatLog.format(new Date()) + ' ';
 		out.println(base + StringUtils.trimToEmpty(text), true);
 	}
 
-	private void logToFile(final String text) throws IOException {
+	protected void logToFile(final String text) throws IOException {
 		final String logDestinationDir = configuration.getString("logger.error.log.destination.path");
 		File logFile;
 		if (StringUtils.isNotBlank(logDestinationDir)) {
@@ -126,7 +127,7 @@ public class Logger {
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
 			}
-			logFile = new File(logDestinationDir.trim() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+			logFile = new File(logDestinationDir.trim() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 		}
 		else {
 			logFile = getDefaultFile();
@@ -139,25 +140,28 @@ public class Logger {
 		logFileWriter.close();
 	}
 
-	private static File getDefaultFile() {
+	protected static File getDefaultFile() {
 		File logFile;
 		try {
-			logFile = new File(new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+			logFile = new File(new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 		}
 		catch (final Exception e1) {
 			try {
-				/* In caso di problemi, scrive nella directory del profilo dell'utente */
-				logFile = new File(System.getProperty("user.home").toString() + File.separator + DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+				/*
+				 * In caso di problemi, scrive nella directory del profilo
+				 * dell'utente
+				 */
+				logFile = new File(System.getProperty("user.home").toString() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 			catch (final Exception e2) {
 				/* Nella peggiore delle ipotesi, scrive nella directory corrente */
-				logFile = new File(DATE_FORMAT_FILE_NAME.format(new Date()) + FILE_EXTENSION);
+				logFile = new File(dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 		}
 		return logFile;
 	}
 
-	private static String getDefaultDirectory() {
+	protected static String getDefaultDirectory() {
 		String directory;
 		try {
 			directory = getDefaultFile().getParentFile().getCanonicalPath();

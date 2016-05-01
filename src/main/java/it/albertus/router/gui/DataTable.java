@@ -32,6 +32,11 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class DataTable {
 
+	protected static final char SAMPLE_CHAR = '9';
+	protected static final char FIELD_SEPARATOR = '\t';
+
+	protected static final DateFormat dateFormatTable = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+
 	public interface Defaults {
 		int GUI_TABLE_MAX_ITEMS = 2000;
 		boolean GUI_TABLE_COLUMNS_PACK = false;
@@ -51,16 +56,11 @@ public class DataTable {
 		}
 	}
 
-	private static final char SAMPLE_CHAR = '9';
-
-	private static final char FIELD_SEPARATOR = '\t';
-	private static final DateFormat DATE_FORMAT_TABLE_GUI = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-	private final Table table;
-
 	private int iteration;
+
+	private final Table table;
 
 	private final Menu contextMenu;
 	private final MenuItem copyMenuItem;
@@ -78,7 +78,7 @@ public class DataTable {
 	 * combinazioni di tasti, gli acceleratori non funzioneranno e le relative
 	 * combinazioni di tasti saranno ignorate.
 	 */
-	DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
+	protected DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
 		table = new Table(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);
@@ -181,7 +181,7 @@ public class DataTable {
 	public void addRow(final int iteration, final RouterData data, final Map<Threshold, String> thresholdsReached) {
 		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();
-			final String timestamp = DATE_FORMAT_TABLE_GUI.format(data.getTimestamp());
+			final String timestamp = dateFormatTable.format(data.getTimestamp());
 			final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
 			new GuiThreadExecutor(table) {
 				@Override
