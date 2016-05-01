@@ -25,8 +25,8 @@ public class TpLink8970Reader extends Reader {
 
 	public static final String DEVICE_MODEL_KEY = "lbl.device.model.tplink.8970";
 
-	private static final String COMMAND_PROMPT = "#";
-	private static final String LOGIN_PROMPT = ":";
+	protected static final String COMMAND_PROMPT = "#";
+	protected static final String LOGIN_PROMPT = ":";
 
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {

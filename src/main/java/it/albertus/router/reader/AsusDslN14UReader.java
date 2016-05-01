@@ -26,9 +26,9 @@ public class AsusDslN14UReader extends Reader {
 
 	public static final String DEVICE_MODEL_KEY = "lbl.device.model.asus.n14u";
 
-	private static final String COMMAND_PROMPT = "# ";
-	private static final String LOGIN_PROMPT = ": ";
-	private static final String NODE_PREFIX = "Node:";
+	protected static final String COMMAND_PROMPT = "# ";
+	protected static final String LOGIN_PROMPT = ": ";
+	protected static final String NODE_PREFIX = "Node:";
 
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {

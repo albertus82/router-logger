@@ -24,10 +24,10 @@ public abstract class Reader {
 		String TELNET_NEWLINE_CHARACTERS = NewLine.CRLF.name();
 	}
 
-	private static final String CFG_KEY_SOCKET_TIMEOUT_MS = "socket.timeout.ms";
-	private static final String CFG_KEY_CONNECTION_TIMEOUT_MS = "connection.timeout.ms";
-	private static final String CFG_KEY_ROUTER_PORT = "router.port";
-	private static final String CFG_KEY_ROUTER_ADDRESS = "router.address";
+	protected static final String CFG_KEY_SOCKET_TIMEOUT_MS = "socket.timeout.ms";
+	protected static final String CFG_KEY_CONNECTION_TIMEOUT_MS = "connection.timeout.ms";
+	protected static final String CFG_KEY_ROUTER_PORT = "router.port";
+	protected static final String CFG_KEY_ROUTER_ADDRESS = "router.address";
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();

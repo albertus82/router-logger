@@ -54,7 +54,7 @@ public class MenuBar {
 	private final MenuItem helpMenuHeader;
 	private final MenuItem helpAboutItem;
 
-	MenuBar(final RouterLoggerGui gui) {
+	public MenuBar(final RouterLoggerGui gui) {
 		bar = new Menu(gui.getShell(), SWT.BAR); // Barra
 
 		/* File */

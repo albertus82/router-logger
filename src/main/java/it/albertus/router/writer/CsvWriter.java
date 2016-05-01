@@ -31,8 +31,8 @@ public class CsvWriter extends Writer {
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
 	}
 
-	private BufferedWriter csvFileWriter = null;
-	private File csvFile = null;
+	protected BufferedWriter csvFileWriter = null;
+	protected File csvFile = null;
 
 	@Override
 	public synchronized void saveInfo(final RouterData info) {

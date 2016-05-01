@@ -23,8 +23,8 @@ public class DLinkDsl2750Reader extends Reader {
 
 	public static final String DEVICE_MODEL_KEY = "lbl.device.model.dlink.2750b";
 
-	private static final String COMMAND_PROMPT = "TBS>>";
-	private static final String LOGIN_PROMPT = ":";
+	protected static final String COMMAND_PROMPT = "TBS>>";
+	protected static final String LOGIN_PROMPT = ":";
 
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {

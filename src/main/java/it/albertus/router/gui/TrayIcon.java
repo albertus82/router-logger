@@ -48,7 +48,7 @@ public class TrayIcon {
 	private String toolTipText;
 	private Image trayIcon;
 
-	TrayIcon(final RouterLoggerGui gui) {
+	public TrayIcon(final RouterLoggerGui gui) {
 		this.gui = gui;
 		gui.getShell().addShellListener(new ShellAdapter() {
 			@Override

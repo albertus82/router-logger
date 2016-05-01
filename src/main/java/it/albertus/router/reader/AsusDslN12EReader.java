@@ -27,8 +27,8 @@ public class AsusDslN12EReader extends Reader {
 
 	public static final String DEVICE_MODEL_KEY = "lbl.device.model.asus.n12e";
 
-	private static final String COMMAND_PROMPT = "$";
-	private static final String LOGIN_PROMPT = ": ";
+	protected static final String COMMAND_PROMPT = "$";
+	protected static final String LOGIN_PROMPT = ": ";
 
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {

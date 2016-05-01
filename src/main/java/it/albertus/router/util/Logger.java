@@ -21,11 +21,11 @@ import java.util.Set;
 
 public class Logger {
 
-	protected static final String FILE_EXTENSION = ".log";
-	protected static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
+	private static final String FILE_EXTENSION = ".log";
+	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
 
-	protected static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
-	protected static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	public enum Destination {
 		CONSOLE,
@@ -52,7 +52,7 @@ public class Logger {
 		this.out = console;
 	}
 
-	protected Console out = TerminalConsole.getInstance(); // Fail-safe.
+	private Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	public boolean isDebugEnabled() {
 		return configuration.getBoolean("console.debug", Defaults.DEBUG);
@@ -75,7 +75,7 @@ public class Logger {
 		}
 	}
 
-	protected Set<Destination> getDestinations(final Destination... destinations) {
+	private Set<Destination> getDestinations(final Destination... destinations) {
 		final Set<Destination> dest = new HashSet<Destination>();
 		if (destinations != null && destinations.length != 0) {
 			dest.addAll(Arrays.asList(destinations));
@@ -111,12 +111,12 @@ public class Logger {
 		}
 	}
 
-	protected void logToConsole(final String text) {
+	private void logToConsole(final String text) {
 		final String base = dateFormatLog.format(new Date()) + ' ';
 		out.println(base + StringUtils.trimToEmpty(text), true);
 	}
 
-	protected void logToFile(final String text) throws IOException {
+	private void logToFile(final String text) throws IOException {
 		final String logDestinationDir = configuration.getString("logger.error.log.destination.path");
 		File logFile;
 		if (StringUtils.isNotBlank(logDestinationDir)) {
@@ -140,7 +140,7 @@ public class Logger {
 		logFileWriter.close();
 	}
 
-	protected static File getDefaultFile() {
+	private static File getDefaultFile() {
 		File logFile;
 		try {
 			logFile = new File(new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
@@ -161,7 +161,7 @@ public class Logger {
 		return logFile;
 	}
 
-	protected static String getDefaultDirectory() {
+	private static String getDefaultDirectory() {
 		String directory;
 		try {
 			directory = getDefaultFile().getParentFile().getCanonicalPath();

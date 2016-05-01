@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class DataTable {
 
-	protected static final char SAMPLE_CHAR = '9';
-	protected static final char FIELD_SEPARATOR = '\t';
+	private static final char SAMPLE_CHAR = '9';
+	private static final char FIELD_SEPARATOR = '\t';
 
-	protected static final DateFormat dateFormatTable = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+	private static final DateFormat dateFormatTable = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	public interface Defaults {
 		int GUI_TABLE_MAX_ITEMS = 2000;
@@ -78,7 +78,7 @@ public class DataTable {
 	 * combinazioni di tasti, gli acceleratori non funzioneranno e le relative
 	 * combinazioni di tasti saranno ignorate.
 	 */
-	protected DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
+	public DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
 		table = new Table(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);

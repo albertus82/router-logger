@@ -26,14 +26,13 @@ public class DatabaseWriter extends Writer {
 		int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
 	}
 
-	private static final String CFG_KEY_DB_PASSWORD = "database.password";
-	private static final String CFG_KEY_DB_USERNAME = "database.username";
-	private static final String CFG_KEY_DB_URL = "database.url";
-	private static final String CFG_KEY_DB_DRIVER_CLASS_NAME = "database.driver.class.name";
+	protected static final String CFG_KEY_DB_PASSWORD = "database.password";
+	protected static final String CFG_KEY_DB_USERNAME = "database.username";
+	protected static final String CFG_KEY_DB_URL = "database.url";
+	protected static final String CFG_KEY_DB_DRIVER_CLASS_NAME = "database.driver.class.name";
 
-	private Connection connection = null;
-	private boolean showMessage = true;
-	private final int connectionValidationTimeoutInMillis;
+	protected Connection connection = null;
+	protected boolean showMessage = true;
 
 	public DatabaseWriter() {
 		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME)) {
@@ -54,7 +53,6 @@ public class DatabaseWriter extends Writer {
 		catch (ClassNotFoundException e) {
 			throw new ConfigurationException(Resources.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e, CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
-		connectionValidationTimeoutInMillis = configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS);
 	}
 
 	@Override
@@ -64,7 +62,7 @@ public class DatabaseWriter extends Writer {
 		try {
 			// Connessione al database...
 			try {
-				if (connection == null || !connection.isValid(connectionValidationTimeoutInMillis)) {
+				if (connection == null || !connection.isValid(configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS))) {
 					connection = DriverManager.getConnection(configuration.getString(CFG_KEY_DB_URL), configuration.getString(CFG_KEY_DB_USERNAME), configuration.getString(CFG_KEY_DB_PASSWORD));
 					connection.setAutoCommit(true);
 				}
@@ -127,15 +125,15 @@ public class DatabaseWriter extends Writer {
 		}
 	}
 
-	private String getResponseTimeColumnName() {
+	protected String getResponseTimeColumnName() {
 		return getColumnName("response_time_ms");
 	}
 
-	private String getTimestampColumnName() {
+	protected String getTimestampColumnName() {
 		return getColumnName("timestamp");
 	}
 
-	private boolean tableExists(final String tableName) {
+	protected boolean tableExists(final String tableName) {
 		PreparedStatement statement = null;
 		try {
 			// Verifica esistenza tabella...
@@ -155,7 +153,7 @@ public class DatabaseWriter extends Writer {
 		}
 	}
 
-	private void createTable(final String tableName, final Map<String, String> info) {
+	protected void createTable(final String tableName, final Map<String, String> info) {
 		final String timestampColumnType = configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE);
 		final String responseTimeColumnType = configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE);
 		final String infoColumnType = configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE);
@@ -184,11 +182,11 @@ public class DatabaseWriter extends Writer {
 		}
 	}
 
-	private String getTableName() {
+	protected String getTableName() {
 		return configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
 	}
 
-	private String getColumnName(String name) {
+	protected String getColumnName(String name) {
 		name = configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name;
 		name = name.replaceAll("[^A-Za-z0-9_]+", "");
 		final int maxLength = configuration.getInt("database.column.name.max.length", Defaults.COLUMN_NAME_MAX_LENGTH);
@@ -203,7 +201,7 @@ public class DatabaseWriter extends Writer {
 		closeDatabaseConnection();
 	}
 
-	private void closeDatabaseConnection() {
+	protected void closeDatabaseConnection() {
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
