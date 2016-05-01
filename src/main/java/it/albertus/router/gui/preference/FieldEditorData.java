@@ -168,4 +168,5 @@ public class FieldEditorData {
 		this.directoryDialogMessageKey = builder.directoryDialogMessageKey;
 		this.emptyStringAllowed = builder.emptyStringAllowed;
 	}
+
 }
