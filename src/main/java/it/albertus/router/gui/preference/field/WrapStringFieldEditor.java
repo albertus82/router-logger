@@ -1,6 +1,5 @@
 package it.albertus.router.gui.preference.field;
 
-import it.albertus.router.gui.preference.FieldEditorData;
 import it.albertus.router.resources.Resources;
 
 import java.util.prefs.Preferences;
@@ -21,27 +20,13 @@ public class WrapStringFieldEditor extends StringFieldEditor {
 
 	public static final int DEFAULT_TEXT_HEIGHT = 4;
 
-	public static WrapStringFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
-		final WrapStringFieldEditor wsfe;
-		if (data != null && data.getTextHeight() != null) {
-			wsfe = new WrapStringFieldEditor(name, labelText, parent, data.getTextHeight());
-		}
-		else {
-			wsfe = new WrapStringFieldEditor(name, labelText, parent);
-		}
-		if (data != null && data.getTextLimit() != null) {
-			wsfe.setTextLimit(data.getTextLimit());
-		}
-		return wsfe;
-	}
-
 	private Text textField; // Do not set any value here!
 
-	protected WrapStringFieldEditor(final String name, final String labelText, final Composite parent) {
+	public WrapStringFieldEditor(final String name, final String labelText, final Composite parent) {
 		this(name, labelText, parent, DEFAULT_TEXT_HEIGHT);
 	}
 
-	protected WrapStringFieldEditor(final String name, final String labelText, final Composite parent, final int height) {
+	public WrapStringFieldEditor(final String name, final String labelText, final Composite parent, final int height) {
 		super(name, labelText, parent);
 		adjustTextHeight(height);
 		setErrorMessage(Resources.get("err.preferences.string"));

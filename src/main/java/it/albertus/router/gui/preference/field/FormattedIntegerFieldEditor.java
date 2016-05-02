@@ -1,7 +1,6 @@
 package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.gui.TextFormatter;
-import it.albertus.router.gui.preference.FieldEditorData;
 import it.albertus.router.gui.preference.field.listener.IntegerVerifyListener;
 import it.albertus.router.resources.Resources;
 
@@ -15,29 +14,12 @@ public class FormattedIntegerFieldEditor extends IntegerFieldEditor {
 
 	protected static final int DEFAULT_TEXT_LIMIT = Integer.toString(Integer.MAX_VALUE).length() - 1;
 
-	public static FormattedIntegerFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
-		final FormattedIntegerFieldEditor ife = new FormattedIntegerFieldEditor(name, labelText, parent);
-		if (data != null) {
-			if (data.getEmptyStringAllowed() != null) {
-				ife.setEmptyStringAllowed(data.getEmptyStringAllowed());
-			}
-			if (data.getIntegerMinValidValue() != null && data.getIntegerMaxValidValue() != null) {
-				ife.setValidRange(data.getIntegerMinValidValue(), data.getIntegerMaxValidValue());
-				ife.setTextLimit(data.getIntegerMaxValidValue().toString().length());
-			}
-			if (data.getTextLimit() != null) {
-				ife.setTextLimit(data.getTextLimit());
-			}
-		}
-		return ife;
-	}
-
-	protected FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int textLimit) {
+	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int textLimit) {
 		super(name, labelText, parent, textLimit);
 		init();
 	}
 
-	protected FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
+	public FormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
 		this(name, labelText, parent, DEFAULT_TEXT_LIMIT);
 	}
 

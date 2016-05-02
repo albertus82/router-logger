@@ -2,7 +2,7 @@ package it.albertus.router.gui;
 
 import org.eclipse.swt.SWT;
 
-public class GuiUtils {
+public abstract class GuiUtils {
 
 	public static final char KEY_OPEN = 'o';
 	public static final char KEY_SAVE = 's';
