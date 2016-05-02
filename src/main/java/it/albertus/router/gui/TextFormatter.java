@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
-public abstract class TextFormatter {
+public final class TextFormatter {
 
 	private static final char SAMPLE_CHAR = '9';
 
@@ -104,5 +104,8 @@ public abstract class TextFormatter {
 		}
 		return widthHint;
 	}
+
+	/** Instantiation not permitted. */
+	private TextFormatter() {}
 
 }

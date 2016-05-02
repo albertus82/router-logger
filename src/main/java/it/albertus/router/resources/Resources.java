@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class Resources {
+public final class Resources {
 
 	public enum Language {
 		ENGLISH(Locale.ENGLISH),
@@ -58,5 +58,8 @@ public class Resources {
 		final String message = MessageFormat.format(resources.getString(key), stringParams.toArray());
 		return message != null ? message.trim() : "";
 	}
+
+	/** Instantiation not permitted. */
+	private Resources() {}
 
 }
