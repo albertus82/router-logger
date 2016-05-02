@@ -16,10 +16,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
+public class ScaleIntegerFieldEditor extends ScaleFieldEditor {
 
-	public static ScaleFormattedIntegerFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
-		final ScaleFormattedIntegerFieldEditor sfe = new ScaleFormattedIntegerFieldEditor(name, labelText, parent);
+	public static ScaleIntegerFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
+		final ScaleIntegerFieldEditor sfe = new ScaleIntegerFieldEditor(name, labelText, parent);
 		if (data != null) {
 			if (data.getScaleMinimum() != null) {
 				sfe.setMinimum(data.getScaleMinimum());
@@ -43,12 +43,12 @@ public class ScaleFormattedIntegerFieldEditor extends ScaleFieldEditor {
 		return text;
 	}
 
-	protected ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
+	protected ScaleIntegerFieldEditor(final String name, final String labelText, final Composite parent, final int min, final int max, final int increment, final int pageIncrement) {
 		super(name, labelText, parent, min, max, increment, pageIncrement);
 		text = createTextControl(parent);
 	}
 
-	protected ScaleFormattedIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
+	protected ScaleIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent);
 		text = createTextControl(parent);
 	}

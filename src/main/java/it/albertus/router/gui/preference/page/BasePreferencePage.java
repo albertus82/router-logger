@@ -13,7 +13,7 @@ import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
 import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
-import it.albertus.router.gui.preference.field.ScaleFormattedIntegerFieldEditor;
+import it.albertus.router.gui.preference.field.ScaleIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
@@ -180,8 +180,8 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 			fe = new IterationsComboFieldEditor(name, labelText, getFieldEditorParent());
 		}
 
-		else if (ScaleFieldEditor.class.equals(clazz) || ScaleFormattedIntegerFieldEditor.class.equals(clazz)) {
-			fe = ScaleFormattedIntegerFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
+		else if (ScaleFieldEditor.class.equals(clazz) || ScaleIntegerFieldEditor.class.equals(clazz)) {
+			fe = ScaleIntegerFieldEditor.newInstance(name, labelText, getFieldEditorParent(), data);
 		}
 
 		else if (ThresholdsFieldEditor.class.equals(clazz)) {
