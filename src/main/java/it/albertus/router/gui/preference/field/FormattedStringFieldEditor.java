@@ -13,7 +13,13 @@ public class FormattedStringFieldEditor extends StringFieldEditor {
 
 	public static FormattedStringFieldEditor newInstance(final String name, final String labelText, final Composite parent, final FieldEditorData data) {
 		final FormattedStringFieldEditor sfe;
-		if (data != null && data.getTextWidth() != null) {
+		if (data != null && data.getTextWidth() != null && data.getTextValidateStrategy() != null) {
+			sfe = new FormattedStringFieldEditor(name, labelText, data.getTextWidth(), data.getTextValidateStrategy(), parent);
+		}
+		else if (data != null && data.getTextValidateStrategy() != null) {
+			sfe = new FormattedStringFieldEditor(name, labelText, UNLIMITED, data.getTextValidateStrategy(), parent);
+		}
+		else if (data != null && data.getTextWidth() != null) {
 			sfe = new FormattedStringFieldEditor(name, labelText, data.getTextWidth(), parent);
 		}
 		else {

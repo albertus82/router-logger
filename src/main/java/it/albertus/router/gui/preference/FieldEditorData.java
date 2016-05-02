@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 public class FieldEditorData {
 
+	// Generic
+	private final Boolean emptyStringAllowed;
+
 	// ComboFieldEditor
 	private final String[][] comboEntryNamesAndValues;
 
@@ -17,7 +20,7 @@ public class FieldEditorData {
 	private final Integer textLimit;
 	private final Integer textWidth;
 	private final Integer textHeight;
-	private final Boolean emptyStringAllowed;
+	private final Integer textValidateStrategy;
 
 	// IntegerFieldEditor
 	private final Integer integerMinValidValue;
@@ -58,6 +61,10 @@ public class FieldEditorData {
 		return textHeight;
 	}
 
+	public Integer getTextValidateStrategy() {
+		return textValidateStrategy;
+	}
+
 	public Integer getIntegerMinValidValue() {
 		return integerMinValidValue;
 	}
@@ -76,10 +83,11 @@ public class FieldEditorData {
 
 	@Override
 	public String toString() {
-		return "FieldEditorData [comboEntryNamesAndValues=" + Arrays.toString(comboEntryNamesAndValues) + ", scaleMinimum=" + scaleMinimum + ", scaleMaximum=" + scaleMaximum + ", scaleIncrement=" + scaleIncrement + ", scalePageIncrement=" + scalePageIncrement + ", textLimit=" + textLimit + ", textWidth=" + textWidth + ", textHeight=" + textHeight + ", emptyStringAllowed=" + emptyStringAllowed + ", integerMinValidValue=" + integerMinValidValue + ", integerMaxValidValue=" + integerMaxValidValue + ", directoryDialogMessageKey=" + directoryDialogMessageKey + "]";
+		return "FieldEditorData [emptyStringAllowed=" + emptyStringAllowed + ", comboEntryNamesAndValues=" + Arrays.toString(comboEntryNamesAndValues) + ", scaleMinimum=" + scaleMinimum + ", scaleMaximum=" + scaleMaximum + ", scaleIncrement=" + scaleIncrement + ", scalePageIncrement=" + scalePageIncrement + ", textLimit=" + textLimit + ", textWidth=" + textWidth + ", textHeight=" + textHeight + ", textValidateStrategy=" + textValidateStrategy + ", integerMinValidValue=" + integerMinValidValue + ", integerMaxValidValue=" + integerMaxValidValue + ", directoryDialogMessageKey=" + directoryDialogMessageKey + "]";
 	}
 
 	public static class FieldEditorDataBuilder {
+		private Boolean emptyStringAllowed;
 		private String[][] comboEntryNamesAndValues;
 		private Integer scaleMinimum;
 		private Integer scaleMaximum;
@@ -88,64 +96,69 @@ public class FieldEditorData {
 		private Integer textLimit;
 		private Integer textWidth;
 		private Integer textHeight;
+		private Integer textValidateStrategy;
 		private Integer integerMinValidValue;
 		private Integer integerMaxValidValue;
 		private String directoryDialogMessageKey;
-		private Boolean emptyStringAllowed;
-
-		public FieldEditorDataBuilder comboEntryNamesAndValues(final String[][] comboEntryNamesAndValues) {
-			this.comboEntryNamesAndValues = comboEntryNamesAndValues;
-			return this;
-		}
-
-		public FieldEditorDataBuilder scaleMinimum(final int scaleMinimum) {
-			this.scaleMinimum = scaleMinimum;
-			return this;
-		}
-
-		public FieldEditorDataBuilder scaleMaximum(final int scaleMaximum) {
-			this.scaleMaximum = scaleMaximum;
-			return this;
-		}
-
-		public FieldEditorDataBuilder scaleIncrement(final int scaleIncrement) {
-			this.scaleIncrement = scaleIncrement;
-			return this;
-		}
-
-		public FieldEditorDataBuilder scalePageIncrement(final int scalePageIncrement) {
-			this.scalePageIncrement = scalePageIncrement;
-			return this;
-		}
-
-		public FieldEditorDataBuilder textLimit(final int textLimit) {
-			this.textLimit = textLimit;
-			return this;
-		}
-
-		public FieldEditorDataBuilder textWidth(final int textWidth) {
-			this.textWidth = textWidth;
-			return this;
-		}
-
-		public FieldEditorDataBuilder textHeight(final int textHeight) {
-			this.textHeight = textHeight;
-			return this;
-		}
-
-		public FieldEditorDataBuilder integerValidRange(final int integerMinValidValue, final int integerMaxValidValue) {
-			this.integerMinValidValue = integerMinValidValue;
-			this.integerMaxValidValue = integerMaxValidValue;
-			return this;
-		}
-
-		public FieldEditorDataBuilder directoryDialogMessageKey(final String directoryDialogMessageKey) {
-			this.directoryDialogMessageKey = directoryDialogMessageKey;
-			return this;
-		}
 
 		public FieldEditorDataBuilder emptyStringAllowed(final boolean emptyStringAllowed) {
 			this.emptyStringAllowed = emptyStringAllowed;
+			return this;
+		}
+
+		public FieldEditorDataBuilder comboEntryNamesAndValues(final String[][] entryNamesAndValues) {
+			this.comboEntryNamesAndValues = entryNamesAndValues;
+			return this;
+		}
+
+		public FieldEditorDataBuilder scaleMinimum(final int min) {
+			this.scaleMinimum = min;
+			return this;
+		}
+
+		public FieldEditorDataBuilder scaleMaximum(final int max) {
+			this.scaleMaximum = max;
+			return this;
+		}
+
+		public FieldEditorDataBuilder scaleIncrement(final int increment) {
+			this.scaleIncrement = increment;
+			return this;
+		}
+
+		public FieldEditorDataBuilder scalePageIncrement(final int pageIncrement) {
+			this.scalePageIncrement = pageIncrement;
+			return this;
+		}
+
+		public FieldEditorDataBuilder textLimit(final int limit) {
+			this.textLimit = limit;
+			return this;
+		}
+
+		public FieldEditorDataBuilder textWidth(final int width) {
+			this.textWidth = width;
+			return this;
+		}
+
+		public FieldEditorDataBuilder textHeight(final int height) {
+			this.textHeight = height;
+			return this;
+		}
+
+		public FieldEditorDataBuilder textValidateStrategy(final int validateStrategy) {
+			this.textValidateStrategy = validateStrategy;
+			return this;
+		}
+
+		public FieldEditorDataBuilder integerValidRange(final int min, final int max) {
+			this.integerMinValidValue = min;
+			this.integerMaxValidValue = max;
+			return this;
+		}
+
+		public FieldEditorDataBuilder directoryDialogMessageKey(final String dialogMessageKey) {
+			this.directoryDialogMessageKey = dialogMessageKey;
 			return this;
 		}
 
@@ -155,6 +168,7 @@ public class FieldEditorData {
 	}
 
 	private FieldEditorData(final FieldEditorDataBuilder builder) {
+		this.emptyStringAllowed = builder.emptyStringAllowed;
 		this.comboEntryNamesAndValues = builder.comboEntryNamesAndValues;
 		this.scaleMinimum = builder.scaleMinimum;
 		this.scaleMaximum = builder.scaleMaximum;
@@ -163,10 +177,10 @@ public class FieldEditorData {
 		this.textLimit = builder.textLimit;
 		this.textWidth = builder.textWidth;
 		this.textHeight = builder.textHeight;
+		this.textValidateStrategy = builder.textValidateStrategy;
 		this.integerMinValidValue = builder.integerMinValidValue;
 		this.integerMaxValidValue = builder.integerMaxValidValue;
 		this.directoryDialogMessageKey = builder.directoryDialogMessageKey;
-		this.emptyStringAllowed = builder.emptyStringAllowed;
 	}
 
 }
