@@ -116,7 +116,8 @@ public class PasswordFieldEditor extends StringFieldEditor {
 
 		char[] newValue = textField.getTextChars();
 		if (!newValue.equals(oldValue)) {
-			fireValueChanged(VALUE, oldValue, newValue); // TODO Check
+			// Avoiding String.valueOf(...)
+			fireValueChanged(VALUE, oldValue, newValue);
 			oldValue = newValue;
 		}
 	}
