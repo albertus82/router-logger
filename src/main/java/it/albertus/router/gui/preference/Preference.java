@@ -20,11 +20,15 @@ import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
+import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 
 import java.util.Locale;
+
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.swt.widgets.Composite;
 
 public enum Preference {
 	LANGUAGE(Page.GENERAL, FieldEditorType.Combo, Locale.getDefault().getLanguage(), new FieldEditorDataBuilder().comboEntryNamesAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
@@ -144,6 +148,10 @@ public enum Preference {
 		this.defaultValue = defaultValue;
 		this.fieldEditorType = fieldEditorType;
 		this.page = page;
+	}
+
+	public FieldEditor createFieldEditor(final Composite parent) {
+		return FieldEditorFactory.createFieldEditor(fieldEditorType, configurationKey, Resources.get(labelKey), parent, fieldEditorData);
 	}
 
 	public String getConfigurationKey() {

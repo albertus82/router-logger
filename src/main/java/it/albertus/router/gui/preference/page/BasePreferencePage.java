@@ -1,7 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.gui.preference.FieldEditorFactory;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -87,7 +85,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		// Fields
 		for (final Preference preference : Preference.values()) {
 			if (getPage().equals(preference.getPage())) {
-				addField(createFieldEditor(preference));
+				addField(preference.createFieldEditor(getFieldEditorParent()));
 			}
 		}
 	}
@@ -100,10 +98,6 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 	protected void addSeparator() {
 		final Label separator = new Label(getFieldEditorParent(), SWT.HORIZONTAL | SWT.SEPARATOR);
 		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).grab(true, false).applyTo(separator);
-	}
-
-	protected FieldEditor createFieldEditor(final Preference preference) {
-		return FieldEditorFactory.createFieldEditor(preference.getFieldEditorType(), preference.getConfigurationKey(), Resources.get(preference.getLabelKey()), getFieldEditorParent(), preference.getFieldEditorData());
 	}
 
 	public static String[][] getNewLineComboOptions() {
