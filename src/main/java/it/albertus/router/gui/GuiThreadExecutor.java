@@ -22,9 +22,11 @@ public abstract class GuiThreadExecutor {
 	protected abstract void run();
 
 	protected void onError(final Exception exception) {
-		final Logger logger = Logger.getInstance();
-		if (logger != null && exception != null) {
-			logger.log(exception);
+		if (!(exception instanceof SWTException)) {
+			final Logger logger = Logger.getInstance();
+			if (logger != null && exception != null) {
+				logger.log(exception);
+			}
 		}
 	}
 
@@ -41,7 +43,6 @@ public abstract class GuiThreadExecutor {
 							try {
 								GuiThreadExecutor.this.run();
 							}
-							catch (final SWTException se) {}
 							catch (final Exception exception) {
 								onError(exception);
 							}
@@ -49,7 +50,6 @@ public abstract class GuiThreadExecutor {
 					});
 				}
 			}
-			catch (final SWTException se) {}
 			catch (final Exception exception) {
 				onError(exception);
 			}
