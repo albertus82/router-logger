@@ -35,6 +35,9 @@ public class CsvWriter extends Writer {
 
 	public static final String DESTINATION_KEY = "lbl.writer.destination.csv";
 
+	private static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
+	private static final String CFG_KEY_EMAIL_HOST = "email.host";
+
 	protected static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
 	protected static final String CSV_FILENAME_REGEX = "[0-9]{8}\\.(csv|CSV)";
 	protected static final String CSV_FILE_EXTENSION = ".csv";
@@ -266,7 +269,14 @@ public class CsvWriter extends Writer {
 	}
 
 	private String sendEmail(final File zipFile) throws EmailException {
-		// TODO configuration check.
+		// Configuration check
+		if (!configuration.contains(CFG_KEY_EMAIL_HOST)) {
+			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
+		}
+		if (!configuration.contains(CFG_KEY_EMAIL_FROM_ADDRESS)) {
+			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
+		}
+
 		final MultiPartEmail email = new MultiPartEmail();
 		email.setStartTLSEnabled(configuration.getBoolean("email.starttls.enabled", Defaults.EMAIL_STARTTLS_ENABLED));
 		email.setStartTLSRequired(configuration.getBoolean("email.starttls.required", Defaults.EMAIL_STARTTLS_REQUIRED));
@@ -275,7 +285,7 @@ public class CsvWriter extends Writer {
 		email.setSmtpPort(configuration.getInt("email.port", Defaults.EMAIL_PORT));
 		email.setSslSmtpPort(configuration.getString("email.ssl.port", Defaults.EMAIL_SSL_PORT));
 
-		email.setHostName(configuration.getString("email.host"));
+		email.setHostName(configuration.getString(CFG_KEY_EMAIL_HOST));
 
 		// Authentication
 		if (!configuration.getString("email.username", "").isEmpty() && !configuration.getString("email.password", "").isEmpty()) {
@@ -284,10 +294,10 @@ public class CsvWriter extends Writer {
 
 		// Sender
 		if (configuration.getString("email.from.name", "").isEmpty()) {
-			email.setFrom(configuration.getString("email.from.address"));
+			email.setFrom(configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS));
 		}
 		else {
-			email.setFrom(configuration.getString("email.from.address"), configuration.getString("email.from.name"));
+			email.setFrom(configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS), configuration.getString("email.from.name"));
 		}
 
 		// Recipients
