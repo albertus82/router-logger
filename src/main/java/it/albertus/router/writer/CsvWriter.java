@@ -3,6 +3,7 @@ package it.albertus.router.writer;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
@@ -47,15 +48,23 @@ public class CsvWriter extends Writer {
 		String DIRECTORY = getDefaultDirectory();
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
+		int EMAIL_PORT = 25;
+		boolean EMAIL_SSL_CONNECT = false;
+		boolean EMAIL_SSL_IDENTITY = false;
+		boolean EMAIL_STARTTLS_ENABLED = false;
+		boolean EMAIL_STARTTLS_REQUIRED = false;
+		String EMAIL_SSL_PORT = "465";
 	}
 
 	protected BufferedWriter csvFileWriter = null;
 	protected File csvFile = null;
 	
-	public CsvWriter() {
-		zipAndSendMail();
+	@Override
+	public void init(final Console console) {
+		super.init(console);
+		sendEmail();
 	}
-
+	
 	@Override
 	public synchronized void saveInfo(final RouterData info) {
 		try {
@@ -76,9 +85,12 @@ public class CsvWriter extends Writer {
 			}
 
 			if (!file.equals(this.csvFile)) {
+				final boolean first = this.csvFile == null;
 				closeOutputFile();
 				this.csvFile = file;
-				zipAndSendMail();
+				if (!first) {
+					sendEmail();
+				}
 			}
 
 			if (!file.exists()) {
@@ -222,39 +234,55 @@ public class CsvWriter extends Writer {
 		}
 		return directory;
 	}
-	
-	private void zipAndSendMail() {
-		final File currentDestinationFile = getDestinationFile();
-		for (final File file : currentDestinationFile.getParentFile().listFiles()) {
-			if (!file.equals(currentDestinationFile) && file.getName().matches(CSV_FILENAME_REGEX)) {
-				try {
-					final File zipFile = zipCsvFile(file);
-					if (testZipFile(zipFile)) {
-						sendEmail(zipFile);
-						file.delete();
-					}
-					else {
-						throw new ZipException("Verifica fallita!"); // TODO
+
+	private void sendEmail() {
+		if (configuration.getBoolean("email.active", false)) {
+			new Thread("zipAndSendMail") {
+				@Override
+				public void run() {
+					final File currentDestinationFile = getDestinationFile();
+					for (final File file : currentDestinationFile.getParentFile().listFiles()) {
+						if (!file.equals(currentDestinationFile) && file.getName().matches(CSV_FILENAME_REGEX)) {
+							try {
+								final File zipFile = zipCsvFile(file);
+								if (testZipFile(zipFile)) {
+									sendEmail(zipFile);
+									out.println(Resources.get("msg.writer.csv.email.sent", zipFile.getName()), true);
+									file.delete();
+								}
+								else {
+									file.delete();
+									throw new ZipException("ZIP file verification failed for " + file.getPath() + '.');
+								}
+							}
+							catch (final Exception e) {
+								logger.log(e);
+							}
+						}
 					}
 				}
-				catch (final Exception e) {
-					logger.log(e);
-				}
-			}
+			}.start();
 		}
 	}
 
 	private String sendEmail(final File zipFile) throws EmailException {
+		// TODO configuration check.
 		final MultiPartEmail email = new MultiPartEmail();
+		email.setStartTLSEnabled(configuration.getBoolean("email.starttls.enabled", Defaults.EMAIL_STARTTLS_ENABLED));
+		email.setStartTLSRequired(configuration.getBoolean("email.starttls.required", Defaults.EMAIL_STARTTLS_REQUIRED));
+		email.setSSLCheckServerIdentity(configuration.getBoolean("email.ssl.identity", Defaults.EMAIL_SSL_IDENTITY));
+		email.setSSLOnConnect(configuration.getBoolean("email.ssl.connect", Defaults.EMAIL_SSL_CONNECT));
+		email.setSmtpPort(configuration.getInt("email.port", Defaults.EMAIL_PORT));
+		email.setSslSmtpPort(configuration.getString("email.ssl.port", Defaults.EMAIL_SSL_PORT));
+
 		email.setHostName(configuration.getString("email.host"));
-		email.setSmtpPort(configuration.getInt("email.port", 25)); // TODO
+
+		// Authentication
 		if (!configuration.getString("email.username", "").isEmpty() && !configuration.getString("email.password", "").isEmpty()) {
 			email.setAuthenticator(new DefaultAuthenticator(configuration.getString("email.username"), configuration.getString("email.password")));
 		}
-		if (configuration.getBoolean("email.ssl") != null) {
-			email.setSSLOnConnect(configuration.getBoolean("email.ssl"));
-		}
 
+		// Sender
 		if (configuration.getString("email.from.name", "").isEmpty()) {
 			email.setFrom(configuration.getString("email.from.address"));
 		}
@@ -262,15 +290,27 @@ public class CsvWriter extends Writer {
 			email.setFrom(configuration.getString("email.from.address"), configuration.getString("email.from.name"));
 		}
 
-		if (configuration.getString("email.to.name", "").isEmpty()) {
-			email.addTo(configuration.getString("email.to.address"));
+		// Recipients
+		if (!configuration.getString("email.to.addresses", "").isEmpty()) {
+			email.addTo(configuration.getString("email.to.addresses").split("[,;]+"));
 		}
-		else {
-			email.addTo(configuration.getString("email.to.address"), configuration.getString("email.to.name"));
+		if (!configuration.getString("email.cc.addresses", "").isEmpty()) {
+			email.addCc(configuration.getString("email.cc.addresses").split("[,;]+"));
+		}
+		if (!configuration.getString("email.bcc.addresses", "").isEmpty()) {
+			email.addBcc(configuration.getString("email.bcc.addresses").split("[,;]+"));
 		}
 
-		email.setSubject(configuration.getString("email.subject")); // TODO
-		email.setMsg(configuration.getString("email.msg")); // TODO
+		// Contents
+		String formattedDate = zipFile.getName();
+		try {
+			formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
+		}
+		catch (final Exception e) {
+			formattedDate = e.getClass().getSimpleName();
+		}
+		email.setSubject(Resources.get("msg.writer.csv.email.subject", formattedDate));
+		email.setMsg(Resources.get("msg.writer.csv.email.message", zipFile.getName()));
 
 		final EmailAttachment attachment = new EmailAttachment();
 		attachment.setPath(zipFile.getPath());
