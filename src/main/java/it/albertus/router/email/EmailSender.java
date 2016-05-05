@@ -30,7 +30,7 @@ public abstract class EmailSender {
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
-	public String send(File... attachments) throws EmailException {
+	public String send(final File... attachments) throws EmailException {
 		checkConfiguration();
 		final Email email;
 		if (attachments != null && attachments.length > 0) {
