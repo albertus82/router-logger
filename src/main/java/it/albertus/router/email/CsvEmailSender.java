@@ -34,6 +34,9 @@ public class CsvEmailSender extends EmailSender {
 			email.setSubject(Resources.get("msg.writer.csv.email.subject", formattedDate));
 			email.setMsg(Resources.get("msg.writer.csv.email.message", attachments[0].getName()));
 		}
+		else {
+			throw new IllegalStateException("Illegal attachments count.");
+		}
 	}
 
 }

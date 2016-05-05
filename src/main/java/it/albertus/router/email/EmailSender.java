@@ -12,6 +12,7 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
+import org.apache.commons.mail.SimpleEmail;
 
 public abstract class EmailSender {
 
@@ -31,14 +32,18 @@ public abstract class EmailSender {
 
 	public String send(File... attachments) throws EmailException {
 		checkConfiguration();
-		final Email email = createEmail();
-		initializeEmail(email);
-		createContents(email, attachments);
-		if (attachments != null && attachments.length > 0 && email instanceof MultiPartEmail) {
+		final Email email;
+		if (attachments != null && attachments.length > 0) {
+			email = new MultiPartEmail();
 			for (final File attachment : attachments) {
 				addAttachment(attachment, (MultiPartEmail) email);
 			}
 		}
+		else {
+			email = new SimpleEmail();
+		}
+		initializeEmail(email);
+		createContents(email, attachments);
 		return email.send();
 	}
 
@@ -50,10 +55,6 @@ public abstract class EmailSender {
 		if (!configuration.contains(CFG_KEY_EMAIL_FROM_ADDRESS)) {
 			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
 		}
-	}
-
-	protected Email createEmail() {
-		return new MultiPartEmail();
 	}
 
 	protected void initializeEmail(final Email email) throws EmailException {
