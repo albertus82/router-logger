@@ -25,7 +25,6 @@ public class CsvWriter extends Writer {
 	protected static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
 	protected static final String CSV_FILENAME_REGEX = "[0-9]{8}\\.(csv|CSV)";
 	protected static final String CSV_FILE_EXTENSION = ".csv";
-	protected static final String ZIP_FILE_EXTENSION = ".zip";
 
 	protected static final DateFormat dateFormatColumn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	public static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
@@ -233,7 +232,7 @@ public class CsvWriter extends Writer {
 			for (final File csvFile : currentDestinationFile.getParentFile().listFiles()) {
 				if (!csvFile.equals(currentDestinationFile) && csvFile.getName().matches(CSV_FILENAME_REGEX)) {
 					try {
-						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, ZIP_FILE_EXTENSION));
+						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
 						zipper.zip(zipFile, csvFile);
 						if (zipper.test(zipFile)) {
 							emailSender.send(zipFile);
@@ -241,7 +240,7 @@ public class CsvWriter extends Writer {
 							csvFile.delete();
 						}
 						else {
-							csvFile.delete();
+							zipFile.delete();
 							throw new ZipException("ZIP file verification failed for " + csvFile.getPath() + '.');
 						}
 					}

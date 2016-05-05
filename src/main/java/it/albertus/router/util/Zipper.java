@@ -15,6 +15,8 @@ import java.util.zip.ZipOutputStream;
 
 public class Zipper {
 
+	public static final String ZIP_FILE_EXTENSION = ".zip";
+
 	private static class Singleton {
 		private static final Zipper instance = new Zipper();
 	}
