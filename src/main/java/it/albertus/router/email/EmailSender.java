@@ -34,10 +34,11 @@ public abstract class EmailSender {
 		checkConfiguration();
 		final Email email;
 		if (attachments != null && attachments.length > 0) {
-			email = new MultiPartEmail();
+			final MultiPartEmail multiPartEmail = new MultiPartEmail();
 			for (final File attachment : attachments) {
-				addAttachment(attachment, (MultiPartEmail) email);
+				addAttachment(attachment, multiPartEmail);
 			}
+			email = multiPartEmail;
 		}
 		else {
 			email = new SimpleEmail();
@@ -55,6 +56,15 @@ public abstract class EmailSender {
 		if (!configuration.contains(CFG_KEY_EMAIL_FROM_ADDRESS)) {
 			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
 		}
+	}
+
+	protected void addAttachment(final File attachment, final MultiPartEmail email) throws EmailException {
+		final EmailAttachment emailAttachment = new EmailAttachment();
+		emailAttachment.setPath(attachment.getPath());
+		emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
+		emailAttachment.setDescription(attachment.getName());
+		emailAttachment.setName(attachment.getName());
+		email.attach(emailAttachment);
 	}
 
 	protected void initializeEmail(final Email email) throws EmailException {
@@ -93,14 +103,5 @@ public abstract class EmailSender {
 	}
 
 	protected abstract void createContents(Email email, File... attachments) throws EmailException;
-
-	protected void addAttachment(final File attachment, final MultiPartEmail email) throws EmailException {
-		final EmailAttachment emailAttachment = new EmailAttachment();
-		emailAttachment.setPath(attachment.getPath());
-		emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
-		emailAttachment.setDescription(attachment.getName());
-		emailAttachment.setName(attachment.getName());
-		email.attach(emailAttachment);
-	}
 
 }
