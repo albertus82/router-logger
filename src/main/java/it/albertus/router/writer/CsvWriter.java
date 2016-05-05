@@ -35,6 +35,7 @@ public class CsvWriter extends Writer {
 		String DIRECTORY = getDefaultDirectory();
 		String FIELD_SEPARATOR = ";";
 		String FIELD_SEPARATOR_REPLACEMENT = ",";
+		boolean EMAIL = false;
 	}
 
 	protected final CsvEmailSender emailSender = CsvEmailSender.getInstance();
@@ -42,7 +43,7 @@ public class CsvWriter extends Writer {
 
 	protected BufferedWriter csvFileWriter = null;
 	protected File csvFile = null;
-	
+
 	@Override
 	public void init(final Console console) {
 		super.init(console);
@@ -220,7 +221,7 @@ public class CsvWriter extends Writer {
 	}
 
 	private void sendEmail() {
-		if (configuration.getBoolean("email.active", false)) {
+		if (configuration.getBoolean("csv.email", Defaults.EMAIL)) {
 			new Thread(new EmailRunnable(), "emailThread").start();
 		}
 	}
