@@ -240,7 +240,7 @@ public class CsvWriter extends Writer {
 
 	private void sendEmail() {
 		if (configuration.getBoolean("email.active", false)) {
-			new Thread("zipAndSendMail") {
+			new Thread("sendEmail") {
 				@Override
 				public void run() {
 					final File currentDestinationFile = getDestinationFile();
@@ -268,7 +268,7 @@ public class CsvWriter extends Writer {
 		}
 	}
 
-	private String sendEmail(final File zipFile) throws EmailException {
+	private String sendEmail(final File attachment) throws EmailException {
 		// Configuration check
 		if (!configuration.contains(CFG_KEY_EMAIL_HOST)) {
 			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
@@ -312,7 +312,7 @@ public class CsvWriter extends Writer {
 		}
 
 		// Contents
-		String formattedDate = zipFile.getName();
+		String formattedDate = attachment.getName();
 		try {
 			formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
 		}
@@ -320,14 +320,14 @@ public class CsvWriter extends Writer {
 			formattedDate = e.getClass().getSimpleName();
 		}
 		email.setSubject(Resources.get("msg.writer.csv.email.subject", formattedDate));
-		email.setMsg(Resources.get("msg.writer.csv.email.message", zipFile.getName()));
+		email.setMsg(Resources.get("msg.writer.csv.email.message", attachment.getName()));
 
-		final EmailAttachment attachment = new EmailAttachment();
-		attachment.setPath(zipFile.getPath());
-		attachment.setDisposition(EmailAttachment.ATTACHMENT);
-		attachment.setDescription(zipFile.getName());
-		attachment.setName(zipFile.getName());
-		email.attach(attachment);
+		final EmailAttachment emailAttachment = new EmailAttachment();
+		emailAttachment.setPath(attachment.getPath());
+		emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
+		emailAttachment.setDescription(attachment.getName());
+		emailAttachment.setName(attachment.getName());
+		email.attach(emailAttachment);
 
 		return email.send();
 	}
