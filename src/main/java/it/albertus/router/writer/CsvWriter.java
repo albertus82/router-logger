@@ -43,6 +43,33 @@ public class CsvWriter extends Writer {
 	protected BufferedWriter csvFileWriter = null;
 	protected File csvFile = null;
 
+	protected class CsvEmailRunnable implements Runnable {
+		@Override
+		public void run() {
+			final File currentDestinationFile = getDestinationFile();
+			for (final File csvFile : currentDestinationFile.getParentFile().listFiles()) {
+				if (!csvFile.equals(currentDestinationFile) && csvFile.getName().matches(CSV_FILENAME_REGEX)) {
+					try {
+						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
+						zipper.zip(zipFile, csvFile);
+						if (zipper.test(zipFile)) {
+							emailSender.send(zipFile);
+							out.println(Resources.get("msg.writer.csv.email.sent", zipFile.getName()), true);
+							csvFile.delete();
+						}
+						else {
+							zipFile.delete();
+							throw new ZipException("ZIP file verification failed for " + csvFile.getPath() + '.');
+						}
+					}
+					catch (final Exception exception) {
+						logger.log(exception);
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void init(final Console console) {
 		super.init(console);
@@ -187,7 +214,7 @@ public class CsvWriter extends Writer {
 
 	protected void sendEmail() {
 		if (configuration.getBoolean("csv.email", Defaults.EMAIL)) {
-			new Thread(new EmailRunnable(), "csvEmailThread").start();
+			new Thread(new CsvEmailRunnable(), "csvEmailThread").start();
 		}
 	}
 
@@ -223,33 +250,6 @@ public class CsvWriter extends Writer {
 			}
 		}
 		return directory;
-	}
-
-	protected class EmailRunnable implements Runnable {
-		@Override
-		public void run() {
-			final File currentDestinationFile = getDestinationFile();
-			for (final File csvFile : currentDestinationFile.getParentFile().listFiles()) {
-				if (!csvFile.equals(currentDestinationFile) && csvFile.getName().matches(CSV_FILENAME_REGEX)) {
-					try {
-						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
-						zipper.zip(zipFile, csvFile);
-						if (zipper.test(zipFile)) {
-							emailSender.send(zipFile);
-							out.println(Resources.get("msg.writer.csv.email.sent", zipFile.getName()), true);
-							csvFile.delete();
-						}
-						else {
-							zipFile.delete();
-							throw new ZipException("ZIP file verification failed for " + csvFile.getPath() + '.');
-						}
-					}
-					catch (final Exception e) {
-						logger.log(e);
-					}
-				}
-			}
-		}
 	}
 
 }

@@ -8,7 +8,8 @@ import java.text.DateFormat;
 
 import org.apache.commons.mail.EmailException;
 
-public class CsvEmailSender extends EmailSender {
+/** Singleton. */
+public class CsvEmailSender {
 
 	private static class Singleton {
 		private static final CsvEmailSender instance = new CsvEmailSender();
@@ -17,6 +18,9 @@ public class CsvEmailSender extends EmailSender {
 	public static CsvEmailSender getInstance() {
 		return Singleton.instance;
 	}
+
+	/** Composition over inheritance. */
+	private final EmailSender emailSender = EmailSender.getInstance();
 
 	private CsvEmailSender() {}
 
@@ -31,7 +35,7 @@ public class CsvEmailSender extends EmailSender {
 			}
 			final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
 			final String message = Resources.get("msg.writer.csv.email.message", attachments[0].getName());
-			return send(subject, message, attachments);
+			return emailSender.send(subject, message, attachments);
 		}
 		else {
 			throw new IllegalStateException("Illegal attachments count.");

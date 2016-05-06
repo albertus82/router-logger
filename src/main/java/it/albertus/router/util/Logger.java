@@ -1,5 +1,6 @@
 package it.albertus.router.util;
 
+import it.albertus.router.email.LogEmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
@@ -22,21 +23,45 @@ import java.util.Set;
 public class Logger {
 
 	private static final String FILE_EXTENSION = ".log";
-	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE };
+	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE, Destination.EMAIL };
 
-	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
-	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	public static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+	public static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	public enum Destination {
 		CONSOLE,
-		FILE;
+		FILE,
+		EMAIL;
 	}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final LogEmailSender emailSender = LogEmailSender.getInstance();
 
 	public interface Defaults {
 		boolean DEBUG = false;
 		String DIRECTORY = getDefaultDirectory();
+		boolean EMAIL = false;
+	}
+
+	protected class LogEmailRunnable implements Runnable {
+
+		protected final String log;
+		protected final Date date;
+
+		protected LogEmailRunnable(final String log, final Date date) {
+			this.log = log;
+			this.date = date;
+		}
+
+		@Override
+		public void run() {
+			try {
+				emailSender.send(log, date);
+			}
+			catch (final Exception exception) {
+				log(exception, Destination.CONSOLE);
+			}
+		}
 	}
 
 	// Lazy initialization...
@@ -73,17 +98,15 @@ public class Logger {
 				log(e, Destination.CONSOLE);
 			}
 		}
-	}
 
-	private Set<Destination> getDestinations(final Destination... destinations) {
-		final Set<Destination> dest = new HashSet<Destination>();
-		if (destinations != null && destinations.length != 0) {
-			dest.addAll(Arrays.asList(destinations));
+		if (dest.contains(Destination.EMAIL)) {
+			try {
+				logToEmail(text);
+			}
+			catch (Exception e) {
+				log(e, Destination.CONSOLE);
+			}
 		}
-		else {
-			dest.addAll(Arrays.asList(DEFAULT_DESTINATIONS));
-		}
-		return dest;
 	}
 
 	public void log(final Throwable throwable, Destination... destinations) {
@@ -104,6 +127,15 @@ public class Logger {
 		if (dest.contains(Destination.FILE)) {
 			try {
 				logToFile(longLog);
+			}
+			catch (Exception e) {
+				log(e, Destination.CONSOLE);
+			}
+		}
+
+		if (dest.contains(Destination.EMAIL)) {
+			try {
+				logToEmail(longLog);
 			}
 			catch (Exception e) {
 				log(e, Destination.CONSOLE);
@@ -140,6 +172,23 @@ public class Logger {
 		logFileWriter.close();
 	}
 
+	private void logToEmail(final String log) {
+		if (configuration.getBoolean("log.email", Defaults.EMAIL)) {
+			new Thread(new LogEmailRunnable(log, new Date()), "logEmailThread").start();
+		}
+	}
+
+	private Set<Destination> getDestinations(final Destination... destinations) {
+		final Set<Destination> dest = new HashSet<Destination>();
+		if (destinations != null && destinations.length != 0) {
+			dest.addAll(Arrays.asList(destinations));
+		}
+		else {
+			dest.addAll(Arrays.asList(DEFAULT_DESTINATIONS));
+		}
+		return dest;
+	}
+
 	private static File getDefaultFile() {
 		File logFile;
 		try {
@@ -147,14 +196,11 @@ public class Logger {
 		}
 		catch (final Exception e1) {
 			try {
-				/*
-				 * In caso di problemi, scrive nella directory del profilo
-				 * dell'utente
-				 */
+				// In caso di problemi, scrive nella directory del profilo dell'utente
 				logFile = new File(System.getProperty("user.home").toString() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 			catch (final Exception e2) {
-				/* Nella peggiore delle ipotesi, scrive nella directory corrente */
+				// Nella peggiore delle ipotesi, scrive nella directory corrente
 				logFile = new File(dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 		}

@@ -14,7 +14,16 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
 
+/** Singleton. */
 public class EmailSender {
+
+	private static class Singleton {
+		private static final EmailSender instance = new EmailSender();
+	}
+
+	public static EmailSender getInstance() {
+		return Singleton.instance;
+	}
 
 	public static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
 	public static final String CFG_KEY_EMAIL_HOST = "email.host";
