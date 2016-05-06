@@ -6,7 +6,6 @@ import it.albertus.router.writer.CsvWriter;
 import java.io.File;
 import java.text.DateFormat;
 
-import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 
 public class CsvEmailSender extends EmailSender {
@@ -21,8 +20,7 @@ public class CsvEmailSender extends EmailSender {
 
 	private CsvEmailSender() {}
 
-	@Override
-	protected void createContents(final Email email, final File... attachments) throws EmailException {
+	public String send(final File... attachments) throws EmailException {
 		if (attachments != null && attachments.length == 1) {
 			String formattedDate = attachments[0].getName();
 			try {
@@ -31,8 +29,9 @@ public class CsvEmailSender extends EmailSender {
 			catch (final Exception e) {
 				formattedDate = e.getClass().getSimpleName();
 			}
-			email.setSubject(Resources.get("msg.writer.csv.email.subject", formattedDate));
-			email.setMsg(Resources.get("msg.writer.csv.email.message", attachments[0].getName()));
+			final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
+			final String message = Resources.get("msg.writer.csv.email.message", attachments[0].getName());
+			return send(subject, message, attachments);
 		}
 		else {
 			throw new IllegalStateException("Illegal attachments count.");

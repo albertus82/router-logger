@@ -14,7 +14,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
 
-public abstract class EmailSender {
+public class EmailSender {
 
 	public static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
 	public static final String CFG_KEY_EMAIL_HOST = "email.host";
@@ -30,7 +30,7 @@ public abstract class EmailSender {
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
-	public String send(final File... attachments) throws EmailException {
+	public String send(final String subject, final String message, final File... attachments) throws EmailException {
 		checkConfiguration();
 		final Email email;
 		if (attachments != null && attachments.length > 0) {
@@ -44,7 +44,7 @@ public abstract class EmailSender {
 			email = new SimpleEmail();
 		}
 		initializeEmail(email);
-		createContents(email, attachments);
+		createContents(email, subject, message, attachments);
 		return email.send();
 	}
 
@@ -102,6 +102,9 @@ public abstract class EmailSender {
 		}
 	}
 
-	protected abstract void createContents(Email email, File... attachments) throws EmailException;
+	protected void createContents(final Email email, final String subject, final String message, final File... attachments) throws EmailException {
+		email.setSubject(subject);
+		email.setMsg(message);
+	}
 
 }

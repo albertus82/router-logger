@@ -185,6 +185,12 @@ public class CsvWriter extends Writer {
 		}
 	}
 
+	protected void sendEmail() {
+		if (configuration.getBoolean("csv.email", Defaults.EMAIL)) {
+			new Thread(new EmailRunnable(), "csvEmailThread").start();
+		}
+	}
+
 	protected static File getDefaultFile() {
 		File csvFile;
 		try {
@@ -217,12 +223,6 @@ public class CsvWriter extends Writer {
 			}
 		}
 		return directory;
-	}
-
-	private void sendEmail() {
-		if (configuration.getBoolean("csv.email", Defaults.EMAIL)) {
-			new Thread(new EmailRunnable(), "emailThread").start();
-		}
 	}
 
 	protected class EmailRunnable implements Runnable {
