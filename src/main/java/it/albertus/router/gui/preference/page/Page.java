@@ -18,7 +18,8 @@ public enum Page {
 	CSV(CsvPreferencePage.class, WRITER),
 	DATABASE(DatabasePreferencePage.class, WRITER),
 	THRESHOLDS(ThresholdsPreferencePage.class),
-	EXPRESSIONS(ExpressionsPreferencePage.class, THRESHOLDS);
+	EXPRESSIONS(ExpressionsPreferencePage.class, THRESHOLDS),
+	EMAIL(EmailPreferencePage.class);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

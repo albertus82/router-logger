@@ -29,12 +29,12 @@ public class EmailSender {
 	public static final String CFG_KEY_EMAIL_HOST = "email.host";
 
 	public interface Defaults {
-		int EMAIL_PORT = 25;
-		boolean EMAIL_SSL_CONNECT = false;
-		boolean EMAIL_SSL_IDENTITY = false;
-		boolean EMAIL_STARTTLS_ENABLED = false;
-		boolean EMAIL_STARTTLS_REQUIRED = false;
-		String EMAIL_SSL_PORT = "465";
+		int PORT = 25;
+		String SSL_PORT = "465";
+		boolean SSL_CONNECT = false;
+		boolean SSL_IDENTITY = false;
+		boolean STARTTLS_ENABLED = false;
+		boolean STARTTLS_REQUIRED = false;
 	}
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
@@ -77,12 +77,12 @@ public class EmailSender {
 	}
 
 	protected void initializeEmail(final Email email) throws EmailException {
-		email.setStartTLSEnabled(configuration.getBoolean("email.starttls.enabled", Defaults.EMAIL_STARTTLS_ENABLED));
-		email.setStartTLSRequired(configuration.getBoolean("email.starttls.required", Defaults.EMAIL_STARTTLS_REQUIRED));
-		email.setSSLCheckServerIdentity(configuration.getBoolean("email.ssl.identity", Defaults.EMAIL_SSL_IDENTITY));
-		email.setSSLOnConnect(configuration.getBoolean("email.ssl.connect", Defaults.EMAIL_SSL_CONNECT));
-		email.setSmtpPort(configuration.getInt("email.port", Defaults.EMAIL_PORT));
-		email.setSslSmtpPort(configuration.getString("email.ssl.port", Defaults.EMAIL_SSL_PORT));
+		email.setStartTLSEnabled(configuration.getBoolean("email.starttls.enabled", Defaults.STARTTLS_ENABLED));
+		email.setStartTLSRequired(configuration.getBoolean("email.starttls.required", Defaults.STARTTLS_REQUIRED));
+		email.setSSLCheckServerIdentity(configuration.getBoolean("email.ssl.identity", Defaults.SSL_IDENTITY));
+		email.setSSLOnConnect(configuration.getBoolean("email.ssl.connect", Defaults.SSL_CONNECT));
+		email.setSmtpPort(configuration.getInt("email.port", Defaults.PORT));
+		email.setSslSmtpPort(configuration.getString("email.ssl.port", Defaults.SSL_PORT));
 
 		email.setHostName(configuration.getString(CFG_KEY_EMAIL_HOST));
 
