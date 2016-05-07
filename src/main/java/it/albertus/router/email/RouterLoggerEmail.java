@@ -1,8 +1,11 @@
 package it.albertus.router.email;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class RouterLoggerEmail {
+public class RouterLoggerEmail implements Serializable {
+
+	private static final long serialVersionUID = 727772177454786813L;
 
 	protected final String subject;
 	protected final String message;

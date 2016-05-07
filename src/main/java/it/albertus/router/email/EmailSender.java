@@ -64,7 +64,7 @@ public class EmailSender {
 						sentItems.add(rle);
 						out.println(Resources.get("msg.email.sent", rle.getSubject()), true);
 					}
-					catch (Exception exception) {
+					catch (final Exception exception) {
 						logger.log(exception, Destination.CONSOLE);
 					}
 				}
