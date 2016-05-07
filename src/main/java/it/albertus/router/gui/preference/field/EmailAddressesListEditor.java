@@ -53,7 +53,7 @@ public class EmailAddressesListEditor extends LocalizedListEditor {
 
 	@Override
 	protected String[] parseString(final String stringList) {
-		if (stringList != null) {
+		if (stringList != null && !stringList.isEmpty()) {
 			return stringList.trim().split(EmailSender.EMAIL_ADDRESSES_SPLIT_REGEX);
 		}
 		else {

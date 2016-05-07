@@ -20,8 +20,8 @@ public abstract class LocalizedListEditor extends ListEditor {
 		this(name, labelText, parent, false);
 	}
 
-	public LocalizedListEditor(final String name, final String labelText, final Composite parent, final boolean flat) {
-		super(name, labelText, flat ? createContainer(parent) : parent);
+	public LocalizedListEditor(final String name, final String labelText, final Composite parent, final boolean span) {
+		super(name, labelText, span ? createContainer(parent) : parent);
 	}
 
 	protected static Composite createContainer(final Composite fieldEditorParent) {
