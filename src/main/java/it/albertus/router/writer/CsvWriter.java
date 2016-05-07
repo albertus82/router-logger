@@ -1,9 +1,8 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.util.EmailSender;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.util.Zipper;
 import it.albertus.util.ConfigurationException;
@@ -46,49 +45,34 @@ public class CsvWriter extends Writer {
 	protected File csvFile = null;
 
 	protected class CsvEmailRunnable implements Runnable {
-		
-		protected static final int RETRIES = 5;
-		
-		protected int retry = 0;
-
 		@Override
 		public void run() {
-			if (retry++ < RETRIES) {
-				final File currentDestinationFile = getDestinationFile();
-				for (final File csvFile : currentDestinationFile.getParentFile().listFiles()) {
-					if (!csvFile.equals(currentDestinationFile) && csvFile.getName().matches(CSV_FILENAME_REGEX)) {
-						try {
-							final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
-							zipper.zip(zipFile, csvFile);
-							if (zipper.test(zipFile)) {
-								String formattedDate = zipFile.getName();
-								try {
-									formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
-								}
-								catch (final Exception e) {
-									formattedDate = e.getClass().getSimpleName();
-								}
-								final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
-								final String message = Resources.get("msg.writer.csv.email.message", zipFile.getName());
-								emailSender.send(subject, message, zipFile);
-								out.println(Resources.get("msg.writer.csv.email.sent", subject), true);
-								csvFile.delete();
-							}
-							else {
-								zipFile.delete();
-								throw new ZipException("ZIP file verification failed for " + csvFile.getPath() + '.');
-							}
-						}
-						catch (final Exception exception) {
-							logger.log(exception, Destination.CONSOLE);
+			final File currentDestinationFile = getDestinationFile();
+			for (final File csvFile : currentDestinationFile.getParentFile().listFiles()) {
+				if (!csvFile.equals(currentDestinationFile) && csvFile.getName().matches(CSV_FILENAME_REGEX)) {
+					try {
+						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
+						zipper.zip(zipFile, csvFile);
+						if (zipper.test(zipFile)) {
+							String formattedDate = zipFile.getName();
 							try {
-								Thread.sleep((long) (configuration.getLong("logger.retry.interval.ms", RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS) * 1.25f));
+								formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
 							}
-							catch (final InterruptedException ie) {
-								return;
+							catch (final Exception e) {
+								formattedDate = e.getClass().getSimpleName();
 							}
-							run();
+							final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
+							final String message = Resources.get("msg.writer.csv.email.message", zipFile.getName());
+							emailSender.reserve(subject, message, zipFile);
+							csvFile.delete();
 						}
+						else {
+							zipFile.delete();
+							throw new ZipException("ZIP file verification failed for " + csvFile.getPath() + '.');
+						}
+					}
+					catch (final Exception exception) {
+						logger.log(exception, Destination.CONSOLE);
 					}
 				}
 			}

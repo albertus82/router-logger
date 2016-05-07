@@ -1,8 +1,8 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.router.email.EmailSender;
 import it.albertus.router.gui.Images;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.util.EmailSender;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;

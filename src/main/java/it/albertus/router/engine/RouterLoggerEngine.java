@@ -1,5 +1,6 @@
 package it.albertus.router.engine;
 
+import it.albertus.router.email.EmailSender;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -32,6 +33,7 @@ public abstract class RouterLoggerEngine {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
+	protected final EmailSender emailSender = EmailSender.getInstance();
 
 	protected final Console out = getConsole();
 
@@ -373,6 +375,9 @@ public abstract class RouterLoggerEngine {
 	public RouterLoggerEngine() {
 		// Inizializzazione del Logger...
 		logger.init(out);
+
+		// Inizializzazione dell'EmailSender...
+		emailSender.init(out, logger);
 	}
 
 	protected void initReaderAndWriter() {

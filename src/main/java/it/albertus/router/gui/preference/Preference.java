@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference;
 
 import it.albertus.router.console.RouterLoggerConsole;
+import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.CloseMessageBox;
@@ -21,7 +22,6 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.util.EmailSender;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
@@ -115,6 +115,7 @@ public enum Preference {
 	EMAIL_SSL_IDENTITY(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.SSL_IDENTITY)),
 	EMAIL_STARTTLS_ENABLED(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.STARTTLS_ENABLED)),
 	EMAIL_STARTTLS_REQUIRED(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.STARTTLS_REQUIRED)),
+	EMAIL_SEND_INTERVAL_MS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Long.toString(EmailSender.Defaults.SEND_INTERVAL_IN_MILLIS)),
 	EMAIL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_CC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),

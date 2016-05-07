@@ -1,11 +1,18 @@
-package it.albertus.router.util;
+package it.albertus.router.email;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.Console;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
@@ -40,16 +47,148 @@ public class EmailSender {
 		boolean SSL_IDENTITY = false;
 		boolean STARTTLS_ENABLED = false;
 		boolean STARTTLS_REQUIRED = false;
+		long SEND_INTERVAL_IN_MILLIS = 60000L;
+	}
+
+	protected class RouterLoggerEmail {
+
+		protected final String subject;
+		protected final String message;
+		protected final File[] attachments;
+
+		protected RouterLoggerEmail(final String subject, final String message, final File[] attachments) {
+			this.subject = subject;
+			this.message = message;
+			this.attachments = attachments;
+		}
+
+		public String getSubject() {
+			return subject;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public File[] getAttachments() {
+			return attachments;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((message == null) ? 0 : message.hashCode());
+			result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof RouterLoggerEmail)) {
+				return false;
+			}
+			RouterLoggerEmail other = (RouterLoggerEmail) obj;
+			if (!getOuterType().equals(other.getOuterType())) {
+				return false;
+			}
+			if (message == null) {
+				if (other.message != null) {
+					return false;
+				}
+			}
+			else if (!message.equals(other.message)) {
+				return false;
+			}
+			if (subject == null) {
+				if (other.subject != null) {
+					return false;
+				}
+			}
+			else if (!subject.equals(other.subject)) {
+				return false;
+			}
+			return true;
+		}
+
+		@Override
+		public String toString() {
+			return "RouterLoggerEmail [subject=" + subject + "]";
+		}
+
+		private EmailSender getOuterType() {
+			return EmailSender.this;
+		}
+
+	}
+
+	protected class EmailRunnable implements Runnable {
+
+		protected boolean exit = false;
+
+		@Override
+		public void run() {
+			while (!exit) {
+				final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>();
+				for (final RouterLoggerEmail rle : queue) {
+					try {
+						send(rle);
+						sentItems.add(rle);
+						out.println(Resources.get("msg.email.sent", rle.getSubject()), true);
+					}
+					catch (Exception exception) {
+						logger.log(exception, Destination.CONSOLE);
+					}
+				}
+				queue.removeAll(sentItems);
+				try {
+					Thread.sleep(configuration.getLong("email.send.interval.ms", Defaults.SEND_INTERVAL_IN_MILLIS));
+				}
+				catch (final InterruptedException ie) {
+					exit = true;
+				}
+			}
+		}
 	}
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	protected Logger logger;
+	protected Console out;
+	protected final Queue<RouterLoggerEmail> queue = new LinkedList<RouterLoggerEmail>();
+	protected final Thread emailThread;
 
-	public String send(final String subject, final String message, final File... attachments) throws EmailException {
+	protected EmailSender() {
+		emailThread = new Thread(new EmailRunnable(), "emailThread");
+	}
+
+	public void init(final Console console, final Logger logger) {
+		this.out = console;
+		this.logger = logger;
+		emailThread.setDaemon(true);
+		if (!emailThread.isAlive()) {
+			emailThread.start();
+		}
+	}
+
+	public void reserve(final String subject, final String message, final File... attachments) {
+		final RouterLoggerEmail rle = new RouterLoggerEmail(subject, message, attachments);
+		System.out.println("Reserving " + rle);
+		queue.add(rle);
+	}
+
+	protected void send(final RouterLoggerEmail rle) throws EmailException {
 		checkConfiguration();
 		final Email email;
-		if (attachments != null && attachments.length > 0) {
+		if (rle.getAttachments() != null && rle.getAttachments().length > 0) {
 			final MultiPartEmail multiPartEmail = new MultiPartEmail();
-			for (final File attachment : attachments) {
+			for (final File attachment : rle.getAttachments()) {
 				addAttachment(attachment, multiPartEmail);
 			}
 			email = multiPartEmail;
@@ -58,8 +197,8 @@ public class EmailSender {
 			email = new SimpleEmail();
 		}
 		initializeEmail(email);
-		createContents(email, subject, message, attachments);
-		return email.send();
+		createContents(email, rle.getSubject(), rle.getMessage(), rle.getAttachments());
+		email.send();
 	}
 
 	protected void checkConfiguration() {
