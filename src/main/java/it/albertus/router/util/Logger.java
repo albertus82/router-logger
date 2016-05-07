@@ -1,6 +1,7 @@
 package it.albertus.router.util;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
@@ -44,8 +45,11 @@ public class Logger {
 
 	protected class LogEmailRunnable implements Runnable {
 
+		protected static final int RETRIES = 5;
+
 		protected final String log;
 		protected final Date date;
+		protected int retry = 0;
 
 		protected LogEmailRunnable(final String log, final Date date) {
 			this.log = log;
@@ -54,12 +58,21 @@ public class Logger {
 
 		@Override
 		public void run() {
-			try {
-				final String subject = Resources.get("msg.log.email.subject", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
-				emailSender.send(subject, log);
-			}
-			catch (final Exception exception) {
-				log(exception, Destination.CONSOLE);
+			if (retry++ < RETRIES) {
+				try {
+					final String subject = Resources.get("msg.log.email.subject", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
+					emailSender.send(subject, log);
+				}
+				catch (final Exception exception) {
+					log(exception, Destination.CONSOLE);
+					try {
+						Thread.sleep((long) (configuration.getLong("logger.retry.interval.ms", RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS) * 1.25f));
+					}
+					catch (final InterruptedException ie) {
+						return;
+					}
+					run();
+				}
 			}
 		}
 	}
