@@ -27,6 +27,7 @@ public class EmailSender {
 
 	public static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
 	public static final String CFG_KEY_EMAIL_HOST = "email.host";
+	public static final String EMAIL_ADDRESSES_SPLIT_REGEX = "[,;\\s]+";
 
 	public interface Defaults {
 		int PORT = 25;
@@ -101,13 +102,13 @@ public class EmailSender {
 
 		// Recipients
 		if (!configuration.getString("email.to.addresses", "").isEmpty()) {
-			email.addTo(configuration.getString("email.to.addresses").split("[,;]+"));
+			email.addTo(configuration.getString("email.to.addresses").split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
 		if (!configuration.getString("email.cc.addresses", "").isEmpty()) {
-			email.addCc(configuration.getString("email.cc.addresses").split("[,;]+"));
+			email.addCc(configuration.getString("email.cc.addresses").split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
 		if (!configuration.getString("email.bcc.addresses", "").isEmpty()) {
-			email.addBcc(configuration.getString("email.bcc.addresses").split("[,;]+"));
+			email.addBcc(configuration.getString("email.bcc.addresses").split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
 	}
 
