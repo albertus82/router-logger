@@ -25,9 +25,13 @@ public class EmailSender {
 		return Singleton.instance;
 	}
 
+	public static final String EMAIL_ADDRESSES_SPLIT_REGEX = "[,;\\s]+";
+
 	public static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
 	public static final String CFG_KEY_EMAIL_HOST = "email.host";
-	public static final String EMAIL_ADDRESSES_SPLIT_REGEX = "[,;\\s]+";
+	public static final String CFG_KEY_EMAIL_TO_ADDRESSES = "email.to.addresses";
+	public static final String CFG_KEY_EMAIL_CC_ADDRESSES = "email.cc.addresses";
+	public static final String CFG_KEY_EMAIL_BCC_ADDRESSES = "email.bcc.addresses";
 
 	public interface Defaults {
 		int PORT = 25;
@@ -60,11 +64,14 @@ public class EmailSender {
 
 	protected void checkConfiguration() {
 		// Configuration check
-		if (!configuration.contains(CFG_KEY_EMAIL_HOST)) {
+		if (configuration.getString(CFG_KEY_EMAIL_HOST, "").isEmpty()) {
 			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
 		}
-		if (!configuration.contains(CFG_KEY_EMAIL_FROM_ADDRESS)) {
+		if (configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS, "").isEmpty()) {
 			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
+		}
+		if (configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, "").isEmpty() && configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, "").isEmpty() && configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, "").isEmpty()) {
+			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_TO_ADDRESSES);
 		}
 	}
 
@@ -101,14 +108,14 @@ public class EmailSender {
 		}
 
 		// Recipients
-		if (!configuration.getString("email.to.addresses", "").isEmpty()) {
-			email.addTo(configuration.getString("email.to.addresses").split(EMAIL_ADDRESSES_SPLIT_REGEX));
+		if (!configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, "").isEmpty()) {
+			email.addTo(configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES).split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
-		if (!configuration.getString("email.cc.addresses", "").isEmpty()) {
-			email.addCc(configuration.getString("email.cc.addresses").split(EMAIL_ADDRESSES_SPLIT_REGEX));
+		if (!configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, "").isEmpty()) {
+			email.addCc(configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES).split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
-		if (!configuration.getString("email.bcc.addresses", "").isEmpty()) {
-			email.addBcc(configuration.getString("email.bcc.addresses").split(EMAIL_ADDRESSES_SPLIT_REGEX));
+		if (!configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, "").isEmpty()) {
+			email.addBcc(configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES).split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
 	}
 

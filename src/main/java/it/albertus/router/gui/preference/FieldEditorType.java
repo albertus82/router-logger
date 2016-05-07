@@ -19,5 +19,6 @@ public enum FieldEditorType {
 	WriterCombo,
 	Directory,
 	FormattedDirectory,
+	EmailAddresses,
 	Thresholds;
 }

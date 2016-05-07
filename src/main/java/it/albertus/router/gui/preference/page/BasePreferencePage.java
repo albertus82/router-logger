@@ -78,7 +78,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		// Header
 		header = createHeader();
 		if (header != null) {
-			GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).applyTo(header);
+			GridDataFactory.fillDefaults().span(Short.MAX_VALUE, 1).applyTo(header);
 			addSeparator();
 		}
 
@@ -97,7 +97,7 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 
 	protected void addSeparator() {
 		final Label separator = new Label(getFieldEditorParent(), SWT.HORIZONTAL | SWT.SEPARATOR);
-		GridDataFactory.fillDefaults().span(Integer.MAX_VALUE, 1).grab(true, false).applyTo(separator);
+		GridDataFactory.fillDefaults().span(Short.MAX_VALUE, 1).grab(true, false).applyTo(separator);
 	}
 
 	public static String[][] getNewLineComboOptions() {

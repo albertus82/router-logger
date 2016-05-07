@@ -2,7 +2,9 @@ package it.albertus.router.gui.preference.field;
 
 import it.albertus.router.resources.Resources;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.ListEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
@@ -10,12 +12,22 @@ public abstract class LocalizedListEditor extends ListEditor {
 
 	private boolean localized; // Do not set any value here!
 
-	public LocalizedListEditor() {
+	protected LocalizedListEditor() {
 		super();
 	}
 
 	public LocalizedListEditor(final String name, final String labelText, final Composite parent) {
-		super(name, labelText, parent);
+		this(name, labelText, parent, false);
+	}
+
+	public LocalizedListEditor(final String name, final String labelText, final Composite parent, final boolean flat) {
+		super(name, labelText, flat ? createContainer(parent) : parent);
+	}
+
+	protected static Composite createContainer(final Composite fieldEditorParent) {
+		final Composite parent = new Composite(fieldEditorParent, SWT.NULL);
+		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).span(Short.MAX_VALUE, 1).applyTo(parent);
+		return parent;
 	}
 
 	@Override

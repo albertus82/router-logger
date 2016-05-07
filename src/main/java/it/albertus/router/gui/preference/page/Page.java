@@ -19,7 +19,8 @@ public enum Page {
 	DATABASE(DatabasePreferencePage.class, WRITER),
 	THRESHOLDS(ThresholdsPreferencePage.class),
 	EXPRESSIONS(ExpressionsPreferencePage.class, THRESHOLDS),
-	EMAIL(EmailPreferencePage.class);
+	EMAIL(EmailPreferencePage.class),
+	EMAIL_ADVANCED(AdvancedEmailPreferencePage.class, EMAIL);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

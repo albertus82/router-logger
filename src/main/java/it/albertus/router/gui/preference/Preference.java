@@ -97,29 +97,28 @@ public enum Preference {
 	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, FieldEditorType.FormattedString, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	DATABASE_COLUMN_NAME_MAX_LENGTH(Page.DATABASE, FieldEditorType.FormattedInteger, Integer.toString(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH), new FieldEditorDataBuilder().textLimit(2).build()),
 
+	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, FieldEditorType.Thresholds),
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, FieldEditorType.Boolean, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, FieldEditorType.WrapString),
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-
-	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, FieldEditorType.Thresholds),
 
 	CSV_EMAIL(Page.CSV, FieldEditorType.Boolean, Boolean.toString(CsvWriter.Defaults.EMAIL)),
 	LOG_EMAIL(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(Logger.Defaults.EMAIL)),
 
 	EMAIL_HOST(Page.EMAIL, FieldEditorType.FormattedString),
-	EMAIL_PORT(Page.EMAIL, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
-	EMAIL_SSL_PORT(Page.EMAIL, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_USERNAME(Page.EMAIL, FieldEditorType.FormattedString),
 	EMAIL_PASSWORD(Page.EMAIL, FieldEditorType.Password),
 	EMAIL_FROM_NAME(Page.EMAIL, FieldEditorType.FormattedString),
 	EMAIL_FROM_ADDRESS(Page.EMAIL, FieldEditorType.FormattedString),
-	EMAIL_TO_ADDRESSES(Page.EMAIL, FieldEditorType.FormattedString),
-	EMAIL_CC_ADDRESSES(Page.EMAIL, FieldEditorType.FormattedString),
-	EMAIL_BCC_ADDRESSES(Page.EMAIL, FieldEditorType.FormattedString),
+	EMAIL_TO_ADDRESSES(Page.EMAIL, FieldEditorType.EmailAddresses),
 	EMAIL_SSL_CONNECT(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.SSL_CONNECT)),
 	EMAIL_SSL_IDENTITY(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.SSL_IDENTITY)),
 	EMAIL_STARTTLS_ENABLED(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.STARTTLS_ENABLED)),
-	EMAIL_STARTTLS_REQUIRED(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.STARTTLS_REQUIRED));
+	EMAIL_STARTTLS_REQUIRED(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.STARTTLS_REQUIRED)),
+	EMAIL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	EMAIL_CC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
+	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
