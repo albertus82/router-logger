@@ -59,9 +59,10 @@ public class EmailSender {
 		@Override
 		public void run() {
 			while (!exit) {
-				if (!messagesToEnqueue.isEmpty()) {
-					queue.addAll(messagesToEnqueue);
-					messagesToEnqueue.clear();
+				final Queue<RouterLoggerEmail> tempQueue = new LinkedList<RouterLoggerEmail>(messagesToEnqueue);
+				if (!tempQueue.isEmpty()) {
+					queue.addAll(tempQueue);
+					messagesToEnqueue.removeAll(tempQueue);
 				}
 				if (!queue.isEmpty()) {
 					final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>();
