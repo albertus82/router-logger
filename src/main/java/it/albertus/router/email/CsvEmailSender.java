@@ -24,9 +24,9 @@ public class CsvEmailSender {
 
 	private CsvEmailSender() {}
 
-	public String send(final File... attachments) throws EmailException {
-		if (attachments != null && attachments.length == 1) {
-			String formattedDate = attachments[0].getName();
+	public String send(final File attachment) throws EmailException {
+		if (attachment != null) {
+			String formattedDate = attachment.getName();
 			try {
 				formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
 			}
@@ -34,11 +34,11 @@ public class CsvEmailSender {
 				formattedDate = e.getClass().getSimpleName();
 			}
 			final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
-			final String message = Resources.get("msg.writer.csv.email.message", attachments[0].getName());
-			return emailSender.send(subject, message, attachments);
+			final String message = Resources.get("msg.writer.csv.email.message", attachment.getName());
+			return emailSender.send(subject, message, attachment);
 		}
 		else {
-			throw new IllegalStateException("Illegal attachments count.");
+			throw new IllegalStateException("Missing attachment.");
 		}
 	}
 
