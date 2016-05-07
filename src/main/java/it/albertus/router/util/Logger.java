@@ -1,6 +1,5 @@
 package it.albertus.router.util;
 
-import it.albertus.router.email.LogEmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
@@ -35,7 +34,7 @@ public class Logger {
 	}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	private final LogEmailSender emailSender = LogEmailSender.getInstance();
+	private final EmailSender emailSender = EmailSender.getInstance();
 
 	public interface Defaults {
 		boolean DEBUG = false;
@@ -56,7 +55,8 @@ public class Logger {
 		@Override
 		public void run() {
 			try {
-				emailSender.send(log, date);
+				final String subject = Resources.get("msg.log.email.subject", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
+				emailSender.send(subject, log);
 			}
 			catch (final Exception exception) {
 				log(exception, Destination.CONSOLE);

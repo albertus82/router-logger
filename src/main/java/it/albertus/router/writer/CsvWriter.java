@@ -1,8 +1,8 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.email.CsvEmailSender;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.EmailSender;
 import it.albertus.router.util.Zipper;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
@@ -37,7 +37,7 @@ public class CsvWriter extends Writer {
 		boolean EMAIL = false;
 	}
 
-	protected final CsvEmailSender emailSender = CsvEmailSender.getInstance();
+	protected final EmailSender emailSender = EmailSender.getInstance();
 	protected final Zipper zipper = Zipper.getInstance();
 
 	protected BufferedWriter csvFileWriter = null;
@@ -53,8 +53,17 @@ public class CsvWriter extends Writer {
 						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
 						zipper.zip(zipFile, csvFile);
 						if (zipper.test(zipFile)) {
-							emailSender.send(zipFile);
-							out.println(Resources.get("msg.writer.csv.email.sent", zipFile.getName()), true);
+							String formattedDate = zipFile.getName();
+							try {
+								formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
+							}
+							catch (final Exception e) {
+								formattedDate = e.getClass().getSimpleName();
+							}
+							final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
+							final String message = Resources.get("msg.writer.csv.email.message", zipFile.getName());
+							emailSender.send(subject, message, zipFile);
+							out.println(Resources.get("msg.writer.csv.email.sent", subject), true);
 							csvFile.delete();
 						}
 						else {
@@ -75,7 +84,7 @@ public class CsvWriter extends Writer {
 		super.init(console);
 		sendEmail();
 	}
-	
+
 	@Override
 	public synchronized void saveInfo(final RouterData info) {
 		try {

@@ -1,4 +1,4 @@
-package it.albertus.router.email;
+package it.albertus.router.util;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;

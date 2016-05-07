@@ -1,7 +1,6 @@
 package it.albertus.router.gui.preference;
 
 import it.albertus.router.console.RouterLoggerConsole;
-import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.CloseMessageBox;
@@ -22,6 +21,7 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.EmailSender;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
