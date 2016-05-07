@@ -21,6 +21,7 @@ import java.util.zip.ZipException;
 
 public class CsvWriter extends Writer {
 
+	public static final String CFG_KEY_CSV_NEWLINE_CHARACTERS = "csv.newline.characters";
 	public static final String DESTINATION_KEY = "lbl.writer.destination.csv";
 
 	protected static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
@@ -63,7 +64,7 @@ public class CsvWriter extends Writer {
 							}
 							final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
 							final String message = Resources.get("msg.writer.csv.email.message", zipFile.getName());
-							emailSender.reserve(subject, message, zipFile);
+							emailSender.send(subject, message, zipFile);
 							csvFile.delete();
 						}
 						else {
@@ -192,8 +193,7 @@ public class CsvWriter extends Writer {
 	}
 
 	protected String getRecordSeparator() {
-		final String cfgKey = "csv.newline.characters";
-		final String cfg = configuration.getString(cfgKey);
+		final String cfg = configuration.getString(CFG_KEY_CSV_NEWLINE_CHARACTERS);
 		if (cfg == null || cfg.length() == 0) {
 			return Defaults.NEWLINE.toString();
 		}
@@ -203,7 +203,7 @@ public class CsvWriter extends Writer {
 				return newLine.toString();
 			}
 			else {
-				throw new ConfigurationException(Resources.get("err.invalid.cfg", cfgKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), cfgKey);
+				throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_CSV_NEWLINE_CHARACTERS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_CSV_NEWLINE_CHARACTERS);
 			}
 		}
 	}
@@ -215,7 +215,7 @@ public class CsvWriter extends Writer {
 				csvFileWriter.close();
 				csvFileWriter = null;
 			}
-			catch (IOException ioe) {
+			catch (final IOException ioe) {
 				logger.log(ioe);
 			}
 		}

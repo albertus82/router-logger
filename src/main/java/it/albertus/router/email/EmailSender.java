@@ -57,18 +57,19 @@ public class EmailSender {
 		@Override
 		public void run() {
 			while (!exit) {
-				final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>();
-				for (final RouterLoggerEmail rle : queue) {
-					try {
-						send(rle);
-						sentItems.add(rle);
-						out.println(Resources.get("msg.email.sent", rle.getSubject()), true);
+				if (queue != null && !queue.isEmpty()) {
+					final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>();
+					for (final RouterLoggerEmail rle : queue) {
+						try {
+							send(rle);
+							sentItems.add(rle);
+						}
+						catch (final Exception exception) {
+							logger.log(exception, Destination.CONSOLE);
+						}
 					}
-					catch (final Exception exception) {
-						logger.log(exception, Destination.CONSOLE);
-					}
+					queue.removeAll(sentItems);
 				}
-				queue.removeAll(sentItems);
 				try {
 					Thread.sleep(configuration.getLong("email.send.interval.ms", Defaults.SEND_INTERVAL_IN_MILLIS));
 				}
@@ -98,12 +99,40 @@ public class EmailSender {
 		}
 	}
 
+	/**
+	 * Try to send the message immediately. On error, enqueue the message and
+	 * try later.
+	 * 
+	 * @param subject the subject of the email.
+	 * @param message the body of the email.
+	 * @param attachments the attachments of the email.
+	 */
 	public void reserve(final String subject, final String message, final File... attachments) {
 		final RouterLoggerEmail rle = new RouterLoggerEmail(subject, message, attachments);
-		queue.add(rle);
+		try {
+			send(rle);
+		}
+		catch (final Exception exception) {
+			queue.offer(rle);
+		}
 	}
 
-	protected void send(final RouterLoggerEmail rle) throws EmailException {
+	/**
+	 * Send the message immediately. <b>This operation may take many
+	 * seconds</b>, so calling from a separate thread can be appropriate.
+	 * 
+	 * @param subject the subject of the email
+	 * @param message the body of the email
+	 * @param attachments the attachments of the email
+	 * @return the message id of the underlying MimeMessage
+	 * @throws EmailException the sending failed
+	 */
+	public String send(final String subject, final String message, final File... attachments) throws EmailException {
+		final RouterLoggerEmail rle = new RouterLoggerEmail(subject, message, attachments);
+		return send(rle);
+	}
+
+	protected String send(final RouterLoggerEmail rle) throws EmailException {
 		checkConfiguration();
 		final Email email;
 		if (rle.getAttachments() != null && rle.getAttachments().length > 0) {
@@ -118,7 +147,9 @@ public class EmailSender {
 		}
 		initializeEmail(email);
 		createContents(email, rle.getSubject(), rle.getMessage(), rle.getAttachments());
-		email.send();
+		final String mimeMessageId = email.send();
+		out.println(Resources.get("msg.email.sent", rle.getSubject()), true);
+		return mimeMessageId;
 	}
 
 	protected void checkConfiguration() {

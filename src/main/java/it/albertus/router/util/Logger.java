@@ -34,8 +34,27 @@ public class Logger {
 		EMAIL;
 	}
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	private final EmailSender emailSender = EmailSender.getInstance();
+	protected class LogEmailRunnable implements Runnable {
+
+		protected final String log;
+		protected final Date date;
+
+		protected LogEmailRunnable(final String log, final Date date) {
+			this.log = log;
+			this.date = date;
+		}
+
+		@Override
+		public void run() {
+			try {
+				final String subject = Resources.get("msg.log.email.subject", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
+				emailSender.reserve(subject, log);
+			}
+			catch (final Exception exception) {
+				log(exception, Destination.CONSOLE);
+			}
+		}
+	}
 
 	public interface Defaults {
 		boolean DEBUG = false;
@@ -56,6 +75,8 @@ public class Logger {
 		this.out = console;
 	}
 
+	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final EmailSender emailSender = EmailSender.getInstance();
 	private Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	public boolean isDebugEnabled() {
@@ -153,8 +174,7 @@ public class Logger {
 
 	private void logToEmail(final String log) {
 		if (configuration.getBoolean("log.email", Defaults.EMAIL)) {
-			final String subject = Resources.get("msg.log.email.subject", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date()));
-			emailSender.reserve(subject, log);
+			new Thread(new LogEmailRunnable(log, new Date()), "logEmailThread").start();
 		}
 	}
 
