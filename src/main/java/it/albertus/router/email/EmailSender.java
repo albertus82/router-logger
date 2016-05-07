@@ -52,12 +52,18 @@ public class EmailSender {
 
 	protected class EmailRunnable implements Runnable {
 
+		protected final Queue<RouterLoggerEmail> queue = new LinkedList<RouterLoggerEmail>();
+
 		protected boolean exit = false;
 
 		@Override
 		public void run() {
 			while (!exit) {
-				if (queue != null && !queue.isEmpty()) {
+				if (!messagesToEnqueue.isEmpty()) {
+					queue.addAll(messagesToEnqueue);
+					messagesToEnqueue.clear();
+				}
+				if (!queue.isEmpty()) {
 					final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>();
 					for (final RouterLoggerEmail rle : queue) {
 						try {
@@ -81,10 +87,10 @@ public class EmailSender {
 	}
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	protected final Queue<RouterLoggerEmail> messagesToEnqueue = new LinkedList<RouterLoggerEmail>();
+	protected final Thread emailThread;
 	protected Logger logger;
 	protected Console out;
-	protected final Queue<RouterLoggerEmail> queue = new LinkedList<RouterLoggerEmail>();
-	protected final Thread emailThread;
 
 	protected EmailSender() {
 		emailThread = new Thread(new EmailRunnable(), "emailThread");
@@ -113,7 +119,8 @@ public class EmailSender {
 			send(rle);
 		}
 		catch (final Exception exception) {
-			queue.offer(rle);
+			messagesToEnqueue.add(rle);
+			logger.log(exception, Destination.CONSOLE);
 		}
 	}
 
