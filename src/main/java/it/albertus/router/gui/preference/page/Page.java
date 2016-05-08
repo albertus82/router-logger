@@ -18,7 +18,6 @@ public enum Page {
 	CSV(CsvPreferencePage.class, WRITER),
 	DATABASE(DatabasePreferencePage.class, WRITER),
 	THRESHOLDS(ThresholdsPreferencePage.class),
-	EXPRESSIONS(ExpressionsPreferencePage.class, THRESHOLDS),
 	EMAIL(EmailPreferencePage.class),
 	EMAIL_ADVANCED(AdvancedEmailPreferencePage.class, EMAIL);
 

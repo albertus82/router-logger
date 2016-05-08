@@ -97,7 +97,7 @@ public enum Preference {
 	DATABASE_COLUMN_NAME_PREFIX(Page.DATABASE, FieldEditorType.FormattedString, DatabaseWriter.Defaults.COLUMN_NAME_PREFIX, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	DATABASE_COLUMN_NAME_MAX_LENGTH(Page.DATABASE, FieldEditorType.FormattedInteger, Integer.toString(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH), new FieldEditorDataBuilder().textLimit(2).build()),
 
-	THRESHOLDS_EXPRESSIONS(Page.EXPRESSIONS, FieldEditorType.Thresholds),
+	THRESHOLDS_EXPRESSIONS(Page.THRESHOLDS, FieldEditorType.Thresholds),
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, FieldEditorType.Boolean, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, FieldEditorType.WrapString),
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
