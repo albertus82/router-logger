@@ -56,41 +56,40 @@ public class EmailSender {
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
-	protected final Thread daemon;
+	protected volatile Thread daemon;
 	protected Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	protected class EmailRunnable implements Runnable {
 		@Override
 		public void run() {
-			boolean exit = false;
-			while (!exit) {
-				if (!queue.isEmpty()) {
-					final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(queue.size());
-					for (final RouterLoggerEmail email : queue) {
-						try {
-							send(email);
-							sent.add(email);
-						}
-						catch (final Exception exception) {
-							Logger.getInstance().log(exception, Destination.CONSOLE);
-						}
-					}
-					queue.removeAll(sent);
-				}
+			while (true) {
 				try {
 					Thread.sleep(configuration.getLong("email.send.interval.ms", Defaults.SEND_INTERVAL_IN_MILLIS));
 				}
 				catch (final InterruptedException ie) {
-					exit = true;
+					break;
+				}
+				final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(queue.size());
+				for (final RouterLoggerEmail email : queue) {
+					try {
+						send(email);
+						sent.add(email);
+					}
+					catch (final Exception exception) {
+						Logger.getInstance().log(exception, Destination.CONSOLE);
+					}
+				}
+				queue.removeAll(sent);
+
+				// Exit if there is nothing to do...
+				synchronized (EmailSender.this) {
+					if (queue.isEmpty()) {
+						daemon = null;
+						break;
+					}
 				}
 			}
 		}
-	}
-
-	protected EmailSender() {
-		daemon = new Thread(new EmailRunnable(), "emailDaemon");
-		daemon.setDaemon(true);
-		daemon.start();
 	}
 
 	public void init(final Console console) {
@@ -111,7 +110,14 @@ public class EmailSender {
 			send(email);
 		}
 		catch (final Exception exception) {
-			queue.add(email);
+			synchronized (this) {
+				queue.add(email);
+				if (this.daemon == null) {
+					daemon = new Thread(new EmailRunnable(), "emailDaemon");
+					daemon.setDaemon(true);
+					daemon.start();
+				}
+			}
 			Logger.getInstance().log(exception, Destination.CONSOLE);
 		}
 	}
