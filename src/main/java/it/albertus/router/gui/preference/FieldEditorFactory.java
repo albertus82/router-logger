@@ -26,7 +26,7 @@ import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class FieldEditorFactory {
+public final class FieldEditorFactory {
 
 	public static FieldEditor createFieldEditor(final FieldEditorType type, final String name, final String label, final Composite parent, final FieldEditorData data) {
 		switch (type) {
@@ -260,5 +260,8 @@ public abstract class FieldEditorFactory {
 		}
 		return wrapStringFieldEditor;
 	}
+
+	/** Instantiation not permitted. */
+	private FieldEditorFactory() {}
 
 }
