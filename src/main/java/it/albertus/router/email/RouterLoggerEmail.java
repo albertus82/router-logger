@@ -2,16 +2,19 @@ package it.albertus.router.email;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
-public class RouterLoggerEmail implements Serializable {
+/** Note: this class has a natural ordering that is inconsistent with equals. */
+public class RouterLoggerEmail implements Serializable, Comparable<RouterLoggerEmail> {
 
 	private static final long serialVersionUID = -2852033440131898330L;
 
-	protected final UUID uuid;
 	protected final String subject;
 	protected final String message;
 	protected final File[] attachments;
+	protected final Date date;
+	protected final UUID uuid;
 
 	protected RouterLoggerEmail(final String subject, final String message, final File[] attachments) {
 		if (message != null && !message.isEmpty()) {
@@ -21,12 +24,9 @@ public class RouterLoggerEmail implements Serializable {
 			throw new IllegalArgumentException("Invalid message supplied");
 		}
 		this.uuid = UUID.randomUUID();
+		this.date = new Date();
 		this.subject = subject != null ? subject.trim() : null;
 		this.attachments = attachments;
-	}
-
-	public UUID getUuid() {
-		return uuid;
 	}
 
 	public String getSubject() {
@@ -41,6 +41,14 @@ public class RouterLoggerEmail implements Serializable {
 		return attachments;
 	}
 
+	public Date getDate() {
+		return date;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -50,7 +58,7 @@ public class RouterLoggerEmail implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -74,7 +82,12 @@ public class RouterLoggerEmail implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RouterLoggerEmail [subject=" + subject + ", uuid=" + uuid + "]";
+		return "RouterLoggerEmail [subject=" + subject + ", date=" + date + ", uuid=" + uuid + "]";
+	}
+
+	@Override
+	public int compareTo(final RouterLoggerEmail o) {
+		return this.date.compareTo(o.date);
 	}
 
 }
