@@ -10,9 +10,9 @@ import it.albertus.util.Console;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
@@ -50,20 +50,17 @@ public class EmailSender {
 		long SEND_INTERVAL_IN_MILLIS = 60000L;
 	}
 
+	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	protected final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
+	protected final Thread emailDaemon;
+	protected Logger logger;
+	protected Console out;
+
 	protected class EmailRunnable implements Runnable {
-
-		protected final Queue<RouterLoggerEmail> queue = new LinkedList<RouterLoggerEmail>();
-
-		protected boolean exit = false;
-
 		@Override
 		public void run() {
+			boolean exit = false;
 			while (!exit) {
-				final Queue<RouterLoggerEmail> tempQueue = new LinkedList<RouterLoggerEmail>(messagesToEnqueue);
-				if (!tempQueue.isEmpty()) {
-					queue.addAll(tempQueue);
-					messagesToEnqueue.removeAll(tempQueue);
-				}
 				if (!queue.isEmpty()) {
 					final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>();
 					for (final RouterLoggerEmail rle : queue) {
@@ -87,22 +84,16 @@ public class EmailSender {
 		}
 	}
 
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	protected final Queue<RouterLoggerEmail> messagesToEnqueue = new LinkedList<RouterLoggerEmail>();
-	protected final Thread emailThread;
-	protected Logger logger;
-	protected Console out;
-
 	protected EmailSender() {
-		emailThread = new Thread(new EmailRunnable(), "emailThread");
-		emailThread.setDaemon(true);
+		emailDaemon = new Thread(new EmailRunnable(), "emailDaemon");
+		emailDaemon.setDaemon(true);
 	}
 
 	public void init(final Console console, final Logger logger) {
 		this.out = console;
 		this.logger = logger;
-		if (!emailThread.isAlive()) {
-			emailThread.start();
+		if (!emailDaemon.isAlive()) {
+			emailDaemon.start();
 		}
 	}
 
@@ -120,7 +111,7 @@ public class EmailSender {
 			send(rle);
 		}
 		catch (final Exception exception) {
-			messagesToEnqueue.add(rle);
+			queue.add(rle);
 			logger.log(exception, Destination.CONSOLE);
 		}
 	}
