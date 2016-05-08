@@ -40,9 +40,6 @@ public class CsvWriter extends Writer {
 		boolean EMAIL = false;
 	}
 
-	protected final EmailSender emailSender = EmailSender.getInstance();
-	protected final Zipper zipper = Zipper.getInstance();
-
 	protected BufferedWriter csvFileWriter = null;
 	protected File csvFile = null;
 
@@ -54,6 +51,7 @@ public class CsvWriter extends Writer {
 				if (!csvFile.equals(currentDestinationFile) && csvFile.getName().matches(CSV_FILENAME_REGEX)) {
 					try {
 						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
+						final Zipper zipper = Zipper.getInstance();
 						zipper.zip(zipFile, csvFile);
 						if (zipper.test(zipFile)) {
 							String formattedDate = zipFile.getName();
@@ -65,7 +63,7 @@ public class CsvWriter extends Writer {
 							}
 							final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
 							final String message = Resources.get("msg.writer.csv.email.message", zipFile.getName());
-							emailSender.send(subject, message, zipFile);
+							EmailSender.getInstance().send(subject, message, zipFile);
 							csvFile.delete();
 						}
 						else {

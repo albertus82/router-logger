@@ -34,7 +34,6 @@ public abstract class RouterLoggerEngine {
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 	protected final EmailSender emailSender = EmailSender.getInstance();
-
 	protected final Console out = getConsole();
 
 	private Reader reader;
@@ -377,7 +376,7 @@ public abstract class RouterLoggerEngine {
 		logger.init(out);
 
 		// Inizializzazione dell'EmailSender...
-		emailSender.init(out, logger);
+		emailSender.init(out);
 	}
 
 	protected void initReaderAndWriter() {

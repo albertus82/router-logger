@@ -25,8 +25,8 @@ public class Logger {
 	private static final String FILE_EXTENSION = ".log";
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE, Destination.EMAIL };
 
-	public static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
-	public static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	public enum Destination {
 		CONSOLE,
@@ -48,7 +48,7 @@ public class Logger {
 		public void run() {
 			try {
 				final String subject = Resources.get("msg.log.email.subject", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
-				emailSender.reserve(subject, log);
+				EmailSender.getInstance().reserve(subject, log);
 			}
 			catch (final Exception exception) {
 				log(exception, Destination.CONSOLE);
@@ -76,7 +76,6 @@ public class Logger {
 	}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	private final EmailSender emailSender = EmailSender.getInstance();
 	private Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	public boolean isDebugEnabled() {

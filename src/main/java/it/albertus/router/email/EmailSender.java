@@ -7,6 +7,7 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
+import it.albertus.util.TerminalConsole;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,9 +56,8 @@ public class EmailSender {
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
-	protected final Thread emailDaemon;
-	protected Logger logger;
-	protected Console out;
+	protected final Thread daemon;
+	protected Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	protected class EmailRunnable implements Runnable {
 		@Override
@@ -72,7 +72,7 @@ public class EmailSender {
 							sent.add(email);
 						}
 						catch (final Exception exception) {
-							logger.log(exception, Destination.CONSOLE);
+							Logger.getInstance().log(exception, Destination.CONSOLE);
 						}
 					}
 					queue.removeAll(sent);
@@ -88,25 +88,22 @@ public class EmailSender {
 	}
 
 	protected EmailSender() {
-		emailDaemon = new Thread(new EmailRunnable(), "emailDaemon");
-		emailDaemon.setDaemon(true);
+		daemon = new Thread(new EmailRunnable(), "emailDaemon");
+		daemon.setDaemon(true);
+		daemon.start();
 	}
 
-	public void init(final Console console, final Logger logger) {
+	public void init(final Console console) {
 		this.out = console;
-		this.logger = logger;
-		if (!emailDaemon.isAlive()) {
-			emailDaemon.start();
-		}
 	}
 
 	/**
 	 * Try to send the message immediately. On error, enqueue the message and
 	 * try later.
 	 * 
-	 * @param subject the subject of the email.
-	 * @param message the body of the email.
-	 * @param attachments the attachments of the email.
+	 * @param subject the subject of the email
+	 * @param message the body of the email
+	 * @param attachments the attachments of the email
 	 */
 	public void reserve(final String subject, final String message, final File... attachments) {
 		final RouterLoggerEmail email = new RouterLoggerEmail(subject, message, attachments);
@@ -115,7 +112,7 @@ public class EmailSender {
 		}
 		catch (final Exception exception) {
 			queue.add(email);
-			logger.log(exception, Destination.CONSOLE);
+			Logger.getInstance().log(exception, Destination.CONSOLE);
 		}
 	}
 
