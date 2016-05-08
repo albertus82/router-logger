@@ -137,7 +137,7 @@ public class EmailSender {
 		if (rle.getAttachments() != null && rle.getAttachments().length > 0) {
 			final MultiPartEmail multiPartEmail = new MultiPartEmail();
 			for (final File attachment : rle.getAttachments()) {
-				addAttachment(attachment, multiPartEmail);
+				addAttachment(multiPartEmail, attachment);
 			}
 			email = multiPartEmail;
 		}
@@ -145,7 +145,7 @@ public class EmailSender {
 			email = new SimpleEmail();
 		}
 		initializeEmail(email);
-		createContents(email, rle.getSubject(), rle.getMessage(), rle.getAttachments());
+		createContents(email, rle);
 		final String mimeMessageId = email.send();
 		out.println(Resources.get("msg.email.sent", rle.getSubject()), true);
 		return mimeMessageId;
@@ -164,7 +164,7 @@ public class EmailSender {
 		}
 	}
 
-	protected void addAttachment(final File attachment, final MultiPartEmail email) throws EmailException {
+	protected void addAttachment(final MultiPartEmail email, final File attachment) throws EmailException {
 		final EmailAttachment emailAttachment = new EmailAttachment();
 		emailAttachment.setPath(attachment.getPath());
 		emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
@@ -208,9 +208,9 @@ public class EmailSender {
 		}
 	}
 
-	protected void createContents(final Email email, final String subject, final String message, final File... attachments) throws EmailException {
-		email.setSubject(subject);
-		email.setMsg(message);
+	protected void createContents(final Email email, final RouterLoggerEmail rle) throws EmailException {
+		email.setSubject(rle.getSubject());
+		email.setMsg(rle.getMessage());
 	}
 
 }
