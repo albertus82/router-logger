@@ -24,21 +24,16 @@ import org.apache.commons.mail.SimpleEmail;
 /** Singleton. */
 public class EmailSender {
 
-	private static class Singleton {
-		private static final EmailSender instance = new EmailSender();
-	}
-
-	public static EmailSender getInstance() {
-		return Singleton.instance;
-	}
-
 	public static final String EMAIL_ADDRESSES_SPLIT_REGEX = "[,;\\s]+";
 
-	public static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
-	public static final String CFG_KEY_EMAIL_HOST = "email.host";
-	public static final String CFG_KEY_EMAIL_TO_ADDRESSES = "email.to.addresses";
-	public static final String CFG_KEY_EMAIL_CC_ADDRESSES = "email.cc.addresses";
-	public static final String CFG_KEY_EMAIL_BCC_ADDRESSES = "email.bcc.addresses";
+	protected static final String CFG_KEY_EMAIL_HOST = "email.host";
+	protected static final String CFG_KEY_EMAIL_USERNAME = "email.username";
+	protected static final String CFG_KEY_EMAIL_PASSWORD = "email.password";
+	protected static final String CFG_KEY_EMAIL_FROM_NAME = "email.from.name";
+	protected static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
+	protected static final String CFG_KEY_EMAIL_TO_ADDRESSES = "email.to.addresses";
+	protected static final String CFG_KEY_EMAIL_CC_ADDRESSES = "email.cc.addresses";
+	protected static final String CFG_KEY_EMAIL_BCC_ADDRESSES = "email.bcc.addresses";
 
 	public interface Defaults {
 		int PORT = 25;
@@ -48,6 +43,14 @@ public class EmailSender {
 		boolean STARTTLS_ENABLED = false;
 		boolean STARTTLS_REQUIRED = false;
 		long SEND_INTERVAL_IN_MILLIS = 60000L;
+	}
+
+	private static class Singleton {
+		private static final EmailSender instance = new EmailSender();
+	}
+
+	public static EmailSender getInstance() {
+		return Singleton.instance;
 	}
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
@@ -184,16 +187,16 @@ public class EmailSender {
 		email.setHostName(configuration.getString(CFG_KEY_EMAIL_HOST));
 
 		// Authentication
-		if (!configuration.getString("email.username", "").isEmpty() && !configuration.getString("email.password", "").isEmpty()) {
-			email.setAuthenticator(new DefaultAuthenticator(configuration.getString("email.username"), configuration.getString("email.password")));
+		if (!configuration.getString(CFG_KEY_EMAIL_USERNAME, "").isEmpty() && !configuration.getString(CFG_KEY_EMAIL_PASSWORD, "").isEmpty()) {
+			email.setAuthenticator(new DefaultAuthenticator(configuration.getString(CFG_KEY_EMAIL_USERNAME), configuration.getString(CFG_KEY_EMAIL_PASSWORD)));
 		}
 
 		// Sender
-		if (configuration.getString("email.from.name", "").isEmpty()) {
+		if (configuration.getString(CFG_KEY_EMAIL_FROM_NAME, "").isEmpty()) {
 			email.setFrom(configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS));
 		}
 		else {
-			email.setFrom(configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS), configuration.getString("email.from.name"));
+			email.setFrom(configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS), configuration.getString(CFG_KEY_EMAIL_FROM_NAME));
 		}
 
 		// Recipients
