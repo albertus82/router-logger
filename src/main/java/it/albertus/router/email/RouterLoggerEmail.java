@@ -2,19 +2,26 @@ package it.albertus.router.email;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.UUID;
 
 public class RouterLoggerEmail implements Serializable {
 
-	private static final long serialVersionUID = 727772177454786813L;
+	private static final long serialVersionUID = -2852033440131898330L;
 
+	protected final UUID uuid;
 	protected final String subject;
 	protected final String message;
 	protected final File[] attachments;
 
 	protected RouterLoggerEmail(final String subject, final String message, final File[] attachments) {
+		this.uuid = UUID.randomUUID();
 		this.subject = subject;
 		this.message = message;
 		this.attachments = attachments;
+	}
+
+	public UUID getUuid() {
+		return uuid;
 	}
 
 	public String getSubject() {
@@ -33,8 +40,7 @@ public class RouterLoggerEmail implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((message == null) ? 0 : message.hashCode());
-		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -50,20 +56,12 @@ public class RouterLoggerEmail implements Serializable {
 			return false;
 		}
 		RouterLoggerEmail other = (RouterLoggerEmail) obj;
-		if (message == null) {
-			if (other.message != null) {
+		if (uuid == null) {
+			if (other.uuid != null) {
 				return false;
 			}
 		}
-		else if (!message.equals(other.message)) {
-			return false;
-		}
-		if (subject == null) {
-			if (other.subject != null) {
-				return false;
-			}
-		}
-		else if (!subject.equals(other.subject)) {
+		else if (!uuid.equals(other.uuid)) {
 			return false;
 		}
 		return true;
@@ -71,7 +69,7 @@ public class RouterLoggerEmail implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RouterLoggerEmail [subject=" + subject + "]";
+		return "RouterLoggerEmail [subject=" + subject + ", uuid=" + uuid + "]";
 	}
 
 }

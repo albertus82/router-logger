@@ -62,17 +62,17 @@ public class EmailSender {
 			boolean exit = false;
 			while (!exit) {
 				if (!queue.isEmpty()) {
-					final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>(queue.size());
-					for (final RouterLoggerEmail rle : queue) {
+					final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(queue.size());
+					for (final RouterLoggerEmail email : queue) {
 						try {
-							send(rle);
-							sentItems.add(rle);
+							send(email);
+							sent.add(email);
 						}
 						catch (final Exception exception) {
 							logger.log(exception, Destination.CONSOLE);
 						}
 					}
-					queue.removeAll(sentItems);
+					queue.removeAll(sent);
 				}
 				try {
 					Thread.sleep(configuration.getLong("email.send.interval.ms", Defaults.SEND_INTERVAL_IN_MILLIS));
@@ -106,12 +106,12 @@ public class EmailSender {
 	 * @param attachments the attachments of the email.
 	 */
 	public void reserve(final String subject, final String message, final File... attachments) {
-		final RouterLoggerEmail rle = new RouterLoggerEmail(subject, message, attachments);
+		final RouterLoggerEmail email = new RouterLoggerEmail(subject, message, attachments);
 		try {
-			send(rle);
+			send(email);
 		}
 		catch (final Exception exception) {
-			queue.add(rle);
+			queue.add(email);
 			logger.log(exception, Destination.CONSOLE);
 		}
 	}
@@ -127,8 +127,8 @@ public class EmailSender {
 	 * @throws EmailException the sending failed
 	 */
 	public String send(final String subject, final String message, final File... attachments) throws EmailException {
-		final RouterLoggerEmail rle = new RouterLoggerEmail(subject, message, attachments);
-		return send(rle);
+		final RouterLoggerEmail email = new RouterLoggerEmail(subject, message, attachments);
+		return send(email);
 	}
 
 	protected String send(final RouterLoggerEmail rle) throws EmailException {
