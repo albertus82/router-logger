@@ -33,17 +33,6 @@ import org.eclipse.swt.widgets.Composite;
 
 public enum Preference {
 	LANGUAGE(Page.GENERAL, FieldEditorType.Combo, Locale.getDefault().getLanguage(), new FieldEditorDataBuilder().comboEntryNamesAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
-
-	READER_CLASS_NAME(Page.READER, FieldEditorType.ReaderCombo, null, new FieldEditorDataBuilder().comboEntryNamesAndValues(ReaderPreferencePage.getReaderComboOptions()).build()),
-	ROUTER_USERNAME(Page.READER, FieldEditorType.FormattedString),
-	ROUTER_PASSWORD(Page.READER, FieldEditorType.Password),
-	ROUTER_ADDRESS(Page.READER, FieldEditorType.FormattedString, Reader.Defaults.ROUTER_ADDRESS, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	ROUTER_PORT(Page.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.ROUTER_PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
-
-	SOCKET_TIMEOUT_MS(Page.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS)),
-	CONNECTION_TIMEOUT_MS(Page.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS)),
-	TELNET_NEWLINE_CHARACTERS(Page.READER, FieldEditorType.FormattedCombo, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
-
 	LOGGER_ITERATIONS(Page.GENERAL, FieldEditorType.IterationsCombo, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS)),
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS)),
 	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS)),
@@ -51,6 +40,22 @@ public enum Preference {
 	LOGGER_RETRY_COUNT(Page.GENERAL, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerEngine.Defaults.RETRIES)),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS)),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessageKey("msg.preferences.directory.dialog.message.log").build()),
+	GUI_MINIMIZE_TRAY(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(TrayIcon.Defaults.GUI_MINIMIZE_TRAY)),
+	GUI_TRAY_TOOLTIP(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP)),
+	GUI_START_MINIMIZED(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),
+	GUI_CONFIRM_CLOSE(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
+	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
+	CONSOLE_DEBUG(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(Logger.Defaults.DEBUG)),
+	LOG_EMAIL(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(Logger.Defaults.EMAIL)),
+
+	READER_CLASS_NAME(Page.READER, FieldEditorType.ReaderCombo, null, new FieldEditorDataBuilder().comboEntryNamesAndValues(ReaderPreferencePage.getReaderComboOptions()).build()),
+	ROUTER_USERNAME(Page.READER, FieldEditorType.FormattedString),
+	ROUTER_PASSWORD(Page.READER, FieldEditorType.Password),
+	ROUTER_ADDRESS(Page.READER, FieldEditorType.FormattedString, Reader.Defaults.ROUTER_ADDRESS, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	ROUTER_PORT(Page.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.ROUTER_PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	SOCKET_TIMEOUT_MS(Page.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS)),
+	CONNECTION_TIMEOUT_MS(Page.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS)),
+	TELNET_NEWLINE_CHARACTERS(Page.READER, FieldEditorType.FormattedCombo, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
 
 	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, FieldEditorType.FormattedString, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
 	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, FieldEditorType.FormattedString),
@@ -62,21 +67,14 @@ public enum Preference {
 	DLINK_2750_COMMAND_INFO_ADSL_SNR(Page.DLINK_2750, FieldEditorType.FormattedString, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR),
 
 	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(DataTable.Defaults.GUI_TABLE_MAX_ITEMS), new FieldEditorDataBuilder().textLimit(4).build()),
-	GUI_CONSOLE_MAX_CHARS(Page.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), new FieldEditorDataBuilder().textLimit(6).build()),
-	GUI_TABLE_COLUMNS_PACK(Page.APPEARANCE, FieldEditorType.Boolean, Boolean.toString(DataTable.Defaults.GUI_TABLE_COLUMNS_PACK)),
-	GUI_MINIMIZE_TRAY(Page.APPEARANCE, FieldEditorType.Boolean, Boolean.toString(TrayIcon.Defaults.GUI_MINIMIZE_TRAY)),
-	GUI_START_MINIMIZED(Page.APPEARANCE, FieldEditorType.Boolean, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),
-	GUI_TRAY_TOOLTIP(Page.APPEARANCE, FieldEditorType.Boolean, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP)),
 	GUI_IMPORTANT_KEYS(Page.APPEARANCE, FieldEditorType.WrapString),
 	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	GUI_TABLE_COLUMNS_PACK(Page.APPEARANCE, FieldEditorType.Boolean, Boolean.toString(DataTable.Defaults.GUI_TABLE_COLUMNS_PACK)),
+	GUI_CONSOLE_MAX_CHARS(Page.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), new FieldEditorDataBuilder().textLimit(6).build()),
 
 	CONSOLE_ANIMATION(Page.CONSOLE, FieldEditorType.Boolean, Boolean.toString(RouterLoggerConsole.Defaults.CONSOLE_ANIMATION)),
-	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
 	CONSOLE_SHOW_KEYS(Page.CONSOLE, FieldEditorType.WrapString),
 	CONSOLE_SHOW_KEYS_SEPARATOR(Page.CONSOLE, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	CONSOLE_DEBUG(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(Logger.Defaults.DEBUG)),
-
-	GUI_CONFIRM_CLOSE(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
 
 	WRITER_CLASS_NAME(Page.WRITER, FieldEditorType.WriterCombo, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), new FieldEditorDataBuilder().comboEntryNamesAndValues(WriterPreferencePage.getWriterComboOptions()).build()),
 
@@ -84,6 +82,7 @@ public enum Preference {
 	CSV_NEWLINE_CHARACTERS(Page.CSV, FieldEditorType.FormattedCombo, CsvWriter.Defaults.NEWLINE.name(), new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
 	CSV_FIELD_SEPARATOR(Page.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	CSV_EMAIL(Page.CSV, FieldEditorType.Boolean, Boolean.toString(CsvWriter.Defaults.EMAIL)),
 
 	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, FieldEditorType.DatabaseCombo, null, new FieldEditorDataBuilder().comboEntryNamesAndValues(DatabasePreferencePage.getDatabaseComboOptions()).build()),
 	DATABASE_URL(Page.DATABASE, FieldEditorType.FormattedString),
@@ -102,9 +101,6 @@ public enum Preference {
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, FieldEditorType.WrapString),
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 
-	CSV_EMAIL(Page.CSV, FieldEditorType.Boolean, Boolean.toString(CsvWriter.Defaults.EMAIL)),
-	LOG_EMAIL(Page.GENERAL, FieldEditorType.Boolean, Boolean.toString(Logger.Defaults.EMAIL)),
-
 	EMAIL_HOST(Page.EMAIL, FieldEditorType.FormattedString),
 	EMAIL_USERNAME(Page.EMAIL, FieldEditorType.FormattedString),
 	EMAIL_PASSWORD(Page.EMAIL, FieldEditorType.Password),
@@ -115,6 +111,7 @@ public enum Preference {
 	EMAIL_SSL_IDENTITY(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.SSL_IDENTITY)),
 	EMAIL_STARTTLS_ENABLED(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.STARTTLS_ENABLED)),
 	EMAIL_STARTTLS_REQUIRED(Page.EMAIL, FieldEditorType.Boolean, Boolean.toString(EmailSender.Defaults.STARTTLS_REQUIRED)),
+
 	EMAIL_SEND_INTERVAL_MS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Long.toString(EmailSender.Defaults.SEND_INTERVAL_IN_MILLIS)),
 	EMAIL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
