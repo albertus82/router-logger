@@ -2,6 +2,7 @@ package it.albertus.router.gui.preference;
 
 public enum FieldEditorType {
 	Boolean,
+	DefaultBoolean,
 	String,
 	WrapString,
 	FormattedString,

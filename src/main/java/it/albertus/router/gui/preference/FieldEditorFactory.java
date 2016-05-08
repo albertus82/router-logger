@@ -2,6 +2,7 @@ package it.albertus.router.gui.preference;
 
 import it.albertus.router.gui.preference.field.ComboFieldEditor;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
+import it.albertus.router.gui.preference.field.DefaultBooleanFieldEditor;
 import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.EmailAddressesListEditor;
 import it.albertus.router.gui.preference.field.FormattedComboFieldEditor;
@@ -35,6 +36,8 @@ public abstract class FieldEditorFactory {
 			return new ComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case DatabaseCombo:
 			return new DatabaseComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+		case DefaultBoolean:
+			return new DefaultBooleanFieldEditor(name, label, parent);
 		case Directory:
 			return createDirectoryFieldEditor(name, label, parent, data);
 		case EditableCombo:
