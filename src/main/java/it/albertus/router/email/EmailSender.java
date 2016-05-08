@@ -62,7 +62,7 @@ public class EmailSender {
 			boolean exit = false;
 			while (!exit) {
 				if (!queue.isEmpty()) {
-					final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>();
+					final List<RouterLoggerEmail> sentItems = new ArrayList<RouterLoggerEmail>(queue.size());
 					for (final RouterLoggerEmail rle : queue) {
 						try {
 							send(rle);
