@@ -21,15 +21,16 @@ import java.util.zip.ZipException;
 
 public class CsvWriter extends Writer {
 
-	public static final String CFG_KEY_CSV_NEWLINE_CHARACTERS = "csv.newline.characters";
 	public static final String DESTINATION_KEY = "lbl.writer.destination.csv";
+
+	protected static final String CFG_KEY_CSV_NEWLINE_CHARACTERS = "csv.newline.characters";
 
 	protected static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
 	protected static final String CSV_FILENAME_REGEX = "[0-9]{8}\\.(csv|CSV)";
 	protected static final String CSV_FILE_EXTENSION = ".csv";
 
 	protected static final DateFormat dateFormatColumn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-	public static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+	protected static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
 
 	public interface Defaults {
 		NewLine NEWLINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
