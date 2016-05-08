@@ -60,7 +60,7 @@ public class CsvWriter extends Writer {
 								formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
 							}
 							catch (final Exception e) {
-								formattedDate = e.getClass().getSimpleName();
+								formattedDate = "";
 							}
 							final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
 							final String message = Resources.get("msg.writer.csv.email.message", zipFile.getName());

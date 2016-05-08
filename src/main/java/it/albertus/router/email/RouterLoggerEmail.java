@@ -14,9 +14,14 @@ public class RouterLoggerEmail implements Serializable {
 	protected final File[] attachments;
 
 	protected RouterLoggerEmail(final String subject, final String message, final File[] attachments) {
+		if (message != null && !message.isEmpty()) {
+			this.message = message;
+		}
+		else {
+			throw new IllegalArgumentException("Invalid message supplied");
+		}
 		this.uuid = UUID.randomUUID();
-		this.subject = subject;
-		this.message = message;
+		this.subject = subject != null ? subject.trim() : null;
 		this.attachments = attachments;
 	}
 
