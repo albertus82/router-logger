@@ -59,6 +59,8 @@ public class EmailSender {
 	protected volatile Thread daemon;
 	protected Console out = TerminalConsole.getInstance(); // Fail-safe.
 
+	private final Object lock = new Object();
+
 	protected class EmailRunnable implements Runnable {
 		@Override
 		public void run() {
@@ -82,7 +84,7 @@ public class EmailSender {
 				queue.removeAll(sent);
 
 				// Exit if there is nothing to do...
-				synchronized (EmailSender.this) {
+				synchronized (lock) {
 					if (queue.isEmpty()) {
 						daemon = null;
 						break;
@@ -110,7 +112,7 @@ public class EmailSender {
 			send(email);
 		}
 		catch (final Exception exception) {
-			synchronized (this) {
+			synchronized (lock) {
 				queue.add(email);
 				if (this.daemon == null) {
 					daemon = new Thread(new EmailRunnable(), "emailDaemon");
