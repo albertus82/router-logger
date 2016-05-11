@@ -26,6 +26,10 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		super(GRID);
 	}
 
+	protected BasePreferencePage(final int style) {
+		super(style);
+	}
+
 	public Page getPage() {
 		return Page.forClass(getClass());
 	}
