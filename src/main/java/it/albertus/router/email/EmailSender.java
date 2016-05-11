@@ -100,7 +100,8 @@ public class EmailSender {
 
 	/**
 	 * Try to send the message immediately. On error, enqueue the message and
-	 * try later.
+	 * try later. <b>This operation may take a few seconds</b>, so calling from
+	 * a separate thread can be appropriate.
 	 * 
 	 * @param subject the subject of the email
 	 * @param message the body of the email
@@ -125,7 +126,7 @@ public class EmailSender {
 	}
 
 	/**
-	 * Send the message immediately. <b>This operation may take many
+	 * Send the message immediately. <b>This operation may take a few
 	 * seconds</b>, so calling from a separate thread can be appropriate.
 	 * 
 	 * @param subject the subject of the email
