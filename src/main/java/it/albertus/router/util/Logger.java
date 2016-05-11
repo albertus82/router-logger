@@ -28,6 +28,16 @@ public class Logger {
 	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
 	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+	private static class Singleton {
+		private static final Logger instance = new Logger();
+	}
+
+	public static Logger getInstance() {
+		return Singleton.instance;
+	}
+
+	private Logger() {}
+
 	public enum Destination {
 		CONSOLE,
 		FILE,
@@ -60,15 +70,6 @@ public class Logger {
 		boolean DEBUG = false;
 		String DIRECTORY = getDefaultDirectory();
 		boolean EMAIL = false;
-	}
-
-	// Lazy initialization...
-	private static class Singleton {
-		private static final Logger instance = new Logger();
-	}
-
-	public static Logger getInstance() {
-		return Singleton.instance;
 	}
 
 	public void init(final Console console) {

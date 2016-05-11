@@ -54,6 +54,8 @@ public class EmailSender {
 		return Singleton.instance;
 	}
 
+	private EmailSender() {}
+
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
 	protected volatile Thread daemon;
