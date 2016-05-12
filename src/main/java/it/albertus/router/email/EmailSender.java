@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailAttachment;
+import org.apache.commons.mail.EmailConstants;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
@@ -44,6 +45,8 @@ public class EmailSender {
 		boolean STARTTLS_ENABLED = false;
 		boolean STARTTLS_REQUIRED = false;
 		long SEND_INTERVAL_IN_MILLIS = 60000L;
+		int SOCKET_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
+		int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 	}
 
 	private static class Singleton {
@@ -185,6 +188,8 @@ public class EmailSender {
 	}
 
 	protected void initializeEmail(final Email email) throws EmailException {
+		email.setSocketConnectionTimeout(configuration.getInt("email.connection.timeout", Defaults.SOCKET_CONNECTION_TIMEOUT));
+		email.setSocketTimeout(configuration.getInt("email.socket.timeout", Defaults.SOCKET_TIMEOUT));
 		email.setStartTLSEnabled(configuration.getBoolean("email.starttls.enabled", Defaults.STARTTLS_ENABLED));
 		email.setStartTLSRequired(configuration.getBoolean("email.starttls.required", Defaults.STARTTLS_REQUIRED));
 		email.setSSLCheckServerIdentity(configuration.getBoolean("email.ssl.identity", Defaults.SSL_IDENTITY));

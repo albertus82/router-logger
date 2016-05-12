@@ -112,9 +112,11 @@ public enum Preference {
 	EMAIL_STARTTLS_ENABLED(Page.EMAIL, FieldEditorType.DefaultBoolean, Boolean.toString(EmailSender.Defaults.STARTTLS_ENABLED)),
 	EMAIL_STARTTLS_REQUIRED(Page.EMAIL, FieldEditorType.DefaultBoolean, Boolean.toString(EmailSender.Defaults.STARTTLS_REQUIRED)),
 
-	EMAIL_SEND_INTERVAL_MS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Long.toString(EmailSender.Defaults.SEND_INTERVAL_IN_MILLIS)),
 	EMAIL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	EMAIL_CONNECTION_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT)),
+	EMAIL_SOCKET_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_TIMEOUT)),
+	EMAIL_SEND_INTERVAL_MS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Long.toString(EmailSender.Defaults.SEND_INTERVAL_IN_MILLIS)),
 	EMAIL_CC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
 	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses);
 
