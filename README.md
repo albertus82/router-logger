@@ -91,8 +91,8 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 ##### Rete
 
-* **`socket.timeout.ms`**= timeout del socket in millisecondi, ossia il tempo di inattivit&agrave; massimo durante la comunicazione con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: `30000` ms). Questo valore deve essere sempre maggiore dell'intervallo tra le richieste (`logger.interval.normal.ms`).
-* **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo in fase di connessione, trascorso il quale si assume che il server non &egrave; raggiungibile (default: `20000` ms).
+* **`socket.timeout.ms`**= timeout del socket in millisecondi, ossia il tempo di inattivit&agrave; massimo *durante la comunicazione* con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: `30000` ms). Questo valore deve essere sempre maggiore dell'intervallo tra le richieste (`logger.interval.normal.ms`).
+* **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo *in fase di connessione*, trascorso il quale si assume che il server non &egrave; raggiungibile (default: `20000` ms).
 * **`telnet.newline.characters`**= specifica come inviare il comando di ritorno a capo al server; pu&ograve; assumere uno tra i seguenti valori:
 	* **`CRLF`** (default): invia la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
 	* **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
@@ -118,6 +118,26 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`console.show.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori devono essere visualizzati in console a ogni iterazione (default: vuoto). Un eccessivo numero di chiavi da visualizzare provocher&agrave; lo scorrimento verticale della console, un effetto collaterale probabilmente indesiderato.
 * **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 * **`console.debug`**= in caso di errore, stampa messaggi dettagliati (default: `false`).
+
+##### Email
+
+* **`email.host`**= indirizzo del server SMTP da utilizzare per l'invio delle email.
+* **`email.username`**= nome utente per l'autenticazione al server SMTP.
+* **`email.password`**= password per l'autenticazione al server SMTP.
+* **`email.from.name`**= nome da utilizzare come mittente.
+* **`email.from.address`**= indirizzo email da utilizzare come mittente.
+* **`email.to.addresses`**= indirizzi dei destinatari "A".
+* **`email.cc.addresses`**= indirizzi dei destinatari "Cc".
+* **`email.bcc.addresses`**= indirizzi dei destinatari "Ccn".
+* **`email.ssl.connect`**= specifica se utilizzare la connessione sicura SSL (default: `false`).
+* **`email.port`**= porta SMTP del server (default: `25`).
+* **`email.ssl.port`**= porta SMTP SSL del server (default: `465`).
+* **`email.ssl.identity`**= specifica se effettuare il controllo di identit&agrave; del server secondo l'RFC 2595 (default: `false`).
+* **`email.starttls.enabled`**= abilita l'uso del comando STARTTLS (default: `false`).
+* **`email.starttls.required`**= richiede l'uso del comando STARTTLS (default: `false`).
+* **`email.send.interval.ms`**= intervallo tra i tentativi di invio dei messaggi in caso di problemi (default: `60000` ms).
+* **`email.connection.timeout`**= timeout in fase di connessione al server SMTP (default: `60000` ms).
+* **`email.socket.timeout`**= timeout della connessione al server SMTP, una volta stabilita (default: `60000` ms).
 
 #### Sorgente (modello di router)
 
