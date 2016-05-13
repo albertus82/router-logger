@@ -119,7 +119,16 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 * **`console.debug`**= in caso di errore, stampa messaggi dettagliati (default: `false`).
 
-##### Email
+#### Email
+
+&Egrave; possibile configurare RouterLogger in modo che invii comunicazioni via email. Questa funzionalit&agrave; &egrave; particolarmente utile se si esegue il programma in un dispositivo dedicato o comunque non presidiato, come un [Raspberry Pi](https://www.raspberrypi.org).
+
+In particolare si possono configurare i seguenti invii:
+
+* **`log.email`**= invia una segnalazione per ogni errore che si verifica durante l'esecuzione del programma. Se la connessione non fosse disponibile al momento, ritenta periodicamente l'invio (default: `false`).
+* **`csv.email`**= invia i file CSV dei giorni precedenti, compressi in formato ZIP (default: `false`); funziona solo se si imposta il salvataggio in formato CSV.
+
+Per consentire l'invio delle email occorre avere un account di posta elettronica e configurare alcuni parametri:
 
 * **`email.host`**= indirizzo del server SMTP da utilizzare per l'invio delle email.
 * **`email.username`**= nome utente per l'autenticazione al server SMTP.
@@ -138,6 +147,8 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`email.send.interval.ms`**= intervallo tra i tentativi di invio dei messaggi in caso di problemi (default: `60000` ms).
 * **`email.connection.timeout`**= timeout in fase di connessione al server SMTP (default: `60000` ms).
 * **`email.socket.timeout`**= timeout della connessione al server SMTP, una volta stabilita (default: `60000` ms).
+
+L'invio funziona senza problemi con [Gmail](https://mail.google.com), a patto di [consentire l'accesso alle applicazioni "meno sicure"](http://www.google.com/settings/security/lesssecureapps); per questo motivo &egrave; consigliabile creare un account dedicato a RouterLogger.
 
 #### Sorgente (modello di router)
 
