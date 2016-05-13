@@ -62,7 +62,7 @@ Infine, impostare la seguente opzione nella scheda **Salvataggio**:
 * Linux: **`routerlogger.sh -c`**
 * OS X: **`routerlogger.command -c`**
 
-In questo caso, prima del primo avvio, occorre modificare manualmente il file di configurazione [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) attivando (ossia rimuovendo il `#` a inizio riga) e configurando le seguenti propriet&agrave;:
+In questo caso, prima del primo avvio, occorre modificare manualmente il file di configurazione [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) con un editor di testo per attivare (rimuovendo il `#` a inizio riga) e impostare le seguenti propriet&agrave;:
 * **`reader.class.name`**= Uno tra [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java), [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java), [`AsusDslN14UReader`](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java) e [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare;
 * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito);
 * **`router.port`**= porta Telnet del router (predefinita: `23`);
@@ -71,6 +71,8 @@ In questo caso, prima del primo avvio, occorre modificare manualmente il file di
 
 
 ### Configurazione avanzata
+
+Se si utilizza l'interfaccia grafica, &egrave; possibile accedere alla configurazione dal men&ugrave; **Strumenti > Configurazione...**. Utilizzando l'interfaccia a riga di comando, invece, occorre modificare manualmente il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) con un editor di testo come Blocco note.
 
 Il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) fornito contiene gi&agrave; tutte le impostazioni dell'applicazione, e quasi tutte sono disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`). Il principio &egrave; il cosiddetto *Convention Over Configuration* (noto anche come *Configuration by Exception*), secondo il quale non occorre preoccuparsi di configurare nulla esplicitamente, fatta eccezione per pochi parametri per i quali non pu&ograve; esistere un valore predefinito; nel nostro caso si tratta esclusivamente delle credenziali di accesso del router e degli eventuali parametri di connessione al database.
 
@@ -126,7 +128,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 In particolare si possono configurare i seguenti invii:
 
 * **`log.email`**= invia una segnalazione per ogni errore che si verifica durante l'esecuzione del programma. Se la connessione non fosse disponibile al momento, ritenta periodicamente l'invio (default: `false`).
-* **`csv.email`**= invia i file CSV dei giorni precedenti, compressi in formato ZIP (default: `false`); funziona solo se si imposta il salvataggio in formato CSV.
+* **`csv.email`**= invia i file CSV delle giornate precedenti, compressi in formato ZIP. A regime invia un'email al giorno e funziona solo se si imposta il salvataggio in formato CSV (default: `false`).
 
 Per consentire l'invio delle email occorre avere un account di posta elettronica e configurare alcuni parametri:
 
