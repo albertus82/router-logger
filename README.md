@@ -130,7 +130,7 @@ In particolare si possono configurare i seguenti invii:
 * **`log.email`**= invia una segnalazione per ogni errore che si verifica durante l'esecuzione del programma. Se la connessione non fosse disponibile al momento, ritenta periodicamente l'invio (default: `false`).
 * **`csv.email`**= invia i file CSV delle giornate precedenti, compressi in formato ZIP. A regime invia un'email al giorno e funziona solo se si imposta il salvataggio in formato CSV (default: `false`).
 
-Per consentire l'invio delle email occorre avere un account di posta elettronica e configurare alcuni parametri:
+Per consentire l'invio delle email occorre avere un account di posta elettronica e configurare i parametri presenti nella sezione **Email** della configurazione, e identificati dalle seguenti chiavi di configurazione:
 
 * **`email.host`**= indirizzo del server SMTP da utilizzare per l'invio delle email.
 * **`email.username`**= nome utente per l'autenticazione al server SMTP.
