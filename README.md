@@ -135,9 +135,9 @@ Per consentire l'invio delle email occorre avere un account di posta elettronica
 * **`email.password`**= password per l'autenticazione al server SMTP.
 * **`email.from.name`**= nome da utilizzare come mittente.
 * **`email.from.address`**= indirizzo email da utilizzare come mittente.
-* **`email.to.addresses`**= indirizzi dei destinatari "A".
-* **`email.cc.addresses`**= indirizzi dei destinatari "Cc".
-* **`email.bcc.addresses`**= indirizzi dei destinatari "Ccn".
+* **`email.to.addresses`**= indirizzi email dei destinatari "A" (separati da virgola).
+* **`email.cc.addresses`**= indirizzi email dei destinatari "Cc" (separati da virgola).
+* **`email.bcc.addresses`**= indirizzi email dei destinatari "Ccn" (separati da virgola).
 * **`email.ssl.connect`**= specifica se utilizzare la connessione sicura SSL (default: `false`).
 * **`email.port`**= porta SMTP del server (default: `25`).
 * **`email.ssl.port`**= porta SMTP SSL del server (default: `465`).
