@@ -2,6 +2,7 @@ package it.albertus.router.gui.preference;
 
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
+import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.CloseMessageBox;
@@ -98,6 +99,8 @@ public enum Preference {
 
 	THRESHOLDS_EXPRESSIONS(Page.THRESHOLDS, FieldEditorType.Thresholds),
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
+	THRESHOLDS_EMAIL(Page.THRESHOLDS, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.THRESHOLDS_EMAIL)),
+	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(Page.THRESHOLDS, FieldEditorType.FormattedInteger, Integer.toString(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS)),
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, FieldEditorType.WrapString),
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 
@@ -116,7 +119,7 @@ public enum Preference {
 	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_CONNECTION_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT)),
 	EMAIL_SOCKET_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_TIMEOUT)),
-	EMAIL_SEND_INTERVAL_MS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Long.toString(EmailSender.Defaults.SEND_INTERVAL_IN_MILLIS)),
+	EMAIL_SEND_INTERVAL_SECS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SEND_INTERVAL_SECS)),
 	EMAIL_CC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
 	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses);
 

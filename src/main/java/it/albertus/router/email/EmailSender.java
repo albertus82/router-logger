@@ -44,7 +44,7 @@ public class EmailSender {
 		boolean SSL_IDENTITY = false;
 		boolean STARTTLS_ENABLED = false;
 		boolean STARTTLS_REQUIRED = false;
-		long SEND_INTERVAL_IN_MILLIS = 60000L;
+		int SEND_INTERVAL_SECS = 60;
 		int SOCKET_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 		int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 	}
@@ -71,7 +71,7 @@ public class EmailSender {
 		public void run() {
 			while (true) {
 				try {
-					Thread.sleep(configuration.getLong("email.send.interval.ms", Defaults.SEND_INTERVAL_IN_MILLIS));
+					Thread.sleep(1000 * configuration.getInt("email.send.interval.ms", Defaults.SEND_INTERVAL_SECS));
 				}
 				catch (final InterruptedException ie) {
 					break;

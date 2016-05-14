@@ -94,14 +94,12 @@ public class TrayIcon {
 					toolTipText = getBaseToolTipText(gui.getCurrentStatus());
 					trayItem.setToolTipText(toolTipText);
 
-					if (configuration.getBoolean("gui.tray.tooltip", Defaults.GUI_TRAY_TOOLTIP)) {
-						toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
-						toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
-						toolTip.setVisible(false);
-						toolTip.setAutoHide(true);
-						toolTip.addListener(SWT.Selection, new RestoreShellListener(gui));
-						trayItem.setToolTip(toolTip);
-					}
+					toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
+					toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
+					toolTip.setVisible(false);
+					toolTip.setAutoHide(true);
+					toolTip.addListener(SWT.Selection, new RestoreShellListener(gui));
+					trayItem.setToolTip(toolTip);
 
 					trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
 					showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
@@ -178,7 +176,7 @@ public class TrayIcon {
 	}
 
 	public void showBalloonToolTip(final Map<Threshold, String> thresholdsReached) {
-		if (toolTip != null && trayItem != null && thresholdsReached != null && !thresholdsReached.isEmpty() && !gui.getCurrentStatus().equals(gui.getPreviousStatus()) && !trayItem.isDisposed() && !toolTip.isDisposed()) {
+		if (toolTip != null && configuration.getBoolean("gui.tray.tooltip", Defaults.GUI_TRAY_TOOLTIP) && trayItem != null && thresholdsReached != null && !thresholdsReached.isEmpty() && !gui.getCurrentStatus().equals(gui.getPreviousStatus()) && !trayItem.isDisposed() && !toolTip.isDisposed()) {
 			final StringBuilder message = new StringBuilder();
 			for (final Threshold threshold : thresholdsReached.keySet()) {
 				message.append(threshold.getKey()).append('=').append(thresholdsReached.get(threshold)).append(NewLine.SYSTEM_LINE_SEPARATOR);

@@ -1,6 +1,7 @@
 package it.albertus.router.engine;
 
 import it.albertus.router.email.EmailSender;
+import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -26,6 +27,7 @@ public abstract class RouterLoggerEngine {
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
+		boolean THRESHOLDS_EMAIL = false; 
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
@@ -320,6 +322,9 @@ public abstract class RouterLoggerEngine {
 				doSetStatus(RouterLoggerStatus.WARNING); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
+					if (configuration.getBoolean("thresholds.email", Defaults.THRESHOLDS_EMAIL)) {
+						ThresholdsEmailSender.getInstance().send(allThresholdsReached, info);
+					}
 				}
 			}
 			else if (!allThresholdsReached.isEmpty()) {
