@@ -10,15 +10,12 @@ import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ThresholdsEmailSender {
-
-	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	public interface Defaults {
 		int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 600;
