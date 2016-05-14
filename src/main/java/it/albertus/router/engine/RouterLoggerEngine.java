@@ -199,7 +199,7 @@ public abstract class RouterLoggerEngine {
 				boolean loggedIn = false;
 				try {
 					interruptible = true;
-					loggedIn = reader.login(configuration.getString("router.username"), configuration.contains("router.password") ? configuration.getString("router.password").toCharArray() : null); // TODO
+					loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
 				}
 				catch (Exception e) {
 					logger.log(e);
