@@ -87,7 +87,7 @@ public enum Preference {
 	DATABASE_DRIVER_CLASS_NAME(Page.DATABASE, FieldEditorType.DatabaseCombo, null, new FieldEditorDataBuilder().comboEntryNamesAndValues(DatabasePreferencePage.getDatabaseComboOptions()).build()),
 	DATABASE_URL(Page.DATABASE, FieldEditorType.FormattedString),
 	DATABASE_USERNAME(Page.DATABASE, FieldEditorType.FormattedString),
-	DATABASE_PASSWORD(Page.DATABASE, FieldEditorType.FormattedString),
+	DATABASE_PASSWORD(Page.DATABASE, FieldEditorType.Password),
 	DATABASE_TABLE_NAME(Page.DATABASE, FieldEditorType.FormattedString, DatabaseWriter.Defaults.TABLE_NAME, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	DATABASE_CONNECTION_VALIDATION_TIMEOUT_MS(Page.DATABASE, FieldEditorType.FormattedInteger, Integer.toString(DatabaseWriter.Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS), new FieldEditorDataBuilder().textLimit(5).build()),
 	DATABASE_TIMESTAMP_COLUMN_TYPE(Page.DATABASE, FieldEditorType.FormattedString, DatabaseWriter.Defaults.TIMESTAMP_COLUMN_TYPE, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
