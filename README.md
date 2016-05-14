@@ -128,7 +128,9 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 In particolare si possono configurare i seguenti invii:
 
 * **`log.email`**= invia una segnalazione per ogni errore che si verifica durante l'esecuzione del programma. Se la connessione non fosse disponibile al momento, ritenta periodicamente l'invio (default: `false`).
-* **`csv.email`**= invia i file CSV delle giornate precedenti, compressi in formato ZIP, uno per messaggio. Funziona solo se si imposta il salvataggio in formato CSV (default: `false`). A regime viene inviata un'email al giorno, ma *alla prima attivazione vengono inviati tutti i file CSV presenti nella cartella di destinazione dei CSV*, pu&ograve; quindi essere il caso di spostarli altrove o comprimerli prima di attivare questa opzione. I file inviati con successo vengono mantenuti in formato ZIP nella cartella di destinazione dei CSV (i relativi CSV non compressi vengono invece cancellati dopo l'invio per risparmiare spazio).
+* **`csv.email`**= invia i file CSV delle giornate precedenti, compressi in formato ZIP, uno per messaggio. Funziona solo se si imposta il salvataggio in formato CSV (default: `false`). A regime viene inviata un'email al giorno, ma *alla prima attivazione vengono inviati tutti i file CSV presenti nella cartella di destinazione dei CSV*, pu&ograve; quindi essere il caso di spostarli altrove o comprimerli prima di attivare questa opzione. I file inviati con successo vengono mantenuti in formato ZIP nella cartella di destinazione dei CSV (i relativi CSV non compressi vengono invece cancellati dopo l'invio per risparmiare spazio di archiviazione).
+* **`thresholds.email`**= invia una segnalazione quando vengono raggiunte una o pi&ugrave; soglie (default: `false`). Per evitare l'invio di un numero eccessivo di messaggi, &egrave; disponibile la seguente propriet&agrave;:
+	* **`thresholds.email.send.interval.secs`**= intervallo, in secondi, tra gli invii delle email relative al raggiungimento delle soglie. Le email conterranno tutti i dettagli sulle soglie raggiunte nell'intervallo (default: `600` secondi).
 
 Per consentire l'invio delle email occorre avere un account di posta elettronica e configurare i parametri presenti nella sezione **Email** della configurazione, identificati dalle seguenti chiavi di configurazione:
 
@@ -146,7 +148,7 @@ Per consentire l'invio delle email occorre avere un account di posta elettronica
 * **`email.ssl.identity`**= specifica se effettuare il controllo di identit&agrave; del server secondo l'RFC 2595 (default: `false`).
 * **`email.starttls.enabled`**= abilita l'uso del comando STARTTLS (default: `false`).
 * **`email.starttls.required`**= richiede l'uso del comando STARTTLS (default: `false`).
-* **`email.send.interval.ms`**= intervallo tra i tentativi di invio dei messaggi in caso di problemi (default: `60000` ms).
+* **`email.send.interval.secs`**= intervallo, in secondi, tra i tentativi di invio dei messaggi in caso di problemi (default: `60` secondi).
 * **`email.connection.timeout`**= timeout in fase di connessione al server SMTP (default: `60000` ms).
 * **`email.socket.timeout`**= timeout della connessione al server SMTP, una volta stabilita (default: `60000` ms).
 
