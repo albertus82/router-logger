@@ -130,38 +130,6 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`console.show.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `console.show.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 * **`console.debug`**= in caso di errore, stampa messaggi dettagliati (default: `false`).
 
-#### Email
-
-&Egrave; possibile configurare RouterLogger in modo che invii comunicazioni via email. Questa funzionalit&agrave; &egrave; particolarmente utile se si esegue il programma in un dispositivo dedicato o comunque non presidiato, come un [Raspberry Pi](https://www.raspberrypi.org).
-
-In particolare si possono configurare i seguenti invii:
-
-* **`log.email`**= invia una segnalazione per ogni errore che si verifica durante l'esecuzione del programma. Se la connessione non fosse disponibile al momento, ritenta periodicamente l'invio (default: `false`).
-* **`csv.email`**= invia i file CSV delle giornate precedenti, compressi in formato ZIP, uno per messaggio. Funziona solo se si imposta il salvataggio in formato CSV (default: `false`). A regime viene inviata un'email al giorno, ma *alla prima attivazione vengono inviati tutti i file CSV presenti nella cartella di destinazione dei CSV*, pu&ograve; quindi essere il caso di spostarli altrove o comprimerli prima di attivare questa opzione. I file inviati con successo vengono mantenuti in formato ZIP nella cartella di destinazione dei CSV (i relativi CSV non compressi vengono invece cancellati dopo l'invio per risparmiare spazio di archiviazione).
-* **`thresholds.email`**= invia una segnalazione quando vengono raggiunte una o pi&ugrave; soglie (default: `false`). Per evitare l'invio di un numero eccessivo di messaggi, &egrave; disponibile la seguente propriet&agrave;:
-	* **`thresholds.email.send.interval.secs`**= intervallo, in secondi, tra gli invii delle email relative al raggiungimento delle soglie. Le email conterranno tutti i dettagli sulle soglie raggiunte nell'intervallo (default: `3600` secondi).
-
-Per consentire l'invio delle email occorre avere un account di posta elettronica e configurare i parametri presenti nella sezione **Email** della configurazione, identificati dalle seguenti chiavi di configurazione:
-
-* **`email.host`**= indirizzo del server SMTP da utilizzare per l'invio delle email.
-* **`email.username`**= nome utente per l'autenticazione al server SMTP.
-* **`email.password`**= password per l'autenticazione al server SMTP.
-* **`email.from.name`**= nome da utilizzare come mittente.
-* **`email.from.address`**= indirizzo email da utilizzare come mittente.
-* **`email.to.addresses`**= indirizzi email dei destinatari "A" (separati da virgola).
-* **`email.cc.addresses`**= indirizzi email dei destinatari "Cc" (separati da virgola).
-* **`email.bcc.addresses`**= indirizzi email dei destinatari "Ccn" (separati da virgola).
-* **`email.ssl.connect`**= specifica se utilizzare la connessione sicura SSL (default: `false`).
-* **`email.port`**= porta SMTP del server (default: `25`).
-* **`email.ssl.port`**= porta SMTP SSL del server (default: `465`).
-* **`email.ssl.identity`**= specifica se effettuare il controllo di identit&agrave; del server secondo l'RFC 2595 (default: `false`).
-* **`email.starttls.enabled`**= abilita l'uso del comando STARTTLS (default: `false`).
-* **`email.starttls.required`**= richiede l'uso del comando STARTTLS (default: `false`).
-* **`email.send.interval.secs`**= intervallo, in secondi, tra i tentativi di invio dei messaggi in caso di problemi (default: `60` secondi).
-* **`email.connection.timeout`**= timeout in fase di connessione al server SMTP (default: `60000` ms).
-* **`email.socket.timeout`**= timeout della connessione al server SMTP, una volta stabilita (default: `60000` ms).
-
-L'invio funziona senza problemi con [Gmail](https://mail.google.com), a patto di [consentire l'accesso alle applicazioni "meno sicure"](http://www.google.com/settings/security/lesssecureapps); per questo motivo &egrave; consigliabile creare un account dedicato a RouterLogger.
 
 #### Sorgente (modello di router)
 
@@ -229,6 +197,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 * **`database.column.name.prefix`**= prefisso per i nomi delle colonne della tabella (default: `rl_`).
 * **`database.column.name.max.length`**= lunghezza massima dei nomi delle colonne, superata la quale il nome viene troncato (default: `30`).
 
+
 #### Soglie
 
 Le soglie permettono di specificare dei valori limite per uno o pi&ugrave; parametri di funzionamento del dispositivo; lo scopo &egrave; di poter incrementare la frequenza di interrogazione nelle situazioni critiche, in modo da aggiungere informazioni che potrebbero essere utili per la diagnosi di eventuali problemi della linea.
@@ -294,6 +263,40 @@ threshold.snr.down.value=100
 Pu&ograve; capitare che, al raggiungimento di una o pi&ugrave; soglie specifiche, non si desideri incrementare la frequenza di registrazione; il caso tipico &egrave; quello della velocit&agrave; di downstream agganciata, che in alcuni casi potrebbe essere inferiore al normale. In questi casi pu&ograve; comunque risultare utile un avviso nell'area di notifica e una particolare evidenziazione nella tabella a video (solo versione con interfaccia grafica), come normalmente avviene quando una soglia viene raggiunta. Per ottenere questo comportamento, valorizzare opportunamente le seguenti propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg):
 * **`thresholds.excluded`**= elenco, separato da delimitatore, degli identificativi univoci delle soglie per le quali, al raggiungimento, non si desidera l'incremento della frequenza di registrazione.
 * **`thresholds.excluded.separator`**= delimitatore (o espressione regolare) usato per separare gli identificativi univoci delle soglie specificati nella propriet&agrave; `thresholds.excluded` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche negli identificativi delle soglie.
+
+
+#### Email
+
+&Egrave; possibile configurare RouterLogger in modo che invii comunicazioni via email. Questa funzionalit&agrave; &egrave; particolarmente utile se si esegue il programma in un dispositivo dedicato o comunque non presidiato, come un [Raspberry Pi](https://www.raspberrypi.org).
+
+In particolare si possono configurare i seguenti invii:
+
+* **`log.email`**= invia una segnalazione per ogni errore che si verifica durante l'esecuzione del programma. Se la connessione non fosse disponibile al momento, ritenta periodicamente l'invio (default: `false`).
+* **`csv.email`**= invia i file CSV delle giornate precedenti, compressi in formato ZIP, uno per messaggio. Funziona solo se si imposta il salvataggio in formato CSV (default: `false`). A regime viene inviata un'email al giorno, ma *alla prima attivazione vengono inviati tutti i file CSV presenti nella cartella di destinazione dei CSV*, pu&ograve; quindi essere il caso di spostarli altrove o comprimerli prima di attivare questa opzione. I file inviati con successo vengono mantenuti in formato ZIP nella cartella di destinazione dei CSV (i relativi CSV non compressi vengono invece cancellati dopo l'invio per risparmiare spazio di archiviazione).
+* **`thresholds.email`**= invia una segnalazione quando vengono raggiunte una o pi&ugrave; soglie (default: `false`). Per evitare l'invio di un numero eccessivo di messaggi, &egrave; disponibile la seguente propriet&agrave;:
+	* **`thresholds.email.send.interval.secs`**= intervallo, in secondi, tra gli invii delle email relative al raggiungimento delle soglie. Le email conterranno tutti i dettagli sulle soglie raggiunte nell'intervallo (default: `3600` secondi).
+
+Per consentire l'invio delle email occorre avere un account di posta elettronica e configurare i parametri presenti nella sezione **Email** della configurazione, identificati dalle seguenti chiavi di configurazione:
+
+* **`email.host`**= indirizzo del server SMTP da utilizzare per l'invio delle email.
+* **`email.username`**= nome utente per l'autenticazione al server SMTP.
+* **`email.password`**= password per l'autenticazione al server SMTP.
+* **`email.from.name`**= nome da utilizzare come mittente.
+* **`email.from.address`**= indirizzo email da utilizzare come mittente.
+* **`email.to.addresses`**= indirizzi email dei destinatari "A" (separati da virgola).
+* **`email.cc.addresses`**= indirizzi email dei destinatari "Cc" (separati da virgola).
+* **`email.bcc.addresses`**= indirizzi email dei destinatari "Ccn" (separati da virgola).
+* **`email.ssl.connect`**= specifica se utilizzare la connessione sicura SSL (default: `false`).
+* **`email.port`**= porta SMTP del server (default: `25`).
+* **`email.ssl.port`**= porta SMTP SSL del server (default: `465`).
+* **`email.ssl.identity`**= specifica se effettuare il controllo di identit&agrave; del server secondo l'RFC 2595 (default: `false`).
+* **`email.starttls.enabled`**= abilita l'uso del comando STARTTLS (default: `false`).
+* **`email.starttls.required`**= richiede l'uso del comando STARTTLS (default: `false`).
+* **`email.send.interval.secs`**= intervallo, in secondi, tra i tentativi di invio dei messaggi in caso di problemi (default: `60` secondi).
+* **`email.connection.timeout`**= timeout in fase di connessione al server SMTP (default: `60000` ms).
+* **`email.socket.timeout`**= timeout della connessione al server SMTP, una volta stabilita (default: `60000` ms).
+
+L'invio funziona senza problemi con [Gmail](https://mail.google.com), a patto di [consentire l'accesso alle applicazioni "meno sicure"](http://www.google.com/settings/security/lesssecureapps); per questo motivo &egrave; consigliabile creare un account dedicato a RouterLogger.
 
 
 ### Estensione
