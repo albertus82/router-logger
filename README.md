@@ -15,8 +15,8 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 ### Installazione e avvio
 
-1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz** adatta alla propria piattaforma, possibilmente la pi&ugrave; recente (per **[Raspberry Pi](http://www.raspberrypi.org)** o altre piattaforme Linux/ARM, scaricare la release **`linux-other`**);
-2. scompattare l'archivio in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
+1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz** adatta alla propria piattaforma, possibilmente la pi&ugrave; recente (per **[Raspberry Pi](http://www.raspberrypi.org)** o altre piattaforme non direttamente supportate, scaricare la release **`other`**);
+2. scompattare l'archivio in una cartella a piacimento in cui si abbiano diritti di scrittura;
 3. avviare il programma eseguendo lo script di avvio che, a seconda del sistema operativo, sar&agrave;:
 	* Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
 	* Linux: [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh)
