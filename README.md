@@ -15,7 +15,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 ### Installazione e avvio
 
-1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz**, possibilmente la pi&ugrave; recente;
+1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz** adatta alla propria piattaforma, possibilmente la pi&ugrave; recente (per **[Raspberry Pi](http://www.raspberrypi.org)** o altre piattaforme Linux/ARM, scaricare la release **`linux-other`**);
 2. scompattare l'archivio in una cartella a piacimento in cui l'utente abbia diritti di scrittura;
 3. avviare il programma eseguendo lo script di avvio che, a seconda del sistema operativo, sar&agrave;:
 	* Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
@@ -24,12 +24,12 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
->Volendo utilizzare l'interfaccia grafica con il **Raspberry Pi** o altre piattaforme basate su **Linux/ARM**, occorre effettuare anche i seguenti passaggi:
+>Volendo utilizzare l'interfaccia grafica con **Raspberry Pi** o altre piattaforme **Linux/ARM**, occorre effettuare anche i seguenti passaggi:
 >	1. installare i seguenti pacchetti (`sudo apt-get install`):
 >		* **`libgtk-3-bin`**
 >		* **`libswt-gtk-3-java`**
 >		* **`libswt-cairo-gtk-3-jni`**
->	2. copiare il file **`/usr/lib/java/swt-gtk-<versione>.jar`** nella directory `lib` dell'applicazione e rimuovere la libreria **`swt-<versione>-<piattaforma>.jar`** preesistente.
+>	2. copiare il file **`/usr/lib/java/swt-gtk-<versione>.jar`** nella directory `lib` dell'applicazione.
 >
 >In caso contrario &egrave; comunque sempre possibile utilizzare l'interfaccia a riga di comando.
 

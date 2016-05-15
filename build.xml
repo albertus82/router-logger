@@ -61,6 +61,9 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
+		<copy todir="${build.distDirectory}/gtk-linux-other/lib">
+			<fileset refid="lib" />
+		</copy>
 		<copy todir="${build.distDirectory}/cocoa-macosx/lib">
 			<fileset refid="lib" />
 			<fileset dir="${dependencies.directory}/os/cocoa-macosx">
@@ -103,6 +106,13 @@
 				</fileset>
 			</classpath>
 		</manifestclasspath>
+		<manifestclasspath property="classpath.gtk-linux-other" jarfile="${build.distDirectory}/gtk-linux-other/${artifactId}.jar" maxParentLevels="0">
+			<classpath>
+				<fileset dir="${build.distDirectory}/gtk-linux-other/lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</manifestclasspath>
 		<manifestclasspath property="classpath.cocoa-macosx" jarfile="${build.distDirectory}/cocoa-macosx/${artifactId}.jar" maxParentLevels="0">
 			<classpath>
 				<fileset dir="${build.distDirectory}/cocoa-macosx/lib">
@@ -132,6 +142,9 @@
 			<fileset refid="config" />
 		</copy>
 		<copy todir="${build.distDirectory}/gtk-linux-x86_64">
+			<fileset refid="config" />
+		</copy>
+		<copy todir="${build.distDirectory}/gtk-linux-other">
 			<fileset refid="config" />
 		</copy>
 		<copy todir="${build.distDirectory}/cocoa-macosx">
@@ -165,6 +178,9 @@
 		<copy todir="${build.distDirectory}/gtk-linux-x86_64">
 			<fileset refid="sh" />
 		</copy>
+		<copy todir="${build.distDirectory}/gtk-linux-other">
+			<fileset refid="sh" />
+		</copy>
 		<copy todir="${build.distDirectory}/cocoa-macosx">
 			<fileset refid="command" />
 		</copy>
@@ -192,6 +208,9 @@
 		<copy todir="${build.distDirectory}/gtk-linux-x86_64">
 			<fileset refid="docs" />
 		</copy>
+		<copy todir="${build.distDirectory}/gtk-linux-other">
+			<fileset refid="docs" />
+		</copy>
 		<copy todir="${build.distDirectory}/cocoa-macosx">
 			<fileset refid="docs" />
 		</copy>
@@ -205,6 +224,7 @@
 		<copy file="${icons.directory}/main.ico" tofile="${build.distDirectory}/win32-win32-x86_64/${artifactId}.ico" />
 		<copy file="${icons.directory}/main.ico" tofile="${build.distDirectory}/gtk-linux-x86/${artifactId}.icns" />
 		<copy file="${icons.directory}/main.ico" tofile="${build.distDirectory}/gtk-linux-x86_64/${artifactId}.icns" />
+		<copy file="${icons.directory}/main.ico" tofile="${build.distDirectory}/gtk-linux-other/${artifactId}.icns" />
 		<copy file="${icons.directory}/main.icns" tofile="${build.distDirectory}/cocoa-macosx/${artifactId}.icns" />
 		<copy file="${icons.directory}/main.icns" tofile="${build.distDirectory}/cocoa-macosx-x86_64/${artifactId}.icns" />
 	</target>
@@ -232,6 +252,12 @@
 			<manifest>
 				<attribute name="Main-Class" value="${build.jar.archive.manifest.mainClass}" />
 				<attribute name="Class-Path" value="${classpath.gtk-linux-x86_64}" />
+			</manifest>
+		</jar>
+		<jar destfile="${build.distDirectory}/gtk-linux-other/${artifactId}.jar" basedir="${build.outputDirectory}" level="9">
+			<manifest>
+				<attribute name="Main-Class" value="${build.jar.archive.manifest.mainClass}" />
+				<attribute name="Class-Path" value="${classpath.gtk-linux-other}" />
 			</manifest>
 		</jar>
 		<jar destfile="${build.distDirectory}/cocoa-macosx/${artifactId}.jar" basedir="${build.outputDirectory}" level="9">
@@ -291,6 +317,17 @@
 				<include name="/*.sh" />
 			</tarfileset>
 			<tarfileset dir="${build.distDirectory}/gtk-linux-x86_64">
+				<include name="/**" />
+				<exclude name="/*.jar" />
+				<exclude name="/*.sh" />
+			</tarfileset>
+		</tar>
+		<tar destfile="${build.releaseDirectory}/${artifactId}-${version.number}-gtk-linux-other-bin.tar.gz" compression="gzip">
+			<tarfileset dir="${build.distDirectory}/gtk-linux-other" filemode="755">
+				<include name="/*.jar" />
+				<include name="/*.sh" />
+			</tarfileset>
+			<tarfileset dir="${build.distDirectory}/gtk-linux-other">
 				<include name="/**" />
 				<exclude name="/*.jar" />
 				<exclude name="/*.sh" />
