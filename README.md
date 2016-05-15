@@ -28,7 +28,7 @@ Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://
 >	1. installare i seguenti pacchetti (*sudo apt-get install ...*):
 >		* **libswt-gtk-3-java**
 >		* **libswt-cairo-gtk-3-jni**
->	2. copiare il file **/usr/lib/java/swt-gtk-&lt;versione&gt;.jar** nella cartella **lib** dell'applicazione e rimuovere la precedente libreria **swt-&lt;versione&gt;-&lt;piattaforma&gt;.jar** ivi presente.
+>	2. copiare il file **/usr/lib/java/swt-gtk-**&lt;versione&gt;**.jar** nella cartella **lib** dell'applicazione e rimuovere la precedente libreria **swt-**&lt;versione&gt;**-**&lt;piattaforma&gt;**.jar** ivi presente.
 >
 >In caso contrario &egrave; comunque possibile utilizzare l'interfaccia a riga di comando.
 
