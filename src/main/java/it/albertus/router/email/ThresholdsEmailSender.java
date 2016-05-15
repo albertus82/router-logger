@@ -31,9 +31,9 @@ public class ThresholdsEmailSender {
 
 	private ThresholdsEmailSender() {}
 
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	protected final Queue<ThresholdEmailItem> queue = new ConcurrentLinkedQueue<ThresholdEmailItem>();
-	protected volatile Thread daemon;
+	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Queue<ThresholdEmailItem> queue = new ConcurrentLinkedQueue<ThresholdEmailItem>();
+	private volatile Thread daemon;
 
 	private final Object lock = new Object();
 
@@ -50,7 +50,7 @@ public class ThresholdsEmailSender {
 		}
 	}
 
-	protected class ThresholdsEmailRunnable implements Runnable {
+	private class ThresholdsEmailRunnable implements Runnable {
 		@Override
 		public void run() {
 			while (true) {
@@ -90,11 +90,14 @@ public class ThresholdsEmailSender {
 					Logger.getInstance().log(exception, Destination.CONSOLE);
 				}
 
-				try {
-					Thread.sleep(1000 * configuration.getInt("thresholds.email.send.interval.secs", Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS));
-				}
-				catch (final InterruptedException ie) {
-					break;
+				final int sleepTime = configuration.getInt("thresholds.email.send.interval.secs", Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS);
+				if (sleepTime > 0) {
+					try {
+						Thread.sleep(1000 * sleepTime);
+					}
+					catch (final InterruptedException ie) {
+						break;
+					}
 				}
 			}
 		}

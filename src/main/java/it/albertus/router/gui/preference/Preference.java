@@ -119,7 +119,7 @@ public enum Preference {
 	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_CONNECTION_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT)),
 	EMAIL_SOCKET_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_TIMEOUT)),
-	EMAIL_SEND_INTERVAL_SECS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SEND_INTERVAL_SECS)),
+	EMAIL_RETRY_INTERVAL_SECS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.RETRY_INTERVAL_SECS)),
 	EMAIL_CC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
 	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses);
 

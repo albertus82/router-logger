@@ -28,14 +28,14 @@ public class EmailSender {
 
 	public static final String EMAIL_ADDRESSES_SPLIT_REGEX = "[,;\\s]+";
 
-	protected static final String CFG_KEY_EMAIL_HOST = "email.host";
-	protected static final String CFG_KEY_EMAIL_USERNAME = "email.username";
-	protected static final String CFG_KEY_EMAIL_PASSWORD = "email.password";
-	protected static final String CFG_KEY_EMAIL_FROM_NAME = "email.from.name";
-	protected static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
-	protected static final String CFG_KEY_EMAIL_TO_ADDRESSES = "email.to.addresses";
-	protected static final String CFG_KEY_EMAIL_CC_ADDRESSES = "email.cc.addresses";
-	protected static final String CFG_KEY_EMAIL_BCC_ADDRESSES = "email.bcc.addresses";
+	private static final String CFG_KEY_EMAIL_HOST = "email.host";
+	private static final String CFG_KEY_EMAIL_USERNAME = "email.username";
+	private static final String CFG_KEY_EMAIL_PASSWORD = "email.password";
+	private static final String CFG_KEY_EMAIL_FROM_NAME = "email.from.name";
+	private static final String CFG_KEY_EMAIL_FROM_ADDRESS = "email.from.address";
+	private static final String CFG_KEY_EMAIL_TO_ADDRESSES = "email.to.addresses";
+	private static final String CFG_KEY_EMAIL_CC_ADDRESSES = "email.cc.addresses";
+	private static final String CFG_KEY_EMAIL_BCC_ADDRESSES = "email.bcc.addresses";
 
 	public interface Defaults {
 		int PORT = 25;
@@ -44,9 +44,9 @@ public class EmailSender {
 		boolean SSL_IDENTITY = false;
 		boolean STARTTLS_ENABLED = false;
 		boolean STARTTLS_REQUIRED = false;
-		int SEND_INTERVAL_SECS = 60;
 		int SOCKET_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 		int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
+		int RETRY_INTERVAL_SECS = 60;
 	}
 
 	private static class Singleton {
@@ -59,19 +59,19 @@ public class EmailSender {
 
 	private EmailSender() {}
 
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	protected final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
-	protected volatile Thread daemon;
-	protected Console out = TerminalConsole.getInstance(); // Fail-safe.
+	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
+	private volatile Thread daemon;
+	private Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	private final Object lock = new Object();
 
-	protected class EmailRunnable implements Runnable {
+	private class EmailRunnable implements Runnable {
 		@Override
 		public void run() {
 			while (true) {
 				try {
-					Thread.sleep(1000 * configuration.getInt("email.send.interval.ms", Defaults.SEND_INTERVAL_SECS));
+					Thread.sleep(1000 * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
 				}
 				catch (final InterruptedException ie) {
 					break;
@@ -145,7 +145,7 @@ public class EmailSender {
 		return send(email);
 	}
 
-	protected String send(final RouterLoggerEmail rle) throws EmailException {
+	private String send(final RouterLoggerEmail rle) throws EmailException {
 		checkConfiguration();
 		final Email email;
 		if (rle.getAttachments() != null && rle.getAttachments().length > 0) {
@@ -165,7 +165,7 @@ public class EmailSender {
 		return mimeMessageId;
 	}
 
-	protected void checkConfiguration() {
+	private void checkConfiguration() {
 		// Configuration check
 		if (configuration.getString(CFG_KEY_EMAIL_HOST, "").isEmpty()) {
 			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
@@ -178,7 +178,7 @@ public class EmailSender {
 		}
 	}
 
-	protected void addAttachment(final MultiPartEmail email, final File attachment) throws EmailException {
+	private void addAttachment(final MultiPartEmail email, final File attachment) throws EmailException {
 		final EmailAttachment emailAttachment = new EmailAttachment();
 		emailAttachment.setPath(attachment.getPath());
 		emailAttachment.setDisposition(EmailAttachment.ATTACHMENT);
@@ -187,7 +187,7 @@ public class EmailSender {
 		email.attach(emailAttachment);
 	}
 
-	protected void initializeEmail(final Email email) throws EmailException {
+	private void initializeEmail(final Email email) throws EmailException {
 		email.setSocketConnectionTimeout(configuration.getInt("email.connection.timeout", Defaults.SOCKET_CONNECTION_TIMEOUT));
 		email.setSocketTimeout(configuration.getInt("email.socket.timeout", Defaults.SOCKET_TIMEOUT));
 		email.setStartTLSEnabled(configuration.getBoolean("email.starttls.enabled", Defaults.STARTTLS_ENABLED));
@@ -224,7 +224,7 @@ public class EmailSender {
 		}
 	}
 
-	protected void createContents(final Email email, final RouterLoggerEmail rle) throws EmailException {
+	private void createContents(final Email email, final RouterLoggerEmail rle) throws EmailException {
 		email.setSubject(rle.getSubject());
 		email.setMsg(rle.getMessage());
 	}
