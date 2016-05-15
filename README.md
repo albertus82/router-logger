@@ -29,7 +29,7 @@ Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://
 >		* **`libgtk-3-bin`**
 >		* **`libswt-gtk-3-java`**
 >		* **`libswt-cairo-gtk-3-jni`**
->	2. copiare il file **`/usr/lib/java/swt-gtk-<versione>.jar`** nella directory `lib` dell'applicazione e rimuovere la precedente libreria **`swt-<versione>-<piattaforma>.jar`** ivi presente.
+>	2. copiare il file **`/usr/lib/java/swt-gtk-<versione>.jar`** nella directory `lib` dell'applicazione e rimuovere la libreria **`swt-<versione>-<piattaforma>.jar`** preesistente.
 >
 >In caso contrario &egrave; comunque sempre possibile utilizzare l'interfaccia a riga di comando.
 
