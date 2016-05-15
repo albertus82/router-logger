@@ -130,6 +130,7 @@ public class TrayIcon {
 		if (tray != null && !tray.isDisposed() && trayItem != null && !trayItem.isDisposed()) {
 			gui.getShell().setVisible(false);
 			trayItem.setVisible(true);
+			trayItem.setImage(trayIcon); // Update icon
 			gui.getShell().setMinimized(false);
 		}
 		else {
@@ -164,7 +165,9 @@ public class TrayIcon {
 								}
 								if (status != null && !getTrayIcon(status).equals(trayIcon)) {
 									trayIcon = getTrayIcon(status);
-									trayItem.setImage(trayIcon);
+									if (trayItem.getVisible() && gui != null && gui.getShell() != null && !gui.getShell().isDisposed() && !gui.getShell().getVisible()) {
+										trayItem.setImage(trayIcon); // Only if visible!
+									}
 								}
 							}
 						}
