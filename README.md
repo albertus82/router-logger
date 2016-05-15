@@ -25,12 +25,13 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
 
 >Volendo utilizzare l'interfaccia grafica con il **Raspberry Pi** o altre piattaforme basate su **Linux/ARM**, occorre effettuare anche i seguenti passaggi:
->	1. installare i seguenti pacchetti (*sudo apt-get install ...*):
->		* **libswt-gtk-3-java**
->		* **libswt-cairo-gtk-3-jni**
->	2. copiare il file **/usr/lib/java/swt-gtk-**&lt;versione&gt;**.jar** nella cartella **lib** dell'applicazione e rimuovere la precedente libreria **swt-**&lt;versione&gt;**-**&lt;piattaforma&gt;**.jar** ivi presente.
+>	1. installare i seguenti pacchetti (`sudo apt-get install`):
+>		* **`libgtk-3-bin`**
+>		* **`libswt-gtk-3-java`**
+>		* **`libswt-cairo-gtk-3-jni`**
+>	2. copiare il file **`/usr/lib/java/swt-gtk-<versione>.jar`** nella directory `lib` dell'applicazione e rimuovere la precedente libreria **`swt-<versione>-<piattaforma>.jar`** ivi presente.
 >
->In caso contrario &egrave; comunque possibile utilizzare l'interfaccia a riga di comando.
+>In caso contrario &egrave; comunque sempre possibile utilizzare l'interfaccia a riga di comando.
 
 Al primo avvio sar&agrave; necessario accedere alla configurazione, scheda **Router**, per specificare il modello di router (**Dispositivo/Classe Reader**) e pochi altri parametri di connessione:
 
