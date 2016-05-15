@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ThresholdsEmailSender {
 
 	public interface Defaults {
-		int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 600;
+		int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 3600;
 	}
 
 	private static class Singleton {
