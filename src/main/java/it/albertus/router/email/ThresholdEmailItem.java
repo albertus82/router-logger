@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ThresholdEmailItem implements Serializable, Comparable<ThresholdEmailItem> {
+public class ThresholdEmailItem implements Serializable {
 
-	private static final long serialVersionUID = -1673604233661066997L;
+	private static final long serialVersionUID = -8330502294900146719L;
 
 	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
@@ -43,44 +43,8 @@ public class ThresholdEmailItem implements Serializable, Comparable<ThresholdEma
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof ThresholdEmailItem)) {
-			return false;
-		}
-		ThresholdEmailItem other = (ThresholdEmailItem) obj;
-		if (date == null) {
-			if (other.date != null) {
-				return false;
-			}
-		}
-		else if (!date.equals(other.date)) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
 	public String toString() {
 		return new StringBuilder(dateFormat.format(date)).append(" - ").append(Resources.get("msg.thresholds.reached", thresholds)).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString()).append(routerData).toString();
-	}
-
-	@Override
-	public int compareTo(final ThresholdEmailItem o) {
-		return this.date.compareTo(o.date);
 	}
 
 }
