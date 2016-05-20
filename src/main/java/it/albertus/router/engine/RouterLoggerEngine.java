@@ -5,6 +5,7 @@ import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.router.web.Server;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.ConfigurationException;
@@ -36,6 +37,7 @@ public abstract class RouterLoggerEngine {
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 	protected final EmailSender emailSender = EmailSender.getInstance();
+	protected final Server httpServer = Server.getInstance();
 	protected final Console out = getConsole();
 
 	private Reader reader;
@@ -47,6 +49,7 @@ public abstract class RouterLoggerEngine {
 
 	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
 	private RouterLoggerStatus previousStatus = null;
+	private RouterData currentData;
 
 	private volatile int iteration = FIRST_ITERATION;
 
@@ -135,6 +138,7 @@ public abstract class RouterLoggerEngine {
 					reader.disconnect();
 				}
 				release();
+				httpServer.destroy();
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
@@ -302,14 +306,14 @@ public abstract class RouterLoggerEngine {
 		// Iterazione...
 		for (int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS); (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			final long timeBeforeRead = System.currentTimeMillis();
-			final RouterData info = reader.readInfo();
+			currentData = reader.readInfo();
 			final long timeAfterRead = System.currentTimeMillis();
-			info.setResponseTime((int) (timeAfterRead - timeBeforeRead));
+			currentData.setResponseTime((int) (timeAfterRead - timeBeforeRead));
 
-			writer.saveInfo(info);
+			writer.saveInfo(currentData);
 
 			/* Impostazione stato di allerta e gestione isteresi... */
-			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(info);
+			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(currentData);
 			boolean importantThresholdReached = false;
 			for (final Threshold threshold : allThresholdsReached.keySet()) {
 				if (!threshold.isExcluded()) {
@@ -323,7 +327,7 @@ public abstract class RouterLoggerEngine {
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
 					if (configuration.getBoolean("thresholds.email", Defaults.THRESHOLDS_EMAIL)) {
-						ThresholdsEmailSender.getInstance().send(allThresholdsReached, info);
+						ThresholdsEmailSender.getInstance().send(allThresholdsReached, currentData);
 					}
 				}
 			}
@@ -334,7 +338,7 @@ public abstract class RouterLoggerEngine {
 				doSetStatus(RouterLoggerStatus.OK); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
 			}
 
-			showInfo(info, allThresholdsReached); /* Aggiorna l'interfaccia */
+			showInfo(currentData, allThresholdsReached); /* Aggiorna l'interfaccia */
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iterations <= 0 || iteration < iterations) {
@@ -382,6 +386,9 @@ public abstract class RouterLoggerEngine {
 
 		// Inizializzazione dell'EmailSender...
 		emailSender.init(out);
+
+		// Inizializzazione dell'HttpServer...
+		httpServer.init(this);
 	}
 
 	protected void initReaderAndWriter() {
@@ -400,6 +407,10 @@ public abstract class RouterLoggerEngine {
 
 	protected void setIteration(int iteration) {
 		this.iteration = iteration;
+	}
+
+	public RouterData getCurrentData() {
+		return currentData;
 	}
 
 	public Reader getReader() {
