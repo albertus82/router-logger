@@ -4,6 +4,7 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
@@ -71,7 +72,8 @@ public class StatusHandler extends BaseHttpHandler {
 			response = status.toString().trim().getBytes(charset);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		}
-		catch (final Exception e) {
+		catch (final Exception exception) {
+			Logger.getInstance().log(exception);
 			response = Resources.get("err.server.status").getBytes(charset);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
 		}

@@ -23,8 +23,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
-	private static volatile boolean restart = false;
-
 	/** Entry point for console version */
 	public static void start(final String args[]) {
 		// Check arguments...
@@ -47,16 +45,16 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			try {
 				routerLogger.addShutdownHook();
 				do {
-					restart = false;
+					routerLogger.restart = false;
 					routerLogger.beforeConnect();
 					routerLogger.connect();
-					if (restart) {
+					if (routerLogger.restart) {
 						routerLogger.configuration.reload();
 						routerLogger.setIteration(FIRST_ITERATION);
 						routerLogger.setStatus(RouterLoggerStatus.STARTING);
 					}
 				}
-				while (restart);
+				while (routerLogger.restart);
 				routerLogger.printGoodbye();
 			}
 			catch (final Exception exception) {
@@ -77,6 +75,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		}
 	}
 
+	private volatile boolean restart = false;
 	private int lastLogLength = 0;
 
 	@Override
@@ -146,6 +145,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			}
 			if (connect) {
 				exit = false;
+				pollingThread = Thread.currentThread();
 				try {
 					outerLoop();
 				}
@@ -176,22 +176,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	public void restart() {
 		restart = true;
 		disconnect(true);
-	}
-
-	/** Interrupts polling thread and disconnect. */
-	@Override
-	public void disconnect() {
-		disconnect(false);
-	}
-
-	private void disconnect(final boolean force) {
-		if (canDisconnect() || force) {
-			setStatus(RouterLoggerStatus.DISCONNECTING);
-			exit = true;
-		}
-		else {
-			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
-		}
 	}
 
 	@Override

@@ -66,6 +66,9 @@ public class WebServer {
 	private void createContexts() {
 		final StatusHandler statusHandler = new StatusHandler(engine);
 		httpServer.createContext(statusHandler.getPath(), statusHandler).setAuthenticator(authenticator);
+
+		final RestartHandler restartHandler = new RestartHandler(engine);
+		httpServer.createContext(restartHandler.getPath(), restartHandler).setAuthenticator(authenticator);
 	}
 
 	private class HttpServerStartThread extends Thread {

@@ -35,8 +35,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		boolean GUI_START_MINIMIZED = false;
 	}
 
-	private Thread pollingThread;
-
 	private final Shell shell;
 	private final DataTable dataTable;
 	private final TrayIcon trayIcon;
@@ -280,30 +278,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
 			}
 		}
-	}
-
-	private void disconnect(final boolean force) {
-		if (canDisconnect() || force) {
-			setStatus(RouterLoggerStatus.DISCONNECTING);
-			exit = true;
-			if (isInterruptible()) {
-				try {
-					pollingThread.interrupt();
-				}
-				catch (final SecurityException se) {
-					logger.log(se);
-				}
-			}
-		}
-		else {
-			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
-		}
-	}
-
-	/** Interrupts polling thread and disconnect. */
-	@Override
-	public void disconnect() {
-		disconnect(false);
 	}
 
 	@Override

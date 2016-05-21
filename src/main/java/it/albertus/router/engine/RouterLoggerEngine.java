@@ -6,6 +6,7 @@ import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.server.WebServer;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.ConfigurationException;
@@ -42,6 +43,7 @@ public abstract class RouterLoggerEngine {
 	private Reader reader;
 	private Writer writer;
 
+	protected Thread pollingThread;
 	private volatile boolean interruptible = false;
 	protected volatile boolean exit = false;
 	protected Thread shutdownHook;
@@ -413,7 +415,28 @@ public abstract class RouterLoggerEngine {
 
 	public abstract void connect();
 
-	public abstract void disconnect();
+	/** Interrupts polling thread and disconnect. */
+	public void disconnect() {
+		disconnect(false);
+	}
+
+	protected void disconnect(final boolean force) {
+		if (canDisconnect() || force) {
+			setStatus(RouterLoggerStatus.DISCONNECTING);
+			exit = true;
+			if (pollingThread != null && isInterruptible()) {
+				try {
+					pollingThread.interrupt();
+				}
+				catch (final SecurityException se) {
+					logger.log(se);
+				}
+			}
+		}
+		else {
+			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
+		}
+	}
 
 	public abstract void restart();
 
