@@ -28,7 +28,7 @@ public abstract class RouterLoggerEngine {
 		int RETRIES = 3;
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
-		boolean THRESHOLDS_EMAIL = false; 
+		boolean THRESHOLDS_EMAIL = false;
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
@@ -322,7 +322,8 @@ public abstract class RouterLoggerEngine {
 			}
 
 			if (importantThresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-				doSetStatus(RouterLoggerStatus.WARNING); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
+				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI				
+				doSetStatus(RouterLoggerStatus.WARNING);
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
 					if (configuration.getBoolean("thresholds.email", Defaults.THRESHOLDS_EMAIL)) {
@@ -331,13 +332,15 @@ public abstract class RouterLoggerEngine {
 				}
 			}
 			else if (!allThresholdsReached.isEmpty()) {
-				doSetStatus(RouterLoggerStatus.INFO); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
+				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
+				doSetStatus(RouterLoggerStatus.INFO); 
 			}
 			else {
-				doSetStatus(RouterLoggerStatus.OK); /* Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI */
+				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
+				doSetStatus(RouterLoggerStatus.OK);
 			}
-
-			showInfo(currentData, allThresholdsReached); /* Aggiorna l'interfaccia */
+			// Aggiorna l'interfaccia
+			showInfo(currentData, allThresholdsReached);
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iterations <= 0 || iteration < iterations) {
@@ -399,6 +402,20 @@ public abstract class RouterLoggerEngine {
 		// Inizializzazione del Writer...
 		setWriter(createWriter());
 	}
+
+	public boolean canConnect() {
+		return (getReader() != null && getWriter() != null && RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
+	}
+
+	public boolean canDisconnect() {
+		return !(RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTING.equals(getCurrentStatus()));
+	}
+
+	public abstract void connect();
+
+	public abstract void disconnect();
+
+	public abstract void restart();
 
 	protected abstract Console getConsole();
 

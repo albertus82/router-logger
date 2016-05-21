@@ -2,9 +2,11 @@ package it.albertus.router.console;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.TerminalConsole;
 import it.albertus.util.Version;
 
@@ -20,6 +22,8 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	private static final String ARG_CONSOLE = "-c";
 
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
+
+	private static volatile boolean restart = false;
 
 	/** Entry point for console version */
 	public static void start(final String args[]) {
@@ -42,8 +46,17 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			final RouterLoggerConsole routerLogger = new RouterLoggerConsole();
 			try {
 				routerLogger.addShutdownHook();
-				routerLogger.beforeConnect();
-				routerLogger.outerLoop();
+				do {
+					restart = false;
+					routerLogger.beforeConnect();
+					routerLogger.connect();
+					if (restart) {
+						routerLogger.configuration.reload();
+						routerLogger.setIteration(FIRST_ITERATION);
+						routerLogger.setStatus(RouterLoggerStatus.STARTING);
+					}
+				}
+				while (restart);
 				routerLogger.printGoodbye();
 			}
 			catch (final Exception exception) {
@@ -117,6 +130,68 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 
 		lastLogLength = log.length();
 		out.print(clean.toString() + log.toString());
+	}
+
+	@Override
+	public void connect() {
+		// Avvia thread di interrogazione router...
+		if (getReader() != null && getWriter() != null) {
+			boolean connect;
+			try {
+				connect = canConnect();
+			}
+			catch (final Exception exception) {
+				logger.log(exception);
+				return;
+			}
+			if (connect) {
+				exit = false;
+				try {
+					outerLoop();
+				}
+				catch (final Exception exception) {
+					logger.log(exception);
+					try {
+						getReader().disconnect();
+					}
+					catch (final Exception e) {}
+					release();
+				}
+				catch (final Throwable throwable) {
+					release();
+					logger.log(throwable);
+					try {
+						getReader().disconnect();
+					}
+					catch (final Exception e) {}
+				}
+			}
+			else {
+				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
+			}
+		}
+	}
+
+	@Override
+	public void restart() {
+		restart = true;
+		disconnect(true);
+	}
+
+	/** Interrupts polling thread and disconnect. */
+	@Override
+	public void disconnect() {
+		disconnect(false);
+	}
+
+	private void disconnect(final boolean force) {
+		if (canDisconnect() || force) {
+			setStatus(RouterLoggerStatus.DISCONNECTING);
+			exit = true;
+		}
+		else {
+			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
+		}
 	}
 
 	@Override

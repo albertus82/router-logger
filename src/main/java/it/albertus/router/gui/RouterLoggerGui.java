@@ -229,15 +229,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		return canSelectAllConsole();
 	}
 
-	public boolean canConnect() {
-		return (getReader() != null && getWriter() != null && RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
-	}
-
-	public boolean canDisconnect() {
-		return !(RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTING.equals(getCurrentStatus()));
-	}
-
 	/** Avvia il ciclo. */
+	@Override
 	public void connect() {
 		// Avvia thread di interrogazione router...
 		if (getReader() != null && getWriter() != null) {
@@ -308,10 +301,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	/** Interrupts polling thread and disconnect. */
+	@Override
 	public void disconnect() {
 		disconnect(false);
 	}
 
+	@Override
 	public void restart() {
 		disconnect(true);
 		new Thread(new Runnable() {
