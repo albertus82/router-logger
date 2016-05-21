@@ -4,7 +4,6 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
@@ -35,7 +34,7 @@ public class StatusHandler extends BaseHttpHandler {
 	}
 
 	@Override
-	public void handle(final HttpExchange exchange) throws IOException {
+	public void service(final HttpExchange exchange) throws IOException {
 		// Charset...
 		final Charset charset = getCharset();
 		exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
@@ -52,38 +51,35 @@ public class StatusHandler extends BaseHttpHandler {
 
 		// Response...
 		byte[] response;
-		try {
-			// Status...
-			final StringBuilder status = new StringBuilder(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR);
-			final String currentStatus = engine.getCurrentStatus().toString();
-			status.append(currentStatus);
+		// Status...
+		final StringBuilder status = new StringBuilder(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR);
+		final String currentStatus = engine.getCurrentStatus().toString();
+		status.append(currentStatus);
 
-			// Current data...
-			final RouterData currentData = engine.getCurrentData();
-			if (currentData != null) {
-				status.append(NewLine.CRLF);
-				status.append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append(dateFormat.format(currentData.getTimestamp())).append(NewLine.CRLF);
-				status.append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append(currentData.getResponseTime()).append(NewLine.CRLF);
-				for (final String key : currentData.getData().keySet()) {
-					status.append(key).append(KEY_VALUE_SEPARATOR).append(currentData.getData().get(key)).append(NewLine.CRLF);
-				}
+		// Current data...
+		final RouterData currentData = engine.getCurrentData();
+		if (currentData != null) {
+			status.append(NewLine.CRLF);
+			status.append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append(dateFormat.format(currentData.getTimestamp())).append(NewLine.CRLF);
+			status.append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append(currentData.getResponseTime()).append(NewLine.CRLF);
+			for (final String key : currentData.getData().keySet()) {
+				status.append(key).append(KEY_VALUE_SEPARATOR).append(currentData.getData().get(key)).append(NewLine.CRLF);
 			}
+		}
 
-			response = status.toString().trim().getBytes(charset);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-		}
-		catch (final Exception exception) {
-			Logger.getInstance().log(exception);
-			response = Resources.get("err.server.status").getBytes(charset);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
-		}
+		response = status.toString().trim().getBytes(charset);
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		exchange.getResponseBody().write(response);
-		exchange.close();
 	}
 
 	@Override
 	public String getPath() {
 		return PATH;
+	}
+
+	@Override
+	public String[] getMethods() {
+		return new String[] { "GET" };
 	}
 
 }

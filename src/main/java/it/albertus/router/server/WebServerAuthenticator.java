@@ -9,10 +9,6 @@ import com.sun.net.httpserver.BasicAuthenticator;
 
 public class WebServerAuthenticator extends BasicAuthenticator {
 
-	public interface Defaults {
-		String USERNAME = "admin";
-	}
-
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	protected WebServerAuthenticator() {
@@ -22,7 +18,7 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 	@Override
 	public boolean checkCredentials(final String username, final String password) {
 		try {
-			if (configuration.getString("server.username", Defaults.USERNAME).equals(username) && checkPassword(password, configuration.getCharArray("server.password"))) {
+			if (username.equals(configuration.getString("server.username")) && checkPassword(password, configuration.getCharArray("server.password"))) {
 				return true;
 			}
 			else {

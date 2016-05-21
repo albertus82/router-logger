@@ -1,9 +1,14 @@
 package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public abstract class BaseHttpHandler implements HttpHandler {
@@ -16,7 +21,13 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		this.engine = engine;
 	}
 
+	public abstract void service(HttpExchange exchange) throws IOException;
+
 	public abstract String getPath();
+
+	public String[] getMethods() {
+		return null;
+	}
 
 	protected Charset getCharset() {
 		try {
@@ -24,6 +35,47 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 		catch (final Exception e) {
 			return Charset.defaultCharset();
+		}
+	}
+
+	@Override
+	public void handle(final HttpExchange exchange) throws IOException {
+		boolean match;
+		if (getMethods() == null) {
+			match = true;
+		}
+		else {
+			match = false;
+			for (final String method : getMethods()) {
+				if (method.equalsIgnoreCase(exchange.getRequestMethod())) {
+					match = true;
+					break;
+				}
+			}
+		}
+		if (!match) {
+			final Charset charset = getCharset();
+			final byte[] response = Resources.get("msg.server.bad.method").getBytes(charset);
+			exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, response.length);
+			exchange.getResponseBody().write(response);
+			exchange.close();
+		}
+		else {
+			try {
+				service(exchange);
+			}
+			catch (final Exception exception) {
+				Logger.getInstance().log(exception);
+				final Charset charset = getCharset();
+				final byte[] response = Resources.get("err.server.handler").getBytes(charset);
+				exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
+				exchange.getResponseBody().write(response);
+			}
+			finally {
+				exchange.close();
+			}
 		}
 	}
 
