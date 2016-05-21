@@ -5,13 +5,28 @@ import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.widgets.Composite;
 
-public class IterationsComboFieldEditor extends ValidatedComboFieldEditor {
+public class IntegerComboFieldEditor extends ValidatedComboFieldEditor {
 
 	protected static final int DEFAULT_TEXT_LIMIT = Integer.toString(Integer.MAX_VALUE).length() - 1;
 
-	public IterationsComboFieldEditor(final String name, final String labelText, final Composite parent) {
-		super(name, labelText, new String[][] { { Resources.get("lbl.preferences.iterations.infinite"), "0" } }, parent);
-		getComboBoxControl().setTextLimit(DEFAULT_TEXT_LIMIT);
+	public IntegerComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
+		super(name, labelText, entryNamesAndValues, parent);
+
+		// Compute text limit & error message...
+		int length = DEFAULT_TEXT_LIMIT;
+		for (final String entry[] : entryNamesAndValues) {
+			if (entry[0].length() > length) {
+				length = entry[0].length();
+			}
+		}
+		if (length > DEFAULT_TEXT_LIMIT) {
+			setErrorMessage(Resources.get("err.preferences.integer.range", 0, Integer.MAX_VALUE));
+		}
+		else {
+			setErrorMessage(Resources.get("err.preferences.integer"));
+		}
+		getComboBoxControl().setTextLimit(length);
+
 		getComboBoxControl().addVerifyListener(new LowercaseVerifyListener());
 	}
 
@@ -27,11 +42,6 @@ public class IterationsComboFieldEditor extends ValidatedComboFieldEditor {
 			catch (final NumberFormatException nfe) {}
 		}
 		return false;
-	}
-
-	@Override
-	public String getErrorMessage() {
-		return Resources.get("err.preferences.iterations");
 	}
 
 	@Override

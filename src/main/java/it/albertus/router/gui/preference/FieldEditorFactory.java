@@ -9,7 +9,7 @@ import it.albertus.router.gui.preference.field.FormattedComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
-import it.albertus.router.gui.preference.field.IterationsComboFieldEditor;
+import it.albertus.router.gui.preference.field.IntegerComboFieldEditor;
 import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleIntegerFieldEditor;
@@ -54,8 +54,8 @@ public final class FieldEditorFactory {
 			return createFormattedStringFieldEditor(name, label, parent, data);
 		case Integer:
 			return createIntegerFieldEditor(name, label, parent, data);
-		case IterationsCombo:
-			return new IterationsComboFieldEditor(name, label, parent);
+		case IntegerCombo:
+			return new IntegerComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case Password:
 			return createPasswordFieldEditor(name, label, parent, data);
 		case ReaderCombo:

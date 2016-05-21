@@ -26,6 +26,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.web.StatusHandler;
 import it.albertus.router.web.WebServer;
+import it.albertus.router.web.StatusHandler.Defaults;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 
@@ -36,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public enum Preference {
 	LANGUAGE(Page.GENERAL, FieldEditorType.Combo, Locale.getDefault().getLanguage(), new FieldEditorDataBuilder().comboEntryNamesAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
-	LOGGER_ITERATIONS(Page.GENERAL, FieldEditorType.IterationsCombo, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS)),
+	LOGGER_ITERATIONS(Page.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.iterations.infinite"), Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS) } }).build()),
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS)),
 	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS)),
 	LOGGER_HYSTERESIS_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS)),
@@ -130,7 +131,7 @@ public enum Preference {
 	SERVER_PASSWORD(Page.WEBSERVER, FieldEditorType.Password, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	SERVER_PORT(Page.WEBSERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	SERVER_STATUS_REFRESH(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH)),
-	SERVER_STATUS_REFRESH_SECS(Page.WEBSERVER, FieldEditorType.FormattedInteger, Integer.toString(0), new FieldEditorDataBuilder().integerValidRange(0, 999999999).build());
+	SERVER_STATUS_REFRESH_SECS(Page.WEBSERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.status.refresh.auto"), Integer.toString(Defaults.REFRESH_SECS) } }).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

@@ -19,6 +19,7 @@ public class StatusHandler extends BaseHttpHandler {
 
 	public interface Defaults {
 		boolean REFRESH = false;
+		int REFRESH_SECS = 0;
 	}
 
 	public static final String PATH = "/status";
@@ -40,8 +41,8 @@ public class StatusHandler extends BaseHttpHandler {
 
 		// Refresh...
 		if (configuration.getBoolean("server.status.refresh", Defaults.REFRESH)) {
-			int refresh = configuration.getInt("server.status.refresh.secs", 0);
-			if (refresh == 0) {
+			int refresh = configuration.getInt("server.status.refresh.secs", Defaults.REFRESH_SECS);
+			if (refresh == Defaults.REFRESH_SECS) {
 				// Division by 2 for sampling theorem
 				refresh = Math.max(1, Long.valueOf(configuration.getLong("logger.interval.normal.ms", RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS) / 1000 / 2).intValue());
 			}
