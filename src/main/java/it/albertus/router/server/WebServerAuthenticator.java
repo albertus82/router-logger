@@ -15,7 +15,7 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
-	public WebServerAuthenticator() {
+	protected WebServerAuthenticator() {
 		super(Resources.get("msg.application.name"));
 	}
 

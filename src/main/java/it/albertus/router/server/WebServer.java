@@ -2,6 +2,7 @@ package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
 
@@ -46,14 +47,16 @@ public class WebServer {
 				new HttpServerStartThread().start();
 			}
 			catch (final IOException ioe) {
-				Logger.getInstance().log(new RuntimeException("Impossibile avviare il server HTTP. Verificare che la porta " + port + " non sia occupata.", ioe));
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", port), ioe));
 			}
 		}
 	}
 
 	public void stop() {
-		httpServer.stop(0);
-		started = false;
+		if (httpServer != null) {
+			httpServer.stop(0);
+			started = false;
+		}
 	}
 
 	public boolean isStarted() {
