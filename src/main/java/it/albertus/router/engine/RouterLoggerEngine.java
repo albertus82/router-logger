@@ -37,7 +37,7 @@ public abstract class RouterLoggerEngine {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
-	protected final WebServer httpServer = WebServer.getInstance();
+	protected final WebServer server = WebServer.getInstance();
 	protected final Console out = getConsole();
 
 	private Reader reader;
@@ -125,6 +125,7 @@ public abstract class RouterLoggerEngine {
 
 	protected void beforeConnect() {
 		printWelcome();
+		server.start();
 		initReaderAndWriter();
 		printDeviceModel();
 	}
@@ -139,7 +140,7 @@ public abstract class RouterLoggerEngine {
 					reader.disconnect();
 				}
 				release();
-				httpServer.stop();
+				server.stop();
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
@@ -392,9 +393,7 @@ public abstract class RouterLoggerEngine {
 		EmailSender.getInstance().init(out);
 
 		// Inizializzazione dell'HttpServer...
-		final WebServer webServer = WebServer.getInstance();
-		webServer.init(this);
-		webServer.start();
+		server.init(this);
 	}
 
 	protected void initReaderAndWriter() {
