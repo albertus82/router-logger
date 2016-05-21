@@ -10,16 +10,16 @@ import java.nio.charset.Charset;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class RestartHandler extends BaseHttpHandler {
+public class ConnectHandler extends BaseHttpHandler {
 
 	public interface Defaults {
 		boolean REFRESH = false;
 		int REFRESH_SECS = 0;
 	}
 
-	public static final String PATH = "/restart";
+	public static final String PATH = "/connect";
 
-	public RestartHandler(final RouterLoggerEngine engine) {
+	public ConnectHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
 
@@ -32,13 +32,19 @@ public class RestartHandler extends BaseHttpHandler {
 		// Response...
 		byte[] response;
 		try {
-			engine.restart();
-			response = Resources.get("msg.server.accepted").getBytes(charset);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
+			if (engine.canConnect()) {
+				engine.connect();
+				response = Resources.get("msg.server.accepted").getBytes(charset);
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
+			}
+			else {
+				response = Resources.get("msg.server.not.acceptable").getBytes(charset);
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_ACCEPTABLE, response.length);
+			}
 		}
 		catch (final Exception exception) {
 			Logger.getInstance().log(exception);
-			response = Resources.get("err.server.restart").getBytes(charset);
+			response = Resources.get("err.server.disconnect").getBytes(charset);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
 		}
 		exchange.getResponseBody().write(response);

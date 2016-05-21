@@ -64,11 +64,17 @@ public class WebServer {
 	}
 
 	private void createContexts() {
-		final StatusHandler statusHandler = new StatusHandler(engine);
+		final BaseHttpHandler statusHandler = new StatusHandler(engine);
 		httpServer.createContext(statusHandler.getPath(), statusHandler).setAuthenticator(authenticator);
 
-		final RestartHandler restartHandler = new RestartHandler(engine);
+		final BaseHttpHandler restartHandler = new RestartHandler(engine);
 		httpServer.createContext(restartHandler.getPath(), restartHandler).setAuthenticator(authenticator);
+
+		final BaseHttpHandler disconnectHandler = new DisconnectHandler(engine);
+		httpServer.createContext(disconnectHandler.getPath(), disconnectHandler).setAuthenticator(authenticator);
+
+		final BaseHttpHandler connectHandler = new ConnectHandler(engine);
+		httpServer.createContext(connectHandler.getPath(), connectHandler).setAuthenticator(authenticator);
 	}
 
 	private class HttpServerStartThread extends Thread {
