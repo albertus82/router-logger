@@ -56,9 +56,6 @@ public class StatusHandler extends BaseHttpHandler {
 			final StringBuilder status = new StringBuilder(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR);
 			final String currentStatus = engine.getCurrentStatus().toString();
 			status.append(currentStatus);
-			if (!currentStatus.endsWith(".") && !currentStatus.endsWith("!")) {
-				status.append('.');
-			}
 
 			// Current data...
 			final RouterData currentData = engine.getCurrentData();
