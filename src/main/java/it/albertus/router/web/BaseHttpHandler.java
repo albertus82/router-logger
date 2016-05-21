@@ -1,12 +1,14 @@
 package it.albertus.router.web;
 
-import java.nio.charset.Charset;
-
 import it.albertus.router.engine.RouterLoggerEngine;
+
+import java.nio.charset.Charset;
 
 import com.sun.net.httpserver.HttpHandler;
 
 public abstract class BaseHttpHandler implements HttpHandler {
+
+	public static final String PREFERRED_CHARSET = "UTF-8";
 
 	protected final RouterLoggerEngine engine;
 
@@ -18,7 +20,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected Charset getCharset() {
 		try {
-			return Charset.forName("UTF-8");
+			return Charset.forName(PREFERRED_CHARSET);
 		}
 		catch (final Exception e) {
 			return Charset.defaultCharset();

@@ -24,6 +24,8 @@ import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.router.web.StatusHandler;
+import it.albertus.router.web.WebServer;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 
@@ -121,7 +123,14 @@ public enum Preference {
 	EMAIL_SOCKET_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_TIMEOUT)),
 	EMAIL_RETRY_INTERVAL_SECS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.RETRY_INTERVAL_SECS)),
 	EMAIL_CC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
-	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses);
+	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
+
+	SERVER_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(WebServer.Defaults.ENABLED)),
+	SERVER_USERNAME(Page.WEBSERVER, FieldEditorType.FormattedString, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	SERVER_PASSWORD(Page.WEBSERVER, FieldEditorType.Password, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	SERVER_PORT(Page.WEBSERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	SERVER_STATUS_REFRESH(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH)),
+	SERVER_STATUS_REFRESH_SECS(Page.WEBSERVER, FieldEditorType.FormattedInteger, Integer.toString(0), new FieldEditorDataBuilder().integerValidRange(0, 999999999).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

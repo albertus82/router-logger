@@ -5,7 +5,7 @@ import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
-import it.albertus.router.web.Server;
+import it.albertus.router.web.WebServer;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.ConfigurationException;
@@ -36,8 +36,7 @@ public abstract class RouterLoggerEngine {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
-	protected final EmailSender emailSender = EmailSender.getInstance();
-	protected final Server httpServer = Server.getInstance();
+	protected final WebServer httpServer = WebServer.getInstance();
 	protected final Console out = getConsole();
 
 	private Reader reader;
@@ -138,7 +137,7 @@ public abstract class RouterLoggerEngine {
 					reader.disconnect();
 				}
 				release();
-				httpServer.destroy();
+				httpServer.stop();
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
@@ -385,10 +384,12 @@ public abstract class RouterLoggerEngine {
 		logger.init(out);
 
 		// Inizializzazione dell'EmailSender...
-		emailSender.init(out);
+		EmailSender.getInstance().init(out);
 
 		// Inizializzazione dell'HttpServer...
-		httpServer.init(this);
+		final WebServer webServer = WebServer.getInstance();
+		webServer.init(this);
+		webServer.start();
 	}
 
 	protected void initReaderAndWriter() {

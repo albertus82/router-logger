@@ -7,7 +7,7 @@ import it.albertus.util.Configuration;
 
 import com.sun.net.httpserver.BasicAuthenticator;
 
-public class ServerAuthenticator extends BasicAuthenticator {
+public class WebServerAuthenticator extends BasicAuthenticator {
 
 	public interface Defaults {
 		String USERNAME = "admin";
@@ -15,7 +15,7 @@ public class ServerAuthenticator extends BasicAuthenticator {
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
-	public ServerAuthenticator() {
+	public WebServerAuthenticator() {
 		super(Resources.get("msg.application.name"));
 	}
 
@@ -40,7 +40,7 @@ public class ServerAuthenticator extends BasicAuthenticator {
 	}
 
 	private boolean checkPassword(final String provided, final char[] stored) {
-		if (stored == null) {
+		if (stored == null || stored.length == 0) {
 			return false;
 		}
 
