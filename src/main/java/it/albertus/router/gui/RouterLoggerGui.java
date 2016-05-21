@@ -75,6 +75,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			routerLogger.disconnect(true);
 			display.dispose();
 			routerLogger.joinPollingThread();
+			routerLogger.server.stop();
 			routerLogger.removeShutdownHook();
 		}
 		routerLogger.printGoodbye();

@@ -57,6 +57,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				}
 				while (routerLogger.restart);
 				routerLogger.printGoodbye();
+				routerLogger.server.stop();
 			}
 			catch (final Exception exception) {
 				routerLogger.release();
