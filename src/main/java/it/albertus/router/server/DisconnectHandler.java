@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class DisconnectHandler extends BaseHttpHandler {
 
 	public static final String PATH = "/disconnect";
+	public static final String[] METHODS = { "POST" };
 
 	public DisconnectHandler(final RouterLoggerEngine engine) {
 		super(engine);
@@ -40,6 +41,11 @@ public class DisconnectHandler extends BaseHttpHandler {
 	@Override
 	public String getPath() {
 		return PATH;
+	}
+
+	@Override
+	public String[] getMethods() {
+		return METHODS;
 	}
 
 }

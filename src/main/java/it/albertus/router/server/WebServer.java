@@ -64,6 +64,9 @@ public class WebServer {
 	}
 
 	private void createContexts() {
+		final BaseHttpHandler rootHandler = new RootHandler(engine);
+		httpServer.createContext(rootHandler.getPath(), rootHandler).setAuthenticator(authenticator);
+
 		final BaseHttpHandler statusHandler = new StatusHandler(engine);
 		httpServer.createContext(statusHandler.getPath(), statusHandler).setAuthenticator(authenticator);
 

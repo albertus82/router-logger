@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class ConnectHandler extends BaseHttpHandler {
 
 	public static final String PATH = "/connect";
+	public static final String[] METHODS = { "POST" };
 
 	public ConnectHandler(final RouterLoggerEngine engine) {
 		super(engine);
@@ -40,6 +41,11 @@ public class ConnectHandler extends BaseHttpHandler {
 	@Override
 	public String getPath() {
 		return PATH;
+	}
+
+	@Override
+	public String[] getMethods() {
+		return METHODS;
 	}
 
 }

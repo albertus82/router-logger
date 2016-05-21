@@ -12,6 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class RestartHandler extends BaseHttpHandler {
 
 	public static final String PATH = "/restart";
+	public static final String[] METHODS = { "POST" };
 
 	public RestartHandler(final RouterLoggerEngine engine) {
 		super(engine);
@@ -34,6 +35,11 @@ public class RestartHandler extends BaseHttpHandler {
 	@Override
 	public String getPath() {
 		return PATH;
+	}
+
+	@Override
+	public String[] getMethods() {
+		return METHODS;
 	}
 
 }

@@ -6,6 +6,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.router.server.WebServer.Defaults;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
+import it.albertus.util.NewLine;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -94,6 +95,17 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		finally {
 			exchange.close();
 		}
+	}
+
+	protected String buildHtmlHeader() {
+		StringBuilder html = new StringBuilder();
+		html.append("<html><head></head><body>");
+		html.append("<h1>").append(Resources.get("msg.application.name")).append("</h1>").append(NewLine.CRLF);
+		return html.toString();
+	}
+
+	protected String buildHtmlFooter() {
+		return "</body></html>";
 	}
 
 }

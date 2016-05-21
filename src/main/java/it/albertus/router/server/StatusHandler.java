@@ -21,6 +21,7 @@ public class StatusHandler extends BaseHttpHandler {
 	}
 
 	public static final String PATH = "/status";
+	public static final String[] METHODS = { "GET" };
 
 	protected static final String KEY_VALUE_SEPARATOR = ": ";
 	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
@@ -75,7 +76,7 @@ public class StatusHandler extends BaseHttpHandler {
 
 	@Override
 	public String[] getMethods() {
-		return new String[] { "GET" };
+		return METHODS;
 	}
 
 }
