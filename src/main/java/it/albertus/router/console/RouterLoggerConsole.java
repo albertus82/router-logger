@@ -52,6 +52,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 						routerLogger.configuration.reload();
 						routerLogger.setIteration(FIRST_ITERATION);
 						routerLogger.setStatus(RouterLoggerStatus.STARTING);
+						routerLogger.out.println();
 					}
 				}
 				while (routerLogger.restart);
