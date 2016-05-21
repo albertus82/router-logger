@@ -23,10 +23,10 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.server.StatusHandler;
+import it.albertus.router.server.StatusHandler.Defaults;
+import it.albertus.router.server.WebServer;
 import it.albertus.router.util.Logger;
-import it.albertus.router.web.StatusHandler;
-import it.albertus.router.web.WebServer;
-import it.albertus.router.web.StatusHandler.Defaults;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 

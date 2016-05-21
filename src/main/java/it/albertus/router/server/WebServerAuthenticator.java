@@ -1,4 +1,4 @@
-package it.albertus.router.web;
+package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
