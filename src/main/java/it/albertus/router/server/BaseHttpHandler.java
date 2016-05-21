@@ -1,8 +1,11 @@
 package it.albertus.router.server;
 
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.server.WebServer.Defaults;
 import it.albertus.router.util.Logger;
+import it.albertus.util.Configuration;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -15,6 +18,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
+	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected final RouterLoggerEngine engine;
 
 	protected BaseHttpHandler(final RouterLoggerEngine engine) {
@@ -40,6 +44,18 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	@Override
 	public void handle(final HttpExchange exchange) throws IOException {
+		// Check if the server is enabled...
+		if (!configuration.getBoolean("server.enabled", Defaults.ENABLED)) {
+			final Charset charset = getCharset();
+			final byte[] response = Resources.get("msg.server.forbidden").getBytes(charset);
+			exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
+			exchange.getResponseBody().write(response);
+			exchange.close();
+			return;
+		}
+
+		// Check HTTP method...
 		boolean match;
 		if (getMethods() == null) {
 			match = true;
@@ -60,22 +76,23 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, response.length);
 			exchange.getResponseBody().write(response);
 			exchange.close();
+			return;
 		}
-		else {
-			try {
-				service(exchange);
-			}
-			catch (final Exception exception) {
-				Logger.getInstance().log(exception);
-				final Charset charset = getCharset();
-				final byte[] response = Resources.get("err.server.handler").getBytes(charset);
-				exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
-				exchange.getResponseBody().write(response);
-			}
-			finally {
-				exchange.close();
-			}
+
+		// Service...
+		try {
+			service(exchange);
+		}
+		catch (final Exception exception) {
+			Logger.getInstance().log(exception);
+			final Charset charset = getCharset();
+			final byte[] response = Resources.get("err.server.handler").getBytes(charset);
+			exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
+			exchange.getResponseBody().write(response);
+		}
+		finally {
+			exchange.close();
 		}
 	}
 
