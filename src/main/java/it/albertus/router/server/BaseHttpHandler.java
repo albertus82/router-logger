@@ -48,8 +48,13 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		// Check if the server is enabled...
 		if (!configuration.getBoolean("server.enabled", Defaults.ENABLED)) {
 			final Charset charset = getCharset();
-			final byte[] response = Resources.get("msg.server.forbidden").getBytes(charset);
-			exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+			exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
+
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
+			html.append("<h3>").append(Resources.get("msg.server.forbidden")).append("</h3>").append(NewLine.CRLF);
+			html.append(buildHtmlFooter());
+
+			final byte[] response = html.toString().getBytes(charset);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
 			exchange.getResponseBody().write(response);
 			exchange.close();
@@ -72,8 +77,13 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 		if (!match) {
 			final Charset charset = getCharset();
-			final byte[] response = Resources.get("msg.server.bad.method").getBytes(charset);
-			exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+			exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
+
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
+			html.append("<h3>").append(Resources.get("msg.server.bad.method")).append("</h3>").append(NewLine.CRLF);
+			html.append(buildHtmlFooter());
+
+			final byte[] response = html.toString().getBytes(charset);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, response.length);
 			exchange.getResponseBody().write(response);
 			exchange.close();
@@ -87,8 +97,13 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		catch (final Exception exception) {
 			Logger.getInstance().log(exception);
 			final Charset charset = getCharset();
-			final byte[] response = Resources.get("err.server.handler").getBytes(charset);
-			exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+			exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
+
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
+			html.append("<h3>").append(Resources.get("err.server.handler")).append("</h3>").append(NewLine.CRLF);
+			html.append(buildHtmlFooter());
+
+			final byte[] response = html.toString().getBytes(charset);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
 			exchange.getResponseBody().write(response);
 		}
