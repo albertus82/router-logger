@@ -26,7 +26,7 @@ public class StatusHandler extends BaseHttpHandler {
 	protected static final char KEY_VALUE_SEPARATOR = ':';
 	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
-	public StatusHandler(final RouterLoggerEngine engine) {
+	protected StatusHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
 
@@ -47,7 +47,7 @@ public class StatusHandler extends BaseHttpHandler {
 		}
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader());
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.status")));
 		html.append("<h3>").append(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().toString()).append("</h3>").append(NewLine.CRLF);
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
@@ -60,7 +60,7 @@ public class StatusHandler extends BaseHttpHandler {
 			}
 			html.append("</p>").append(NewLine.CRLF);
 		}
-		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"" + RootHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.button.home")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"" + RootHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlFooter());
 
 		final byte[] response = html.toString().getBytes(charset);

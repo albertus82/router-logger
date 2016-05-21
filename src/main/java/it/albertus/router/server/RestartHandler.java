@@ -2,6 +2,7 @@ package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
+import it.albertus.util.NewLine;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,7 +15,7 @@ public class RestartHandler extends BaseHttpHandler {
 	public static final String PATH = "/restart";
 	public static final String[] METHODS = { "POST" };
 
-	public RestartHandler(final RouterLoggerEngine engine) {
+	protected RestartHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
 
@@ -22,12 +23,17 @@ public class RestartHandler extends BaseHttpHandler {
 	public void service(final HttpExchange exchange) throws IOException {
 		// Charset...
 		final Charset charset = getCharset();
-		exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
+
+		engine.restart();
 
 		// Response...
-		byte[] response;
-		engine.restart();
-		response = Resources.get("msg.server.accepted").getBytes(charset);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.restart")));
+		html.append("<h3>").append(Resources.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
+		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"" + RootHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append(buildHtmlFooter());
+
+		final byte[] response = html.toString().getBytes(charset);
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
 		exchange.getResponseBody().write(response);
 	}

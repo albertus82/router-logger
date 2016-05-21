@@ -28,13 +28,13 @@ public class RootHandler extends BaseHttpHandler {
 
 		// Response...
 		final Version version = Version.getInstance();
-		final StringBuilder html = new StringBuilder(buildHtmlHeader());
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.home")));
 
-		html.append("<h3>").append(Resources.get("msg.application.name")).append(' ').append(Resources.get("msg.version", version.getNumber(), version.getDate())).append(" - <a href=\"").append(Resources.get("msg.website")).append("\">").append(Resources.get("msg.website")).append("</a></h3>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(StatusHandler.PATH).append("\" method=\"" + StatusHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.button.status")).append("\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(RestartHandler.PATH).append("\" method=\"" + RestartHandler.METHODS[0] + "\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.button.restart")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.restart.message")).append("')) document.forms[1].submit();\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(ConnectHandler.PATH).append("\" method=\"" + ConnectHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.button.connect")).append("\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(DisconnectHandler.PATH).append("\" method=\"" + DisconnectHandler.METHODS[0] + "\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.button.disconnect")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.disconnect.message")).append("')) document.forms[3].submit();\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(version.getDate()).append(") - <a href=\"").append(Resources.get("msg.website")).append("\">").append(Resources.get("msg.website")).append("</a></h3>").append(NewLine.CRLF.toString());
+		html.append("<form style=\"display: inline;\" action=\"").append(StatusHandler.PATH).append("\" method=\"" + StatusHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form style=\"display: inline;\" action=\"").append(RestartHandler.PATH).append("\" method=\"" + RestartHandler.METHODS[0] + "\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.restart")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.restart.message")).append("')) document.forms[1].submit();\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form style=\"display: inline;\" action=\"").append(ConnectHandler.PATH).append("\" method=\"" + ConnectHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.connect")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form style=\"display: inline;\" action=\"").append(DisconnectHandler.PATH).append("\" method=\"" + DisconnectHandler.METHODS[0] + "\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.disconnect")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.disconnect.message")).append("')) document.forms[3].submit();\" /></form>").append(NewLine.CRLF.toString());
 
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(charset);
