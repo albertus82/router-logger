@@ -15,7 +15,7 @@ import com.sun.net.httpserver.HttpServer;
 public class WebServer {
 
 	public interface Defaults {
-		int PORT = 8081;
+		int PORT = 8080;
 		boolean ENABLED = false;
 	}
 
