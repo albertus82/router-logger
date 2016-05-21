@@ -26,7 +26,9 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 				return true;
 			}
 			else {
-				Logger.getInstance().log("Tentativo di autenticazione con credenziali non valide.");
+				if (username != null && !username.isEmpty()) {
+					Logger.getInstance().log(Resources.get("err.server.authentication", username, password));
+				}
 				return false;
 			}
 		}

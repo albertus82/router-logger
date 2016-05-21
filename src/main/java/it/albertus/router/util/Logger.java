@@ -48,16 +48,25 @@ public class Logger {
 
 		protected final String log;
 		protected final Date date;
+		protected final Throwable throwable;
 
-		protected LogEmailRunnable(final String log, final Date date) {
+		protected LogEmailRunnable(final String log, final Date date, final Throwable throwable) {
 			this.log = log;
 			this.date = date;
+			this.throwable = throwable;
 		}
 
 		@Override
 		public void run() {
 			try {
-				final String subject = Resources.get("msg.log.email.subject", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
+				final String subjectKey;
+				if (throwable != null) {
+					subjectKey = "msg.log.email.subject.exception";
+				}
+				else {
+					subjectKey = "msg.log.email.subject.event";
+				}
+				final String subject = Resources.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
 				EmailSender.getInstance().reserve(subject, log);
 			}
 			catch (final Exception exception) {
@@ -101,7 +110,7 @@ public class Logger {
 
 		if (dest.contains(Destination.EMAIL)) {
 			try {
-				logToEmail(text);
+				logToEmail(text, null);
 			}
 			catch (Exception e) {
 				log(e, Destination.CONSOLE);
@@ -135,7 +144,7 @@ public class Logger {
 
 		if (dest.contains(Destination.EMAIL)) {
 			try {
-				logToEmail(longLog);
+				logToEmail(longLog, throwable);
 			}
 			catch (Exception e) {
 				log(e, Destination.CONSOLE);
@@ -172,9 +181,9 @@ public class Logger {
 		logFileWriter.close();
 	}
 
-	private void logToEmail(final String log) {
+	private void logToEmail(final String log, final Throwable throwable) {
 		if (configuration.getBoolean("log.email", Defaults.EMAIL)) {
-			new Thread(new LogEmailRunnable(log, new Date()), "logEmailThread").start();
+			new Thread(new LogEmailRunnable(log, new Date(), throwable), "logEmailThread").start();
 		}
 	}
 
