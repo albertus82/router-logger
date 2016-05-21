@@ -23,7 +23,7 @@ public class StatusHandler extends BaseHttpHandler {
 	public static final String PATH = "/status";
 	public static final String[] METHODS = { "GET" };
 
-	protected static final String KEY_VALUE_SEPARATOR = ": ";
+	protected static final char KEY_VALUE_SEPARATOR = ':';
 	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	public StatusHandler(final RouterLoggerEngine engine) {
@@ -34,7 +34,7 @@ public class StatusHandler extends BaseHttpHandler {
 	public void service(final HttpExchange exchange) throws IOException {
 		// Charset...
 		final Charset charset = getCharset();
-		exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=" + charset.name());
+		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
 
 		// Refresh...
 		if (configuration.getBoolean("server.status.refresh", Defaults.REFRESH)) {
@@ -47,24 +47,23 @@ public class StatusHandler extends BaseHttpHandler {
 		}
 
 		// Response...
-		byte[] response;
-		// Status...
-		final StringBuilder status = new StringBuilder(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR);
-		final String currentStatus = engine.getCurrentStatus().toString();
-		status.append(currentStatus);
-
-		// Current data...
+		final StringBuilder html = new StringBuilder(buildHtmlHeader());
+		html.append("<h3>").append(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().toString()).append("</h3>").append(NewLine.CRLF);
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
-			status.append(NewLine.CRLF);
-			status.append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append(dateFormat.format(currentData.getTimestamp())).append(NewLine.CRLF);
-			status.append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append(currentData.getResponseTime()).append(NewLine.CRLF);
+			html.append("<p>");
+			html.append(NewLine.CRLF).append("<strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.format(currentData.getTimestamp())).append("<br />").append(NewLine.CRLF);
+			html.append("<strong>").append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime());
 			for (final String key : currentData.getData().keySet()) {
-				status.append(key).append(KEY_VALUE_SEPARATOR).append(currentData.getData().get(key)).append(NewLine.CRLF);
+				html.append("<br />").append(NewLine.CRLF);
+				html.append("<strong>").append(key).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getData().get(key));
 			}
+			html.append("</p>").append(NewLine.CRLF);
 		}
+		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"" + RootHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.button.home")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append(buildHtmlFooter());
 
-		response = status.toString().trim().getBytes(charset);
+		final byte[] response = html.toString().getBytes(charset);
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		exchange.getResponseBody().write(response);
 	}

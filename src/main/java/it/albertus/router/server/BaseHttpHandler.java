@@ -98,9 +98,9 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	}
 
 	protected String buildHtmlHeader() {
-		StringBuilder html = new StringBuilder();
-		html.append("<html><head></head><body>");
-		html.append("<h1>").append(Resources.get("msg.application.name")).append("</h1>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF.toString());
+		html.append("<html><head></head><body>").append(NewLine.CRLF.toString());
+		html.append("<h1>").append(Resources.get("msg.application.name")).append("</h1>").append(NewLine.CRLF.toString());
 		return html.toString();
 	}
 
