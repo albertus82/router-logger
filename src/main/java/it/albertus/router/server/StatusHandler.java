@@ -1,10 +1,8 @@
 package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
-import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
 import java.io.IOException;
@@ -26,8 +24,6 @@ public class StatusHandler extends BaseHttpHandler {
 
 	protected static final String KEY_VALUE_SEPARATOR = ": ";
 	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	public StatusHandler(final RouterLoggerEngine engine) {
 		super(engine);
