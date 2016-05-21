@@ -29,9 +29,10 @@ public class WebServer {
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private final Authenticator authenticator = new WebServerAuthenticator();
-	private HttpServer httpServer;
+	private volatile HttpServer httpServer;
 	private RouterLoggerEngine engine;
 	private volatile boolean started = false;
+	private final Object lock = new Object();
 
 	public void init(final RouterLoggerEngine engine) {
 		this.engine = engine;
@@ -39,23 +40,21 @@ public class WebServer {
 
 	public void start() {
 		if (!started && configuration.getBoolean("server.enabled", Defaults.ENABLED)) {
-			final int port = configuration.getInt("server.port", Defaults.PORT);
-			final InetSocketAddress address = new InetSocketAddress(port);
-			try {
-				httpServer = HttpServer.create(address, 0);
-				createContexts();
-				new HttpServerStartThread().start();
-			}
-			catch (final IOException ioe) {
-				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", port), ioe));
-			}
+			new HttpServerStartThread().start();
 		}
 	}
 
 	public void stop() {
 		if (httpServer != null) {
-			httpServer.stop(0);
-			started = false;
+			synchronized (lock) {
+				try {
+					httpServer.stop(0);
+				}
+				catch (final Exception exception) {
+					Logger.getInstance().log(exception);
+				}
+				started = false;
+			}
 		}
 	}
 
@@ -88,8 +87,19 @@ public class WebServer {
 
 		@Override
 		public void run() {
-			httpServer.start();
-			started = true;
+			final int port = configuration.getInt("server.port", Defaults.PORT);
+			final InetSocketAddress address = new InetSocketAddress(port);
+			try {
+				synchronized (lock) {
+					httpServer = HttpServer.create(address, 0);
+					createContexts();
+					httpServer.start();
+					started = true;
+				}
+			}
+			catch (final IOException ioe) {
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", port), ioe));
+			}
 		}
 	}
 

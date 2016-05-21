@@ -422,6 +422,7 @@ public abstract class RouterLoggerEngine {
 	protected void disconnect(final boolean force) {
 		if (canDisconnect() || force) {
 			setStatus(RouterLoggerStatus.DISCONNECTING);
+			server.stop();
 			exit = true;
 			if (pollingThread != null && isInterruptible()) {
 				try {

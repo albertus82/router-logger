@@ -25,8 +25,6 @@ public class RestartHandler extends BaseHttpHandler {
 		final Charset charset = getCharset();
 		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
 
-		engine.restart();
-
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.restart")));
 		html.append("<h3>").append(Resources.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
@@ -36,6 +34,9 @@ public class RestartHandler extends BaseHttpHandler {
 		final byte[] response = html.toString().getBytes(charset);
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
 		exchange.getResponseBody().write(response);
+		exchange.close();
+
+		engine.restart();
 	}
 
 	@Override
