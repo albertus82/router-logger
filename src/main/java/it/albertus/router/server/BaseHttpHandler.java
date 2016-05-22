@@ -3,7 +3,6 @@ package it.albertus.router.server;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.server.WebServer.Defaults;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
@@ -72,7 +71,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	@Override
 	public void handle(final HttpExchange exchange) throws IOException {
 		// Check if the server and the handler are enabled...
-		if (!configuration.getBoolean("server.enabled", Defaults.ENABLED) || !isEnabled()) {
+		if (!configuration.getBoolean("server.enabled", BaseHttpServer.Defaults.ENABLED) || !isEnabled()) {
 			addCommonHeaders(exchange);
 
 			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
