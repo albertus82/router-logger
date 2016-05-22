@@ -25,6 +25,7 @@ public class RootHandler extends BaseHttpHandler {
 		// Charset...
 		final Charset charset = getCharset();
 		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
+		exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
 
 		// Response...
 		final Version version = Version.getInstance();

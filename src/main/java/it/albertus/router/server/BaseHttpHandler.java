@@ -12,12 +12,16 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 
+import org.apache.http.protocol.HttpDateGenerator;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public abstract class BaseHttpHandler implements HttpHandler {
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
+
+	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected final RouterLoggerEngine engine;

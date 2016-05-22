@@ -35,6 +35,7 @@ public class StatusHandler extends BaseHttpHandler {
 		// Charset...
 		final Charset charset = getCharset();
 		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
+		exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
 
 		// Refresh...
 		if (configuration.getBoolean("server.status.refresh", Defaults.REFRESH)) {
