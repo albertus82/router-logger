@@ -295,8 +295,33 @@ Per consentire l'invio delle email occorre avere un account di posta elettronica
 * **`email.send.interval.secs`**= intervallo, in secondi, tra i tentativi di invio dei messaggi in caso di problemi (default: `60` secondi).
 * **`email.connection.timeout`**= timeout in fase di connessione al server SMTP (default: `60000` ms).
 * **`email.socket.timeout`**= timeout della connessione al server SMTP, una volta stabilita (default: `60000` ms).
+* **`email.max.sendings.per.cycle`**= numero massimo di email che possono essere inviate contemporaneamente (default: `3`). Un valore eccessivo potrebbe far scattare il blocco dell'account utilizzato per l'invio per sospetto spamming. I messaggi non inviati saranno comunque man mano inviati ai successivi tentativi, intervallati come da propriet&agrave; `email.send.interval.secs`.
 
 L'invio funziona senza problemi con [Gmail](https://mail.google.com), a patto di [consentire l'accesso alle applicazioni "meno sicure"](http://www.google.com/settings/security/lesssecureapps); per questo motivo &egrave; consigliabile creare un account dedicato a RouterLogger.
+
+
+#### Server web
+
+RouterLogger pu&ograve; esporre una semplice interfaccia web che consente di:
+
+* visualizzare lo **stato** della connessione ad Internet;
+* **riavviare** l'applicazione;
+* **connettere** l'applicazione al server Telnet del router (solo se in modalit&agrave; grafica);
+* **disconnettere** l'applicazione dal server Telnet del router (solo se in modalit&agrave; grafica);
+
+Per attivare e configurare il server web sono disponibili le seguenti opzioni:
+
+* **`server.enabled`**= abilita il server web (default: `false`).
+* **`server.username`**= nome utente per l'accesso all'interfaccia web.
+* **`server.password`**= password per l'accesso all'interfaccia web.
+* **`server.port`**= porta del server web (default: `8080`).
+* **`server.handler.root.enabled`**= abilita la pagina **Home** (default: `true`).
+* **`server.handler.connect.enabled`**= abilita la funzione **Connetti** (default: `false`).
+* **`server.handler.disconnect.enabled`**= abilita la funzione **Disconnetti** (default: `false`).
+* **`server.handler.restart.enabled`**= abilita la funzione **Riavvia** (default: `false`).
+* **`server.handler.status.enabled`**= abilita la funzione **Stato** (default: `true`).
+* **`server.handler.status.refresh`**= aggiorna automaticamente la pagina **Stato** (default: `false`).
+* **`server.handler.status.refresh.secs`**= intervallo di aggiornamento della pagina **Stato** (default: `0` ossia autodeterminato).
 
 
 ### Estensione
