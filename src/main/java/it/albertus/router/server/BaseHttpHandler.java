@@ -34,15 +34,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		return null;
 	}
 
-	protected Charset getCharset() {
-		try {
-			return Charset.forName(PREFERRED_CHARSET);
-		}
-		catch (final Exception e) {
-			return Charset.defaultCharset();
-		}
-	}
-
 	@Override
 	public void handle(final HttpExchange exchange) throws IOException {
 		// Check if the server is enabled...
@@ -114,7 +105,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected String buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF.toString());
-		html.append("<html><head>");
+		html.append("<html lang=\"").append(Resources.getLanguage().getLocale().getLanguage()).append("\"><head>");
 		if (title != null && !title.isEmpty()) {
 			html.append("<title>").append(Resources.get("msg.application.name")).append(" - ").append(title).append("</title>");
 		}
@@ -125,6 +116,15 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected String buildHtmlFooter() {
 		return "</body></html>";
+	}
+
+	protected Charset getCharset() {
+		try {
+			return Charset.forName(PREFERRED_CHARSET);
+		}
+		catch (final Exception e) {
+			return Charset.defaultCharset();
+		}
 	}
 
 }
