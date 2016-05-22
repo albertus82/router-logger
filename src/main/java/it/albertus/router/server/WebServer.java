@@ -8,6 +8,8 @@ import it.albertus.util.Configuration;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpServer;
@@ -64,20 +66,24 @@ public class WebServer {
 	}
 
 	private void createContexts() {
-		final BaseHttpHandler rootHandler = new RootHandler(engine);
-		httpServer.createContext(rootHandler.getPath(), rootHandler).setAuthenticator(authenticator);
+		for (final BaseHttpHandler handler : createHandlers()) {
+			httpServer.createContext(handler.getPath(), handler).setAuthenticator(authenticator);
+		}
+	}
 
-		final BaseHttpHandler statusHandler = new StatusHandler(engine);
-		httpServer.createContext(statusHandler.getPath(), statusHandler).setAuthenticator(authenticator);
-
-		final BaseHttpHandler restartHandler = new RestartHandler(engine);
-		httpServer.createContext(restartHandler.getPath(), restartHandler).setAuthenticator(authenticator);
-
-		final BaseHttpHandler disconnectHandler = new DisconnectHandler(engine);
-		httpServer.createContext(disconnectHandler.getPath(), disconnectHandler).setAuthenticator(authenticator);
-
-		final BaseHttpHandler connectHandler = new ConnectHandler(engine);
-		httpServer.createContext(connectHandler.getPath(), connectHandler).setAuthenticator(authenticator);
+	/**
+	 * Creates {@code BaseHttpHandler} objects.
+	 * 
+	 * @return the {@code Set} containing the handlers.
+	 */
+	private Set<BaseHttpHandler> createHandlers() {
+		final Set<BaseHttpHandler> handlers = new HashSet<BaseHttpHandler>();
+		handlers.add(new RootHandler(engine));
+		handlers.add(new StatusHandler(engine));
+		handlers.add(new RestartHandler(engine));
+		handlers.add(new DisconnectHandler(engine));
+		handlers.add(new ConnectHandler(engine));
+		return handlers;
 	}
 
 	private class HttpServerStartThread extends Thread {
