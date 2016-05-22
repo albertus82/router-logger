@@ -15,6 +15,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class StatusHandler extends BaseHttpHandler {
 
 	public interface Defaults {
+		boolean ENABLED = true;
 		boolean REFRESH = false;
 		int REFRESH_SECS = 0;
 	}
@@ -35,8 +36,8 @@ public class StatusHandler extends BaseHttpHandler {
 		addCommonHeaders(exchange);
 
 		// Refresh...
-		if (configuration.getBoolean("server.status.refresh", Defaults.REFRESH)) {
-			int refresh = configuration.getInt("server.status.refresh.secs", Defaults.REFRESH_SECS);
+		if (configuration.getBoolean("server.handler.status.refresh", Defaults.REFRESH)) {
+			int refresh = configuration.getInt("server.handler.status.refresh.secs", Defaults.REFRESH_SECS);
 			if (refresh == Defaults.REFRESH_SECS) {
 				// Division by 2 for sampling theorem
 				refresh = Math.max(1, Long.valueOf(configuration.getLong("logger.interval.normal.ms", RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS) / 1000 / 2).intValue());
@@ -74,6 +75,11 @@ public class StatusHandler extends BaseHttpHandler {
 	@Override
 	public String[] getMethods() {
 		return METHODS;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return configuration.getBoolean("server.handler.status.enabled", Defaults.ENABLED);
 	}
 
 }

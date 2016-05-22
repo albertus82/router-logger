@@ -11,6 +11,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class ConnectHandler extends BaseHttpHandler {
 
+	public interface Defaults {
+		boolean ENABLED = true;
+	}
+
 	public static final String PATH = "/connect";
 	public static final String[] METHODS = { "POST" };
 
@@ -45,6 +49,11 @@ public class ConnectHandler extends BaseHttpHandler {
 	@Override
 	public String[] getMethods() {
 		return METHODS;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return configuration.getBoolean("server.handler.connect.enabled", Defaults.ENABLED);
 	}
 
 }

@@ -12,6 +12,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class RootHandler extends BaseHttpHandler {
 
+	public interface Defaults {
+		boolean ENABLED = true;
+	}
+
 	public static final String PATH = "/";
 	public static final String[] METHODS = { "GET" };
 
@@ -47,6 +51,11 @@ public class RootHandler extends BaseHttpHandler {
 	@Override
 	public String[] getMethods() {
 		return METHODS;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return configuration.getBoolean("server.handler.root.enabled", Defaults.ENABLED);
 	}
 
 }

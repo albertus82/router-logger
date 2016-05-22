@@ -11,6 +11,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class RestartHandler extends BaseHttpHandler {
 
+	public interface Defaults {
+		boolean ENABLED = true;
+	}
+	
 	public static final String PATH = "/restart";
 	public static final String[] METHODS = { "POST" };
 
@@ -45,6 +49,11 @@ public class RestartHandler extends BaseHttpHandler {
 	@Override
 	public String[] getMethods() {
 		return METHODS;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return configuration.getBoolean("server.handler.restart.enabled", Defaults.ENABLED);
 	}
 
 }

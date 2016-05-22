@@ -46,14 +46,33 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	public abstract String getPath();
 
+	/**
+	 * Returns the method names (GET, POST, PUT, DELETE) that are allowed for
+	 * this handler. <b>By default all methods are allowed.</b> Requests with
+	 * forbidden methods will be bounced with <b>HTTP Status-Code 405: Method
+	 * Not Allowed.</b>
+	 * 
+	 * @return the array containing the names of the methods that are allowed.
+	 */
 	public String[] getMethods() {
 		return null;
 	}
 
+	/**
+	 * Returns if this handler is enabled. <b>Handlers are enabled by
+	 * default.</b> Requests to disabled handlers will be bounced with <b>HTTP
+	 * Status-Code 403: Forbidden.</b>
+	 * 
+	 * @return {@code true} if this handler is enabled, otherwise {@code false}.
+	 */
+	public boolean isEnabled() {
+		return true;
+	}
+
 	@Override
 	public void handle(final HttpExchange exchange) throws IOException {
-		// Check if the server is enabled...
-		if (!configuration.getBoolean("server.enabled", Defaults.ENABLED)) {
+		// Check if the server and the handler are enabled...
+		if (!configuration.getBoolean("server.enabled", Defaults.ENABLED) || !isEnabled()) {
 			addCommonHeaders(exchange);
 
 			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));

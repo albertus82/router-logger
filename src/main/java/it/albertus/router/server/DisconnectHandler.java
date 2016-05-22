@@ -11,6 +11,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class DisconnectHandler extends BaseHttpHandler {
 
+	public interface Defaults {
+		boolean ENABLED = true;
+	}
+
 	public static final String PATH = "/disconnect";
 	public static final String[] METHODS = { "POST" };
 
@@ -45,6 +49,11 @@ public class DisconnectHandler extends BaseHttpHandler {
 	@Override
 	public String[] getMethods() {
 		return METHODS;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return configuration.getBoolean("server.handler.disconnect.enabled", Defaults.ENABLED);
 	}
 
 }

@@ -23,6 +23,10 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.server.ConnectHandler;
+import it.albertus.router.server.DisconnectHandler;
+import it.albertus.router.server.RestartHandler;
+import it.albertus.router.server.RootHandler;
 import it.albertus.router.server.StatusHandler;
 import it.albertus.router.server.StatusHandler.Defaults;
 import it.albertus.router.server.WebServer;
@@ -131,8 +135,13 @@ public enum Preference {
 	SERVER_USERNAME(Page.WEBSERVER, FieldEditorType.FormattedString, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	SERVER_PASSWORD(Page.WEBSERVER, FieldEditorType.Password, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	SERVER_PORT(Page.WEBSERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
-	SERVER_STATUS_REFRESH(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH)),
-	SERVER_STATUS_REFRESH_SECS(Page.WEBSERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.status.refresh.auto"), Integer.toString(Defaults.REFRESH_SECS) } }).build());
+	SERVER_HANDLER_ROOT_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_RESTART_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_CONNECT_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_DISCONNECT_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_STATUS_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_STATUS_REFRESH(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH)),
+	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.WEBSERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(Defaults.REFRESH_SECS) } }).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
