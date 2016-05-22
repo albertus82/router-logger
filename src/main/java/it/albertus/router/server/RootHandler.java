@@ -31,7 +31,7 @@ public class RootHandler extends BaseHttpHandler {
 		// Response...
 		final Version version = Version.getInstance();
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.home")));
-		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(version.getDate()).append(") - <a href=\"").append(Resources.get("msg.website")).append("\">").append(Resources.get("msg.website")).append("</a></h3>").append(NewLine.CRLF.toString());
+		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(version.getDate()).append(")</h3>").append(NewLine.CRLF.toString());
 		html.append("<form style=\"display: inline;\" action=\"").append(StatusHandler.PATH).append("\" method=\"").append(StatusHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
 		html.append("<form style=\"display: inline;\" action=\"").append(RestartHandler.PATH).append("\" method=\"").append(RestartHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.restart")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.restart.message")).append("')) document.forms[1].submit();\" /></form>").append(NewLine.CRLF.toString());
 		html.append("<form style=\"display: inline;\" action=\"").append(ConnectHandler.PATH).append("\" method=\"").append(ConnectHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.connect")).append("\" /></form>").append(NewLine.CRLF.toString());

@@ -138,6 +138,16 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 	}
 
+	/**
+	 * Creates HTML5 doctype, {@code <html>} opening tag, full {@code <head>}
+	 * with {@code <title>}, and {@code <body>} opening tag.
+	 * 
+	 * @param title the title to be included in {@code <title>} tag, after the
+	 *        application name. If null or empty, no {@code <title>} will be
+	 *        created.
+	 * 
+	 * @return the string containing the HTML code.
+	 */
 	protected String buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF.toString());
 		html.append("<html lang=\"").append(Resources.getLanguage().getLocale().getLanguage()).append("\"><head>");
@@ -149,10 +159,21 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		return html.toString();
 	}
 
+	/**
+	 * Closes {@code <body>} and {@code <html>} tags.
+	 * 
+	 * @return the string containing the HTML code.
+	 */
 	protected String buildHtmlFooter() {
 		return "</body></html>";
 	}
 
+	/**
+	 * Adds {@code Content-Type: text/html} and {@code Date} headers to the
+	 * provided {@link HttpExchange} object.
+	 * 
+	 * @param exchange the {@link HttpExchange} to be modified.
+	 */
 	protected void addCommonHeaders(final HttpExchange exchange) {
 		final Headers headers = exchange.getResponseHeaders();
 		headers.add("Content-Type", "text/html; charset=" + getCharset().name());
