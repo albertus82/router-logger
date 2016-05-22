@@ -44,37 +44,6 @@ public class Logger {
 		EMAIL;
 	}
 
-	protected class LogEmailRunnable implements Runnable {
-
-		protected final String log;
-		protected final Date date;
-		protected final Throwable throwable;
-
-		protected LogEmailRunnable(final String log, final Date date, final Throwable throwable) {
-			this.log = log;
-			this.date = date;
-			this.throwable = throwable;
-		}
-
-		@Override
-		public void run() {
-			try {
-				final String subjectKey;
-				if (throwable != null) {
-					subjectKey = "msg.log.email.subject.exception";
-				}
-				else {
-					subjectKey = "msg.log.email.subject.event";
-				}
-				final String subject = Resources.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(date));
-				EmailSender.getInstance().reserve(subject, log);
-			}
-			catch (final Exception exception) {
-				log(exception, Destination.CONSOLE);
-			}
-		}
-	}
-
 	public interface Defaults {
 		boolean DEBUG = false;
 		String DIRECTORY = getDefaultDirectory();
@@ -183,7 +152,15 @@ public class Logger {
 
 	private void logToEmail(final String log, final Throwable throwable) {
 		if (configuration.getBoolean("log.email", Defaults.EMAIL)) {
-			new Thread(new LogEmailRunnable(log, new Date(), throwable), "logEmailThread").start();
+			final String subjectKey;
+			if (throwable != null) {
+				subjectKey = "msg.log.email.subject.exception";
+			}
+			else {
+				subjectKey = "msg.log.email.subject.event";
+			}
+			final String subject = Resources.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date()));
+			EmailSender.getInstance().reserve(subject, log);
 		}
 	}
 
@@ -205,11 +182,11 @@ public class Logger {
 		}
 		catch (final Exception e1) {
 			try {
-				// In caso di problemi, scrive nella directory del profilo dell'utente
+				// On error, try to write in the user profile directory
 				logFile = new File(System.getProperty("user.home").toString() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 			catch (final Exception e2) {
-				// Nella peggiore delle ipotesi, scrive nella directory corrente
+				// In the worst case: write in the current directory
 				logFile = new File(dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 			}
 		}

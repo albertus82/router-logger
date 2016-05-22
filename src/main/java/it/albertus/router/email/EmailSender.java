@@ -47,6 +47,7 @@ public class EmailSender {
 		int SOCKET_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 		int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 		int RETRY_INTERVAL_SECS = 60;
+		int MAX_SENDINGS_PER_CYCLE = 3;
 	}
 
 	private static class Singleton {
@@ -67,23 +68,25 @@ public class EmailSender {
 	private final Object lock = new Object();
 
 	private class EmailRunnable implements Runnable {
+
 		@Override
 		public void run() {
 			while (true) {
-				try {
-					Thread.sleep(1000 * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
-				}
-				catch (final InterruptedException ie) {
-					break;
-				}
-				final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(queue.size());
+				final int maxSendingsPerCycle = configuration.getInt("email.max.sendings.per.cycle", Defaults.MAX_SENDINGS_PER_CYCLE);
+				final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(Math.min(queue.size(), maxSendingsPerCycle));
 				for (final RouterLoggerEmail email : queue) {
-					try {
-						send(email);
-						sent.add(email);
+					if (maxSendingsPerCycle <= 0 || sent.size() < maxSendingsPerCycle) {
+						try {
+							send(email);
+							sent.add(email);
+						}
+						catch (final Exception exception) {
+							Logger.getInstance().log(exception, Destination.CONSOLE);
+						}
 					}
-					catch (final Exception exception) {
-						Logger.getInstance().log(exception, Destination.CONSOLE);
+					else {
+						out.println(Resources.get("msg.email.limit", maxSendingsPerCycle), true);
+						break;
 					}
 				}
 				queue.removeAll(sent);
@@ -95,6 +98,13 @@ public class EmailSender {
 						break;
 					}
 				}
+
+				try {
+					Thread.sleep(1000 * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
+				}
+				catch (final InterruptedException ie) {
+					break;
+				}
 			}
 		}
 	}
@@ -104,9 +114,7 @@ public class EmailSender {
 	}
 
 	/**
-	 * Try to send the message immediately. On error, enqueue the message and
-	 * try later. <b>This operation may take a few seconds</b>, so calling from
-	 * a separate thread can be appropriate.
+	 * Enqueue the message for sending as soon as possible.
 	 * 
 	 * @param subject the subject of the email
 	 * @param message the body of the email
@@ -114,19 +122,13 @@ public class EmailSender {
 	 */
 	public void reserve(final String subject, final String message, final File... attachments) {
 		final RouterLoggerEmail email = new RouterLoggerEmail(subject, message, attachments);
-		try {
-			send(email);
-		}
-		catch (final Exception exception) {
-			synchronized (lock) {
-				queue.add(email);
-				if (this.daemon == null) {
-					daemon = new Thread(new EmailRunnable(), "emailDaemon");
-					daemon.setDaemon(true);
-					daemon.start();
-				}
+		synchronized (lock) {
+			queue.add(email);
+			if (this.daemon == null) {
+				daemon = new Thread(new EmailRunnable(), "emailDaemon");
+				daemon.setDaemon(true);
+				daemon.start();
 			}
-			Logger.getInstance().log(exception, Destination.CONSOLE);
 		}
 	}
 

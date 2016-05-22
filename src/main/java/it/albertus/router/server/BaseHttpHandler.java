@@ -103,6 +103,9 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		try {
 			service(exchange);
 		}
+		catch (final IOException ioe) {
+			// Ignore (often caused by the client that interrupts the stream).
+		}
 		catch (final Exception exception) {
 			Logger.getInstance().log(exception);
 			final Charset charset = getCharset();

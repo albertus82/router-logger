@@ -32,6 +32,7 @@ public class WebServer {
 	private volatile HttpServer httpServer;
 	private RouterLoggerEngine engine;
 	private volatile boolean started = false;
+
 	private final Object lock = new Object();
 
 	public void init(final RouterLoggerEngine engine) {
