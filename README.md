@@ -321,7 +321,7 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 * **`server.handler.restart.enabled`**= abilita la funzione **Riavvia** (default: `false`).
 * **`server.handler.status.enabled`**= abilita la funzione **Stato** (default: `true`).
 * **`server.handler.status.refresh`**= aggiorna automaticamente la pagina **Stato** (default: `false`).
-* **`server.handler.status.refresh.secs`**= intervallo di aggiornamento della pagina **Stato** (default: `0` ossia autodeterminato).
+* **`server.handler.status.refresh.secs`**= intervallo di aggiornamento della pagina **Stato**, in secondi (default: `5`).
 
 
 ### Estensione
