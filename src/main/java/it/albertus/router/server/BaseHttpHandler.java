@@ -24,17 +24,15 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
 
-	private static final Charset charset;
+	private static final Charset charset = initCharset();
 
-	static {
-		Charset cs;
+	private static Charset initCharset() {
 		try {
-			cs = Charset.forName(PREFERRED_CHARSET);
+			return Charset.forName(PREFERRED_CHARSET);
 		}
 		catch (final Exception e) {
-			cs = Charset.defaultCharset();
+			return Charset.defaultCharset();
 		}
-		charset = cs;
 	}
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
@@ -44,7 +42,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		this.engine = engine;
 	}
 
-	public abstract void service(HttpExchange exchange) throws IOException;
+	protected abstract void service(HttpExchange exchange) throws IOException;
 
 	public abstract String getPath();
 
