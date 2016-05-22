@@ -7,7 +7,6 @@ import it.albertus.util.Version;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.nio.charset.Charset;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -22,23 +21,20 @@ public class RootHandler extends BaseHttpHandler {
 
 	@Override
 	public void service(HttpExchange exchange) throws IOException {
-		// Charset...
-		final Charset charset = getCharset();
-		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
-		exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
+		// Headers...
+		addCommonHeaders(exchange);
 
 		// Response...
 		final Version version = Version.getInstance();
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.home")));
-
 		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(version.getDate()).append(") - <a href=\"").append(Resources.get("msg.website")).append("\">").append(Resources.get("msg.website")).append("</a></h3>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(StatusHandler.PATH).append("\" method=\"" + StatusHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(RestartHandler.PATH).append("\" method=\"" + RestartHandler.METHODS[0] + "\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.restart")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.restart.message")).append("')) document.forms[1].submit();\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(ConnectHandler.PATH).append("\" method=\"" + ConnectHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.connect")).append("\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(DisconnectHandler.PATH).append("\" method=\"" + DisconnectHandler.METHODS[0] + "\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.disconnect")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.disconnect.message")).append("')) document.forms[3].submit();\" /></form>").append(NewLine.CRLF.toString());
-
+		html.append("<form style=\"display: inline;\" action=\"").append(StatusHandler.PATH).append("\" method=\"").append(StatusHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form style=\"display: inline;\" action=\"").append(RestartHandler.PATH).append("\" method=\"").append(RestartHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.restart")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.restart.message")).append("')) document.forms[1].submit();\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form style=\"display: inline;\" action=\"").append(ConnectHandler.PATH).append("\" method=\"").append(ConnectHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.connect")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form style=\"display: inline;\" action=\"").append(DisconnectHandler.PATH).append("\" method=\"").append(DisconnectHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.disconnect")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.disconnect.message")).append("')) document.forms[3].submit();\" /></form>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlFooter());
-		final byte[] response = html.toString().getBytes(charset);
+
+		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		exchange.getResponseBody().write(response);
 	}

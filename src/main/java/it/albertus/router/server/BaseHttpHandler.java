@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 
 import org.apache.http.protocol.HttpDateGenerator;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -22,6 +23,19 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
 	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
+
+	private static final Charset charset;
+
+	static {
+		Charset cs;
+		try {
+			cs = Charset.forName(PREFERRED_CHARSET);
+		}
+		catch (final Exception e) {
+			cs = Charset.defaultCharset();
+		}
+		charset = cs;
+	}
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected final RouterLoggerEngine engine;
@@ -122,13 +136,14 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		return "</body></html>";
 	}
 
+	protected void addCommonHeaders(final HttpExchange exchange) {
+		final Headers headers = exchange.getResponseHeaders();
+		headers.add("Content-Type", "text/html; charset=" + getCharset().name());
+		headers.add("Date", httpDateGenerator.getCurrentDate());
+	}
+
 	protected Charset getCharset() {
-		try {
-			return Charset.forName(PREFERRED_CHARSET);
-		}
-		catch (final Exception e) {
-			return Charset.defaultCharset();
-		}
+		return charset;
 	}
 
 }

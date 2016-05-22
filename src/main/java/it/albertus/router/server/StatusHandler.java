@@ -7,7 +7,6 @@ import it.albertus.util.NewLine;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -32,10 +31,8 @@ public class StatusHandler extends BaseHttpHandler {
 
 	@Override
 	public void service(final HttpExchange exchange) throws IOException {
-		// Charset...
-		final Charset charset = getCharset();
-		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + charset.name());
-		exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
+		// Headers...
+		addCommonHeaders(exchange);
 
 		// Refresh...
 		if (configuration.getBoolean("server.status.refresh", Defaults.REFRESH)) {
@@ -61,10 +58,10 @@ public class StatusHandler extends BaseHttpHandler {
 			}
 			html.append("</p>").append(NewLine.CRLF);
 		}
-		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"" + RootHandler.METHODS[0] + "\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlFooter());
 
-		final byte[] response = html.toString().getBytes(charset);
+		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		exchange.getResponseBody().write(response);
 	}

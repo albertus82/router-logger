@@ -287,6 +287,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				server.stop();
 				joinPollingThread();
 				configuration.reload();
 				setIteration(FIRST_ITERATION);
