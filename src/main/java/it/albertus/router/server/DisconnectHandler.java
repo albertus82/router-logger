@@ -12,7 +12,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class DisconnectHandler extends BaseHttpHandler {
 
 	public interface Defaults {
-		boolean ENABLED = true;
+		boolean ENABLED = false;
 	}
 
 	public static final String PATH = "/disconnect";
