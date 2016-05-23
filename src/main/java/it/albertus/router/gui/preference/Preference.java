@@ -16,6 +16,7 @@ import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
 import it.albertus.router.gui.preference.page.Page;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
+import it.albertus.router.gui.preference.page.ServerPreferencePage;
 import it.albertus.router.gui.preference.page.WriterPreferencePage;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
@@ -23,6 +24,7 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.ConnectHandler;
 import it.albertus.router.server.DisconnectHandler;
 import it.albertus.router.server.RestartHandler;
@@ -131,17 +133,18 @@ public enum Preference {
 	EMAIL_CC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
 	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
 
-	SERVER_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(WebServer.Defaults.ENABLED)),
-	SERVER_USERNAME(Page.WEBSERVER, FieldEditorType.FormattedString, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	SERVER_PASSWORD(Page.WEBSERVER, FieldEditorType.Password, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	SERVER_PORT(Page.WEBSERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
-	SERVER_HANDLER_ROOT_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_RESTART_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_CONNECT_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_DISCONNECT_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_STATUS_ENABLED(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_STATUS_REFRESH(Page.WEBSERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH)),
-	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.WEBSERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build());
+	SERVER_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(WebServer.Defaults.ENABLED)),
+	SERVER_USERNAME(Page.SERVER, FieldEditorType.FormattedString, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	SERVER_PASSWORD(Page.SERVER, FieldEditorType.Password, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	SERVER_PORT(Page.SERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	SERVER_HANDLER_ROOT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_RESTART_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED)),
+	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH)),
+	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build()),
+	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

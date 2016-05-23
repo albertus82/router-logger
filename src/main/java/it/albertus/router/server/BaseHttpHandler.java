@@ -4,6 +4,7 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
@@ -19,9 +20,15 @@ import com.sun.net.httpserver.HttpHandler;
 
 public abstract class BaseHttpHandler implements HttpHandler {
 
+	public interface Defaults {
+		int LOG_REQUEST = 1;
+	}
+
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
 	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
+
+	protected static String lastRequest = null;
 
 	private static final Charset charset = initCharset();
 
@@ -68,9 +75,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		return true;
 	}
 
-	@Override
-	public void handle(final HttpExchange exchange) throws IOException {
-		// Check if the server and the handler are enabled...
+	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
 		if (!configuration.getBoolean("server.enabled", BaseHttpServer.Defaults.ENABLED) || !isEnabled()) {
 			addCommonHeaders(exchange);
 
@@ -82,10 +87,14 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
 			exchange.getResponseBody().write(response);
 			exchange.close();
-			return;
+			return false;
 		}
+		else {
+			return true;
+		}
+	}
 
-		// Check HTTP method...
+	protected boolean isMethodAllowed(final HttpExchange exchange) throws IOException {
 		boolean match;
 		if (getMethods() == null) {
 			match = true;
@@ -110,30 +119,57 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, response.length);
 			exchange.getResponseBody().write(response);
 			exchange.close();
+		}
+		return match;
+	}
+
+	@Override
+	public void handle(final HttpExchange exchange) throws IOException {
+		if (isEnabled(exchange) && isMethodAllowed(exchange)) {
+			try {
+				service(exchange);
+			}
+			catch (final IOException ioe) {
+				// Ignore (often caused by the client that interrupts the stream).
+			}
+			catch (final Exception exception) {
+				Logger.getInstance().log(exception);
+				addCommonHeaders(exchange);
+
+				final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
+				html.append("<h3>").append(Resources.get("err.server.handler")).append("</h3>").append(NewLine.CRLF);
+				html.append(buildHtmlFooter());
+
+				final byte[] response = html.toString().getBytes(getCharset());
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
+				exchange.getResponseBody().write(response);
+			}
+			finally {
+				exchange.close();
+			}
+		}
+		log(exchange);
+	}
+
+	protected void log(final HttpExchange exchange) {
+		final Destination[] destinations;
+		switch (configuration.getInt("server.log.request", Defaults.LOG_REQUEST)) {
+		case 1:
+			destinations = new Destination[] { Destination.CONSOLE };
+			break;
+		case 2:
+			destinations = new Destination[] { Destination.CONSOLE, Destination.FILE };
+			break;
+		default:
 			return;
 		}
 
-		// Service...
-		try {
-			service(exchange);
-		}
-		catch (final IOException ioe) {
-			// Ignore (often caused by the client that interrupts the stream).
-		}
-		catch (final Exception exception) {
-			Logger.getInstance().log(exception);
-			addCommonHeaders(exchange);
-
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
-			html.append("<h3>").append(Resources.get("err.server.handler")).append("</h3>").append(NewLine.CRLF);
-			html.append(buildHtmlFooter());
-
-			final byte[] response = html.toString().getBytes(getCharset());
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
-			exchange.getResponseBody().write(response);
-		}
-		finally {
-			exchange.close();
+		if (destinations != null) {
+			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
+			if (!request.equals(lastRequest)) {
+				lastRequest = request;
+				Logger.getInstance().log(Resources.get("msg.server.log.request", request), destinations);
+			}
 		}
 	}
 
