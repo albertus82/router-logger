@@ -322,7 +322,10 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 * **`server.handler.status.enabled`**= abilita la funzione **Stato** (default: `true`).
 * **`server.handler.status.refresh`**= aggiorna automaticamente la pagina **Stato** (default: `false`).
 * **`server.handler.status.refresh.secs`**= intervallo di aggiornamento della pagina **Stato**, in secondi (default: `5`).
-
+* **`server.log.request`**= regola il livello di registrazione delle richieste HTTP ricevute dall'applicazione. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
+	* **`0`**: nessuna registrazione.
+	* **`1`**: registrazione nel registro a video (default).
+	* **`2`**: registrazione nel registro a video e su file.
 
 ### Estensione
 
