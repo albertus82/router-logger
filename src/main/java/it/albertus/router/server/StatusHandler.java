@@ -23,6 +23,8 @@ public class StatusHandler extends BaseHttpHandler {
 	public static final String PATH = "/status";
 	public static final String[] METHODS = { "GET" };
 
+	protected static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
+
 	protected static final char KEY_VALUE_SEPARATOR = ':';
 	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
@@ -55,7 +57,7 @@ public class StatusHandler extends BaseHttpHandler {
 			}
 			html.append("</p>").append(NewLine.CRLF);
 		}
-		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 
 		// If-Modified-Since...
@@ -88,7 +90,7 @@ public class StatusHandler extends BaseHttpHandler {
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean("server.handler.status.enabled", Defaults.ENABLED);
+		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
 	}
 
 }

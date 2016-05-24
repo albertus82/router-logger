@@ -14,9 +14,11 @@ public class RestartHandler extends BaseHttpHandler {
 	public interface Defaults {
 		boolean ENABLED = false;
 	}
-	
+
 	public static final String PATH = "/restart";
 	public static final String[] METHODS = { "POST" };
+
+	protected static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
 
 	protected RestartHandler(final RouterLoggerEngine engine) {
 		super(engine);
@@ -30,7 +32,7 @@ public class RestartHandler extends BaseHttpHandler {
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.restart")));
 		html.append("<h3>").append(Resources.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
-		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 
 		final byte[] response = html.toString().getBytes(getCharset());
@@ -53,7 +55,7 @@ public class RestartHandler extends BaseHttpHandler {
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean("server.handler.restart.enabled", Defaults.ENABLED);
+		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
 	}
 
 }

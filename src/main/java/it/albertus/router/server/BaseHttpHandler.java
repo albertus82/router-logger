@@ -248,6 +248,15 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		return "</body></html>";
 	}
 
+	protected String buildHtmlHomeButton() {
+		if (configuration.getBoolean(RootHandler.CFG_KEY_ENABLED, RootHandler.Defaults.ENABLED)) {
+			return new StringBuilder("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
+		}
+		else {
+			return "";
+		}
+	}
+
 	/**
 	 * Adds {@code Content-Type: text/html} and {@code Date} headers to the
 	 * provided {@link HttpExchange} object.

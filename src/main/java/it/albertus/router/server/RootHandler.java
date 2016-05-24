@@ -19,6 +19,8 @@ public class RootHandler extends BaseHttpHandler {
 	public static final String PATH = "/";
 	public static final String[] METHODS = { "GET" };
 
+	protected static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
+
 	protected RootHandler(RouterLoggerEngine engine) {
 		super(engine);
 	}
@@ -32,11 +34,20 @@ public class RootHandler extends BaseHttpHandler {
 		final Version version = Version.getInstance();
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.home")));
 		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(version.getDate()).append(")</h3>").append(NewLine.CRLF.toString());
-		// TODO if configuration -> handler enabled...
-		html.append("<form style=\"display: inline;\" action=\"").append(StatusHandler.PATH).append("\" method=\"").append(StatusHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(RestartHandler.PATH).append("\" method=\"").append(RestartHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.restart")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.restart.message")).append("')) document.forms[1].submit();\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(ConnectHandler.PATH).append("\" method=\"").append(ConnectHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.connect")).append("\" /></form>").append(NewLine.CRLF.toString());
-		html.append("<form style=\"display: inline;\" action=\"").append(DisconnectHandler.PATH).append("\" method=\"").append(DisconnectHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.disconnect")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.disconnect.message")).append("')) document.forms[3].submit();\" /></form>").append(NewLine.CRLF.toString());
+
+		if (configuration.getBoolean(StatusHandler.CFG_KEY_ENABLED, StatusHandler.Defaults.ENABLED)) {
+			html.append("<form style=\"display: inline;\" action=\"").append(StatusHandler.PATH).append("\" method=\"").append(StatusHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
+		}
+		if (configuration.getBoolean(RestartHandler.CFG_KEY_ENABLED, RestartHandler.Defaults.ENABLED)) {
+			html.append("<form style=\"display: inline;\" action=\"").append(RestartHandler.PATH).append("\" method=\"").append(RestartHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.restart")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.restart.message")).append("')) document.forms[1].submit();\" /></form>").append(NewLine.CRLF.toString());
+		}
+		if (configuration.getBoolean(ConnectHandler.CFG_KEY_ENABLED, ConnectHandler.Defaults.ENABLED)) {
+			html.append("<form style=\"display: inline;\" action=\"").append(ConnectHandler.PATH).append("\" method=\"").append(ConnectHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.connect")).append("\" /></form>").append(NewLine.CRLF.toString());
+		}
+		if (configuration.getBoolean(DisconnectHandler.CFG_KEY_ENABLED, DisconnectHandler.Defaults.ENABLED)) {
+			html.append("<form style=\"display: inline;\" action=\"").append(DisconnectHandler.PATH).append("\" method=\"").append(DisconnectHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.disconnect")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.disconnect.message")).append("')) document.forms[3].submit();\" /></form>").append(NewLine.CRLF.toString());
+		}
+
 		html.append(buildHtmlFooter());
 
 		final byte[] response = html.toString().getBytes(getCharset());
@@ -56,7 +67,7 @@ public class RootHandler extends BaseHttpHandler {
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean("server.handler.root.enabled", Defaults.ENABLED);
+		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
 	}
 
 }

@@ -18,6 +18,8 @@ public class DisconnectHandler extends BaseHttpHandler {
 	public static final String PATH = "/disconnect";
 	public static final String[] METHODS = { "POST" };
 
+	protected static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
+
 	protected DisconnectHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
@@ -34,7 +36,7 @@ public class DisconnectHandler extends BaseHttpHandler {
 			engine.disconnect();
 		}
 		html.append("<h3>").append(accepted ? Resources.get("msg.server.accepted") : Resources.get("msg.server.not.acceptable")).append("</h3>").append(NewLine.CRLF.toString());
-		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
+		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_NOT_ACCEPTABLE, response.length);
@@ -53,7 +55,7 @@ public class DisconnectHandler extends BaseHttpHandler {
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean("server.handler.disconnect.enabled", Defaults.ENABLED);
+		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
 	}
 
 }
