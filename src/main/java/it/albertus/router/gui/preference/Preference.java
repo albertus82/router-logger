@@ -195,15 +195,15 @@ public enum Preference {
 	}
 
 	public FieldEditor createFieldEditor(final Composite parent) {
-		return FieldEditorFactory.createFieldEditor(fieldEditorType, configurationKey, Resources.get(labelKey), parent, fieldEditorData);
+		return FieldEditorFactory.createFieldEditor(fieldEditorType, configurationKey, getLabel(), parent, fieldEditorData);
 	}
 
 	public String getConfigurationKey() {
 		return configurationKey;
 	}
 
-	public String getLabelKey() {
-		return labelKey;
+	public String getLabel() {
+		return Resources.get(labelKey);
 	}
 
 	public Page getPage() {

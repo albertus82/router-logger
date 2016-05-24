@@ -4,6 +4,7 @@ import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.TpLink8970Reader;
+import it.albertus.router.resources.Resources;
 
 public enum Page {
 	GENERAL(GeneralPreferencePage.class),
@@ -70,8 +71,8 @@ public enum Page {
 		return nodeId;
 	}
 
-	public String getLabelKey() {
-		return labelKey;
+	public String getLabel() {
+		return Resources.get(labelKey);
 	}
 
 	public Class<? extends BasePreferencePage> getPageClass() {
