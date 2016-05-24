@@ -17,7 +17,6 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.http.protocol.HttpDateGenerator;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -264,9 +263,17 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	 * @param exchange the {@link HttpExchange} to be modified.
 	 */
 	protected void addCommonHeaders(final HttpExchange exchange) {
-		final Headers headers = exchange.getResponseHeaders();
-		headers.add("Content-Type", "text/html; charset=" + getCharset().name());
-		headers.add("Date", httpDateGenerator.getCurrentDate());
+		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + getCharset().name());
+		addDateHeader(exchange);
+	}
+
+	/**
+	 * Adds {@code Date} header to the provided {@link HttpExchange} object.
+	 * 
+	 * @param exchange the {@link HttpExchange} to be modified.
+	 */
+	protected void addDateHeader(final HttpExchange exchange) {
+		exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
 	}
 
 	protected Charset getCharset() {

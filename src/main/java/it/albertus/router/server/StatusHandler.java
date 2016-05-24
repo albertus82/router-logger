@@ -63,9 +63,9 @@ public class StatusHandler extends BaseHttpHandler {
 		// If-Modified-Since...
 		final String ifModifiedSince = exchange.getRequestHeaders().getFirst("If-Modified-Since");
 		if (ifModifiedSince != null && currentData != null && currentData.getTimestamp() != null && httpDateGenerator.getDateFormat().format(currentData.getTimestamp()).equals(ifModifiedSince)) {
-			exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
+			addDateHeader(exchange);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_MODIFIED, -1);
-			exchange.getResponseBody().close();
+			exchange.getResponseBody().close(); // Needed when no write occurs.
 		}
 		else {
 			addCommonHeaders(exchange);
