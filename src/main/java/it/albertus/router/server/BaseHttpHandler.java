@@ -127,7 +127,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	public void handle(final HttpExchange exchange) throws IOException {
 		if (isEnabled(exchange) && isMethodAllowed(exchange)) {
 			try {
-				service(exchange);
+				service(exchange); // TODO compress if isCompressed and if request headers contains accept gzip
 			}
 			catch (final IOException ioe) {
 				// Ignore (often caused by the client that interrupts the stream).
