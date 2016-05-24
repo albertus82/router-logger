@@ -10,6 +10,9 @@ import com.sun.net.httpserver.BasicAuthenticator;
 
 public class WebServerAuthenticator extends BasicAuthenticator {
 
+	private static final String CFG_KEY_SERVER_USERNAME = "server.username";
+	private static final String CFG_KEY_SERVER_PASSWORD = "server.password";
+
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	protected WebServerAuthenticator() {
@@ -23,15 +26,15 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 				return false;
 			}
 
-			final String expectedUsername = configuration.getString("server.username");
+			final String expectedUsername = configuration.getString(CFG_KEY_SERVER_USERNAME);
 			if (expectedUsername == null || expectedUsername.isEmpty()) {
-				Logger.getInstance().log("Errore di configurazione", Destination.CONSOLE); // TODO resources
+				Logger.getInstance().log(Resources.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
 				return false;
 			}
 
-			final char[] expectedPassword = configuration.getCharArray("server.password");
+			final char[] expectedPassword = configuration.getCharArray(CFG_KEY_SERVER_PASSWORD);
 			if (expectedPassword == null || expectedPassword.length == 0) {
-				Logger.getInstance().log("Errore di configurazione", Destination.CONSOLE); // TODO resources
+				Logger.getInstance().log(Resources.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
 				return false;
 			}
 
