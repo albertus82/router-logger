@@ -32,9 +32,6 @@ public class StatusHandler extends BaseHttpHandler {
 
 	@Override
 	public void service(final HttpExchange exchange) throws IOException {
-		// Headers...
-		addCommonHeaders(exchange);
-
 		// Refresh...
 		if (configuration.getBoolean("server.handler.status.refresh", Defaults.REFRESH)) {
 			int refresh = configuration.getInt("server.handler.status.refresh.secs", Defaults.REFRESH_SECS);
@@ -61,9 +58,22 @@ public class StatusHandler extends BaseHttpHandler {
 		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlFooter());
 
-		final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-		exchange.getResponseBody().write(response);
+		// If-Modified-Since...
+		final String ifModifiedSince = exchange.getRequestHeaders().getFirst("If-Modified-Since");
+		if (ifModifiedSince != null && currentData != null && currentData.getTimestamp() != null && httpDateGenerator.getDateFormat().format(currentData.getTimestamp()).equals(ifModifiedSince)) {
+			exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_MODIFIED, -1);
+			exchange.getResponseBody().close();
+		}
+		else {
+			addCommonHeaders(exchange);
+			if (currentData != null && currentData.getTimestamp() != null) {
+				exchange.getResponseHeaders().add("Last-Modified", httpDateGenerator.getDateFormat().format(currentData.getTimestamp()));
+			}
+			final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
+			exchange.getResponseBody().write(response);
+		}
 	}
 
 	@Override

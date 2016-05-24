@@ -66,4 +66,8 @@ public class HttpDateGenerator {
 		return this.dateAsText;
 	}
 
+	public DateFormat getDateFormat() {
+		return dateformat;
+	}
+
 }
