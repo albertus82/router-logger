@@ -61,10 +61,7 @@ public class StatusHandler extends BaseHttpHandler {
 		html.append("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlFooter());
 
-		byte[] response = html.toString().getBytes(getCharset());
-		if (canCompressResponse(exchange)) {
-			response = compressResponse(response, exchange);
-		}
+		final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		exchange.getResponseBody().write(response);
 	}

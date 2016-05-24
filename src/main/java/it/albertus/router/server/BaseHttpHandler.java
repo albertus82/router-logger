@@ -177,27 +177,45 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 	}
 
-	protected byte[] compressResponse(final byte[] uncompressed, final HttpExchange exchange) throws IOException {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		final GZIPOutputStream gzos = new GZIPOutputStream(baos);
-		gzos.write(uncompressed);
-		gzos.close();
-		exchange.getResponseHeaders().add("Content-Encoding", "gzip");
-		return baos.toByteArray();
-	}
-
-	protected boolean canCompressResponse(final HttpExchange exchange) {
+	protected byte[] compressResponse(final byte[] uncompressed, final HttpExchange exchange) {
 		if (configuration.getBoolean("server.compress.response", Defaults.COMPRESS_RESPONSE)) {
 			final List<String> headers = exchange.getRequestHeaders().get("Accept-Encoding");
 			if (headers != null) {
 				for (final String header : headers) {
 					if (header != null && header.trim().toLowerCase().contains("gzip")) {
-						return true;
+						try {
+							return doCompressResponse(uncompressed, exchange);
+						}
+						catch (final IOException ioe) {
+							Logger.getInstance().log(ioe);
+							return uncompressed;
+						}
 					}
 				}
 			}
 		}
-		return false;
+		return uncompressed;
+	}
+
+	protected byte[] doCompressResponse(final byte[] uncompressed, final HttpExchange exchange) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream(uncompressed.length / 4);
+		GZIPOutputStream gzos = null;
+		try {
+			gzos = new GZIPOutputStream(baos);
+			gzos.write(uncompressed);
+		}
+		finally {
+			try {
+				baos.close();
+			}
+			catch (final Exception e) {}
+			try {
+				gzos.close();
+			}
+			catch (final Exception e) {}
+		}
+		exchange.getResponseHeaders().add("Content-Encoding", "gzip");
+		return baos.toByteArray();
 	}
 
 	/**
