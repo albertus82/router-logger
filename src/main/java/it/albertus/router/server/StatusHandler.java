@@ -5,12 +5,10 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.zip.GZIPOutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -64,13 +62,8 @@ public class StatusHandler extends BaseHttpHandler {
 		html.append(buildHtmlFooter());
 
 		byte[] response = html.toString().getBytes(getCharset());
-		if (true) { // TODO Configurazione
-			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			final GZIPOutputStream gzos = new GZIPOutputStream(baos);
-			gzos.write(response);
-			gzos.close();
-			response = baos.toByteArray();
-			exchange.getResponseHeaders().add("Content-Encoding", "gzip");
+		if (canCompressResponse(exchange)) {
+			response = compressResponse(response, exchange);
 		}
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		exchange.getResponseBody().write(response);

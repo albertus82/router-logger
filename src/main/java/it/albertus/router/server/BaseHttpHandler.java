@@ -8,9 +8,12 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.http.protocol.HttpDateGenerator;
 
@@ -22,6 +25,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	public interface Defaults {
 		int LOG_REQUEST = 1;
+		boolean COMPRESS_RESPONSE = false;
 	}
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
@@ -127,7 +131,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	public void handle(final HttpExchange exchange) throws IOException {
 		if (isEnabled(exchange) && isMethodAllowed(exchange)) {
 			try {
-				service(exchange); // TODO compress if isCompressed and if request headers contains accept gzip
+				service(exchange);
 			}
 			catch (final IOException ioe) {
 				// Ignore (often caused by the client that interrupts the stream).
@@ -171,6 +175,29 @@ public abstract class BaseHttpHandler implements HttpHandler {
 				Logger.getInstance().log(Resources.get("msg.server.log.request", request), destinations);
 			}
 		}
+	}
+
+	protected byte[] compressResponse(final byte[] uncompressed, final HttpExchange exchange) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final GZIPOutputStream gzos = new GZIPOutputStream(baos);
+		gzos.write(uncompressed);
+		gzos.close();
+		exchange.getResponseHeaders().add("Content-Encoding", "gzip");
+		return baos.toByteArray();
+	}
+
+	protected boolean canCompressResponse(final HttpExchange exchange) {
+		if (configuration.getBoolean("server.compress.response", Defaults.COMPRESS_RESPONSE)) {
+			final List<String> headers = exchange.getRequestHeaders().get("Accept-Encoding");
+			if (headers != null) {
+				for (final String header : headers) {
+					if (header != null && header.trim().toLowerCase().contains("gzip")) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -3,6 +3,7 @@ package it.albertus.router.server;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 
 import com.sun.net.httpserver.BasicAuthenticator;
@@ -16,15 +17,29 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 	}
 
 	@Override
-	public boolean checkCredentials(final String username, final String password) {
+	public boolean checkCredentials(final String specifiedUsername, final String specifiedPassword) {
 		try {
-			if (username.equals(configuration.getString("server.username")) && checkPassword(password, configuration.getCharArray("server.password"))) {
+			if (specifiedUsername == null || specifiedUsername.isEmpty() || specifiedPassword == null || specifiedPassword.isEmpty()) {
+				return false;
+			}
+
+			final String expectedUsername = configuration.getString("server.username");
+			if (expectedUsername == null || expectedUsername.isEmpty()) {
+				Logger.getInstance().log("Errore di configurazione", Destination.CONSOLE); // TODO resources
+				return false;
+			}
+
+			final char[] expectedPassword = configuration.getCharArray("server.password");
+			if (expectedPassword == null || expectedPassword.length == 0) {
+				Logger.getInstance().log("Errore di configurazione", Destination.CONSOLE); // TODO resources
+				return false;
+			}
+
+			if (specifiedUsername.equals(expectedUsername) && checkPassword(specifiedPassword, expectedPassword)) {
 				return true;
 			}
 			else {
-				if (username != null && !username.isEmpty()) {
-					Logger.getInstance().log(Resources.get("err.server.authentication", username, password));
-				}
+				Logger.getInstance().log(Resources.get("err.server.authentication", specifiedUsername, specifiedPassword));
 				return false;
 			}
 		}
@@ -37,18 +52,14 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 		}
 	}
 
-	private boolean checkPassword(final String provided, final char[] stored) {
-		if (stored == null || stored.length == 0) {
-			return false;
-		}
-
+	private boolean checkPassword(final String specifiedPassword, final char[] expectedPassword) {
 		boolean equal = true;
-		if (provided.length() != stored.length) {
+		if (specifiedPassword.length() != expectedPassword.length) {
 			equal = false;
 		}
 
 		for (int i = 0; i < 0x400; i++) {
-			if (provided.charAt(i % provided.length()) != stored[i % stored.length]) {
+			if (specifiedPassword.charAt(i % specifiedPassword.length()) != expectedPassword[i % expectedPassword.length]) {
 				equal = false;
 			}
 		}

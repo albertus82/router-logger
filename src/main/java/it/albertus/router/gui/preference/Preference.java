@@ -134,9 +134,10 @@ public enum Preference {
 	EMAIL_BCC_ADDRESSES(Page.EMAIL_ADVANCED, FieldEditorType.EmailAddresses),
 
 	SERVER_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(WebServer.Defaults.ENABLED)),
-	SERVER_USERNAME(Page.SERVER, FieldEditorType.FormattedString, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	SERVER_PASSWORD(Page.SERVER, FieldEditorType.Password, null, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	SERVER_USERNAME(Page.SERVER, FieldEditorType.FormattedString),
+	SERVER_PASSWORD(Page.SERVER, FieldEditorType.Password),
 	SERVER_PORT(Page.SERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	SERVER_COMPRESS_RESPONSE(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpHandler.Defaults.COMPRESS_RESPONSE)),
 	SERVER_HANDLER_ROOT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED)),
 	SERVER_HANDLER_RESTART_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED)),
 	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED)),
