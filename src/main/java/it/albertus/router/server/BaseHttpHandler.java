@@ -5,7 +5,6 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
 import java.io.ByteArrayOutputStream;
@@ -44,7 +43,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 	}
 
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final RouterLoggerEngine engine;
 
 	protected BaseHttpHandler(final RouterLoggerEngine engine) {

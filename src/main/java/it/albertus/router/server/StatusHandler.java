@@ -52,8 +52,15 @@ public class StatusHandler extends BaseHttpHandler {
 			html.append(NewLine.CRLF).append("<strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.format(currentData.getTimestamp())).append("<br />").append(NewLine.CRLF);
 			html.append("<strong>").append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime());
 			for (final String key : currentData.getData().keySet()) {
+				final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
 				html.append("<br />").append(NewLine.CRLF);
+				if (highlight) {
+					html.append("<mark>");
+				}
 				html.append("<strong>").append(key).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getData().get(key));
+				if (highlight) {
+					html.append("</mark>");
+				}
 			}
 			html.append("</p>").append(NewLine.CRLF);
 		}
