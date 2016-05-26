@@ -48,12 +48,12 @@ public class StatusHandler extends BaseHttpHandler {
 		html.append("<h3>").append(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().toString()).append("</h3>").append(NewLine.CRLF);
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
-			html.append("<p>");
-			html.append(NewLine.CRLF).append("<strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.format(currentData.getTimestamp())).append("<br />").append(NewLine.CRLF);
-			html.append("<strong>").append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime());
+			html.append("<ul>").append(NewLine.CRLF);
+			html.append("<li><strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
+			html.append("<li><strong>").append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
 			for (final String key : currentData.getData().keySet()) {
 				final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
-				html.append("<br />").append(NewLine.CRLF);
+				html.append("<li>");
 				if (highlight) {
 					html.append("<mark>");
 				}
@@ -61,8 +61,9 @@ public class StatusHandler extends BaseHttpHandler {
 				if (highlight) {
 					html.append("</mark>");
 				}
+				html.append("</li>").append(NewLine.CRLF);
 			}
-			html.append("</p>").append(NewLine.CRLF);
+			html.append("</ul>").append(NewLine.CRLF);
 		}
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
@@ -83,6 +84,17 @@ public class StatusHandler extends BaseHttpHandler {
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 			exchange.getResponseBody().write(response);
 		}
+	}
+
+	@Override
+	protected String buildHtmlHead(final String title) {
+		final StringBuilder html = new StringBuilder("<head>");
+		if (title != null && !title.isEmpty()) {
+			html.append("<title>").append(Resources.get("msg.application.name")).append(" - ").append(title).append("</title>");
+		}
+		html.append("<style type=\"text/css\">ul {list-style-type: none; padding-left: 0;}</style>");
+		html.append("</head>");
+		return html.toString();
 	}
 
 	@Override
