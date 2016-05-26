@@ -162,12 +162,21 @@ public abstract class RouterLoggerEngine {
 	}
 
 	protected void outerLoop() {
-		for (int index = 0, retries = configuration.getInt("logger.retry.count", Defaults.RETRIES); index <= retries && !exit; index++) {
+		for (int index = 0; !exit; index++) {
+			final int retries = configuration.getInt("logger.retry.count", Defaults.RETRIES);
+			if (retries > 0 && index > retries) {
+				break;
+			}
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
 				setStatus(RouterLoggerStatus.RECONNECTING);
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
-				out.println(Resources.get("msg.wait.reconnection", index, retries, retryIntervalInMillis), true);
+				final StringBuilder message = new StringBuilder(Resources.get("msg.wait.reconnection"));
+				if (retries > 0) {
+					message.append(' ').append(Resources.get("msg.wait.reconnection.retry", index, retries));
+				}
+				message.append(' ').append(Resources.get("msg.wait.reconnection.time", retryIntervalInMillis));
+				out.println(message.toString(), true);
 				try {
 					interruptible = true;
 					Thread.sleep(retryIntervalInMillis);

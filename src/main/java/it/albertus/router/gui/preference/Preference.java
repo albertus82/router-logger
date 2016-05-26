@@ -47,7 +47,7 @@ public enum Preference {
 	LOGGER_INTERVAL_NORMAL_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS)),
 	LOGGER_INTERVAL_FAST_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS)),
 	LOGGER_HYSTERESIS_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS)),
-	LOGGER_RETRY_COUNT(Page.GENERAL, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerEngine.Defaults.RETRIES)),
+	LOGGER_RETRY_COUNT(Page.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.logger.retry.count.infinite"), Integer.toString(0) } }).build()),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS)),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessageKey("msg.preferences.directory.dialog.message.log").build()),
 	GUI_MINIMIZE_TRAY(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(TrayIcon.Defaults.GUI_MINIMIZE_TRAY)),
