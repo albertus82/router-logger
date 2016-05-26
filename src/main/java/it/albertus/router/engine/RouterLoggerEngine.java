@@ -30,6 +30,7 @@ public abstract class RouterLoggerEngine {
 		long RETRY_INTERVAL_IN_MILLIS = 30000L;
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		boolean THRESHOLDS_EMAIL = false;
+		boolean LOG_CONNECTED = false;
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
@@ -217,6 +218,9 @@ public abstract class RouterLoggerEngine {
 				// Loop...
 				if (loggedIn && !exit) {
 					setStatus(RouterLoggerStatus.OK);
+					if (configuration.getBoolean("reader.log.connected", Defaults.LOG_CONNECTED)) {
+						logger.log(Resources.get("msg.reader.connected", reader.getDeviceModel()), Destination.FILE, Destination.EMAIL);
+					}
 					index = 0;
 					try {
 						innerLoop();
