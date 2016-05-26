@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Text;
 public class ThresholdsFieldEditor extends LocalizedListEditor {
 
 	public ThresholdsFieldEditor(final String name, final String labelText, final Composite parent) {
-		super(name, labelText, parent, true);
+		super(name, labelText, parent, Integer.valueOf(Short.MAX_VALUE));
 	}
 
 	@Override

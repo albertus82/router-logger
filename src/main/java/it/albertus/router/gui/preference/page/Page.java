@@ -21,6 +21,7 @@ public enum Page {
 	THRESHOLDS(ThresholdsPreferencePage.class),
 	EMAIL(EmailPreferencePage.class),
 	EMAIL_ADVANCED(AdvancedEmailPreferencePage.class, EMAIL),
+	EMAIL_CC_BCC(CcBccEmailPreferencePage.class, EMAIL),
 	SERVER(ServerPreferencePage.class);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";

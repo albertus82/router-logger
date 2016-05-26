@@ -17,16 +17,16 @@ public abstract class LocalizedListEditor extends ListEditor {
 	}
 
 	public LocalizedListEditor(final String name, final String labelText, final Composite parent) {
-		this(name, labelText, parent, false);
+		this(name, labelText, parent, null);
 	}
 
-	public LocalizedListEditor(final String name, final String labelText, final Composite parent, final boolean span) {
-		super(name, labelText, span ? createContainer(parent) : parent);
+	public LocalizedListEditor(final String name, final String labelText, final Composite parent, final Integer horizontalSpan) {
+		super(name, labelText, (horizontalSpan != null && horizontalSpan > 0) ? createContainer(parent, horizontalSpan) : parent);
 	}
 
-	protected static Composite createContainer(final Composite fieldEditorParent) {
+	protected static Composite createContainer(final Composite fieldEditorParent, final int horizontalSpan) {
 		final Composite parent = new Composite(fieldEditorParent, SWT.NULL);
-		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).span(Short.MAX_VALUE, 1).applyTo(parent);
+		GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).span(horizontalSpan, 1).applyTo(parent);
 		return parent;
 	}
 

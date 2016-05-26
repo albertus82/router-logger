@@ -6,6 +6,7 @@ public class FieldEditorData {
 
 	// Generic
 	private final Boolean emptyStringAllowed;
+	private final Integer horizontalSpan;
 
 	// ComboFieldEditor
 	private final String[][] comboEntryNamesAndValues;
@@ -28,6 +29,14 @@ public class FieldEditorData {
 
 	// DirectoryFieldEditor
 	private final String directoryDialogMessageKey;
+
+	public Boolean getEmptyStringAllowed() {
+		return emptyStringAllowed;
+	}
+
+	public Integer getHorizontalSpan() {
+		return horizontalSpan;
+	}
 
 	public String[][] getComboEntryNamesAndValues() {
 		return comboEntryNamesAndValues;
@@ -77,17 +86,15 @@ public class FieldEditorData {
 		return directoryDialogMessageKey;
 	}
 
-	public Boolean getEmptyStringAllowed() {
-		return emptyStringAllowed;
-	}
-
 	@Override
 	public String toString() {
-		return "FieldEditorData [emptyStringAllowed=" + emptyStringAllowed + ", comboEntryNamesAndValues=" + Arrays.toString(comboEntryNamesAndValues) + ", scaleMinimum=" + scaleMinimum + ", scaleMaximum=" + scaleMaximum + ", scaleIncrement=" + scaleIncrement + ", scalePageIncrement=" + scalePageIncrement + ", textLimit=" + textLimit + ", textWidth=" + textWidth + ", textHeight=" + textHeight + ", textValidateStrategy=" + textValidateStrategy + ", integerMinValidValue=" + integerMinValidValue + ", integerMaxValidValue=" + integerMaxValidValue + ", directoryDialogMessageKey=" + directoryDialogMessageKey + "]";
+		return "FieldEditorData [emptyStringAllowed=" + emptyStringAllowed + ", horizontalSpan=" + horizontalSpan + ", comboEntryNamesAndValues=" + Arrays.toString(comboEntryNamesAndValues) + ", scaleMinimum=" + scaleMinimum + ", scaleMaximum=" + scaleMaximum + ", scaleIncrement=" + scaleIncrement + ", scalePageIncrement=" + scalePageIncrement + ", textLimit=" + textLimit + ", textWidth=" + textWidth + ", textHeight=" + textHeight + ", textValidateStrategy=" + textValidateStrategy
+				+ ", integerMinValidValue=" + integerMinValidValue + ", integerMaxValidValue=" + integerMaxValidValue + ", directoryDialogMessageKey=" + directoryDialogMessageKey + "]";
 	}
 
 	public static class FieldEditorDataBuilder {
 		private Boolean emptyStringAllowed;
+		private Integer horizontalSpan;
 		private String[][] comboEntryNamesAndValues;
 		private Integer scaleMinimum;
 		private Integer scaleMaximum;
@@ -103,6 +110,11 @@ public class FieldEditorData {
 
 		public FieldEditorDataBuilder emptyStringAllowed(final boolean emptyStringAllowed) {
 			this.emptyStringAllowed = emptyStringAllowed;
+			return this;
+		}
+
+		public FieldEditorDataBuilder horizontalSpan(final Integer horizontalSpan) {
+			this.horizontalSpan = horizontalSpan;
 			return this;
 		}
 
@@ -169,6 +181,7 @@ public class FieldEditorData {
 
 	private FieldEditorData(final FieldEditorDataBuilder builder) {
 		this.emptyStringAllowed = builder.emptyStringAllowed;
+		this.horizontalSpan = builder.horizontalSpan;
 		this.comboEntryNamesAndValues = builder.comboEntryNamesAndValues;
 		this.scaleMinimum = builder.scaleMinimum;
 		this.scaleMaximum = builder.scaleMaximum;

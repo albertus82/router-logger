@@ -43,7 +43,7 @@ public final class FieldEditorFactory {
 		case EditableCombo:
 			return new EditableComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case EmailAddresses:
-			return new EmailAddressesListEditor(name, label, parent);
+			return new EmailAddressesListEditor(name, label, parent, data.getHorizontalSpan());
 		case FormattedCombo:
 			return new FormattedComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case FormattedDirectory:

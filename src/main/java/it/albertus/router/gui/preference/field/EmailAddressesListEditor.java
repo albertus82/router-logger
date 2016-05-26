@@ -23,8 +23,8 @@ public class EmailAddressesListEditor extends LocalizedListEditor {
 
 	public static final char SEPARATOR = ',';
 
-	public EmailAddressesListEditor(final String name, final String labelText, final Composite parent) {
-		super(name, labelText, parent, true);
+	public EmailAddressesListEditor(final String name, final String labelText, final Composite parent, final Integer horizontalSpan) {
+		super(name, labelText, parent, horizontalSpan);
 	}
 
 	@Override
