@@ -108,6 +108,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 	* **`CRLF`** (default): invia la coppia di caratteri di controllo `CR` (`0x0D`) e `LF` (`0x0A`) (`\r\n`, stile DOS/Windows).
 	* **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
 	* **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`).
+* **`reader.log.connected`**= specifica se registrare l'avvenuta connessione al router su file e via email (default: `false`).
 
 ##### Interfaccia grafica (GUI)
 
@@ -120,7 +121,6 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`gui.console.max.chars`**= dimensione massima della console, in caratteri; la console viene automaticamente ripulita al raggiungimento della soglia per limitare l'utilizzo di memoria (default: `50000` caratteri).
 * **`gui.important.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno evidenziati nella tabella (default: vuoto). Gli stessi valori saranno mostrati anche nel suggerimento che compare soffermandosi con il mouse sull'eventuale icona di RouterLogger nell'area di notifica.
 * **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.important.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
-
 
 ##### Console
 
@@ -315,6 +315,7 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 * **`server.username`**= nome utente per l'accesso all'interfaccia web.
 * **`server.password`**= password per l'accesso all'interfaccia web.
 * **`server.port`**= porta del server web (default: `8080`).
+* **`server.compress.response`**= abilita la compressione dati, quando possibile (default: `false`).
 * **`server.handler.root.enabled`**= abilita la pagina **Home** (default: `true`).
 * **`server.handler.connect.enabled`**= abilita la funzione **Connetti** (default: `false`).
 * **`server.handler.disconnect.enabled`**= abilita la funzione **Disconnetti** (default: `false`).
@@ -326,6 +327,7 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 	* **`0`**: nessuna registrazione.
 	* **`1`**: registrazione nel registro a video (default).
 	* **`2`**: registrazione nel registro a video e su file.
+
 
 ### Estensione
 
