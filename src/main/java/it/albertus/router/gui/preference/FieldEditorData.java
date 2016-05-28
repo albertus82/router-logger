@@ -113,7 +113,7 @@ public class FieldEditorData {
 			return this;
 		}
 
-		public FieldEditorDataBuilder horizontalSpan(final Integer horizontalSpan) {
+		public FieldEditorDataBuilder horizontalSpan(final int horizontalSpan) {
 			this.horizontalSpan = horizontalSpan;
 			return this;
 		}
