@@ -46,6 +46,7 @@ public class StatusHandler extends BaseHttpHandler {
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.status")));
 		html.append("<h3>").append(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().toString()).append("</h3>").append(NewLine.CRLF);
+		html.append(buildHtmlHomeButton());
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
 			html.append("<ul>").append(NewLine.CRLF);
@@ -65,7 +66,6 @@ public class StatusHandler extends BaseHttpHandler {
 			}
 			html.append("</ul>").append(NewLine.CRLF);
 		}
-		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 
 		// If-Modified-Since...
