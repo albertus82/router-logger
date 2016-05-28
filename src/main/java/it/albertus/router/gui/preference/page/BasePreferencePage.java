@@ -8,10 +8,16 @@ import it.albertus.util.NewLine;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -19,6 +25,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 public abstract class BasePreferencePage extends FieldEditorPreferencePage {
+
+	private final Map<Preference, FieldEditor> fieldEditorMap = new EnumMap<Preference, FieldEditor>(Preference.class);
 
 	private Control header;
 
@@ -89,7 +97,54 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		// Fields
 		for (final Preference preference : Preference.values()) {
 			if (getPage().equals(preference.getPage())) {
-				addField(preference.createFieldEditor(getFieldEditorParent()));
+				final FieldEditor fieldEditor = preference.createFieldEditor(getFieldEditorParent());
+				addField(fieldEditor);
+				fieldEditorMap.put(preference, fieldEditor);
+			}
+		}
+	}
+
+	@Override
+	public void propertyChange(final PropertyChangeEvent event) {
+		super.propertyChange(event);
+		if (event.getSource() instanceof BooleanFieldEditor) {
+			final BooleanFieldEditor fieldEditor = (BooleanFieldEditor) event.getSource();
+			for (final Entry<Preference, FieldEditor> entry : fieldEditorMap.entrySet()) {
+				if (entry.getValue().equals(fieldEditor)) {
+					for (final Preference child : entry.getKey().getChildren()) {
+						final FieldEditor childFieldEditor = fieldEditorMap.get(child);
+						final Boolean enabled = (Boolean) event.getNewValue();
+						childFieldEditor.setEnabled(enabled, getFieldEditorParent());
+						if (!enabled && !childFieldEditor.isValid()) {
+							childFieldEditor.loadDefault();
+							checkState();
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void initialize() {
+		super.initialize();
+		updateChildrenFields();
+	}
+
+	@Override
+	protected void performDefaults() {
+		super.performDefaults();
+		updateChildrenFields();
+	}
+
+	protected void updateChildrenFields() {
+		for (final Preference preference : fieldEditorMap.keySet()) {
+			if (fieldEditorMap.get(preference) instanceof BooleanFieldEditor) {
+				final BooleanFieldEditor fieldEditor = (BooleanFieldEditor) fieldEditorMap.get(preference);
+				for (final Preference child : preference.getChildren()) {
+					fieldEditorMap.get(child).setEnabled(fieldEditor.getBooleanValue(), getFieldEditorParent());
+				}
 			}
 		}
 	}

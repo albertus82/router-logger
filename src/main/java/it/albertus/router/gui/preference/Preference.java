@@ -36,7 +36,9 @@ import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 
+import java.util.EnumSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
@@ -51,7 +53,7 @@ public enum Preference {
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS)),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessageKey("msg.preferences.directory.dialog.message.log").build()),
 	GUI_MINIMIZE_TRAY(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(TrayIcon.Defaults.GUI_MINIMIZE_TRAY)),
-	GUI_TRAY_TOOLTIP(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP)),
+	GUI_TRAY_TOOLTIP(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP), null, GUI_MINIMIZE_TRAY),
 	GUI_START_MINIMIZED(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),
 	GUI_CONFIRM_CLOSE(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE)),
 	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
@@ -110,7 +112,7 @@ public enum Preference {
 	THRESHOLDS_EXPRESSIONS(Page.THRESHOLDS, FieldEditorType.Thresholds),
 	THRESHOLDS_SPLIT(Page.THRESHOLDS, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT)),
 	THRESHOLDS_EMAIL(Page.THRESHOLDS, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.THRESHOLDS_EMAIL)),
-	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(Page.THRESHOLDS, FieldEditorType.FormattedInteger, Integer.toString(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS)),
+	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(Page.THRESHOLDS, FieldEditorType.FormattedInteger, Integer.toString(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS), null, THRESHOLDS_EMAIL),
 	THRESHOLDS_EXCLUDED(Page.THRESHOLDS, FieldEditorType.WrapString),
 	THRESHOLDS_EXCLUDED_SEPARATOR(Page.THRESHOLDS, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 
@@ -136,18 +138,18 @@ public enum Preference {
 	EMAIL_BCC_ADDRESSES(Page.EMAIL_CC_BCC, FieldEditorType.EmailAddresses, null, new FieldEditorDataBuilder().horizontalSpan(0).build()),
 
 	SERVER_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(WebServer.Defaults.ENABLED)),
-	SERVER_USERNAME(Page.SERVER, FieldEditorType.FormattedString),
-	SERVER_PASSWORD(Page.SERVER, FieldEditorType.Password),
-	SERVER_PORT(Page.SERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
-	SERVER_COMPRESS_RESPONSE(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpHandler.Defaults.COMPRESS_RESPONSE)),
-	SERVER_HANDLER_ROOT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_RESTART_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH)),
-	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build()),
-	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build());
+	SERVER_USERNAME(Page.SERVER, FieldEditorType.FormattedString, null, null, SERVER_ENABLED),
+	SERVER_PASSWORD(Page.SERVER, FieldEditorType.Password, null, null, SERVER_ENABLED),
+	SERVER_PORT(Page.SERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build(), SERVER_ENABLED),
+	SERVER_COMPRESS_RESPONSE(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpHandler.Defaults.COMPRESS_RESPONSE), null, SERVER_ENABLED),
+	SERVER_HANDLER_ROOT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_RESTART_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_ENABLED),
+	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_ENABLED),
+	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
@@ -155,26 +157,31 @@ public enum Preference {
 	private final FieldEditorType fieldEditorType;
 	private final String defaultValue;
 	private final FieldEditorData fieldEditorData;
+	private final Preference parent;
 	private final String configurationKey;
 	private final String labelKey;
 
 	private Preference(final Page page, final FieldEditorType fieldEditorType) {
-		this(page, fieldEditorType, null, null, null, null);
+		this(page, fieldEditorType, null, null, null, null, null);
 	}
 
 	private Preference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue) {
-		this(page, fieldEditorType, defaultValue, null, null, null);
+		this(page, fieldEditorType, defaultValue, null, null, null, null);
 	}
 
 	private Preference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData) {
-		this(page, fieldEditorType, defaultValue, fieldEditorData, null, null);
+		this(page, fieldEditorType, defaultValue, fieldEditorData, null, null, null);
 	}
 
-	private Preference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final String configurationKey) {
-		this(page, fieldEditorType, defaultValue, fieldEditorData, configurationKey, null);
+	private Preference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final Preference parent) {
+		this(page, fieldEditorType, defaultValue, fieldEditorData, parent, null, null);
 	}
 
-	private Preference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final String configurationKey, final String labelKey) {
+	private Preference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final Preference parent, final String configurationKey) {
+		this(page, fieldEditorType, defaultValue, fieldEditorData, parent, configurationKey, null);
+	}
+
+	private Preference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final Preference parent, final String configurationKey, final String labelKey) {
 		// Configuration key...
 		if (configurationKey != null && !configurationKey.isEmpty()) {
 			this.configurationKey = configurationKey;
@@ -195,10 +202,7 @@ public enum Preference {
 		this.defaultValue = defaultValue;
 		this.fieldEditorType = fieldEditorType;
 		this.page = page;
-	}
-
-	public FieldEditor createFieldEditor(final Composite parent) {
-		return FieldEditorFactory.createFieldEditor(fieldEditorType, configurationKey, getLabel(), parent, fieldEditorData);
+		this.parent = parent;
 	}
 
 	public String getConfigurationKey() {
@@ -223,6 +227,24 @@ public enum Preference {
 
 	public FieldEditorData getFieldEditorData() {
 		return fieldEditorData;
+	}
+
+	public Preference getParent() {
+		return parent;
+	}
+
+	public Set<Preference> getChildren() {
+		final Set<Preference> preferences = EnumSet.noneOf(Preference.class);
+		for (final Preference item : Preference.values()) {
+			if (this.equals(item.getParent())) {
+				preferences.add(item);
+			}
+		}
+		return preferences;
+	}
+
+	public FieldEditor createFieldEditor(final Composite parent) {
+		return FieldEditorFactory.createFieldEditor(fieldEditorType, configurationKey, getLabel(), parent, fieldEditorData);
 	}
 
 	public static Preference forConfigurationKey(final String configurationKey) {
