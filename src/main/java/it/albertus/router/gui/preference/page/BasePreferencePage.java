@@ -155,15 +155,16 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 		for (final Entry<Preference, FieldEditor> entry : fieldEditorMap.entrySet()) {
 			if (entry.getValue() instanceof BooleanFieldEditor) {
 				final BooleanFieldEditor booleanFieldEditor = (BooleanFieldEditor) entry.getValue();
-				final BooleanFieldEditor parentBooleanFieldEditor;
+				final boolean enabled;
 				if (fieldEditorMap.get(entry.getKey().getParent()) instanceof BooleanFieldEditor) {
-					parentBooleanFieldEditor = (BooleanFieldEditor) fieldEditorMap.get(entry.getKey().getParent());
+					final BooleanFieldEditor parentBooleanFieldEditor = (BooleanFieldEditor) fieldEditorMap.get(entry.getKey().getParent());
+					enabled = booleanFieldEditor.getBooleanValue() && parentBooleanFieldEditor.getBooleanValue();
 				}
 				else {
-					parentBooleanFieldEditor = null;
+					enabled = booleanFieldEditor.getBooleanValue();
 				}
 				for (final Preference childPreference : entry.getKey().getChildren()) {
-					fieldEditorMap.get(childPreference).setEnabled(booleanFieldEditor.getBooleanValue() && (parentBooleanFieldEditor == null || parentBooleanFieldEditor.getBooleanValue()), getFieldEditorParent());
+					fieldEditorMap.get(childPreference).setEnabled(enabled, getFieldEditorParent());
 				}
 			}
 		}

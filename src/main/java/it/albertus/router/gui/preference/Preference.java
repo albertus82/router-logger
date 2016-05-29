@@ -147,7 +147,7 @@ public enum Preference {
 	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED), null, SERVER_ENABLED),
-	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_ENABLED),
+	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_HANDLER_STATUS_ENABLED),
 	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
 	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED);
 
