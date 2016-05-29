@@ -108,19 +108,15 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 	public void propertyChange(final PropertyChangeEvent event) {
 		super.propertyChange(event);
 		if (event.getSource() instanceof BooleanFieldEditor) {
-			final BooleanFieldEditor fieldEditor = (BooleanFieldEditor) event.getSource();
+			final BooleanFieldEditor changedBooleanFieldEditor = (BooleanFieldEditor) event.getSource();
+			final Boolean parentEnabled = (Boolean) event.getNewValue();
 			for (final Entry<Preference, FieldEditor> entry : fieldEditorMap.entrySet()) {
-				if (entry.getValue().equals(fieldEditor)) {
-					for (final Preference child : entry.getKey().getChildren()) {
-						final FieldEditor childFieldEditor = fieldEditorMap.get(child);
-						final Boolean enabled = (Boolean) event.getNewValue();
-						childFieldEditor.setEnabled(enabled, getFieldEditorParent());
-						if (!enabled && !childFieldEditor.isValid()) {
-							childFieldEditor.loadDefault();
-							checkState();
-						}
+				if (entry.getValue().equals(changedBooleanFieldEditor)) {
+					// Found!
+					for (final Preference childPreference : entry.getKey().getChildren()) {
+						updateChildrenStatus(parentEnabled, childPreference);
 					}
-					break;
+					break; // Done!
 				}
 			}
 		}
@@ -129,21 +125,45 @@ public abstract class BasePreferencePage extends FieldEditorPreferencePage {
 	@Override
 	protected void initialize() {
 		super.initialize();
-		updateChildrenFields();
+		updateFieldsStatus();
 	}
 
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
-		updateChildrenFields();
+		updateFieldsStatus();
 	}
 
-	protected void updateChildrenFields() {
-		for (final Preference preference : fieldEditorMap.keySet()) {
-			if (fieldEditorMap.get(preference) instanceof BooleanFieldEditor) {
-				final BooleanFieldEditor fieldEditor = (BooleanFieldEditor) fieldEditorMap.get(preference);
-				for (final Preference child : preference.getChildren()) {
-					fieldEditorMap.get(child).setEnabled(fieldEditor.getBooleanValue(), getFieldEditorParent());
+	protected void updateChildrenStatus(final Boolean parentEnabled, final Preference childPreference) {
+		final FieldEditor childFieldEditor = fieldEditorMap.get(childPreference);
+		childFieldEditor.setEnabled(parentEnabled, getFieldEditorParent());
+		if (!parentEnabled && !childFieldEditor.isValid()) {
+			childFieldEditor.loadDefault(); // Fix invalid value
+			checkState(); // Enable OK & Apply buttons
+		}
+		// Recurse descendants...
+		if (childFieldEditor instanceof BooleanFieldEditor) {
+			final BooleanFieldEditor childBooleanFieldEditor = (BooleanFieldEditor) childFieldEditor;
+			for (final Preference descendantPreference : childPreference.getChildren()) { // Exit condition
+				final boolean childEnabled = childBooleanFieldEditor.getBooleanValue();
+				updateChildrenStatus(childEnabled && parentEnabled, descendantPreference);
+			}
+		}
+	}
+
+	protected void updateFieldsStatus() {
+		for (final Entry<Preference, FieldEditor> entry : fieldEditorMap.entrySet()) {
+			if (entry.getValue() instanceof BooleanFieldEditor) {
+				final BooleanFieldEditor booleanFieldEditor = (BooleanFieldEditor) entry.getValue();
+				final BooleanFieldEditor parentBooleanFieldEditor;
+				if (fieldEditorMap.get(entry.getKey().getParent()) instanceof BooleanFieldEditor) {
+					parentBooleanFieldEditor = (BooleanFieldEditor) fieldEditorMap.get(entry.getKey().getParent());
+				}
+				else {
+					parentBooleanFieldEditor = null;
+				}
+				for (final Preference childPreference : entry.getKey().getChildren()) {
+					fieldEditorMap.get(childPreference).setEnabled(booleanFieldEditor.getBooleanValue() && (parentBooleanFieldEditor == null || parentBooleanFieldEditor.getBooleanValue()), getFieldEditorParent());
 				}
 			}
 		}
