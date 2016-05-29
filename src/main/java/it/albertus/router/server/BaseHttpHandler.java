@@ -50,6 +50,10 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		this.engine = engine;
 	}
 
+	protected BaseHttpHandler() {
+		this.engine = null;
+	}
+
 	protected abstract void service(HttpExchange exchange) throws IOException;
 
 	public abstract String getPath();

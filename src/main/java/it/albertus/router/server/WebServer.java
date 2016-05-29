@@ -29,6 +29,7 @@ public class WebServer extends BaseHttpServer {
 		handlers.add(new RestartHandler(engine));
 		handlers.add(new DisconnectHandler(engine));
 		handlers.add(new ConnectHandler(engine));
+		handlers.add(new FaviconHandler());
 		return handlers;
 	}
 
