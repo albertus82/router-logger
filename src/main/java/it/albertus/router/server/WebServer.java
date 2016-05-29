@@ -2,7 +2,9 @@ package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class WebServer extends BaseHttpServer {
@@ -29,7 +31,12 @@ public class WebServer extends BaseHttpServer {
 		handlers.add(new RestartHandler(engine));
 		handlers.add(new DisconnectHandler(engine));
 		handlers.add(new ConnectHandler(engine));
-		handlers.add(new FaviconHandler());
+
+		final Map<String, String> faviconHeaders = new HashMap<String, String>();
+		faviconHeaders.put("Content-Type", "image/x-icon");
+		faviconHeaders.put("Cache-Control", "no-transform, public, max-age=86400, s-maxage=259200");
+		handlers.add(new StaticResourceHandler("/favicon.ico", "favicon.ico", faviconHeaders));
+
 		return handlers;
 	}
 
