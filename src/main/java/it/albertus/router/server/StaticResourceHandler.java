@@ -17,7 +17,7 @@ public class StaticResourceHandler extends BaseHttpHandler {
 	public static final String[] METHODS = { "GET" };
 
 	private static final int BUFFER_SIZE = 8192;
-	private static final String DEFAULT_CACHE_CONTROL = "no-transform, public, max-age=300, s-maxage=900";
+	private static final String DEFAULT_CACHE_CONTROL = "no-transform,public,max-age=300,s-maxage=900";
 
 	private final String path;
 	private final String resourceName;

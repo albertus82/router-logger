@@ -35,7 +35,7 @@ public class WebServer extends BaseHttpServer {
 		// Static resources
 		final Headers faviconHeaders = new Headers();
 		faviconHeaders.add("Content-Type", "image/x-icon");
-		faviconHeaders.add("Cache-Control", "no-transform, public, max-age=86400, s-maxage=259200");
+		faviconHeaders.add("Cache-Control", "no-transform,public,max-age=86400,s-maxage=259200");
 		handlers.add(new StaticResourceHandler("/favicon.ico", "favicon.ico", faviconHeaders));
 
 		return handlers;
