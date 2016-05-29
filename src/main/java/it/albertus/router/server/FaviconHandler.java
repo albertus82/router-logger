@@ -1,7 +1,5 @@
 package it.albertus.router.server;
 
-import it.albertus.router.gui.Images;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +12,7 @@ public class FaviconHandler extends BaseHttpHandler {
 	public static final String PATH = "/favicon.ico";
 	public static final String[] METHODS = { "GET" };
 
-	private static final int BUFFER_SIZE = 4096;
+	private static final int BUFFER_SIZE = 1024;
 
 	@Override
 	public void service(final HttpExchange exchange) throws IOException {
@@ -22,7 +20,7 @@ public class FaviconHandler extends BaseHttpHandler {
 		exchange.getResponseHeaders().add("Content-Type", "image/x-icon");
 		exchange.getResponseHeaders().add("Cache-Control", "no-transform, public, max-age=86400, s-maxage=259200");
 
-		final InputStream inputStream = Images.class.getResourceAsStream("main.ico");
+		final InputStream inputStream = getClass().getResourceAsStream("favicon.ico");
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 		final byte[] buffer = new byte[BUFFER_SIZE];
