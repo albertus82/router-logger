@@ -121,7 +121,7 @@ public enum Preference {
 	EMAIL_PASSWORD(Page.EMAIL, FieldEditorType.Password),
 	EMAIL_FROM_NAME(Page.EMAIL, FieldEditorType.FormattedString),
 	EMAIL_FROM_ADDRESS(Page.EMAIL, FieldEditorType.FormattedString),
-	EMAIL_TO_ADDRESSES(Page.EMAIL, FieldEditorType.EmailAddresses, null, new FieldEditorDataBuilder().horizontalSpan(Integer.valueOf(Short.MAX_VALUE)).build()),
+	EMAIL_TO_ADDRESSES(Page.EMAIL, FieldEditorType.EmailAddresses, null, new FieldEditorDataBuilder().horizontalSpan(Short.MAX_VALUE).build()),
 
 	EMAIL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
