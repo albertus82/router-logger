@@ -4,8 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -19,20 +18,15 @@ public class StaticResourceHandler extends BaseHttpHandler {
 
 	private static final int BUFFER_SIZE = 8192;
 	private static final String DEFAULT_CACHE_CONTROL = "no-transform, public, max-age=300, s-maxage=900";
-	private static final MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
 	private final String path;
 	private final String resourceName;
-	private final Map<String, String> headers = new HashMap<String, String>();
+	private final Headers headers;
 
-	public StaticResourceHandler(final String path, final String resourceName, final Map<String, String> headers) {
+	public StaticResourceHandler(final String path, final String resourceName, final Headers headers) {
 		this.path = path;
 		this.resourceName = resourceName;
-		this.headers.put("Content-Type", mimetypesFileTypeMap.getContentType(resourceName));
-		this.headers.put("Cache-Control", DEFAULT_CACHE_CONTROL);
-		if (headers != null) {
-			this.headers.putAll(headers);
-		}
+		this.headers = headers;
 	}
 
 	public StaticResourceHandler(final String path, final String resourceName) {
@@ -41,11 +35,7 @@ public class StaticResourceHandler extends BaseHttpHandler {
 
 	@Override
 	protected void service(final HttpExchange exchange) throws IOException {
-		addDateHeader(exchange);
-		final Headers responseHeaders = exchange.getResponseHeaders();
-		for (final Entry<String, String> header : headers.entrySet()) {
-			responseHeaders.add(header.getKey(), header.getValue());
-		}
+		addHeaders(exchange);
 
 		final InputStream inputStream = getClass().getResourceAsStream(resourceName);
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -71,6 +61,22 @@ public class StaticResourceHandler extends BaseHttpHandler {
 	@Override
 	public String[] getMethods() {
 		return METHODS;
+	}
+
+	protected void addHeaders(final HttpExchange exchange) {
+		addDateHeader(exchange);
+		final Headers responseHeaders = exchange.getResponseHeaders();
+		if (this.headers != null) {
+			for (final Entry<String, List<String>> entry : this.headers.entrySet()) {
+				responseHeaders.put(entry.getKey(), entry.getValue());
+			}
+		}
+		if (!responseHeaders.containsKey("Content-Type")) {
+			responseHeaders.add("Content-Type", new MimetypesFileTypeMap().getContentType(resourceName));
+		}
+		if (!responseHeaders.containsKey("Cache-Control")) {
+			responseHeaders.add("Cache-Control", DEFAULT_CACHE_CONTROL);
+		}
 	}
 
 }
