@@ -208,11 +208,11 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 		finally {
 			try {
-				baos.close();
+				gzos.close();
 			}
 			catch (final Exception e) {}
 			try {
-				gzos.close();
+				baos.close();
 			}
 			catch (final Exception e) {}
 		}
