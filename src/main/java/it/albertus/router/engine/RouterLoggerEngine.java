@@ -31,6 +31,7 @@ public abstract class RouterLoggerEngine {
 		boolean CONSOLE_SHOW_CONFIGURATION = false;
 		boolean THRESHOLDS_EMAIL = false;
 		boolean LOG_CONNECTED = false;
+		boolean WAIT_DISCONNECTED = false;
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
@@ -54,6 +55,8 @@ public abstract class RouterLoggerEngine {
 	private RouterData currentData;
 
 	private volatile int iteration = FIRST_ITERATION;
+	private boolean connected = false;
+	private boolean loggedIn = false;
 
 	public RouterLoggerStatus getCurrentStatus() {
 		return currentStatus;
@@ -192,7 +195,6 @@ public abstract class RouterLoggerEngine {
 			}
 
 			/* Avvio della procedura... */
-			final boolean connected;
 			try {
 				setStatus(RouterLoggerStatus.CONNECTING);
 				interruptible = true;
@@ -212,7 +214,6 @@ public abstract class RouterLoggerEngine {
 			// Log in...
 			if (connected && !exit) {
 				setStatus(RouterLoggerStatus.AUTHENTICATING);
-				boolean loggedIn = false;
 				try {
 					interruptible = true;
 					loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
@@ -321,6 +322,21 @@ public abstract class RouterLoggerEngine {
 		// Iterazione...
 		for (int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS); (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			final long timeBeforeRead = System.currentTimeMillis();
+
+			// Reconnnect if needed...
+			if (!connected) {
+				connected = reader.connect();
+				if (!connected) {
+					throw new RuntimeException("Connection error");
+				}
+			}
+			if (!loggedIn) {
+				loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
+				if (!loggedIn) {
+					throw new RuntimeException("Login error");
+				}
+			}
+
 			currentData = reader.readInfo();
 			final long timeAfterRead = System.currentTimeMillis();
 			currentData.setResponseTime((int) (timeAfterRead - timeBeforeRead));
@@ -360,6 +376,16 @@ public abstract class RouterLoggerEngine {
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iterations <= 0 || iteration < iterations) {
+
+				// Disconnect if requested...
+				if (configuration.getBoolean("reader.wait.disconnected", Defaults.WAIT_DISCONNECTED)) {
+					reader.logout();
+					loggedIn = false;
+					reader.disconnect();
+					connected = false;
+					writer.release();
+				}
+
 				long waitTimeInMillis;
 				if (RouterLoggerStatus.WARNING.equals(currentStatus)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
