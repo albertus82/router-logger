@@ -32,6 +32,7 @@ public abstract class RouterLoggerEngine {
 		boolean THRESHOLDS_EMAIL = false;
 		boolean LOG_CONNECTED = false;
 		boolean WAIT_DISCONNECTED = false;
+		long WAIT_DISCONNECTED_MIN_INTERVAL_IN_MILLIS = 1000L;
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
@@ -185,7 +186,7 @@ public abstract class RouterLoggerEngine {
 					Thread.sleep(retryIntervalInMillis);
 				}
 				catch (InterruptedException ie) {
-					/* Se si chiude il programma mentre e' in attesa di riconnessione... */
+					// Se si chiude il programma mentre e' in attesa di riconnessione...
 					exit = true;
 					continue;
 				}
@@ -323,17 +324,27 @@ public abstract class RouterLoggerEngine {
 		for (int iterations = configuration.getInt("logger.iterations", Defaults.ITERATIONS); (iterations <= 0 || iteration <= iterations) && !exit; iteration++) {
 			final long timeBeforeRead = System.currentTimeMillis();
 
-			// Reconnnect if needed...
+			// Reconnect if needed...
 			if (!connected) {
 				connected = reader.connect();
-				if (!connected) {
-					throw new RuntimeException("Connection error");
+				if (!connected) { // Retry...
+					throw new RuntimeException(Resources.get("msg.reconnection.error"));
 				}
 			}
 			if (!loggedIn) {
-				loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
-				if (!loggedIn) {
-					throw new RuntimeException("Login error");
+				try {
+					loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
+					if (!loggedIn) {
+						break; // Exit immediately!
+					}
+				}
+				catch (final IOException ioe) {
+					logger.log(ioe);
+					break; // Exit immediately!
+				}
+				catch (final RuntimeException re) {
+					logger.log(re);
+					break; // Exit immediately!
 				}
 			}
 
@@ -365,7 +376,7 @@ public abstract class RouterLoggerEngine {
 			}
 			else if (!allThresholdsReached.isEmpty()) {
 				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
-				doSetStatus(RouterLoggerStatus.INFO); 
+				doSetStatus(RouterLoggerStatus.INFO);
 			}
 			else {
 				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
@@ -377,21 +388,21 @@ public abstract class RouterLoggerEngine {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iterations <= 0 || iteration < iterations) {
 
-				// Disconnect if requested...
-				if (configuration.getBoolean("reader.wait.disconnected", Defaults.WAIT_DISCONNECTED)) {
-					reader.logout();
-					loggedIn = false;
-					reader.disconnect();
-					connected = false;
-					writer.release();
-				}
-
 				long waitTimeInMillis;
 				if (RouterLoggerStatus.WARNING.equals(currentStatus)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
 				else {
 					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
+				}
+
+				// Disconnect if requested...
+				if (configuration.getBoolean("reader.wait.disconnected", Defaults.WAIT_DISCONNECTED) && waitTimeInMillis > configuration.getLong("reader.wait.disconnected.min.interval.ms", Defaults.WAIT_DISCONNECTED_MIN_INTERVAL_IN_MILLIS)) {
+					reader.logout();
+					loggedIn = false;
+					reader.disconnect();
+					connected = false;
+					writer.release();
 				}
 
 				// Sottrazione dal tempo di attesa di quello trascorso durante la scrittura dei dati...
