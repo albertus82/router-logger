@@ -110,6 +110,9 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 	* **`LF`**: invia il solo carattere `LF` (`0x0A`) (`\n`, stile Linux/OS X).
 	* **`CR`**: invia il solo carattere `CR` (`0x0D`) (`\r`).
 * **`reader.log.connected`**= specifica se registrare l'avvenuta connessione al router su file e via email (default: `false`).
+* **`reader.wait.disconnected`**= specifica se disconnettersi dal router dopo ogni interrogazione. Normalmente l'applicazione resta sempre connessa al dispositivo, ma in caso di intervallo tra le richieste maggiore di alcuni secondi pu&ograve; essere opportuno abilitare questa opzione che forza una disconnessione e riconnessione ad ogni iterazione (default: `false`).
+	* **`reader.wait.disconnected.interval.threshold`**= disconnette solo se l'intervallo &egrave; superiore ad una certa soglia configurabile con la propriet&agrave; `reader.wait.disconnected.interval.threshold.ms` (default: `true`).
+	* **`reader.wait.disconnected.interval.threshold.ms`**= l'intervallo minimo al di sotto del quale non viene effettuata la disconnessione, in millisecondi (default: `1000` ms).
 
 ##### Interfaccia grafica (GUI)
 
