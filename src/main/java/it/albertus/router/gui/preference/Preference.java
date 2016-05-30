@@ -70,7 +70,8 @@ public enum Preference {
 	TELNET_NEWLINE_CHARACTERS(Page.READER, FieldEditorType.FormattedCombo, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
 	READER_LOG_CONNECTED(Page.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.LOG_CONNECTED)),
 	READER_WAIT_DISCONNECTED(Page.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED)),
-	READER_WAIT_DISCONNECTED_MIN_INTERVAL_MS(Page.READER, FieldEditorType.IntegerCombo, Long.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_MIN_INTERVAL_IN_MILLIS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.reader.wait.disconnected.min.interval.ms.none"), Integer.toString(0) } }).build(), READER_WAIT_DISCONNECTED),
+	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD(Page.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD), null, READER_WAIT_DISCONNECTED),
+	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD_MS(Page.READER, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS), new FieldEditorDataBuilder().integerValidRange(1, Integer.MAX_VALUE).build(), READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD),
 
 	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, FieldEditorType.FormattedString, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
 	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, FieldEditorType.FormattedString),

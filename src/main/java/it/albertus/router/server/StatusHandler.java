@@ -17,7 +17,7 @@ public class StatusHandler extends BaseHttpHandler {
 	public interface Defaults {
 		boolean ENABLED = true;
 		boolean REFRESH = false;
-		int REFRESH_SECS = 5;
+		int REFRESH_SECS = (int) (RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS / 1000);
 	}
 
 	public static final String PATH = "/status";

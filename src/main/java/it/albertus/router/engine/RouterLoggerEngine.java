@@ -32,7 +32,8 @@ public abstract class RouterLoggerEngine {
 		boolean THRESHOLDS_EMAIL = false;
 		boolean LOG_CONNECTED = false;
 		boolean WAIT_DISCONNECTED = false;
-		long WAIT_DISCONNECTED_MIN_INTERVAL_IN_MILLIS = 1000L;
+		boolean WAIT_DISCONNECTED_INTERVAL_THRESHOLD = true;
+		long WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS = INTERVAL_FAST_IN_MILLIS;
 		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
 	}
 
@@ -325,13 +326,13 @@ public abstract class RouterLoggerEngine {
 			final long timeBeforeRead = System.currentTimeMillis();
 
 			// Reconnect if needed...
-			if (!connected) {
+			if (!connected && !exit) {
 				connected = reader.connect();
 				if (!connected) { // Retry...
 					throw new RuntimeException(Resources.get("msg.reconnection.error"));
 				}
 			}
-			if (!loggedIn) {
+			if (!loggedIn && !exit) {
 				try {
 					loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
 					if (!loggedIn) {
@@ -346,6 +347,10 @@ public abstract class RouterLoggerEngine {
 					logger.log(re);
 					break; // Exit immediately!
 				}
+			}
+
+			if (exit) {
+				break;
 			}
 
 			currentData = reader.readInfo();
@@ -385,6 +390,10 @@ public abstract class RouterLoggerEngine {
 			// Aggiorna l'interfaccia
 			showInfo(currentData, allThresholdsReached);
 
+			if (exit) {
+				break;
+			}
+
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iterations <= 0 || iteration < iterations) {
 
@@ -397,12 +406,13 @@ public abstract class RouterLoggerEngine {
 				}
 
 				// Disconnect if requested...
-				if (configuration.getBoolean("reader.wait.disconnected", Defaults.WAIT_DISCONNECTED) && waitTimeInMillis > configuration.getLong("reader.wait.disconnected.min.interval.ms", Defaults.WAIT_DISCONNECTED_MIN_INTERVAL_IN_MILLIS)) {
+				if (configuration.getBoolean("reader.wait.disconnected", Defaults.WAIT_DISCONNECTED) && (!configuration.getBoolean("reader.wait.disconnected.interval.threshold", Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD) || waitTimeInMillis > configuration.getLong("reader.wait.disconnected.interval.threshold.ms", Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS))) {
 					reader.logout();
 					loggedIn = false;
 					reader.disconnect();
 					connected = false;
 					writer.release();
+					out.println(Resources.get("msg.reconnection.info", waitTimeInMillis), true);
 				}
 
 				// Sottrazione dal tempo di attesa di quello trascorso durante la scrittura dei dati...
