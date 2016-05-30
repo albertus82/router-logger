@@ -92,7 +92,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			final byte[] response = html.toString().getBytes(getCharset());
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
 			exchange.getResponseBody().write(response);
-			exchange.getResponseBody().close();
 			exchange.close();
 			return false;
 		}
@@ -125,7 +124,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			final byte[] response = html.toString().getBytes(getCharset());
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, response.length);
 			exchange.getResponseBody().write(response);
-			exchange.getResponseBody().close();
 			exchange.close();
 		}
 		return match;
@@ -151,7 +149,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 				final byte[] response = html.toString().getBytes(getCharset());
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
 				exchange.getResponseBody().write(response);
-				exchange.getResponseBody().close();
 			}
 			finally {
 				exchange.close();
@@ -211,11 +208,11 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 		finally {
 			try {
-				gzos.close();
+				baos.close();
 			}
 			catch (final Exception e) {}
 			try {
-				baos.close();
+				gzos.close();
 			}
 			catch (final Exception e) {}
 		}
