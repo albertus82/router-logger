@@ -330,7 +330,8 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 * **`server.log.request`**= regola il livello di registrazione delle richieste HTTP ricevute dall'applicazione. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
 	* **`0`**: nessuna registrazione.
 	* **`1`**: registrazione nel registro a video (default).
-	* **`2`**: registrazione nel registro a video e su file.
+	* **`2`**: registrazione su file.
+	* **`3`**: registrazione nel registro a video e su file.
 
 
 ### Estensione

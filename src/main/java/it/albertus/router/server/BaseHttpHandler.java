@@ -22,7 +22,7 @@ import com.sun.net.httpserver.HttpHandler;
 public abstract class BaseHttpHandler implements HttpHandler {
 
 	public interface Defaults {
-		int LOG_REQUEST = 1;
+		byte LOG_REQUEST = 1;
 		boolean COMPRESS_RESPONSE = false;
 	}
 
@@ -159,11 +159,14 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected void log(final HttpExchange exchange) {
 		final Destination[] destinations;
-		switch (configuration.getInt("server.log.request", Defaults.LOG_REQUEST)) {
+		switch (configuration.getByte("server.log.request", Defaults.LOG_REQUEST)) {
 		case 1:
 			destinations = new Destination[] { Destination.CONSOLE };
 			break;
 		case 2:
+			destinations = new Destination[] { Destination.FILE };
+			break;
+		case 3:
 			destinations = new Destination[] { Destination.CONSOLE, Destination.FILE };
 			break;
 		default:

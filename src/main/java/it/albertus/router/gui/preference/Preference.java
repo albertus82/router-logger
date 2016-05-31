@@ -71,7 +71,7 @@ public enum Preference {
 	READER_LOG_CONNECTED(Page.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.LOG_CONNECTED)),
 	READER_WAIT_DISCONNECTED(Page.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED)),
 	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD(Page.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD), null, READER_WAIT_DISCONNECTED),
-	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD_MS(Page.READER, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS), new FieldEditorDataBuilder().integerValidRange(1, Integer.MAX_VALUE).build(), READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD),
+	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD_MS(Page.READER, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS), null, READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD),
 
 	TPLINK_8970_COMMAND_INFO_ADSL(Page.TPLINK_8970, FieldEditorType.FormattedString, TpLink8970Reader.Defaults.COMMAND_INFO_ADSL),
 	TPLINK_8970_COMMAND_INFO_WAN(Page.TPLINK_8970, FieldEditorType.FormattedString),

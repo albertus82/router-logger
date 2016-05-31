@@ -18,7 +18,7 @@ public class ServerPreferencePage extends BasePreferencePage {
 	}
 
 	public static String[][] getLogComboOptions() {
-		final int length = 3;
+		final int length = 4;
 		final String[][] options = new String[length][2];
 		for (int index = 0; index < length; index++) {
 			options[index][1] = Integer.toString(index);
