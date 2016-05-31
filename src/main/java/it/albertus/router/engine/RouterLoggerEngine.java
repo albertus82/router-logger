@@ -143,7 +143,10 @@ public abstract class RouterLoggerEngine {
 			@Override
 			public void run() {
 				if (reader != null) {
-					reader.disconnect();
+					try {
+						reader.disconnect();
+					}
+					catch (final Exception e) {/* Ignore */}
 				}
 				release();
 				server.stop();
