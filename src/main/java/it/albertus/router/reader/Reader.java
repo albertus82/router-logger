@@ -141,8 +141,9 @@ public abstract class Reader {
 		try {
 			telnet.disconnect();
 		}
-		catch (Exception e) {
-			logger.log(e);
+		catch (final NullPointerException npe) {/* Ignore */}
+		catch (final IOException ioe) {
+			logger.log(ioe);
 		}
 	}
 
@@ -171,9 +172,8 @@ public abstract class Reader {
 	 * server</b>, che potrebbero non arrivare mai.
 	 * 
 	 * @param until la stringa limite che determina la fine della lettura.
-	 * @param inclusive
-	 *            determina l'inclusione o meno della stringa limite all'interno
-	 *            della stringa restituita.
+	 * @param inclusive determina l'inclusione o meno della stringa limite
+	 *        all'interno della stringa restituita.
 	 * @return la stringa contenente i dati ricevuti dal server Telnet.
 	 * @throws IOException in caso di errore durante la lettura dei dati.
 	 * @throws NullPointerException se la stringa fornita &egrave; null.
