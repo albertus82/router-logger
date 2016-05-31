@@ -157,7 +157,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 					try {
 						getReader().disconnect();
 					}
-					catch (final Exception e) {}
+					catch (final Exception e) {/* Ignore */}
 					release();
 				}
 				catch (final Throwable throwable) {
@@ -166,7 +166,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 					try {
 						getReader().disconnect();
 					}
-					catch (final Exception e) {}
+					catch (final Exception e) {/* Ignore */}
 				}
 			}
 			else {

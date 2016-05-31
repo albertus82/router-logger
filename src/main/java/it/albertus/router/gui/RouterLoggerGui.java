@@ -254,7 +254,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {}
+							catch (final Exception e) {/* Ignore */}
 							release();
 						}
 						catch (final Throwable throwable) {
@@ -269,7 +269,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {}
+							catch (final Exception e) {/* Ignore */}
 						}
 					}
 				};
