@@ -28,6 +28,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
+	protected static final int TCP_PACKET_SIZE = 1460;
+
 	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
 
 	protected static String lastRequest = null;
@@ -287,6 +289,27 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	 */
 	protected void addDateHeader(final HttpExchange exchange) {
 		exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
+	}
+
+	protected String padHtml(final String response) {
+		if (response.length() > TCP_PACKET_SIZE) {
+			return response;
+		}
+		else {
+			final StringBuilder padded = new StringBuilder(response);
+			padded.append(NewLine.CRLF.toString()).append("<!--");
+			for (int i = padded.length(), j = 0; i < TCP_PACKET_SIZE - 4; i++, j++) {
+				if (j % 79 == 0) {
+					padded.append(NewLine.CRLF.toString());
+					i++;
+				}
+				else {
+					padded.append('x');
+				}
+			}
+			padded.append(NewLine.CRLF.toString()).append("-->");
+			return padded.toString();
+		}
 	}
 
 	protected Charset getCharset() {
