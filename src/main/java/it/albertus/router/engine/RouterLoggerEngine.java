@@ -15,6 +15,7 @@ import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -400,7 +401,7 @@ public abstract class RouterLoggerEngine {
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iterations <= 0 || iteration < iterations) {
 
-				long waitTimeInMillis;
+				final long waitTimeInMillis;
 				if (RouterLoggerStatus.WARNING.equals(currentStatus)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
@@ -409,21 +410,25 @@ public abstract class RouterLoggerEngine {
 				}
 
 				// Disconnect if requested...
-				if (configuration.getBoolean("reader.wait.disconnected", Defaults.WAIT_DISCONNECTED) && (!configuration.getBoolean("reader.wait.disconnected.interval.threshold", Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD) || waitTimeInMillis > configuration.getLong("reader.wait.disconnected.interval.threshold.ms", Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS))) {
+				final boolean disconnectionRequested = configuration.getBoolean("reader.wait.disconnected", Defaults.WAIT_DISCONNECTED) && (!configuration.getBoolean("reader.wait.disconnected.interval.threshold", Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD) || waitTimeInMillis > configuration.getLong("reader.wait.disconnected.interval.threshold.ms", Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS));
+				if (disconnectionRequested) {
 					reader.logout();
 					loggedIn = false;
 					reader.disconnect();
 					connected = false;
 					writer.release();
-					out.println(Resources.get("msg.reconnection.info", waitTimeInMillis), true);
 				}
 
 				// Sottrazione dal tempo di attesa di quello trascorso durante la scrittura dei dati...
-				waitTimeInMillis = waitTimeInMillis - (System.currentTimeMillis() - timeAfterRead);
+				final long adjustedWaitTimeInMillis = waitTimeInMillis - (System.currentTimeMillis() - timeAfterRead);
 
-				if (waitTimeInMillis > 0L) {
+				if (adjustedWaitTimeInMillis > 0L) {
+					if (disconnectionRequested) {
+						final String formattedDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date(System.currentTimeMillis() + adjustedWaitTimeInMillis));
+						out.println(Resources.get("msg.reconnection.info", formattedDate), true);
+					}
 					interruptible = true;
-					Thread.sleep(waitTimeInMillis);
+					Thread.sleep(adjustedWaitTimeInMillis);
 					interruptible = false;
 				}
 			}
