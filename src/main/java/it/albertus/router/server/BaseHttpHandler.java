@@ -28,8 +28,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
-	protected static final int TCP_PACKET_SIZE = 1460;
-
 	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
 
 	protected static String lastRequest = null;
