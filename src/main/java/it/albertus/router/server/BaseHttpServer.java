@@ -3,11 +3,14 @@ package it.albertus.router.server;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
+import it.albertus.util.ExceptionUtils;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
 import java.util.Set;
@@ -112,9 +115,7 @@ public abstract class BaseHttpServer {
 						tmf.init(ks);
 
 						sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-
-						final HttpsServer httpsServer = HttpsServer.create(address, 0);
-						httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+						final HttpsConfigurator httpsConfigurator = new HttpsConfigurator(sslContext) {
 							@Override
 							public void configure(final HttpsParameters params) {
 								try {
@@ -128,10 +129,13 @@ public abstract class BaseHttpServer {
 									params.setSSLParameters(defaultSSLParameters);
 								}
 								catch (final Exception e) {
-									Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", e.getLocalizedMessage())));
+									Logger.getInstance().log(e);
 								}
 							}
-						});
+						};
+
+						final HttpsServer httpsServer = HttpsServer.create(address, 0);
+						httpsServer.setHttpsConfigurator(httpsConfigurator);
 						httpServer = httpsServer;
 					}
 					else {
@@ -142,8 +146,13 @@ public abstract class BaseHttpServer {
 					started = true;
 				}
 			}
-			catch (final Exception e1) {
-				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", e1.getLocalizedMessage())));
+			catch (final BindException be) {
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start.port", port)), Destination.CONSOLE);
+				Logger.getInstance().log(be, Destination.FILE, Destination.EMAIL);
+			}
+			catch (final Exception e) {
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE);
+				Logger.getInstance().log(e, Destination.FILE, Destination.EMAIL);
 			}
 		}
 	}
