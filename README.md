@@ -332,6 +332,11 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 	* **`1`**: registrazione nel registro a video (default).
 	* **`2`**: registrazione su file.
 	* **`3`**: registrazione nel registro a video e su file.
+* **`server.https.enabled`**= Abilita il protocollo di comunicazione sicura HTTPS (default: `false`). Questa funzione richiede la presenza di un certificato SSL sul sistema che esegue l'applicazione. Per creare un certificato SSL, &egrave; possibile utilizzare il programma **`keytool**`, che prevede una sintassi del seguente tipo:
+	* `keytool -genkey -alias "`myalias`" -keyalg "RSA" -keypass "`mykeypass`" -keystore ssl.key -storepass "`mystorepass`" -validity 360`
+* **`server.https.keystore.file`**= Puntamento al file *keystore* (prodotto da **`keytool`**). 
+* **`server.https.storepass`**= Password *keystore* (`storepass`).
+* **`server.https.keypass`**= Password *chiave privata* (`keypass`).
 
 
 ### Estensione
