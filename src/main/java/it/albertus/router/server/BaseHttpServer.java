@@ -103,7 +103,7 @@ public abstract class BaseHttpServer {
 
 						final char[] storepass = configuration.getCharArray("server.https.storepass"); // Keystore password
 						final KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
-						// keytool -genkey -alias "myalias" -keyalg "RSA" -keypass "mykeypass" -keystore "mykeystore.ks" -storepass "mystorepass" -validity 360
+						// keytool -genkey -alias "myalias" -keyalg "RSA" -keypass "mykeypass" -keystore "mykeystore.jks" -storepass "mystorepass" -validity 360
 						final InputStream bis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.file")));
 						keyStore.load(bis, storepass);
 						bis.close();
