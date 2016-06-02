@@ -343,7 +343,7 @@ Volendo invece utilizzare **OpenSSL**, una possibile sequenza di comandi &egrave
 ```
 openssl genrsa -des3 -out server.key 1024
 openssl req -new -key server.key -out server.csr
-openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+openssl x509 -req -days 360 -in server.csr -signkey server.key -out server.crt
 openssl pkcs12 -export -out mykeystore.pfx -inkey server.key -in server.crt
 ```
 **&Egrave; caldamente consigliato mantenere sempre aggiornata l'installazione di Java** per garantire i pi&ugrave; elevati livelli di sicurezza disponibili. Molti browser bloccano le connessioni con i server che non rispettano dei criteri minimi di sicurezza, e questi criteri vengono periodicamente rivisti.
