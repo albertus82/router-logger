@@ -350,7 +350,7 @@ openssl pkcs12 -export -out mykeystore.pfx -inkey server.key -in server.crt
 
 La configurazione del protocollo HTTPS si effettua mediante le seguenti propriet&agrave;:
 * **`server.ssl.enabled`**= Abilita il protocollo di comunicazione sicura HTTPS (default: `false`).  
-* **`server.ssl.keystore.file`**= Puntamento al file *keystore* (prodotto da **`keytool`** o **OpenSSL**). 
+* **`server.ssl.keystore.file`**= Puntamento al file *keystore* (prodotto da **keytool** o **OpenSSL**). 
 * **`server.ssl.storepass`**= Password *keystore* (`storepass`).
 * **`server.ssl.keypass`**= Password *chiave privata* (`keypass`).
 
