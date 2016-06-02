@@ -15,6 +15,8 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class ServerHttpsPreferencePage extends ServerPreferencePage {
 
+	private static final String[] KEY_STORE_FILE_EXTENSIONS = { "*.JKS;*.jks", "*.P12;*.p12;*.PFX;*.pfx", "*.*" };
+
 	private static final Set<String> keyManagerFactoryAlgorithms = new TreeSet<String>();
 	private static final Set<String> trustManagerFactoryAlgorithms = new TreeSet<String>();
 	private static final Set<String> keyStoreAlgorithms = new TreeSet<String>();
@@ -81,6 +83,10 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 			options[index++] = new String[] { algorithm, algorithm };
 		}
 		return options;
+	}
+
+	public static String[] getKeyStoreFileExtensions() {
+		return KEY_STORE_FILE_EXTENSIONS;
 	}
 
 }

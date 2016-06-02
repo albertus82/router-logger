@@ -157,7 +157,7 @@ public enum Preference {
 
 	SERVER_SSL_ENABLED(Page.SERVER_HTTPS, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.SSL_ENABLED)),
 	SERVER_SSL_KEYSTORE_TYPE(Page.SERVER_HTTPS, FieldEditorType.ValidatedCombo, BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
-	SERVER_SSL_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.FormattedFile, null, new FieldEditorDataBuilder().fileExtensions(new String[] { "*.JKS;*.jks", "*.P1*;*.p1*;*.PFX;*.pfx", "*.*" }).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.FormattedFile, null, new FieldEditorDataBuilder().fileExtensions(ServerHttpsPreferencePage.getKeyStoreFileExtensions()).build(), SERVER_SSL_ENABLED),
 	SERVER_SSL_STOREPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_SSL_ENABLED),
 	SERVER_SSL_KEYPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_SSL_ENABLED),
 	SERVER_SSL_PROTOCOL(Page.SERVER_HTTPS, FieldEditorType.ValidatedCombo, BaseHttpServer.Defaults.SSL_PROTOCOL, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getSslContextAlgorithmsComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
