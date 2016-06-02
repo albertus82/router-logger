@@ -24,8 +24,6 @@ import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 
-// Linux: keytool -genkey -alias alias -keypass PASSWORD -keystore lig.keystore -storepass PASSWORD
-// Windows: keytool -genkey -keyalg RSA -alias selfsigned -keystore testkey.jks -storepass PASSWORD -validity 360 -keysize 2048
 public abstract class BaseHttpServer {
 
 	public interface Defaults {
@@ -37,6 +35,7 @@ public abstract class BaseHttpServer {
 	protected static final String SSL_PROTOCOL = "TLS";
 	protected static final String KEYSTORE_TYPE = "JKS";
 	protected static final String SECURITY_ALGORITHM = "SunX509";
+	protected static final int STOP_DELAY = 0;
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Authenticator authenticator = new WebServerAuthenticator();
@@ -55,7 +54,7 @@ public abstract class BaseHttpServer {
 		if (httpServer != null) {
 			synchronized (lock) {
 				try {
-					httpServer.stop(0);
+					httpServer.stop(STOP_DELAY);
 				}
 				catch (final Exception exception) {
 					Logger.getInstance().log(exception);
@@ -96,44 +95,40 @@ public abstract class BaseHttpServer {
 			try {
 				synchronized (lock) {
 					if (configuration.getBoolean("server.https.enabled", Defaults.HTTPS_ENABLED)) {
-						final HttpsServer httpsServer = HttpsServer.create(address, 0);
 						final SSLContext sslContext = SSLContext.getInstance(SSL_PROTOCOL);
 
-						// initialise the keystore
 						final char[] storepass = configuration.getCharArray("server.https.storepass"); // Keystore password
 						final KeyStore ks = KeyStore.getInstance(KEYSTORE_TYPE);
-						final InputStream fis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.file")));
-						ks.load(fis, storepass);
-						fis.close();
+						// keytool -genkey -alias "ALIAS" -keyalg "RSA" -keypass PASSWORD -keystore ssl.key -storepass PASSWORD -validity 360
+						final InputStream bis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.file")));
+						ks.load(bis, storepass);
+						bis.close();
 
-						// setup the key manager factory
 						final char[] keypass = configuration.getCharArray("server.https.keypass"); // Key password
 						final KeyManagerFactory kmf = KeyManagerFactory.getInstance(SECURITY_ALGORITHM);
 						kmf.init(ks, keypass);
 
-						// setup the trust manager factory
 						final TrustManagerFactory tmf = TrustManagerFactory.getInstance(SECURITY_ALGORITHM);
 						tmf.init(ks);
 
-						// setup the HTTPS context and parameters
 						sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+
+						final HttpsServer httpsServer = HttpsServer.create(address, 0);
 						httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
 							@Override
 							public void configure(final HttpsParameters params) {
 								try {
-									// initialise the SSL context
-									final SSLContext c = SSLContext.getDefault();
-									final SSLEngine engine = c.createSSLEngine();
+									final SSLContext sslContext = SSLContext.getDefault();
+									final SSLEngine sslEngine = sslContext.createSSLEngine();
 									params.setNeedClientAuth(false);
-									params.setCipherSuites(engine.getEnabledCipherSuites());
-									params.setProtocols(engine.getEnabledProtocols());
+									params.setCipherSuites(sslEngine.getEnabledCipherSuites());
+									params.setProtocols(sslEngine.getEnabledProtocols());
 
-									// get the default parameters
-									final SSLParameters defaultSSLParameters = c.getDefaultSSLParameters();
+									final SSLParameters defaultSSLParameters = sslContext.getDefaultSSLParameters();
 									params.setSSLParameters(defaultSSLParameters);
 								}
 								catch (final Exception e) {
-									Logger.getInstance().log(Resources.get("err.server.start", e.getLocalizedMessage()));
+									Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", e.getLocalizedMessage())));
 								}
 							}
 						});
@@ -147,8 +142,8 @@ public abstract class BaseHttpServer {
 					started = true;
 				}
 			}
-			catch (final Exception e) {
-				Logger.getInstance().log(Resources.get("err.server.start", e.getLocalizedMessage()));
+			catch (final Exception e1) {
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", e1.getLocalizedMessage())));
 			}
 		}
 	}
