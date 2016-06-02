@@ -103,7 +103,7 @@ public abstract class BaseHttpServer {
 
 						final char[] storepass = configuration.getCharArray("server.https.storepass"); // Keystore password
 						final KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
-						// keytool -genkey -alias "ALIAS" -keyalg "RSA" -keypass PASSWORD -keystore ssl.key -storepass PASSWORD -validity 360
+						// keytool -genkey -alias "myalias" -keyalg "RSA" -keypass "mykeypass" -keystore "mykeystore.ks" -storepass "mystorepass" -validity 360
 						final InputStream bis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.file")));
 						keyStore.load(bis, storepass);
 						bis.close();
@@ -148,15 +148,15 @@ public abstract class BaseHttpServer {
 				}
 			}
 			catch (final BindException be) {
-				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start.port", port)));
+				Logger.getInstance().log(new BindException(Resources.get("err.server.start.port", port)), Destination.CONSOLE, Destination.FILE);
 				Logger.getInstance().log(be, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final FileNotFoundException fnfe) {
-				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start.keystore.file")));
+				Logger.getInstance().log(new FileNotFoundException(Resources.get("err.server.start.keystore.file")), Destination.CONSOLE, Destination.FILE);
 				Logger.getInstance().log(fnfe, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", ExceptionUtils.getUIMessage(e))));
+				Logger.getInstance().log(new Exception(Resources.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE, Destination.FILE);
 				Logger.getInstance().log(e, Destination.FILE, Destination.EMAIL);
 			}
 		}
