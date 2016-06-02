@@ -31,7 +31,6 @@ import it.albertus.router.server.DisconnectHandler;
 import it.albertus.router.server.RestartHandler;
 import it.albertus.router.server.RootHandler;
 import it.albertus.router.server.StatusHandler;
-import it.albertus.router.server.StatusHandler.Defaults;
 import it.albertus.router.server.WebServer;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
@@ -152,13 +151,17 @@ public enum Preference {
 	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_HANDLER_STATUS_ENABLED),
-	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
+	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(StatusHandler.Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
 	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED),
 
-	SERVER_HTTPS_ENABLED(Page.SERVER_HTTPS, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.HTTPS_ENABLED)),
-	SERVER_HTTPS_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.FormattedFile, null, new FieldEditorDataBuilder().fileExtensions(new String[] { "*.JKS;*.jks", "*.*" }).build(), SERVER_HTTPS_ENABLED),
-	SERVER_HTTPS_STOREPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_HTTPS_ENABLED),
-	SERVER_HTTPS_KEYPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_HTTPS_ENABLED);
+	SERVER_SSL_ENABLED(Page.SERVER_HTTPS, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.SSL_ENABLED)),
+	SERVER_SSL_KEYSTORE_TYPE(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.FormattedFile, null, new FieldEditorDataBuilder().fileExtensions(new String[] { "*.JKS;*.jks", "*.P12;*.p12;*.PFX;*.pfx", "*.*" }).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_STOREPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_SSL_ENABLED),
+	SERVER_SSL_KEYPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_SSL_ENABLED),
+	SERVER_SSL_PROTOCOL(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_PROTOCOL, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_KMF_ALGORITHM(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_KMF_ALGORITHM, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_TMF_ALGORITHM(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_TMF_ALGORITHM, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

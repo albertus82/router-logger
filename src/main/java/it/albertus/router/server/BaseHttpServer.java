@@ -33,12 +33,13 @@ public abstract class BaseHttpServer {
 	public interface Defaults {
 		int PORT = 8080;
 		boolean ENABLED = false;
-		boolean HTTPS_ENABLED = false;
+		boolean SSL_ENABLED = false;
+		String SSL_KEYSTORE_TYPE = "JKS";
+		String SSL_PROTOCOL = "TLS";
+		String SSL_KMF_ALGORITHM = KeyManagerFactory.getDefaultAlgorithm();
+		String SSL_TMF_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
 	}
 
-	protected static final String SSL_PROTOCOL = "TLS";
-	protected static final String KEYSTORE_TYPE = "JKS";
-	protected static final String SECURITY_ALGORITHM = "SunX509";
 	protected static final int STOP_DELAY = 0;
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
@@ -98,21 +99,21 @@ public abstract class BaseHttpServer {
 			final InetSocketAddress address = new InetSocketAddress(port);
 			try {
 				synchronized (lock) {
-					if (configuration.getBoolean("server.https.enabled", Defaults.HTTPS_ENABLED)) {
-						final SSLContext sslContext = SSLContext.getInstance(SSL_PROTOCOL);
+					if (configuration.getBoolean("server.ssl.enabled", Defaults.SSL_ENABLED)) {
+						final SSLContext sslContext = SSLContext.getInstance(configuration.getString("server.ssl.protocol", Defaults.SSL_PROTOCOL));
 
-						final char[] storepass = configuration.getCharArray("server.https.storepass"); // Keystore password
-						final KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+						final char[] storepass = configuration.getCharArray("server.ssl.storepass");
+						final KeyStore keyStore = KeyStore.getInstance(configuration.getString("server.ssl.keystore.type", Defaults.SSL_KEYSTORE_TYPE));
 						// keytool -genkey -alias "myalias" -keyalg "RSA" -keypass "mykeypass" -keystore "mykeystore.jks" -storepass "mystorepass" -validity 360
-						final InputStream bis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.file")));
+						final InputStream bis = new BufferedInputStream(new FileInputStream(configuration.getString("server.ssl.keystore.file")));
 						keyStore.load(bis, storepass);
 						bis.close();
 
-						final char[] keypass = configuration.getCharArray("server.https.keypass"); // Key password
-						final KeyManagerFactory kmf = KeyManagerFactory.getInstance(SECURITY_ALGORITHM);
+						final char[] keypass = configuration.getCharArray("server.ssl.keypass");
+						final KeyManagerFactory kmf = KeyManagerFactory.getInstance(configuration.getString("server.ssl.KeyManagerFactory.algorithm", Defaults.SSL_KMF_ALGORITHM));
 						kmf.init(keyStore, keypass);
 
-						final TrustManagerFactory tmf = TrustManagerFactory.getInstance(SECURITY_ALGORITHM);
+						final TrustManagerFactory tmf = TrustManagerFactory.getInstance(configuration.getString("server.ssl.TrustManagerFactory.algorithm", Defaults.SSL_TMF_ALGORITHM));
 						tmf.init(keyStore);
 
 						sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
