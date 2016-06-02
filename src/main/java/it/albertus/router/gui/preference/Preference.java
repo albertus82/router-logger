@@ -146,23 +146,20 @@ public enum Preference {
 	SERVER_PASSWORD(Page.SERVER, FieldEditorType.Password, null, null, SERVER_ENABLED),
 	SERVER_PORT(Page.SERVER, FieldEditorType.FormattedInteger, Integer.toString(WebServer.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build(), SERVER_ENABLED),
 	SERVER_COMPRESS_RESPONSE(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpHandler.Defaults.COMPRESS_RESPONSE), null, SERVER_ENABLED),
-	SERVER_HTTPS(Page.SERVER,FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.HTTPS), null, SERVER_ENABLED),
+	SERVER_HANDLER_ROOT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_RESTART_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_HANDLER_STATUS_ENABLED),
+	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
 	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED),
-	
-	SERVER_HANDLER_ROOT_ENABLED(Page.SERVER_FUNCTIONS, FieldEditorType.DefaultBoolean, Boolean.toString(RootHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_RESTART_ENABLED(Page.SERVER_FUNCTIONS, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER_FUNCTIONS, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER_FUNCTIONS, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER_FUNCTIONS, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED)),
-	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER_FUNCTIONS, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_HANDLER_STATUS_ENABLED),
-	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER_FUNCTIONS, FieldEditorType.IntegerCombo, Integer.toString(Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
 
+	SERVER_HTTPS_ENABLED(Page.SERVER_HTTPS, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.HTTPS_ENABLED)),
+	SERVER_HTTPS_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.File, null, null, SERVER_HTTPS_ENABLED),
+	SERVER_HTTPS_STOREPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_HTTPS_ENABLED),
+	SERVER_HTTPS_KEYPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_HTTPS_ENABLED);
 
-//	SERVER_HTTPS_KEYSTORE_PATH(Page.SERVER_ADVANCED,),
-//	SERVER_HTTPS_STOREPASS(Page.SERVER_ADVANCED,),
-//	SERVER_HTTPS_KEYPASS(Page.SERVER_ADVANCED,);
-	;
-	
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
 	private final Page page;

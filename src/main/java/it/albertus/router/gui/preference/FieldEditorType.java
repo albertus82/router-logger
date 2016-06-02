@@ -8,6 +8,8 @@ public enum FieldEditorType {
 	FormattedString,
 	Password,
 	Integer,
+	File,
+//	FormattedFile,
 	FormattedInteger,
 	Scale,
 	ScaleInteger,

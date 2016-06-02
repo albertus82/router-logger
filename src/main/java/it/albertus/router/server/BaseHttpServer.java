@@ -31,7 +31,7 @@ public abstract class BaseHttpServer {
 	public interface Defaults {
 		int PORT = 8080;
 		boolean ENABLED = false;
-		boolean HTTPS = false;
+		boolean HTTPS_ENABLED = false;
 	}
 
 	protected static final String SSL_PROTOCOL = "TLS";
@@ -95,14 +95,14 @@ public abstract class BaseHttpServer {
 			final InetSocketAddress address = new InetSocketAddress(port);
 			try {
 				synchronized (lock) {
-					if (configuration.getBoolean("server.https", Defaults.HTTPS)) {
+					if (configuration.getBoolean("server.https.enabled", Defaults.HTTPS_ENABLED)) {
 						final HttpsServer httpsServer = HttpsServer.create(address, 0);
 						final SSLContext sslContext = SSLContext.getInstance(SSL_PROTOCOL);
 
 						// initialise the keystore
 						final char[] storepass = configuration.getCharArray("server.https.storepass"); // Keystore password
 						final KeyStore ks = KeyStore.getInstance(KEYSTORE_TYPE);
-						final InputStream fis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.path")));
+						final InputStream fis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.file")));
 						ks.load(fis, storepass);
 						fis.close();
 

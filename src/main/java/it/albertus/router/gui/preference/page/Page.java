@@ -23,7 +23,7 @@ public enum Page {
 	EMAIL_ADVANCED(AdvancedEmailPreferencePage.class, EMAIL),
 	EMAIL_CC_BCC(CcBccEmailPreferencePage.class, EMAIL),
 	SERVER(ServerPreferencePage.class),
-	SERVER_FUNCTIONS(ServerAdvancedPreferencePage.class, SERVER);
+	SERVER_HTTPS(ServerHttpsPreferencePage.class, SERVER);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

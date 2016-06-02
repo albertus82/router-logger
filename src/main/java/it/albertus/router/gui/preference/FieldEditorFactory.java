@@ -21,6 +21,7 @@ import it.albertus.router.resources.Resources;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -44,6 +45,8 @@ public final class FieldEditorFactory {
 			return new EditableComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case EmailAddresses:
 			return new EmailAddressesListEditor(name, label, parent, data.getHorizontalSpan());
+		case File:
+			return new FileFieldEditor(name, label, parent);
 		case FormattedCombo:
 			return new FormattedComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case FormattedDirectory:
