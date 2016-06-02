@@ -19,6 +19,7 @@ public enum FieldEditorType {
 	DatabaseCombo,
 	IntegerCombo,
 	ReaderCombo,
+	ValidatedCombo,
 	WriterCombo,
 	Directory,
 	FormattedDirectory,

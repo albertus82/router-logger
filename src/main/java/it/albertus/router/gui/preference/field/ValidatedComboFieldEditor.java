@@ -7,17 +7,17 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor {
+public class ValidatedComboFieldEditor extends EditableComboFieldEditor {
 
 	private boolean valid = true;
 	private String errorMessage;
+	private boolean emptyStringAllowed = true;
 
 	public ValidatedComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
+		setErrorMessage(Resources.get("err.preferences.combo.empty"));
 		getComboBoxControl().addKeyListener(new ValidateKeyListener());
 	}
-
-	protected abstract boolean checkState();
 
 	@Override
 	protected void updateValue() {
@@ -106,12 +106,29 @@ public abstract class ValidatedComboFieldEditor extends EditableComboFieldEditor
 		}
 	}
 
+	protected boolean checkState() {
+		if (!emptyStringAllowed && (getValue() == null || getValue().isEmpty())) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
 	public String getErrorMessage() {
 		return errorMessage;
 	}
 
 	public void setErrorMessage(final String message) {
 		this.errorMessage = message;
+	}
+
+	public boolean isEmptyStringAllowed() {
+		return emptyStringAllowed;
+	}
+
+	public void setEmptyStringAllowed(boolean emptyStringAllowed) {
+		this.emptyStringAllowed = emptyStringAllowed;
 	}
 
 	protected class ValidateKeyListener extends KeyAdapter {

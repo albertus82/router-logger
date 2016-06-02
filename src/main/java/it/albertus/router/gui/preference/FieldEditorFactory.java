@@ -15,6 +15,7 @@ import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ScaleIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.field.ValidatedComboFieldEditor;
 import it.albertus.router.gui.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.resources.Resources;
@@ -74,6 +75,8 @@ public final class FieldEditorFactory {
 			return createStringFieldEditor(name, label, parent, data);
 		case Thresholds:
 			return new ThresholdsFieldEditor(name, label, parent);
+		case ValidatedCombo:
+			return createValidatedComboFieldEditor(name, label, parent, data);
 		case WrapString:
 			return createWrapStringFieldEditor(name, label, parent, data);
 		case WriterCombo:
@@ -295,6 +298,14 @@ public final class FieldEditorFactory {
 			}
 		}
 		return stringFieldEditor;
+	}
+
+	private static FieldEditor createValidatedComboFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
+		final ValidatedComboFieldEditor validatedComboFieldEditor = new ValidatedComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+		if (data.getEmptyStringAllowed() != null) {
+			validatedComboFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
+		}
+		return validatedComboFieldEditor;
 	}
 
 	private static FieldEditor createWrapStringFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
