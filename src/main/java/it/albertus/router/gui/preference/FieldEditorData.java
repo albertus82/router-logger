@@ -30,6 +30,10 @@ public class FieldEditorData {
 	// DirectoryFieldEditor
 	private final String directoryDialogMessageKey;
 
+	// FileFieldEditor
+	private final String[] fileExtensions;
+	private final Boolean fileEnforceAbsolute;
+
 	public Boolean getEmptyStringAllowed() {
 		return emptyStringAllowed;
 	}
@@ -86,10 +90,18 @@ public class FieldEditorData {
 		return directoryDialogMessageKey;
 	}
 
+	public String[] getFileExtensions() {
+		return fileExtensions;
+	}
+
+	public Boolean getFileEnforceAbsolute() {
+		return fileEnforceAbsolute;
+	}
+
 	@Override
 	public String toString() {
 		return "FieldEditorData [emptyStringAllowed=" + emptyStringAllowed + ", horizontalSpan=" + horizontalSpan + ", comboEntryNamesAndValues=" + Arrays.toString(comboEntryNamesAndValues) + ", scaleMinimum=" + scaleMinimum + ", scaleMaximum=" + scaleMaximum + ", scaleIncrement=" + scaleIncrement + ", scalePageIncrement=" + scalePageIncrement + ", textLimit=" + textLimit + ", textWidth=" + textWidth + ", textHeight=" + textHeight + ", textValidateStrategy=" + textValidateStrategy
-				+ ", integerMinValidValue=" + integerMinValidValue + ", integerMaxValidValue=" + integerMaxValidValue + ", directoryDialogMessageKey=" + directoryDialogMessageKey + "]";
+				+ ", integerMinValidValue=" + integerMinValidValue + ", integerMaxValidValue=" + integerMaxValidValue + ", directoryDialogMessageKey=" + directoryDialogMessageKey + ", fileExtensions=" + Arrays.toString(fileExtensions) + ", fileEnforceAbsolute=" + fileEnforceAbsolute + "]";
 	}
 
 	public static class FieldEditorDataBuilder {
@@ -107,6 +119,8 @@ public class FieldEditorData {
 		private Integer integerMinValidValue;
 		private Integer integerMaxValidValue;
 		private String directoryDialogMessageKey;
+		private String[] fileExtensions;
+		private Boolean fileEnforceAbsolute;
 
 		public FieldEditorDataBuilder emptyStringAllowed(final boolean emptyStringAllowed) {
 			this.emptyStringAllowed = emptyStringAllowed;
@@ -174,6 +188,16 @@ public class FieldEditorData {
 			return this;
 		}
 
+		public FieldEditorDataBuilder fileExtensions(final String[] fileExtensions) {
+			this.fileExtensions = fileExtensions;
+			return this;
+		}
+
+		public FieldEditorDataBuilder fileEnforceAbsolute(final boolean fileEnforceAbsolute) {
+			this.fileEnforceAbsolute = fileEnforceAbsolute;
+			return this;
+		}
+
 		public FieldEditorData build() {
 			return new FieldEditorData(this);
 		}
@@ -194,6 +218,8 @@ public class FieldEditorData {
 		this.integerMinValidValue = builder.integerMinValidValue;
 		this.integerMaxValidValue = builder.integerMaxValidValue;
 		this.directoryDialogMessageKey = builder.directoryDialogMessageKey;
+		this.fileExtensions = builder.fileExtensions;
+		this.fileEnforceAbsolute = builder.fileEnforceAbsolute;
 	}
 
 }

@@ -97,13 +97,22 @@ public final class FieldEditorFactory {
 	}
 
 	private static FieldEditor createFileFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
-		final FileFieldEditor fileFieldEditor = new FileFieldEditor(name, label, parent);
+		final FileFieldEditor fileFieldEditor;
+		if (data != null && data.getFileEnforceAbsolute() != null) {
+			fileFieldEditor = new FileFieldEditor(name, label, data.getFileEnforceAbsolute(), parent);
+		}
+		else {
+			fileFieldEditor = new FileFieldEditor(name, label, parent);
+		}
 		if (data != null) {
 			if (data.getTextLimit() != null) {
 				fileFieldEditor.setTextLimit(data.getTextLimit());
 			}
 			if (data.getEmptyStringAllowed() != null) {
 				fileFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
+			}
+			if (data.getFileExtensions() != null && data.getFileExtensions().length != 0) {
+				fileFieldEditor.setFileExtensions(data.getFileExtensions());
 			}
 		}
 		return fileFieldEditor;
@@ -126,13 +135,22 @@ public final class FieldEditorFactory {
 	}
 
 	private static FieldEditor createFormattedFileFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
-		final FormattedFileFieldEditor formattedFileFieldEditor = new FormattedFileFieldEditor(name, label, parent);
+		final FormattedFileFieldEditor formattedFileFieldEditor;
+		if (data != null && data.getFileEnforceAbsolute() != null) {
+			formattedFileFieldEditor = new FormattedFileFieldEditor(name, label, data.getFileEnforceAbsolute(), parent);
+		}
+		else {
+			formattedFileFieldEditor = new FormattedFileFieldEditor(name, label, parent);
+		}
 		if (data != null) {
 			if (data.getTextLimit() != null) {
 				formattedFileFieldEditor.setTextLimit(data.getTextLimit());
 			}
 			if (data.getEmptyStringAllowed() != null) {
 				formattedFileFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
+			}
+			if (data.getFileExtensions() != null && data.getFileExtensions().length != 0) {
+				formattedFileFieldEditor.setFileExtensions(data.getFileExtensions());
 			}
 		}
 		return formattedFileFieldEditor;
