@@ -339,7 +339,7 @@ Per aumentare il livello di sicurezza della comunicazione con RouterLogger, &egr
 
 `keytool -genkey -alias "myalias" -keyalg "RSA" -keypass "mykeypass" -keystore "mykeystore.jks" -storepass "mystorepass" -validity 360`
 
-**&Egrave; caldamente consigliato mantenere sempre aggiornata l'installazione di Java** per garantire i pi&ugrave; elevati livelli di sicurezza disponibili. Molti browser bloccano le connessioni con i server che non rispettano dei criteri minimi di sicurezza, e questi criteri vengono rivisti periodicamente.
+**&Egrave; caldamente consigliato mantenere sempre aggiornata l'installazione di Java** per garantire i pi&ugrave; elevati livelli di sicurezza disponibili. Molti browser bloccano le connessioni con i server che non rispettano dei criteri minimi di sicurezza, e questi criteri vengono periodicamente rivisti.
 
 La configurazione del protocollo HTTPS si effettua mediante le seguenti propriet&agrave:
 * **`server.https.enabled`**= Abilita il protocollo di comunicazione sicura HTTPS (default: `false`).  
