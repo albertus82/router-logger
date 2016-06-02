@@ -16,6 +16,7 @@ import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
 import it.albertus.router.gui.preference.page.Page;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
+import it.albertus.router.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.router.gui.preference.page.ServerPreferencePage;
 import it.albertus.router.gui.preference.page.WriterPreferencePage;
 import it.albertus.router.reader.AsusDslN12EReader;
@@ -155,13 +156,13 @@ public enum Preference {
 	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED),
 
 	SERVER_SSL_ENABLED(Page.SERVER_HTTPS, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.SSL_ENABLED)),
-	SERVER_SSL_KEYSTORE_TYPE(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
-	SERVER_SSL_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.FormattedFile, null, new FieldEditorDataBuilder().fileExtensions(new String[] { "*.JKS;*.jks", "*.P12;*.p12;*.PFX;*.pfx", "*.*" }).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_KEYSTORE_TYPE(Page.SERVER_HTTPS, FieldEditorType.EditableCombo, BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.FormattedFile, null, new FieldEditorDataBuilder().fileExtensions(new String[] { "*.JKS;*.jks", "*.P1*;*.p1*;*.PFX;*.pfx", "*.*" }).build(), SERVER_SSL_ENABLED),
 	SERVER_SSL_STOREPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_SSL_ENABLED),
 	SERVER_SSL_KEYPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_SSL_ENABLED),
-	SERVER_SSL_PROTOCOL(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_PROTOCOL, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
-	SERVER_SSL_KMF_ALGORITHM(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_KMF_ALGORITHM, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
-	SERVER_SSL_TMF_ALGORITHM(Page.SERVER_HTTPS, FieldEditorType.FormattedString, BaseHttpServer.Defaults.SSL_TMF_ALGORITHM, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), SERVER_SSL_ENABLED);
+	SERVER_SSL_PROTOCOL(Page.SERVER_HTTPS, FieldEditorType.EditableCombo, BaseHttpServer.Defaults.SSL_PROTOCOL, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getSslContextAlgorithmsComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_KMF_ALGORITHM(Page.SERVER_HTTPS, FieldEditorType.EditableCombo, BaseHttpServer.Defaults.SSL_KMF_ALGORITHM, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyManagerFactoryComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
+	SERVER_SSL_TMF_ALGORITHM(Page.SERVER_HTTPS, FieldEditorType.EditableCombo, BaseHttpServer.Defaults.SSL_TMF_ALGORITHM, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

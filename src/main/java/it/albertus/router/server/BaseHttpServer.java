@@ -100,8 +100,6 @@ public abstract class BaseHttpServer {
 			try {
 				synchronized (lock) {
 					if (configuration.getBoolean("server.ssl.enabled", Defaults.SSL_ENABLED)) {
-						final SSLContext sslContext = SSLContext.getInstance(configuration.getString("server.ssl.protocol", Defaults.SSL_PROTOCOL));
-
 						final char[] storepass = configuration.getCharArray("server.ssl.storepass");
 						final KeyStore keyStore = KeyStore.getInstance(configuration.getString("server.ssl.keystore.type", Defaults.SSL_KEYSTORE_TYPE));
 						// keytool -genkey -alias "myalias" -keyalg "RSA" -keypass "mykeypass" -keystore "mykeystore.jks" -storepass "mystorepass" -validity 360
@@ -116,18 +114,18 @@ public abstract class BaseHttpServer {
 						final TrustManagerFactory tmf = TrustManagerFactory.getInstance(configuration.getString("server.ssl.TrustManagerFactory.algorithm", Defaults.SSL_TMF_ALGORITHM));
 						tmf.init(keyStore);
 
+						final SSLContext sslContext = SSLContext.getInstance(configuration.getString("server.ssl.protocol", Defaults.SSL_PROTOCOL));
 						sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 						final HttpsConfigurator httpsConfigurator = new HttpsConfigurator(sslContext) {
 							@Override
 							public void configure(final HttpsParameters params) {
 								try {
-									final SSLContext sslContext = SSLContext.getDefault();
-									final SSLEngine sslEngine = sslContext.createSSLEngine();
+									final SSLEngine sslEngine = getSSLContext().createSSLEngine();
 									params.setNeedClientAuth(false);
 									params.setCipherSuites(sslEngine.getEnabledCipherSuites());
 									params.setProtocols(sslEngine.getEnabledProtocols());
 
-									final SSLParameters defaultSSLParameters = sslContext.getDefaultSSLParameters();
+									final SSLParameters defaultSSLParameters = getSSLContext().getDefaultSSLParameters();
 									params.setSSLParameters(defaultSSLParameters);
 								}
 								catch (final Exception e) {
