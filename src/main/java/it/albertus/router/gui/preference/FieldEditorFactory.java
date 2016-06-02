@@ -7,6 +7,7 @@ import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.EmailAddressesListEditor;
 import it.albertus.router.gui.preference.field.FormattedComboFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
+import it.albertus.router.gui.preference.field.FormattedFileFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
 import it.albertus.router.gui.preference.field.IntegerComboFieldEditor;
@@ -46,11 +47,13 @@ public final class FieldEditorFactory {
 		case EmailAddresses:
 			return new EmailAddressesListEditor(name, label, parent, data.getHorizontalSpan());
 		case File:
-			return new FileFieldEditor(name, label, parent);
+			return createFileFieldEditor(name, label, parent, data);
 		case FormattedCombo:
 			return new FormattedComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case FormattedDirectory:
 			return createFormattedDirectoryFieldEditor(name, label, parent, data);
+		case FormattedFile:
+			return createFormattedFileFieldEditor(name, label, parent, data);
 		case FormattedInteger:
 			return createFormattedIntegerFieldEditor(name, label, parent, data);
 		case FormattedString:
@@ -93,6 +96,19 @@ public final class FieldEditorFactory {
 		return directoryFieldEditor;
 	}
 
+	private static FieldEditor createFileFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
+		final FileFieldEditor fileFieldEditor = new FileFieldEditor(name, label, parent);
+		if (data != null) {
+			if (data.getTextLimit() != null) {
+				fileFieldEditor.setTextLimit(data.getTextLimit());
+			}
+			if (data.getEmptyStringAllowed() != null) {
+				fileFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
+			}
+		}
+		return fileFieldEditor;
+	}
+
 	private static FieldEditor createFormattedDirectoryFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
 		final FormattedDirectoryFieldEditor formattedDirectoryFieldEditor = new FormattedDirectoryFieldEditor(name, label, parent);
 		if (data != null) {
@@ -107,6 +123,19 @@ public final class FieldEditorFactory {
 			}
 		}
 		return formattedDirectoryFieldEditor;
+	}
+
+	private static FieldEditor createFormattedFileFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
+		final FormattedFileFieldEditor formattedFileFieldEditor = new FormattedFileFieldEditor(name, label, parent);
+		if (data != null) {
+			if (data.getTextLimit() != null) {
+				formattedFileFieldEditor.setTextLimit(data.getTextLimit());
+			}
+			if (data.getEmptyStringAllowed() != null) {
+				formattedFileFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
+			}
+		}
+		return formattedFileFieldEditor;
 	}
 
 	private static FieldEditor createFormattedIntegerFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {

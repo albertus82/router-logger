@@ -156,7 +156,7 @@ public enum Preference {
 	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED),
 
 	SERVER_HTTPS_ENABLED(Page.SERVER_HTTPS, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.HTTPS_ENABLED)),
-	SERVER_HTTPS_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.File, null, null, SERVER_HTTPS_ENABLED),
+	SERVER_HTTPS_KEYSTORE_FILE(Page.SERVER_HTTPS, FieldEditorType.FormattedFile, null, null, SERVER_HTTPS_ENABLED),
 	SERVER_HTTPS_STOREPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_HTTPS_ENABLED),
 	SERVER_HTTPS_KEYPASS(Page.SERVER_HTTPS, FieldEditorType.Password, null, null, SERVER_HTTPS_ENABLED);
 

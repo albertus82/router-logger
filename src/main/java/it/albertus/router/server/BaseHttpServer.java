@@ -9,6 +9,7 @@ import it.albertus.util.ExceptionUtils;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.BindException;
 import java.net.InetSocketAddress;
@@ -101,18 +102,18 @@ public abstract class BaseHttpServer {
 						final SSLContext sslContext = SSLContext.getInstance(SSL_PROTOCOL);
 
 						final char[] storepass = configuration.getCharArray("server.https.storepass"); // Keystore password
-						final KeyStore ks = KeyStore.getInstance(KEYSTORE_TYPE);
+						final KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
 						// keytool -genkey -alias "ALIAS" -keyalg "RSA" -keypass PASSWORD -keystore ssl.key -storepass PASSWORD -validity 360
 						final InputStream bis = new BufferedInputStream(new FileInputStream(configuration.getString("server.https.keystore.file")));
-						ks.load(bis, storepass);
+						keyStore.load(bis, storepass);
 						bis.close();
 
 						final char[] keypass = configuration.getCharArray("server.https.keypass"); // Key password
 						final KeyManagerFactory kmf = KeyManagerFactory.getInstance(SECURITY_ALGORITHM);
-						kmf.init(ks, keypass);
+						kmf.init(keyStore, keypass);
 
 						final TrustManagerFactory tmf = TrustManagerFactory.getInstance(SECURITY_ALGORITHM);
-						tmf.init(ks);
+						tmf.init(keyStore);
 
 						sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 						final HttpsConfigurator httpsConfigurator = new HttpsConfigurator(sslContext) {
@@ -147,11 +148,15 @@ public abstract class BaseHttpServer {
 				}
 			}
 			catch (final BindException be) {
-				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start.port", port)), Destination.CONSOLE);
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start.port", port)));
 				Logger.getInstance().log(be, Destination.FILE, Destination.EMAIL);
 			}
+			catch (final FileNotFoundException fnfe) {
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start.keystore.file")));
+				Logger.getInstance().log(fnfe, Destination.FILE, Destination.EMAIL);
+			}
 			catch (final Exception e) {
-				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE);
+				Logger.getInstance().log(new RuntimeException(Resources.get("err.server.start", ExceptionUtils.getUIMessage(e))));
 				Logger.getInstance().log(e, Destination.FILE, Destination.EMAIL);
 			}
 		}

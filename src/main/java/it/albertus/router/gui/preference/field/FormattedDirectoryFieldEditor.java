@@ -31,7 +31,7 @@ public class FormattedDirectoryFieldEditor extends DirectoryFieldEditor {
 	protected Button getChangeControl(final Composite parent) {
 		final Button browseButton = super.getChangeControl(parent);
 		if (!localized) {
-			browseButton.setText(Resources.get("lbl.preferences.directory.button.browse"));
+			browseButton.setText(Resources.get("lbl.preferences.button.browse"));
 			localized = true;
 		}
 		return browseButton;

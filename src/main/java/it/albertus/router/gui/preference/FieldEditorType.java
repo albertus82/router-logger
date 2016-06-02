@@ -9,7 +9,7 @@ public enum FieldEditorType {
 	Password,
 	Integer,
 	File,
-//	FormattedFile,
+	FormattedFile,
 	FormattedInteger,
 	Scale,
 	ScaleInteger,
