@@ -17,6 +17,8 @@ public class WebServer extends BaseHttpServer {
 		return Singleton.instance;
 	}
 
+	private WebServer() {}
+
 	private RouterLoggerEngine engine;
 
 	public void init(final RouterLoggerEngine engine) {
