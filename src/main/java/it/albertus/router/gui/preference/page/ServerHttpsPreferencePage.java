@@ -50,43 +50,32 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 	}
 
 	public static String[][] getKeyManagerFactoryComboOptions() {
-		final String[][] options = new String[keyManagerFactoryAlgorithms.size()][];
-		int index = 0;
-		for (final String algorithm : keyManagerFactoryAlgorithms) {
-			options[index++] = new String[] { algorithm, algorithm };
-		}
-		return options;
+		return buildComboOptionsArray(keyManagerFactoryAlgorithms);
 	}
 
 	public static String[][] getTrustManagerFactoryComboOptions() {
-		final String[][] options = new String[trustManagerFactoryAlgorithms.size()][];
-		int index = 0;
-		for (final String algorithm : trustManagerFactoryAlgorithms) {
-			options[index++] = new String[] { algorithm, algorithm };
-		}
-		return options;
+		return buildComboOptionsArray(trustManagerFactoryAlgorithms);
 	}
 
 	public static String[][] getKeyStoreAlgorithmsComboOptions() {
-		final String[][] options = new String[keyStoreAlgorithms.size()][];
-		int index = 0;
-		for (final String algorithm : keyStoreAlgorithms) {
-			options[index++] = new String[] { algorithm, algorithm };
-		}
-		return options;
+		return buildComboOptionsArray(keyStoreAlgorithms);
 	}
 
 	public static String[][] getSslContextAlgorithmsComboOptions() {
-		final String[][] options = new String[sslContextAlgorithms.size()][];
-		int index = 0;
-		for (final String algorithm : sslContextAlgorithms) {
-			options[index++] = new String[] { algorithm, algorithm };
-		}
-		return options;
+		return buildComboOptionsArray(sslContextAlgorithms);
 	}
 
 	public static String[] getKeyStoreFileExtensions() {
 		return KEY_STORE_FILE_EXTENSIONS;
+	}
+
+	private static String[][] buildComboOptionsArray(final Set<String> options) {
+		final String[][] optionsArray = new String[options.size()][];
+		int index = 0;
+		for (final String algorithm : options) {
+			optionsArray[index++] = new String[] { algorithm, algorithm };
+		}
+		return optionsArray;
 	}
 
 }
