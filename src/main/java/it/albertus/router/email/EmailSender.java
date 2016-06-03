@@ -201,6 +201,9 @@ public class EmailSender {
 
 		email.setHostName(configuration.getString(CFG_KEY_EMAIL_HOST));
 
+		
+//		System.setProperty("mail.smtp.auth.mechanisms", "XOAUTH2");
+		
 		// Authentication
 		if (!configuration.getString(CFG_KEY_EMAIL_USERNAME, "").isEmpty() && !configuration.getString(CFG_KEY_EMAIL_PASSWORD, "").isEmpty()) {
 			email.setAuthenticator(new DefaultAuthenticator(configuration.getString(CFG_KEY_EMAIL_USERNAME), configuration.getString(CFG_KEY_EMAIL_PASSWORD)));
