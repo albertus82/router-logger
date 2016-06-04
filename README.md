@@ -118,6 +118,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 
 * **`gui.table.items.max`**= numero massimo di righe contenute nella tabella a video; al raggiungimento del limite, le righe pi&ugrave; vecchie vengono cancellate. Questa impostazione non influisce in alcun modo sul salvataggio delle informazioni ma ha effetto unicamente sull'interfaccia grafica dell'applicazione (default: `2000`, valori maggiori comportano una maggiore occupazione di memoria).
 * **`gui.table.columns.pack`**= riduce al minimo la larghezza delle colonne della tabella a video adattandola ai valori e ignorando la larghezza dei nomi delle chiavi in intestazione (default: `false`).
+* **`gui.table.columns.padding.right`**= aggiunge un margine destro alle colonne della tabella a video; utile con alcuni ambienti grafici Linux. Il valore determina le dimensioni del margine (default: `0`, ossia nessun margine).
 * **`gui.minimize.tray`**= specifica se l'applicazione deve essere ridotta a icona nell'area di notifica invece che nella barra delle applicazioni (default: `true`).
 * **`gui.start.minimized`**= specifica se l'applicazione deve essere avviata gi&agrave; ridotta a icona (default: `false`).
 * **`gui.tray.tooltip`**= specifica se deve essere mostrato un avviso nell'area di notifica in caso di raggiungimento di una soglia (default: `true`).

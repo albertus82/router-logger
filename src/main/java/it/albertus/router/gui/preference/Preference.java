@@ -83,10 +83,11 @@ public enum Preference {
 	DLINK_2750_COMMAND_INFO_ADSL_STATUS(Page.DLINK_2750, FieldEditorType.FormattedString, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_STATUS),
 	DLINK_2750_COMMAND_INFO_ADSL_SNR(Page.DLINK_2750, FieldEditorType.FormattedString, DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR),
 
-	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(DataTable.Defaults.GUI_TABLE_MAX_ITEMS), new FieldEditorDataBuilder().textLimit(4).build()),
+	GUI_TABLE_ITEMS_MAX(Page.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(DataTable.Defaults.MAX_ITEMS), new FieldEditorDataBuilder().textLimit(4).build()),
 	GUI_IMPORTANT_KEYS(Page.APPEARANCE, FieldEditorType.WrapString),
 	GUI_IMPORTANT_KEYS_SEPARATOR(Page.APPEARANCE, FieldEditorType.FormattedString, RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	GUI_TABLE_COLUMNS_PACK(Page.APPEARANCE, FieldEditorType.DefaultBoolean, Boolean.toString(DataTable.Defaults.GUI_TABLE_COLUMNS_PACK)),
+	GUI_TABLE_COLUMNS_PACK(Page.APPEARANCE, FieldEditorType.DefaultBoolean, Boolean.toString(DataTable.Defaults.COLUMNS_PACK)),
+	GUI_TABLE_COLUMNS_PADDING_RIGHT(Page.APPEARANCE, FieldEditorType.FormattedInteger, Byte.toString(DataTable.Defaults.COLUMNS_PADDING_RIGHT), new FieldEditorDataBuilder().integerValidRange(0, Byte.MAX_VALUE).build()),
 	GUI_CONSOLE_MAX_CHARS(Page.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), new FieldEditorDataBuilder().textLimit(6).build()),
 
 	CONSOLE_ANIMATION(Page.CONSOLE, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerConsole.Defaults.CONSOLE_ANIMATION)),

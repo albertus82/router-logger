@@ -35,11 +35,15 @@ public class DataTable {
 	private static final char SAMPLE_CHAR = '9';
 	private static final char FIELD_SEPARATOR = '\t';
 
+	private static final String CFG_KEY_GUI_TABLE_COLUMNS_PADDING_RIGHT = "gui.table.columns.padding.right";
+	private static final String CFG_KEY_GUI_TABLE_COLUMNS_PACK = "gui.table.columns.pack";
+
 	private static final DateFormat dateFormatTable = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
 	public interface Defaults {
-		int GUI_TABLE_MAX_ITEMS = 2000;
-		boolean GUI_TABLE_COLUMNS_PACK = false;
+		int MAX_ITEMS = 2000;
+		boolean COLUMNS_PACK = false;
+		byte COLUMNS_PADDING_RIGHT = 0;
 	}
 
 	enum TableDataKey {
@@ -182,7 +186,7 @@ public class DataTable {
 		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();
 			final String timestamp = dateFormatTable.format(data.getTimestamp());
-			final int maxItems = configuration.getInt("gui.table.items.max", Defaults.GUI_TABLE_MAX_ITEMS);
+			final int maxItems = configuration.getInt("gui.table.items.max", Defaults.MAX_ITEMS);
 			new GuiThreadExecutor(table) {
 				@Override
 				protected void run() {
@@ -209,7 +213,7 @@ public class DataTable {
 						// Tutte le altre colonne...
 						for (String key : info.keySet()) {
 							column = new TableColumn(table, SWT.NONE);
-							column.setText(configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK) ? " " : key);
+							column.setText(configuration.getBoolean(CFG_KEY_GUI_TABLE_COLUMNS_PACK, Defaults.COLUMNS_PACK) ? " " : key);
 							column.setToolTipText(key);
 						}
 					}
@@ -247,17 +251,20 @@ public class DataTable {
 						item.setText(i++, info.get(key));
 					}
 
-					// Dimesionamento delle colonne (una tantum)...
+					// Dimensionamento delle colonne (una tantum)...
 					if (!(Boolean) table.getData(TableDataKey.INITIALIZED.toString())) {
 						final TableItem iterationTableItem = table.getItem(0);
-						final String originalIteration = iterationTableItem.getText();
+						final String originalIteration = iterationTableItem.getText(0);
 						setSampleNumber(iterationTableItem, 4);
+						final byte margin = configuration.getByte(CFG_KEY_GUI_TABLE_COLUMNS_PADDING_RIGHT, Defaults.COLUMNS_PADDING_RIGHT);
 						for (int j = 0; j < table.getColumns().length; j++) {
+							addRightMargin(iterationTableItem, j, margin);
 							table.getColumn(j).pack();
+							removeRightMargin(iterationTableItem, j, margin);
 						}
-						iterationTableItem.setText(originalIteration);
+						iterationTableItem.setText(0, originalIteration);
 
-						if (configuration.getBoolean("gui.table.columns.pack", Defaults.GUI_TABLE_COLUMNS_PACK)) {
+						if (configuration.getBoolean(CFG_KEY_GUI_TABLE_COLUMNS_PACK, Defaults.COLUMNS_PACK)) {
 							table.getColumn(2).setWidth(table.getColumn(0).getWidth());
 							final String[] stringArray = new String[info.keySet().size()];
 							final TableColumn[] columns = table.getColumns();
@@ -290,6 +297,23 @@ public class DataTable {
 			sample[i] = SAMPLE_CHAR;
 		}
 		tableItem.setText(String.valueOf(sample));
+	}
+
+	private void addRightMargin(final TableItem item, final int index, final byte margin) {
+		if (margin > 0) {
+			String text = item.getText(index);
+			for (byte i = 0; i < margin; i++) {
+				text += " ";
+			}
+			item.setText(index, text);
+		}
+	}
+
+	private void removeRightMargin(final TableItem item, final int index, final byte margin) {
+		if (margin > 0) {
+			final String text = item.getText(index);
+			item.setText(index, text.substring(0, text.length() - margin));
+		}
 	}
 
 	public Table getTable() {
