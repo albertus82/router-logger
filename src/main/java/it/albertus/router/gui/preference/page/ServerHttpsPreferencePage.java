@@ -42,7 +42,7 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 				if (keyStoreClassName.equals(service.getType())) {
 					keyStoreAlgorithms.add(service.getAlgorithm());
 				}
-				if (sslContextClassName.equals(service.getType())) {
+				if (sslContextClassName.equals(service.getType()) && !"Default".equals(service.getAlgorithm())) {
 					sslContextAlgorithms.add(service.getAlgorithm());
 				}
 			}
