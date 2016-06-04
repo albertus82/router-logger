@@ -356,8 +356,9 @@ La configurazione del protocollo HTTPS si effettua mediante le seguenti propriet
 
 Le seguenti propriet&agrave; consentono di personalizzare ulteriormente la configurazione della connessione sicura:
 * **`server.ssl.keystore.type`**= Tipo di `KeyStore` (default: `JKS`).
-* **`server.ssl.KeyManagerFactory.algorithm`**= Algoritmo utilizzato da `KeyManagerFactory` (default: dipendente dalla piattaforma).
-* **`server.ssl.TrustManagerFactory.algorithm`**= Algoritmo utilizzato da `TrustManagerFactory` (default: dipendente dalla piattaforma).
+* **`server.ssl.kmf.algorithm`**= Algoritmo utilizzato da `KeyManagerFactory` (default: dipendente dalla piattaforma).
+* **`server.ssl.tmf.algorithm`**= Algoritmo utilizzato da `TrustManagerFactory` (default: dipendente dalla piattaforma).
+* **`server.ssl.protocol`**= Protocollo SSL utilizzato (default: `TLS`).
 
 
 ### Estensione

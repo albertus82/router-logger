@@ -108,10 +108,10 @@ public abstract class BaseHttpServer {
 						bis.close();
 
 						final char[] keypass = configuration.getCharArray("server.ssl.keypass");
-						final KeyManagerFactory kmf = KeyManagerFactory.getInstance(configuration.getString("server.ssl.KeyManagerFactory.algorithm", Defaults.SSL_KMF_ALGORITHM));
+						final KeyManagerFactory kmf = KeyManagerFactory.getInstance(configuration.getString("server.ssl.kmf.algorithm", Defaults.SSL_KMF_ALGORITHM));
 						kmf.init(keyStore, keypass);
 
-						final TrustManagerFactory tmf = TrustManagerFactory.getInstance(configuration.getString("server.ssl.TrustManagerFactory.algorithm", Defaults.SSL_TMF_ALGORITHM));
+						final TrustManagerFactory tmf = TrustManagerFactory.getInstance(configuration.getString("server.ssl.tmf.algorithm", Defaults.SSL_TMF_ALGORITHM));
 						tmf.init(keyStore);
 
 						final SSLContext sslContext = SSLContext.getInstance(configuration.getString("server.ssl.protocol", Defaults.SSL_PROTOCOL));
