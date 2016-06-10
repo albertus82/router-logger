@@ -27,9 +27,8 @@ Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://
 
 >Volendo utilizzare l'interfaccia grafica con **Raspberry Pi** o altre piattaforme **Linux/ARM**, occorre effettuare anche i seguenti passaggi:
 >	1. installare i seguenti pacchetti (`sudo apt-get install`):
->		* **`libgtk-3-bin`**
->		* **`libswt-gtk-4-java`**
 >		* **`libswt-cairo-gtk-4-jni`**
+>		* **`libswt-gtk-4-java`**
 >	2. copiare il file **`/usr/lib/java/swt-gtk-<versione>.jar`** nella directory `lib` dell'applicazione.
 
 >In caso contrario &egrave; comunque sempre possibile utilizzare l'interfaccia a riga di comando.
