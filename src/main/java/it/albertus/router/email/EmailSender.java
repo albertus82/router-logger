@@ -36,6 +36,7 @@ public class EmailSender {
 	private static final String CFG_KEY_EMAIL_TO_ADDRESSES = "email.to.addresses";
 	private static final String CFG_KEY_EMAIL_CC_ADDRESSES = "email.cc.addresses";
 	private static final String CFG_KEY_EMAIL_BCC_ADDRESSES = "email.bcc.addresses";
+	private static final String CFG_KEY_EMAIL_MAX_QUEUE_SIZE = "email.max.queue.size";
 
 	public interface Defaults {
 		int PORT = 25;
@@ -48,6 +49,7 @@ public class EmailSender {
 		int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 		int RETRY_INTERVAL_SECS = 60;
 		int MAX_SENDINGS_PER_CYCLE = 3;
+		short MAX_QUEUE_SIZE = 50;
 	}
 
 	private static class Singleton {
@@ -123,11 +125,17 @@ public class EmailSender {
 	public void reserve(final String subject, final String message, final File... attachments) {
 		final RouterLoggerEmail email = new RouterLoggerEmail(subject, message, attachments);
 		synchronized (lock) {
-			queue.add(email);
-			if (this.daemon == null) {
-				daemon = new Thread(new EmailRunnable(), "emailDaemon");
-				daemon.setDaemon(true);
-				daemon.start();
+			final short maxQueueSize = configuration.getShort(CFG_KEY_EMAIL_MAX_QUEUE_SIZE, Defaults.MAX_QUEUE_SIZE);
+			if (queue.size() < maxQueueSize) {
+				queue.add(email);
+				if (this.daemon == null) {
+					daemon = new Thread(new EmailRunnable(), "emailDaemon");
+					daemon.setDaemon(true);
+					daemon.start();
+				}
+			}
+			else {
+				Logger.getInstance().log(Resources.get("err.email.max.queue.size", maxQueueSize, subject), Destination.CONSOLE, Destination.FILE);
 			}
 		}
 	}

@@ -10,6 +10,7 @@ import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -19,6 +20,7 @@ public class ThresholdsEmailSender {
 
 	public interface Defaults {
 		int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 3600;
+		short MAX_ITEMS = 50;
 	}
 
 	private static class Singleton {
@@ -29,10 +31,14 @@ public class ThresholdsEmailSender {
 		return Singleton.instance;
 	}
 
+	private static final String CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS = "thresholds.email.max.items";
+
 	private ThresholdsEmailSender() {}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private final Queue<ThresholdEmailItem> queue = new ConcurrentLinkedQueue<ThresholdEmailItem>();
+	private int extraEventsCount;
+	private Date lastEventTimestamp;
 	private volatile Thread daemon;
 
 	private final Object lock = new Object();
@@ -40,11 +46,17 @@ public class ThresholdsEmailSender {
 	public void send(final Map<Threshold, String> thresholdsReached, final RouterData routerData) {
 		if (thresholdsReached != null && !thresholdsReached.isEmpty() && routerData != null) {
 			synchronized (lock) {
-				queue.add(new ThresholdEmailItem(thresholdsReached, routerData));
-				if (this.daemon == null) {
-					daemon = new Thread(new ThresholdsEmailRunnable(), "thresholdsEmailDaemon");
-					daemon.setDaemon(true);
-					daemon.start();
+				if (queue.size() < configuration.getShort(CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS, Defaults.MAX_ITEMS)) {
+					queue.add(new ThresholdEmailItem(thresholdsReached, routerData));
+					if (this.daemon == null) {
+						daemon = new Thread(new ThresholdsEmailRunnable(), "thresholdsEmailDaemon");
+						daemon.setDaemon(true);
+						daemon.start();
+					}
+				}
+				else {
+					extraEventsCount++;
+					lastEventTimestamp = routerData.getTimestamp();
 				}
 			}
 		}
@@ -78,7 +90,12 @@ public class ThresholdsEmailSender {
 						subject = Resources.get("msg.threshold.email.subject.single", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(sent.getFirst().getDate()));
 					}
 					else {
-						subject = Resources.get("msg.threshold.email.subject.multiple", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(sent.getFirst().getDate()), DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(sent.getLast().getDate()));
+						subject = Resources.get("msg.threshold.email.subject.multiple", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(sent.getFirst().getDate()), DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format((lastEventTimestamp != null && lastEventTimestamp.after(sent.getLast().getDate())) ? lastEventTimestamp : sent.getLast().getDate()));
+					}
+
+					if (extraEventsCount != 0) {
+						message.append(Resources.get("msg.threshold.email.message.limit", configuration.getShort(CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS, Defaults.MAX_ITEMS), extraEventsCount));
+						extraEventsCount = 0;
 					}
 
 					// Send email...
