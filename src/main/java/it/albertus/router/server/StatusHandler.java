@@ -2,6 +2,7 @@ package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.NewLine;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Set;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -49,19 +51,39 @@ public class StatusHandler extends BaseHttpHandler {
 		html.append(buildHtmlHomeButton());
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
+			final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
 			html.append("<ul>").append(NewLine.CRLF);
 			html.append("<li><strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
 			html.append("<li><strong>").append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
 			for (final String key : currentData.getData().keySet()) {
-				final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
 				html.append("<li>");
+
+				final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
 				if (highlight) {
 					html.append("<mark>");
 				}
+
+				boolean warning = false;
+				for (final Threshold threshold : thresholdsReached) {
+					if (key.equals(threshold.getKey())) {
+						warning = true;
+						break;
+					}
+				}
+				if (warning) {
+					html.append("<span style=\"color: red;\">");
+				}
+
 				html.append("<strong>").append(key).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getData().get(key));
+
+				if (warning) {
+					html.append("</span>");
+				}
+
 				if (highlight) {
 					html.append("</mark>");
 				}
+
 				html.append("</li>").append(NewLine.CRLF);
 			}
 			html.append("</ul>").append(NewLine.CRLF);
