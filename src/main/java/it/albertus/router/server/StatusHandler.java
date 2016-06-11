@@ -71,7 +71,7 @@ public class StatusHandler extends BaseHttpHandler {
 					}
 				}
 				if (warning) {
-					html.append("<span style=\"color: red;\">");
+					html.append("<span class=\"warning\">");
 				}
 
 				html.append("<strong>").append(key).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getData().get(key));
@@ -114,7 +114,7 @@ public class StatusHandler extends BaseHttpHandler {
 		if (title != null && !title.isEmpty()) {
 			html.append("<title>").append(Resources.get("msg.application.name")).append(" - ").append(title).append("</title>");
 		}
-		html.append("<style type=\"text/css\">ul {list-style-type: none; padding-left: 0;}</style>");
+		html.append("<style type=\"text/css\">ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>");
 		html.append("</head>");
 		return html.toString();
 	}
