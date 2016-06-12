@@ -371,7 +371,7 @@ Le seguenti propriet&agrave; consentono di personalizzare ulteriormente la confi
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server Telnet comunicando le credenziali di accesso che, per semplicit&agrave;, vengono preventivamente lette dal file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e rese disponibili direttamente nel metodo sotto forma di parametri `username` e `password`.
-* **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di oggetto [**`RouterData`**](src/main/java/it/albertus/router/engine/RouterData.java) che &egrave; costituito fondamentalmente da una mappa chiave-valore.
+* **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di mappa chiave-valore.
 
 All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/main/java/it/albertus/router/reader/Reader.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `exit`, ma alcuni router possono richiedere un comando diverso, ad esempio `logout`, pertanto in questi casi il metodo deve essere opportunamente sovrascritto.
@@ -391,7 +391,7 @@ Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della 
 ##### Modalit&agrave; di salvataggio alternative
 
 Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o database SQL, si pu&ograve; estendere la classe astratta [**`Writer`**](src/main/java/it/albertus/router/writer/Writer.java) e sar&agrave; ovviamente necessario implementare i due metodi seguenti:
-* **`saveInfo`**: effettua il salvataggio delle informazioni ottenute con le modalit&agrave; desiderate.
+* **`saveInfo`**: effettua il salvataggio delle informazioni ottenute, con le modalit&agrave; desiderate.
 * **`release`**: libera risorse eventualmente allocate dal [`Writer`](src/main/java/it/albertus/router/writer/Writer.java), ad esempio file o connessioni a database.
 
 >&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/main/config/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Writer`](src/main/java/it/albertus/router/writer/Writer.java).
