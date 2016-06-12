@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * <b>TP-Link TD-W8970 V1</b>. Comandi Telnet disponibili (case sensitive):
@@ -44,11 +43,11 @@ public class TpLink8970Reader extends Reader {
 	}
 
 	@Override
-	public Map<String, String> readInfo() throws IOException {
+	public LinkedHashMap<String, String> readInfo() throws IOException {
 		// Informazioni sulla portante ADSL...
 		writeToTelnet(configuration.getString("tplink.8970.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
-		final Map<String, String> info = new LinkedHashMap<String, String>();
+		final LinkedHashMap<String, String> info = new LinkedHashMap<String, String>();
 		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
 		String line;
 		while ((line = reader.readLine()) != null) {

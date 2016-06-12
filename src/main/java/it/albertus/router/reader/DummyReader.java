@@ -6,7 +6,6 @@ import it.albertus.util.ThreadUtils;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class DummyReader extends Reader {
 
@@ -56,8 +55,8 @@ public class DummyReader extends Reader {
 	}
 
 	@Override
-	public Map<String, String> readInfo() throws IOException {
-		Map<String, String> map = new LinkedHashMap<String, String>();
+	public LinkedHashMap<String, String> readInfo() throws IOException {
+		final LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		for (byte i = 1; i <= COLUMNS; i++) {
 			StringBuilder field = new StringBuilder();
 			for (byte j = 1; j <= CHARACTERS; j++) {

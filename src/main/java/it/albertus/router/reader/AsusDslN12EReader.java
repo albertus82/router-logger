@@ -8,7 +8,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <b>ASUS DSL-N12E</b>. Comandi Telnet disponibili (case sensitive):
@@ -45,11 +44,11 @@ public class AsusDslN12EReader extends Reader {
 	}
 
 	@Override
-	public Map<String, String> readInfo() throws IOException {
+	public LinkedHashMap<String, String> readInfo() throws IOException {
 		// Informazioni sulla portante ADSL...
 		writeToTelnet(configuration.getString("asus.dsln12e.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("wan adsl", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
-		final Map<String, String> info = new LinkedHashMap<String, String>();
+		final LinkedHashMap<String, String> info = new LinkedHashMap<String, String>();
 		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
 		String line;
 		while ((line = reader.readLine()) != null) {

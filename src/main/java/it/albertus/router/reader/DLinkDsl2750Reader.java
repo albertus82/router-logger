@@ -4,7 +4,6 @@ import it.albertus.router.resources.Resources;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * <b>D-Link DSL-2750B</b>. Comandi Telnet disponibili (case sensitive):
@@ -41,8 +40,8 @@ public class DLinkDsl2750Reader extends Reader {
 	}
 
 	@Override
-	public Map<String, String> readInfo() throws IOException {
-		final Map<String, String> info = new LinkedHashMap<String, String>();
+	public LinkedHashMap<String, String> readInfo() throws IOException {
+		final LinkedHashMap<String, String> info = new LinkedHashMap<String, String>();
 
 		// Informazioni sulla portante ADSL...
 		writeToTelnet(configuration.getString("dlink.2750.command.info.adsl.status", Defaults.COMMAND_INFO_ADSL_STATUS));

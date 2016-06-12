@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * <b>ASUS DSL-N14U</b>. Comandi Telnet disponibili (case sensitive):
@@ -47,8 +46,8 @@ public class AsusDslN14UReader extends Reader {
 	}
 
 	@Override
-	public Map<String, String> readInfo() throws IOException {
-		final Map<String, String> info = new LinkedHashMap<String, String>();
+	public LinkedHashMap<String, String> readInfo() throws IOException {
+		final LinkedHashMap<String, String> info = new LinkedHashMap<String, String>();
 
 		// Informazioni sulla portante ADSL...
 		final String commandInfoAdsl = configuration.getString("asus.dsln14u.command.info.adsl", Defaults.COMMAND_INFO_ADSL);

@@ -10,7 +10,7 @@ import it.albertus.util.NewLine;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
@@ -155,7 +155,7 @@ public abstract class Reader {
 	 * @return la mappa contenente le informazioni estratte.
 	 * @throws IOException in caso di errore nella lettura dei dati.
 	 */
-	public abstract Map<String, String> readInfo() throws IOException;
+	public abstract LinkedHashMap<String, String> readInfo() throws IOException;
 
 	/**
 	 * Restituisce una stringa contenente marca e modello del router relativo
