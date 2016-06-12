@@ -1,6 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.ThreadUtils;
 
@@ -57,7 +56,7 @@ public class DummyReader extends Reader {
 	}
 
 	@Override
-	public RouterData readInfo() throws IOException {
+	public Map<String, String> readInfo() throws IOException {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		for (byte i = 1; i <= COLUMNS; i++) {
 			StringBuilder field = new StringBuilder();
@@ -72,7 +71,7 @@ public class DummyReader extends Reader {
 		if (Math.random() > (100.0 - READ_ERROR_PERCENTAGE) / 100.0) {
 			throw new IOException(Resources.get("msg.dummy.readinfo.error", READ_ERROR_PERCENTAGE));
 		}
-		return new RouterData(map);
+		return map;
 	}
 
 	@Override

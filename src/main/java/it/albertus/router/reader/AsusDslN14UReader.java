@@ -1,6 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
@@ -13,9 +12,11 @@ import java.util.Map;
  * <b>ASUS DSL-N14U</b>. Comandi Telnet disponibili (case sensitive):
  * <ul>
  * <li><tt><b>tcapi show Info</b></tt></li>
- * <li><tt><b>tcapi show Info_<i>Node</i></b></tt> (si consiglia: <tt><b>tcapi show Info_Adsl</b></tt>)</li>
+ * <li><tt><b>tcapi show Info_<i>Node</i></b></tt> (si consiglia:
+ * <tt><b>tcapi show Info_Adsl</b></tt>)</li>
  * <li><tt><b>tcapi show Wan</b></tt> (sconsigliato, verboso)</li>
- * <li><tt><b>tcapi show Wan_<i>Node</i></b></tt> (si consiglia: <tt><b>tcapi show Wan_PVC0</b></tt>)</li>
+ * <li><tt><b>tcapi show Wan_<i>Node</i></b></tt> (si consiglia:
+ * <tt><b>tcapi show Wan_PVC0</b></tt>)</li>
  * </ul>
  */
 public class AsusDslN14UReader extends Reader {
@@ -46,7 +47,7 @@ public class AsusDslN14UReader extends Reader {
 	}
 
 	@Override
-	public RouterData readInfo() throws IOException {
+	public Map<String, String> readInfo() throws IOException {
 		final Map<String, String> info = new LinkedHashMap<String, String>();
 
 		// Informazioni sulla portante ADSL...
@@ -88,7 +89,7 @@ public class AsusDslN14UReader extends Reader {
 			reader.close();
 		}
 
-		return new RouterData(info);
+		return info;
 	}
 
 	@Override

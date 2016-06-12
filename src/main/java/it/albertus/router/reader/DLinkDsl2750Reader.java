@@ -1,6 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class DLinkDsl2750Reader extends Reader {
 	}
 
 	@Override
-	public RouterData readInfo() throws IOException {
+	public Map<String, String> readInfo() throws IOException {
 		final Map<String, String> info = new LinkedHashMap<String, String>();
 
 		// Informazioni sulla portante ADSL...
@@ -56,7 +55,7 @@ public class DLinkDsl2750Reader extends Reader {
 		info.put("ADSL SNR Downstream", snrs[0]);
 		info.put("ADSL SNR Upstream", snrs[1]);
 
-		return new RouterData(info);
+		return info;
 	}
 
 	@Override

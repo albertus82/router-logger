@@ -1,6 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
@@ -46,7 +45,7 @@ public class AsusDslN12EReader extends Reader {
 	}
 
 	@Override
-	public RouterData readInfo() throws IOException {
+	public Map<String, String> readInfo() throws IOException {
 		// Informazioni sulla portante ADSL...
 		writeToTelnet(configuration.getString("asus.dsln12e.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("wan adsl", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
@@ -89,7 +88,7 @@ public class AsusDslN12EReader extends Reader {
 		info.put("Gateway", values.get(6));
 		info.put("Status", values.get(7));
 
-		return new RouterData(info);
+		return info;
 	}
 
 	@Override

@@ -6,19 +6,20 @@ import java.util.Map;
 
 public class RouterData implements Serializable {
 
-	private static final long serialVersionUID = 675438334715612374L;
+	private static final long serialVersionUID = 4673990924602102371L;
 
 	private final Date timestamp;
-	private int responseTime = -1;
+	private final int responseTime;
 	private final Map<String, String> data;
 
-	public RouterData(final Map<String, String> data) {
-		this(new Date(), data);
+	public RouterData(final Date timestamp, final int responseTime, final Map<String, String> data) {
+		this.timestamp = timestamp;
+		this.responseTime = responseTime;
+		this.data = data;
 	}
 
-	public RouterData(final Date timestamp, final Map<String, String> data) {
-		this.timestamp = timestamp;
-		this.data = data;
+	public RouterData(final int responseTime, final Map<String, String> data) {
+		this(new Date(), responseTime, data);
 	}
 
 	public Date getTimestamp() {
@@ -27,10 +28,6 @@ public class RouterData implements Serializable {
 
 	public int getResponseTime() {
 		return responseTime;
-	}
-
-	void setResponseTime(int responseTime) {
-		this.responseTime = responseTime;
 	}
 
 	public Map<String, String> getData() {

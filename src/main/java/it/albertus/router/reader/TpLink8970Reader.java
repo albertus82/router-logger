@@ -1,6 +1,5 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 
 import java.io.BufferedReader;
@@ -45,7 +44,7 @@ public class TpLink8970Reader extends Reader {
 	}
 
 	@Override
-	public RouterData readInfo() throws IOException {
+	public Map<String, String> readInfo() throws IOException {
 		// Informazioni sulla portante ADSL...
 		writeToTelnet(configuration.getString("tplink.8970.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
@@ -71,7 +70,7 @@ public class TpLink8970Reader extends Reader {
 			readFromTelnet(COMMAND_PROMPT, true);
 		}
 
-		return new RouterData(info);
+		return info;
 	}
 
 	@Override

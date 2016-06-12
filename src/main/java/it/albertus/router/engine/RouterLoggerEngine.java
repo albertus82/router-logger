@@ -357,9 +357,9 @@ public abstract class RouterLoggerEngine {
 				break;
 			}
 
-			currentData = reader.readInfo();
+			final Map<String, String> info = reader.readInfo();
 			final long timeAfterRead = System.currentTimeMillis();
-			currentData.setResponseTime((int) (timeAfterRead - timeBeforeRead));
+			currentData = new RouterData((int) (timeAfterRead - timeBeforeRead), info);
 
 			writer.saveInfo(currentData);
 
