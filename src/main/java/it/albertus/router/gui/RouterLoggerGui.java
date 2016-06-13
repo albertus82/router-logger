@@ -327,18 +327,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		while (getReader() == null || getWriter() == null);
 	}
 
-	private void joinPollingThread() {
-		if (pollingThread != null) {
-			try {
-				pollingThread.join();
-			}
-			catch (final InterruptedException ie) {}
-			catch (final Exception e) {
-				logger.log(e);
-			}
-		}
-	}
-
 	@Override
 	protected void setStatus(RouterLoggerStatus status) {
 		super.setStatus(status);

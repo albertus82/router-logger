@@ -507,6 +507,18 @@ public abstract class RouterLoggerEngine {
 
 	public abstract void restart();
 
+	protected void joinPollingThread() {
+		if (pollingThread != null) {
+			try {
+				pollingThread.join();
+			}
+			catch (final InterruptedException ie) {}
+			catch (final Exception e) {
+				logger.log(e);
+			}
+		}
+	}
+
 	protected abstract Console getConsole();
 
 	protected int getIteration() {

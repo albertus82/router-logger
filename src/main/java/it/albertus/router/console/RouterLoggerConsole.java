@@ -44,19 +44,11 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			final RouterLoggerConsole routerLogger = new RouterLoggerConsole();
 			try {
 				routerLogger.addShutdownHook();
-				do {
-					routerLogger.restart = false;
-					routerLogger.beforeConnect();
-					routerLogger.connect();
-					if (routerLogger.restart) {
-						routerLogger.server.stop();
-						routerLogger.configuration.reload();
-						routerLogger.setIteration(FIRST_ITERATION);
-						routerLogger.setStatus(RouterLoggerStatus.STARTING);
-						routerLogger.out.println();
-					}
+				routerLogger.beforeConnect();
+				routerLogger.connect();
+				synchronized (routerLogger) {
+					routerLogger.wait();
 				}
-				while (routerLogger.restart);
 				routerLogger.printGoodbye();
 				routerLogger.server.stop();
 			}
@@ -78,7 +70,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		}
 	}
 
-	private volatile boolean restart = false;
 	private int lastLogLength = 0;
 
 	@Override
@@ -148,26 +139,31 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			}
 			if (connect) {
 				exit = false;
-				pollingThread = Thread.currentThread();
-				try {
-					outerLoop();
-				}
-				catch (final Exception exception) {
-					logger.log(exception);
-					try {
-						getReader().disconnect();
+				pollingThread = new Thread("pollingThread") {
+					@Override
+					public void run() {
+						try {
+							outerLoop();
+						}
+						catch (final Exception exception) {
+							logger.log(exception);
+							try {
+								getReader().disconnect();
+							}
+							catch (final Exception e) {/* Ignore */}
+							release();
+						}
+						catch (final Throwable throwable) {
+							release();
+							logger.log(throwable);
+							try {
+								getReader().disconnect();
+							}
+							catch (final Exception e) {/* Ignore */}
+						}
 					}
-					catch (final Exception e) {/* Ignore */}
-					release();
-				}
-				catch (final Throwable throwable) {
-					release();
-					logger.log(throwable);
-					try {
-						getReader().disconnect();
-					}
-					catch (final Exception e) {/* Ignore */}
-				}
+				};
+				pollingThread.start();
 			}
 			else {
 				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
@@ -177,8 +173,19 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 
 	@Override
 	public void restart() {
-		restart = true;
 		disconnect(true);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				server.stop();
+				joinPollingThread();
+				configuration.reload();
+				setIteration(FIRST_ITERATION);
+				setStatus(RouterLoggerStatus.STARTING);
+				beforeConnect();
+				connect();
+			}
+		}, "resetThread").start();
 	}
 
 	@Override
