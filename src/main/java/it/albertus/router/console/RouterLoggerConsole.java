@@ -182,6 +182,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				configuration.reload();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
+				out.println();
 				beforeConnect();
 				connect();
 			}
