@@ -312,8 +312,9 @@ RouterLogger pu&ograve; esporre una semplice interfaccia web che consente di:
 
 * visualizzare lo **stato** della connessione ad Internet;
 * **riavviare** l'applicazione;
-* **connettere** l'applicazione al server Telnet del router (solo se in modalit&agrave; grafica);
-* **disconnettere** l'applicazione dal server Telnet del router (solo se in modalit&agrave; grafica);
+* **connettere** l'applicazione al server Telnet del router;
+* **disconnettere** l'applicazione dal server Telnet del router;
+* **chiudere** l'applicazione.
 
 Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 
@@ -323,6 +324,7 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 * **`server.port`**= porta del server web (default: `8080`).
 * **`server.compress.response`**= abilita la compressione dati, quando possibile (default: `false`).
 * **`server.handler.root.enabled`**= abilita la pagina **Home** (default: `true`).
+* **`server.handler.close.enabled`**= abilita la funzione **Chiudi** (default: `false`).
 * **`server.handler.connect.enabled`**= abilita la funzione **Connetti** (default: `false`).
 * **`server.handler.disconnect.enabled`**= abilita la funzione **Disconnetti** (default: `false`).
 * **`server.handler.restart.enabled`**= abilita la funzione **Riavvia** (default: `false`).
