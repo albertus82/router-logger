@@ -507,6 +507,8 @@ public abstract class RouterLoggerEngine {
 
 	public abstract void restart();
 
+	public abstract void close();
+
 	protected void joinPollingThread() {
 		if (pollingThread != null) {
 			try {

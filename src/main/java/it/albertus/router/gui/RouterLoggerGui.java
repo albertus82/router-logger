@@ -328,6 +328,16 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	@Override
+	public void close() {
+		new GuiThreadExecutor(shell) {
+			@Override
+			protected void run() {
+				shell.dispose();
+			}
+		}.start();
+	}
+
+	@Override
 	protected void setStatus(RouterLoggerStatus status) {
 		super.setStatus(status);
 		if (trayIcon != null) {

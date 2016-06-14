@@ -52,6 +52,10 @@ public class RootHandler extends BaseHttpHandler {
 			html.append("<form style=\"display: inline;\" action=\"").append(DisconnectHandler.PATH).append("\" method=\"").append(DisconnectHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.disconnect")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.disconnect.message")).append("')) document.forms[").append(formIndex).append("].submit();\" /></form>").append(NewLine.CRLF.toString());
 			formIndex++;
 		}
+		if (configuration.getBoolean(CloseHandler.CFG_KEY_ENABLED, CloseHandler.Defaults.ENABLED)) {
+			html.append("<form style=\"display: inline;\" action=\"").append(CloseHandler.PATH).append("\" method=\"").append(CloseHandler.METHODS[0]).append("\"><input type=\"button\" value=\"").append(Resources.get("lbl.server.close")).append("\" onclick=\"if (confirm('").append(Resources.get("msg.confirm.close.message")).append("')) document.forms[").append(formIndex).append("].submit();\" /></form>").append(NewLine.CRLF.toString());
+			formIndex++;
+		}
 
 		html.append(buildHtmlFooter());
 

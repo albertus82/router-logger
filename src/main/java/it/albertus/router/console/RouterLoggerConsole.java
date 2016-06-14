@@ -40,29 +40,29 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			System.out.println(Resources.get("err.try.help", ARG_HELP));
 		}
 		else if (args[0].trim().equalsIgnoreCase(ARG_CONSOLE)) {
+			uiThread = Thread.currentThread();
 			// Start RouterLogger in console...
 			final RouterLoggerConsole routerLogger = new RouterLoggerConsole();
 			try {
 				routerLogger.addShutdownHook();
 				routerLogger.beforeConnect();
 				routerLogger.connect();
-				synchronized (routerLogger) {
-					routerLogger.wait();
-				}
-				routerLogger.printGoodbye();
-				routerLogger.server.stop();
+				Thread.sleep(Long.MAX_VALUE);
 			}
+			catch (final InterruptedException ie) { /* Exit */}
 			catch (final Exception exception) {
-				routerLogger.release();
 				Logger.getInstance().log(exception);
 			}
 			catch (final Throwable throwable) {
-				routerLogger.release();
 				throwable.printStackTrace();
 			}
 			finally {
+				routerLogger.disconnect(true);
+				routerLogger.joinPollingThread();
+				routerLogger.server.stop();
 				routerLogger.removeShutdownHook();
 			}
+			routerLogger.printGoodbye();
 		}
 		else {
 			System.err.println(Resources.get("err.unrecognized.option", args[0]));
@@ -71,6 +71,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	}
 
 	private int lastLogLength = 0;
+	private static Thread uiThread;
 
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {
@@ -187,6 +188,13 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				connect();
 			}
 		}, "resetThread").start();
+	}
+
+	@Override
+	public void close() {
+		if (uiThread != null) {
+			uiThread.interrupt();
+		}
 	}
 
 	@Override

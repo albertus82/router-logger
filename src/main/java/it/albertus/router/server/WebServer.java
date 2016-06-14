@@ -33,6 +33,7 @@ public class WebServer extends BaseHttpServer {
 		handlers.add(new RestartHandler(engine));
 		handlers.add(new DisconnectHandler(engine));
 		handlers.add(new ConnectHandler(engine));
+		handlers.add(new CloseHandler(engine));
 
 		// Static resources
 		final Headers faviconHeaders = new Headers();

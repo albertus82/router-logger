@@ -27,6 +27,7 @@ import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
+import it.albertus.router.server.CloseHandler;
 import it.albertus.router.server.ConnectHandler;
 import it.albertus.router.server.DisconnectHandler;
 import it.albertus.router.server.RestartHandler;
@@ -153,6 +154,7 @@ public enum Preference {
 	SERVER_HANDLER_RESTART_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(RestartHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_CONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(ConnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_DISCONNECT_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(DisconnectHandler.Defaults.ENABLED), null, SERVER_ENABLED),
+	SERVER_HANDLER_CLOSE_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(CloseHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_STATUS_ENABLED(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_HANDLER_STATUS_ENABLED),
 	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(StatusHandler.Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
