@@ -336,6 +336,7 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 	* **`1`**: registrazione nel registro a video (default).
 	* **`2`**: registrazione su file.
 	* **`3`**: registrazione nel registro a video e su file.
+* **`server.threads`**= numero di thread dedicati alla gestione delle richieste HTTP. Bench&eacute; valori inferiori o uguali al numero di thread del processore possano garantire una risposta pi&ugrave; pronta da parte del server, valori eccessivi possono provocare grave degrado prestazionale (default: `1`).
 
 ##### HTTPS
 
