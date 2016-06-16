@@ -159,6 +159,7 @@ public enum Preference {
 	SERVER_HANDLER_STATUS_REFRESH(Page.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_HANDLER_STATUS_ENABLED),
 	SERVER_HANDLER_STATUS_REFRESH_SECS(Page.SERVER, FieldEditorType.IntegerCombo, Integer.toString(StatusHandler.Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
 	SERVER_LOG_REQUEST(Page.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED),
+	SERVER_THREADS(Page.SERVER, FieldEditorType.FormattedInteger, Byte.toString(BaseHttpServer.Defaults.THREADS), new FieldEditorDataBuilder().integerValidRange(1, Byte.MAX_VALUE).build(), SERVER_ENABLED),
 
 	SERVER_SSL_ENABLED(Page.SERVER_HTTPS, FieldEditorType.DefaultBoolean, Boolean.toString(BaseHttpServer.Defaults.SSL_ENABLED)),
 	SERVER_SSL_KEYSTORE_TYPE(Page.SERVER_HTTPS, FieldEditorType.ValidatedCombo, BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),

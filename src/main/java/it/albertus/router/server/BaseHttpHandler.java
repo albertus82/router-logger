@@ -177,7 +177,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
 			if (!request.equals(lastRequest)) {
 				lastRequest = request;
-				Logger.getInstance().log(Resources.get("msg.server.log.request", request), destinations);
+				Logger.getInstance().log(Resources.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
 			}
 		}
 	}

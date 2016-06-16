@@ -2,6 +2,7 @@ package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.DaemonThreadFactory;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
@@ -15,6 +16,8 @@ import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -33,6 +36,7 @@ public abstract class BaseHttpServer {
 	public interface Defaults {
 		int PORT = 8080;
 		boolean ENABLED = false;
+		byte THREADS = 1;
 		boolean SSL_ENABLED = false;
 		String SSL_KEYSTORE_TYPE = "JKS";
 		String SSL_PROTOCOL = "TLS";
@@ -46,6 +50,7 @@ public abstract class BaseHttpServer {
 	protected final Authenticator authenticator = new WebServerAuthenticator();
 	protected volatile HttpServer httpServer;
 	protected volatile boolean started = false;
+	protected volatile ExecutorService threadPool;
 
 	private final Object lock = new Object();
 
@@ -60,6 +65,14 @@ public abstract class BaseHttpServer {
 			synchronized (lock) {
 				try {
 					httpServer.stop(STOP_DELAY);
+					if (threadPool != null && !threadPool.isShutdown()) {
+						try {
+							threadPool.shutdown();
+						}
+						catch (final Exception exception) {
+							Logger.getInstance().log(exception);
+						}
+					}
 				}
 				catch (final Exception exception) {
 					Logger.getInstance().log(exception);
@@ -142,6 +155,13 @@ public abstract class BaseHttpServer {
 						httpServer = HttpServer.create(address, 0);
 					}
 					createContexts();
+
+					final byte threads = configuration.getByte("server.threads", Defaults.THREADS);
+					if (threads > 1) {
+						threadPool = Executors.newFixedThreadPool(threads, new DaemonThreadFactory());
+						httpServer.setExecutor(threadPool);
+					}
+
 					httpServer.start();
 					started = true;
 				}
