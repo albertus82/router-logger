@@ -27,11 +27,10 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	}
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
+	public static final String DEFAULT_STYLE = "";
 
 	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
-
 	protected static String lastRequest = null;
-
 	private static final Charset charset = initCharset();
 
 	private static Charset initCharset() {
@@ -225,11 +224,11 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	/**
 	 * Creates HTML5 doctype, {@code <html>} opening tag, full {@code <head>}
-	 * with {@code <title>}, and {@code <body>} opening tag.
+	 * with {@code <title>}, {@code <style>} and {@code <body>} opening tag.
 	 * 
 	 * @param title the title to be included in {@code <title>} tag, after the
-	 *        application name. If null or empty, no {@code <title>} will be
-	 *        created.
+	 *        application name. If null or empty, nothing but the application
+	 *        name will be used.
 	 * 
 	 * @return the string containing the HTML code.
 	 */
@@ -242,13 +241,48 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		return html.toString();
 	}
 
+	/**
+	 * Creates full {@code <head>} with {@code <title>}, and {@code <style>}
+	 * elements.
+	 * 
+	 * @param title the title to be included in {@code <title>} tag, after the
+	 *        application name. If null or empty, nothing but the application
+	 *        name will be used.
+	 * 
+	 * @return the string containing the HTML code.
+	 */
 	protected String buildHtmlHead(final String title) {
 		final StringBuilder html = new StringBuilder("<head>");
-		if (title != null && !title.isEmpty()) {
-			html.append("<title>").append(Resources.get("msg.application.name")).append(" - ").append(title).append("</title>");
-		}
+		html.append(buildHtmlHeadTitle(title));
+		html.append(buildHtmlHeadStyle());
 		html.append("</head>");
 		return html.toString();
+	}
+
+	/**
+	 * Creates {@code <title>} element.
+	 * 
+	 * @param title the title to be included after the application name. If null
+	 *        or empty, nothing but the application name will be used.
+	 * 
+	 * @return the string containing the HTML code.
+	 */
+	protected String buildHtmlHeadTitle(final String title) {
+		final StringBuilder html = new StringBuilder("<title>").append(Resources.get("msg.application.name"));
+		if (title != null && !title.trim().isEmpty()) {
+			html.append(" - ").append(title.trim());
+		}
+		return html.append("</title>").toString();
+	}
+
+	/**
+	 * Override this method to create {@code <style>} element. The default
+	 * implementation returns an empty string.
+	 * 
+	 * @return the string containing the HTML code.
+	 */
+	protected String buildHtmlHeadStyle() {
+		return DEFAULT_STYLE;
 	}
 
 	/**
@@ -265,7 +299,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			return new StringBuilder("<form action=\"").append(RootHandler.PATH).append("\" method=\"").append(RootHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
 		}
 		else {
-			return "";
+			return DEFAULT_STYLE;
 		}
 	}
 

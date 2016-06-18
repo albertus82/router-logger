@@ -28,7 +28,13 @@ public class StatusHandler extends BaseHttpHandler {
 	protected static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
 
 	protected static final char KEY_VALUE_SEPARATOR = ':';
-	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+
+	private final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		}
+	};
 
 	protected StatusHandler(final RouterLoggerEngine engine) {
 		super(engine);
@@ -53,7 +59,7 @@ public class StatusHandler extends BaseHttpHandler {
 		if (currentData != null) {
 			final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
 			html.append("<ul>").append(NewLine.CRLF);
-			html.append("<li><strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
+			html.append("<li><strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.get().format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
 			html.append("<li><strong>").append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
 			for (final String key : currentData.getData().keySet()) {
 				html.append("<li>");
@@ -92,7 +98,7 @@ public class StatusHandler extends BaseHttpHandler {
 
 		// If-Modified-Since...
 		final String ifModifiedSince = exchange.getRequestHeaders().getFirst("If-Modified-Since");
-		if (ifModifiedSince != null && currentData != null && currentData.getTimestamp() != null && httpDateGenerator.getDateFormat().format(currentData.getTimestamp()).equals(ifModifiedSince)) {
+		if (ifModifiedSince != null && currentData != null && currentData.getTimestamp() != null && httpDateGenerator.format(currentData.getTimestamp()).equals(ifModifiedSince)) {
 			addDateHeader(exchange);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_MODIFIED, -1);
 			exchange.getResponseBody().close(); // Needed when no write occurs.
@@ -100,7 +106,7 @@ public class StatusHandler extends BaseHttpHandler {
 		else {
 			addCommonHeaders(exchange);
 			if (currentData != null && currentData.getTimestamp() != null) {
-				exchange.getResponseHeaders().add("Last-Modified", httpDateGenerator.getDateFormat().format(currentData.getTimestamp()));
+				exchange.getResponseHeaders().add("Last-Modified", httpDateGenerator.format(currentData.getTimestamp()));
 			}
 			final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
@@ -109,14 +115,8 @@ public class StatusHandler extends BaseHttpHandler {
 	}
 
 	@Override
-	protected String buildHtmlHead(final String title) {
-		final StringBuilder html = new StringBuilder("<head>");
-		if (title != null && !title.isEmpty()) {
-			html.append("<title>").append(Resources.get("msg.application.name")).append(" - ").append(title).append("</title>");
-		}
-		html.append("<style type=\"text/css\">ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>");
-		html.append("</head>");
-		return html.toString();
+	protected String buildHtmlHeadStyle() {
+		return "<style type=\"text/css\">ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>";
 	}
 
 	@Override
