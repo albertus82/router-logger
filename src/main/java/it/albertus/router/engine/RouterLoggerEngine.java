@@ -24,6 +24,7 @@ public abstract class RouterLoggerEngine {
 
 	public interface Defaults {
 		int ITERATIONS = 0;
+		boolean CLOSE_WHEN_FINISHED = false;
 		long INTERVAL_FAST_IN_MILLIS = 1000L;
 		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
 		long HYSTERESIS_IN_MILLIS = 10000L;
@@ -296,6 +297,10 @@ public abstract class RouterLoggerEngine {
 		release();
 		if (!RouterLoggerStatus.ERROR.equals(currentStatus)) {
 			setStatus(RouterLoggerStatus.DISCONNECTED);
+		}
+
+		if (configuration.getBoolean("logger.close.when.finished", Defaults.CLOSE_WHEN_FINISHED) && iteration >= configuration.getInt("logger.iterations", Defaults.ITERATIONS)) {
+			close();
 		}
 	}
 
