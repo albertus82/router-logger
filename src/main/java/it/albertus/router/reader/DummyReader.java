@@ -4,6 +4,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.util.ThreadUtils;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
@@ -27,7 +28,7 @@ public class DummyReader extends Reader {
 			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
 		}
 		if (Math.random() > (100.0 - CONNECTION_ERROR_PERCENTAGE) / 100.0) {
-			logger.log(Resources.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE));
+			logger.log(new ConnectException(Resources.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE)));
 			return false;
 		}
 		return true;

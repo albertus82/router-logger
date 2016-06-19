@@ -48,6 +48,7 @@ public class Logger {
 		boolean DEBUG = false;
 		String DIRECTORY = getDefaultDirectory();
 		boolean EMAIL = false;
+		boolean EMAIL_IGNORE_DUPLICATES = true;
 	}
 
 	public void init(final Console console) {
@@ -56,6 +57,7 @@ public class Logger {
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private Console out = TerminalConsole.getInstance(); // Fail-safe.
+	private String lastEmailLog;
 
 	public boolean isDebugEnabled() {
 		return configuration.getBoolean("console.debug", Defaults.DEBUG);
@@ -152,15 +154,18 @@ public class Logger {
 
 	private void logToEmail(final String log, final Throwable throwable) {
 		if (configuration.getBoolean("log.email", Defaults.EMAIL)) {
-			final String subjectKey;
-			if (throwable != null) {
-				subjectKey = "msg.log.email.subject.exception";
+			if (throwable == null || lastEmailLog == null || !configuration.getBoolean("log.email.ignore.duplicates", Defaults.EMAIL_IGNORE_DUPLICATES) || !lastEmailLog.equals(log)) {
+				final String subjectKey;
+				if (throwable != null) {
+					subjectKey = "msg.log.email.subject.exception";
+				}
+				else {
+					subjectKey = "msg.log.email.subject.event";
+				}
+				final String subject = Resources.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date()));
+				EmailSender.getInstance().reserve(subject, log);
+				lastEmailLog = log;
 			}
-			else {
-				subjectKey = "msg.log.email.subject.event";
-			}
-			final String subject = Resources.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date()));
-			EmailSender.getInstance().reserve(subject, log);
 		}
 	}
 

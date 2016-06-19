@@ -58,6 +58,7 @@ public enum Preference {
 	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
 	CONSOLE_DEBUG(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(Logger.Defaults.DEBUG)),
 	LOG_EMAIL(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(Logger.Defaults.EMAIL)),
+	LOG_EMAIL_IGNORE_DUPLICATES(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(Logger.Defaults.EMAIL_IGNORE_DUPLICATES), null, LOG_EMAIL),
 
 	READER_CLASS_NAME(Page.READER, FieldEditorType.ReaderCombo, null, new FieldEditorDataBuilder().comboEntryNamesAndValues(ReaderPreferencePage.getReaderComboOptions()).build()),
 	ROUTER_USERNAME(Page.READER, FieldEditorType.FormattedString),
@@ -137,7 +138,7 @@ public enum Preference {
 	EMAIL_SOCKET_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_TIMEOUT)),
 	EMAIL_RETRY_INTERVAL_SECS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.RETRY_INTERVAL_SECS)),
 	EMAIL_MAX_SENDINGS_PER_CYCLE(Page.EMAIL_ADVANCED, FieldEditorType.IntegerCombo, Integer.toString(EmailSender.Defaults.MAX_SENDINGS_PER_CYCLE), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.email.max.sendings.per.cycle.unlimited"), Integer.toString(0) } }).build()),
-	EMAIL_MAX_QUEUE_SIZE(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Short.toString(EmailSender.Defaults.MAX_QUEUE_SIZE), new FieldEditorDataBuilder().integerValidRange(1, 1000).build()),
+	EMAIL_MAX_QUEUE_SIZE(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Short.toString(EmailSender.Defaults.MAX_QUEUE_SIZE), new FieldEditorDataBuilder().integerValidRange(1, Byte.MAX_VALUE).build()),
 	EMAIL_SSL_CONNECT(Page.EMAIL_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(EmailSender.Defaults.SSL_CONNECT)),
 	EMAIL_SSL_IDENTITY(Page.EMAIL_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(EmailSender.Defaults.SSL_IDENTITY)),
 	EMAIL_STARTTLS_ENABLED(Page.EMAIL_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(EmailSender.Defaults.STARTTLS_ENABLED)),

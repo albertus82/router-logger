@@ -49,7 +49,7 @@ public class EmailSender {
 		int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
 		int RETRY_INTERVAL_SECS = 60;
 		int MAX_SENDINGS_PER_CYCLE = 3;
-		short MAX_QUEUE_SIZE = 50;
+		byte MAX_QUEUE_SIZE = 10;
 	}
 
 	private static class Singleton {
@@ -125,7 +125,7 @@ public class EmailSender {
 	public void reserve(final String subject, final String message, final File... attachments) {
 		final RouterLoggerEmail email = new RouterLoggerEmail(subject, message, attachments);
 		synchronized (lock) {
-			final short maxQueueSize = configuration.getShort(CFG_KEY_EMAIL_MAX_QUEUE_SIZE, Defaults.MAX_QUEUE_SIZE);
+			final byte maxQueueSize = configuration.getByte(CFG_KEY_EMAIL_MAX_QUEUE_SIZE, Defaults.MAX_QUEUE_SIZE);
 			if (queue.size() < maxQueueSize) {
 				queue.add(email);
 				if (this.daemon == null) {
