@@ -236,127 +236,127 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	@Override
-	public Long getLong(String key) {
+	public Long getLong(final String key) {
 		try {
 			return super.getLong(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Long.MIN_VALUE, Long.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public long getLong(String key, long defaultValue) {
+	public long getLong(final String key, final long defaultValue) {
 		try {
 			return super.getLong(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Long.MIN_VALUE, Long.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public Integer getInt(String key) {
+	public Integer getInt(final String key) {
 		try {
 			return super.getInt(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Integer.MIN_VALUE, Integer.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public int getInt(String key, int defaultValue) {
+	public int getInt(final String key, final int defaultValue) {
 		try {
 			return super.getInt(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Integer.MIN_VALUE, Integer.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public Short getShort(String key) {
+	public Short getShort(final String key) {
 		try {
 			return super.getShort(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Short.MIN_VALUE, Short.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public short getShort(String key, short defaultValue) {
+	public short getShort(final String key, final short defaultValue) {
 		try {
 			return super.getShort(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Short.MIN_VALUE, Short.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public Byte getByte(String key) {
+	public Byte getByte(final String key) {
 		try {
 			return super.getByte(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Byte.MIN_VALUE, Byte.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public byte getByte(String key, byte defaultValue) {
+	public byte getByte(final String key, final byte defaultValue) {
 		try {
 			return super.getByte(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Byte.MIN_VALUE, Byte.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public Float getFloat(String key) {
+	public Float getFloat(final String key) {
 		try {
 			return super.getFloat(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Float.MIN_VALUE, Float.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public float getFloat(String key, float defaultValue) {
+	public float getFloat(final String key, final float defaultValue) {
 		try {
 			return super.getFloat(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Float.MIN_VALUE, Float.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public Double getDouble(String key) {
+	public Double getDouble(final String key) {
 		try {
 			return super.getDouble(key);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Double.MIN_VALUE, Double.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public double getDouble(String key, double defaultValue) {
+	public double getDouble(final String key, final double defaultValue) {
 		try {
 			return super.getDouble(key, defaultValue);
 		}
 		catch (final RuntimeException re) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", key) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
+			throw new ConfigurationException(Resources.get("err.invalid.cfg.number", key, Double.MIN_VALUE, Double.MAX_VALUE) + ' ' + Resources.get("err.review.cfg", getFileName()), re, key);
 		}
 	}
 
 	@Override
-	public Character getChar(String key) {
+	public Character getChar(final String key) {
 		try {
 			return super.getChar(key);
 		}
@@ -366,7 +366,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	@Override
-	public char getChar(String key, char defaultValue) {
+	public char getChar(final String key, final char defaultValue) {
 		try {
 			return super.getChar(key, defaultValue);
 		}
