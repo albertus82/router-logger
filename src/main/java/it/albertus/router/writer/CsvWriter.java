@@ -4,11 +4,11 @@ import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.Zipper;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
+import it.albertus.util.Zipper;
 
 import java.io.BufferedWriter;
 import java.io.File;

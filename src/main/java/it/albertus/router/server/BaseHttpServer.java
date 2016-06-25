@@ -2,10 +2,10 @@ package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.util.DaemonThreadFactory;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
+import it.albertus.util.DaemonThreadFactory;
 import it.albertus.util.ExceptionUtils;
 
 import java.io.BufferedInputStream;
