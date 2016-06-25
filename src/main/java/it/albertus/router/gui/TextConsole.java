@@ -1,6 +1,6 @@
 package it.albertus.router.gui;
 
-import it.albertus.jface.GuiThreadExecutor;
+import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Console;
@@ -91,7 +91,7 @@ public class TextConsole extends Console {
 		}
 
 		// Actual print...
-		new GuiThreadExecutor(scrollable) {
+		new SwtThreadExecutor(scrollable) {
 			@Override
 			protected void run() {
 				doPrint(toPrint);

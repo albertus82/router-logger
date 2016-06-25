@@ -1,6 +1,6 @@
 package it.albertus.router.gui;
 
-import it.albertus.jface.GuiThreadExecutor;
+import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
@@ -259,7 +259,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							release();
 						}
 						catch (final Throwable throwable) {
-							new GuiThreadExecutor(RouterLoggerGui.this.shell) {
+							new SwtThreadExecutor(RouterLoggerGui.this.shell) {
 								@Override
 								protected void run() {
 									getWidget().getDisplay().dispose();
@@ -293,7 +293,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				configuration.reload();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
-				new GuiThreadExecutor(shell) {
+				new SwtThreadExecutor(shell) {
 					@Override
 					public void run() {
 						getConsole().clear();
@@ -330,7 +330,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	@Override
 	public void close() {
-		new GuiThreadExecutor(shell) {
+		new SwtThreadExecutor(shell) {
 			@Override
 			protected void run() {
 				shell.dispose();

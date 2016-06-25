@@ -1,7 +1,7 @@
 package it.albertus.router.gui;
 
-import it.albertus.jface.GuiThreadExecutor;
-import it.albertus.jface.GuiUtils;
+import it.albertus.jface.SwtThreadExecutor;
+import it.albertus.jface.SwtUtils;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
@@ -95,23 +95,23 @@ public class DataTable {
 
 		// Copy...
 		copyMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_COPY));
+		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
 		copyMenuItem.addSelectionListener(new CopyDataTableSelectionListener(gui));
-		copyMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_COPY); // Finto!
+		copyMenuItem.setAccelerator(SWT.MOD1 | SwtUtils.KEY_COPY); // Finto!
 
 		// Delete...
 		deleteMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		deleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + GuiUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
+		deleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + SwtUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
 		deleteMenuItem.addSelectionListener(new DeleteDataTableSelectionListener(gui));
-		deleteMenuItem.setAccelerator(GuiUtils.KEY_DELETE); // Finto!
+		deleteMenuItem.setAccelerator(SwtUtils.KEY_DELETE); // Finto!
 
 		new MenuItem(contextMenu, SWT.SEPARATOR);
 
 		// Select all...
 		selectAllMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + GuiUtils.getMod1ShortcutLabel(GuiUtils.KEY_SELECT_ALL));
+		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_SELECT_ALL));
 		selectAllMenuItem.addSelectionListener(new SelectAllDataTableSelectionListener(gui));
-		selectAllMenuItem.setAccelerator(SWT.MOD1 | GuiUtils.KEY_SELECT_ALL); // Finto!
+		selectAllMenuItem.setAccelerator(SWT.MOD1 | SwtUtils.KEY_SELECT_ALL); // Finto!
 
 		new MenuItem(contextMenu, SWT.SEPARATOR);
 
@@ -189,7 +189,7 @@ public class DataTable {
 			final Map<String, String> info = data.getData();
 			final String timestamp = dateFormatTable.format(data.getTimestamp());
 			final int maxItems = configuration.getInt("gui.table.items.max", Defaults.MAX_ITEMS);
-			new GuiThreadExecutor(table) {
+			new SwtThreadExecutor(table) {
 				@Override
 				protected void run() {
 					// Header (una tantum)...
