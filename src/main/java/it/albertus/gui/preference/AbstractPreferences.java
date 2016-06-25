@@ -16,11 +16,11 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class APreferences {
+public abstract class AbstractPreferences {
 
 	protected final Shell parentShell;
 
-	public APreferences(final Shell parentShell) {
+	public AbstractPreferences(final Shell parentShell) {
 		this.parentShell = parentShell;
 	}
 

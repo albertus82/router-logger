@@ -24,17 +24,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-public abstract class APreferencePage extends FieldEditorPreferencePage {
+public abstract class AbstractPreferencePage extends FieldEditorPreferencePage {
 
 	protected final Map<IPreference, FieldEditor> fieldEditorMap = new HashMap<IPreference, FieldEditor>();
 
 	protected Control header;
 
-	public APreferencePage() {
+	public AbstractPreferencePage() {
 		super(GRID);
 	}
 
-	protected APreferencePage(final int style) {
+	protected AbstractPreferencePage(final int style) {
 		super(style);
 	}
 

@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference;
 
-import it.albertus.gui.preference.APreferences;
+import it.albertus.gui.preference.AbstractPreferences;
 import it.albertus.gui.preference.IPreference;
 import it.albertus.gui.preference.page.IPage;
 import it.albertus.router.engine.RouterLoggerConfiguration;
@@ -13,7 +13,7 @@ import it.albertus.util.Configuration;
 
 import org.eclipse.swt.widgets.Shell;
 
-public class Preferences extends APreferences {
+public class Preferences extends AbstractPreferences {
 
 	private final RouterLoggerGui gui;
 	private boolean restartRequired = false;

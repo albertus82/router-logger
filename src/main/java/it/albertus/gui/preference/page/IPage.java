@@ -6,7 +6,7 @@ public interface IPage {
 
 	String getLabel();
 
-	Class<? extends APreferencePage> getPageClass();
+	Class<? extends AbstractPreferencePage> getPageClass();
 
 	IPage getParent();
 

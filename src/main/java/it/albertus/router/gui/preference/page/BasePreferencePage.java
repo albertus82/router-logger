@@ -1,13 +1,13 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.gui.preference.IPreference;
-import it.albertus.gui.preference.page.APreferencePage;
+import it.albertus.gui.preference.page.AbstractPreferencePage;
 import it.albertus.gui.preference.page.IPage;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.util.Configuration;
 
-public abstract class BasePreferencePage extends APreferencePage {
+public abstract class BasePreferencePage extends AbstractPreferencePage {
 
 	public BasePreferencePage() {
 		super();
