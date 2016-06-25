@@ -59,7 +59,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		if (this.contains("language")) {
 			final String language = this.getString("language");
 			it.albertus.router.resources.Resources.setLanguage(language); // Application
-			it.albertus.jface.preference.Resources.setLanguage(language); // Preferences
+			it.albertus.jface.Resources.setLanguage(language); // Preferences
 		}
 
 		/* Caricamento chiavi da evidenziare */
@@ -377,30 +377,30 @@ public class RouterLoggerConfiguration extends Configuration {
 		}
 	}
 
-//	public static void main(String... args) throws IOException {
-//		Properties p = new Properties();
-//		InputStream r = RouterLoggerConfiguration.class.getResourceAsStream("/routerlogger.cfg");
-//		p.load(r);
-//		r.close();
-//		System.out.println("Presenti in routerlogger.cfg e non presenti in Preference:");
-//		outer: for (String key : p.stringPropertyNames()) {
-//			for (Preference preference : Preference.values()) {
-//				if (preference.getConfigurationKey().equals(key)) {
-//					continue outer;
-//				}
-//			}
-//			System.out.println(key);
-//		}
-//		System.out.println();
-//		System.out.println("Presenti in Preference e non presenti in routerlogger.cfg:");
-//		outer: for (Preference preference : Preference.values()) {
-//			for (String key : p.stringPropertyNames()) {
-//				if (preference.getConfigurationKey().equals(key)) {
-//					continue outer;
-//				}
-//			}
-//			System.out.println(preference.getConfigurationKey());
-//		}
-//	}
+	//	public static void main(String... args) throws IOException {
+	//		Properties p = new Properties();
+	//		InputStream r = RouterLoggerConfiguration.class.getResourceAsStream("/routerlogger.cfg");
+	//		p.load(r);
+	//		r.close();
+	//		System.out.println("Presenti in routerlogger.cfg e non presenti in Preference:");
+	//		outer: for (String key : p.stringPropertyNames()) {
+	//			for (Preference preference : Preference.values()) {
+	//				if (preference.getConfigurationKey().equals(key)) {
+	//					continue outer;
+	//				}
+	//			}
+	//			System.out.println(key);
+	//		}
+	//		System.out.println();
+	//		System.out.println("Presenti in Preference e non presenti in routerlogger.cfg:");
+	//		outer: for (Preference preference : Preference.values()) {
+	//			for (String key : p.stringPropertyNames()) {
+	//				if (preference.getConfigurationKey().equals(key)) {
+	//					continue outer;
+	//				}
+	//			}
+	//			System.out.println(preference.getConfigurationKey());
+	//		}
+	//	}
 
 }

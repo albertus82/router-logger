@@ -1,6 +1,6 @@
 package it.albertus.router.gui;
 
-import it.albertus.router.gui.listener.LinkSelectionListener;
+import it.albertus.jface.listener.LinkSelectionListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.SWT;
