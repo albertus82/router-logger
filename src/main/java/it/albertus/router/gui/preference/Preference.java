@@ -1,10 +1,8 @@
 package it.albertus.router.gui.preference;
 
-import it.albertus.gui.preference.FieldEditorData;
-import it.albertus.gui.preference.FieldEditorData.FieldEditorDataBuilder;
-import it.albertus.gui.preference.FieldEditorFactory;
-import it.albertus.gui.preference.FieldEditorType;
-import it.albertus.gui.preference.IPreference;
+import it.albertus.jface.preference.FieldEditorData;
+import it.albertus.jface.preference.FieldEditorData.FieldEditorDataBuilder;
+import it.albertus.jface.preference.IPreference;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
@@ -58,7 +56,7 @@ public enum Preference implements IPreference {
 	LOGGER_HYSTERESIS_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS)),
 	LOGGER_RETRY_COUNT(Page.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.logger.retry.count.infinite"), Integer.toString(0) } }).build()),
 	LOGGER_RETRY_INTERVAL_MS(Page.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS)),
-	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessageKey("msg.preferences.directory.dialog.message.log").build()),
+	LOGGER_ERROR_LOG_DESTINATION_PATH(Page.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(Resources.get("msg.preferences.directory.dialog.message.log")).build()),
 	CONSOLE_SHOW_CONFIGURATION(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
 	CONSOLE_DEBUG(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(Logger.Defaults.DEBUG)),
 	LOG_EMAIL(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(Logger.Defaults.EMAIL)),
@@ -103,7 +101,7 @@ public enum Preference implements IPreference {
 
 	WRITER_CLASS_NAME(Page.WRITER, FieldEditorType.WriterCombo, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), new FieldEditorDataBuilder().comboEntryNamesAndValues(WriterPreferencePage.getWriterComboOptions()).build()),
 
-	CSV_DESTINATION_PATH(Page.CSV, FieldEditorType.FormattedDirectory, CsvWriter.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessageKey("msg.preferences.directory.dialog.message.csv").build()),
+	CSV_DESTINATION_PATH(Page.CSV, FieldEditorType.FormattedDirectory, CsvWriter.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(Resources.get("msg.preferences.directory.dialog.message.csv")).build()),
 	CSV_NEWLINE_CHARACTERS(Page.CSV, FieldEditorType.FormattedCombo, CsvWriter.Defaults.NEWLINE.name(), new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
 	CSV_FIELD_SEPARATOR(Page.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(Page.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
@@ -246,18 +244,8 @@ public enum Preference implements IPreference {
 	}
 
 	@Override
-	public FieldEditorType getFieldEditorType() {
-		return fieldEditorType;
-	}
-
-	@Override
 	public String getDefaultValue() {
 		return defaultValue;
-	}
-
-	@Override
-	public FieldEditorData getFieldEditorData() {
-		return fieldEditorData;
 	}
 
 	@Override

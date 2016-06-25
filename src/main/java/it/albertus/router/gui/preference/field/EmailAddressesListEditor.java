@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference.field;
 
-import it.albertus.gui.preference.field.LocalizedListEditor;
+import it.albertus.jface.preference.field.LocalizedListEditor;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.gui.Images;
 import it.albertus.router.resources.Resources;
@@ -114,11 +114,11 @@ public class EmailAddressesListEditor extends LocalizedListEditor {
 			super.createButtonsForButtonBar(parent);
 
 			okButton = getButton(IDialogConstants.OK_ID);
-			okButton.setText(Resources.get("lbl.button.ok"));
+			okButton.setText(Resources.get("lbl.preferences.button.ok"));
 			okButton.setEnabled(false);
 
 			cancelButton = getButton(IDialogConstants.CANCEL_ID);
-			cancelButton.setText(Resources.get("lbl.button.cancel"));
+			cancelButton.setText(Resources.get("lbl.preferences.button.cancel"));
 		}
 
 		@Override

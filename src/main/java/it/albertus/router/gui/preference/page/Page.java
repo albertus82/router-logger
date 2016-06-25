@@ -1,7 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.gui.preference.page.AbstractPreferencePage;
-import it.albertus.gui.preference.page.IPage;
+import it.albertus.jface.preference.page.IPage;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -91,7 +90,7 @@ public enum Page implements IPage {
 		return parent;
 	}
 
-	public static Page forClass(final Class<? extends AbstractPreferencePage> clazz) {
+	public static Page forClass(final Class<? extends BasePreferencePage> clazz) {
 		if (clazz != null) {
 			for (final Page page : Page.values()) {
 				if (clazz.equals(page.getPageClass())) {

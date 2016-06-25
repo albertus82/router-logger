@@ -57,7 +57,9 @@ public class RouterLoggerConfiguration extends Configuration {
 	private void init() {
 		/* Impostazione lingua */
 		if (this.contains("language")) {
-			Resources.setLanguage(this.getString("language"));
+			final String language = this.getString("language");
+			it.albertus.router.resources.Resources.setLanguage(language); // Application
+			it.albertus.jface.preference.Resources.setLanguage(language); // Preferences
 		}
 
 		/* Caricamento chiavi da evidenziare */

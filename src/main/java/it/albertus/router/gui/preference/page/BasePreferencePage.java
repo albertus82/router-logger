@@ -1,8 +1,8 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.gui.preference.IPreference;
-import it.albertus.gui.preference.page.AbstractPreferencePage;
-import it.albertus.gui.preference.page.IPage;
+import it.albertus.jface.preference.IPreference;
+import it.albertus.jface.preference.page.AbstractPreferencePage;
+import it.albertus.jface.preference.page.IPage;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.util.Configuration;

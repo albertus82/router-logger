@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.gui.TextFormatter;
+import it.albertus.jface.TextFormatter;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;

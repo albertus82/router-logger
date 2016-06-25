@@ -1,16 +1,18 @@
 package it.albertus.router.gui.preference;
 
-import it.albertus.gui.preference.AbstractPreferences;
-import it.albertus.gui.preference.IPreference;
-import it.albertus.gui.preference.page.IPage;
+import it.albertus.jface.preference.AbstractPreferences;
+import it.albertus.jface.preference.IPreference;
+import it.albertus.jface.preference.page.IPage;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.gui.Images;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.page.Page;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.resources.Resources.Language;
 import it.albertus.util.Configuration;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 public class Preferences extends AbstractPreferences {
@@ -41,6 +43,11 @@ public class Preferences extends AbstractPreferences {
 	@Override
 	protected IPreference[] getPreferences() {
 		return Preference.values();
+	}
+
+	@Override
+	protected Image[] getImages() {
+		return Images.MAIN_ICONS;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package it.albertus.router.gui;
 
-import it.albertus.gui.GuiThreadExecutor;
+import it.albertus.jface.GuiThreadExecutor;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;

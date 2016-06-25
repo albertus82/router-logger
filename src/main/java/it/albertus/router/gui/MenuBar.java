@@ -1,6 +1,6 @@
 package it.albertus.router.gui;
 
-import it.albertus.gui.GuiUtils;
+import it.albertus.jface.GuiUtils;
 import it.albertus.router.gui.listener.AboutSelectionListener;
 import it.albertus.router.gui.listener.ClearMenuBarSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;

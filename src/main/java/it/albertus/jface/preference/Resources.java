@@ -1,4 +1,4 @@
-package it.albertus.router.resources;
+package it.albertus.jface.preference;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public final class Resources {
+public class Resources {
 
 	public enum Language {
 		ENGLISH(Locale.ENGLISH),
