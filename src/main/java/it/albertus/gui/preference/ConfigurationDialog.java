@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preference;
+package it.albertus.gui.preference;
 
 import it.albertus.router.gui.Images;
 import it.albertus.router.resources.Resources;

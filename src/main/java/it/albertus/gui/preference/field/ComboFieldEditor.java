@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Remy Chi Jian Suen <remy.suen@gmail.com> - Bug 214392 missing implementation of ComboFieldEditor.setEnabled
  *******************************************************************************/
-package it.albertus.router.gui.preference.field;
+package it.albertus.gui.preference.field;
 
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.core.runtime.Assert;

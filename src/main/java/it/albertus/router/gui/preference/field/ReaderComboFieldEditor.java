@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.gui.preference.field.ValidatedComboFieldEditor;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;

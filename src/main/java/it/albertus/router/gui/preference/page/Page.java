@@ -1,12 +1,14 @@
 package it.albertus.router.gui.preference.page;
 
+import it.albertus.gui.preference.page.APreferencePage;
+import it.albertus.gui.preference.page.IPage;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 
-public enum Page {
+public enum Page implements IPage {
 	GENERAL(GeneralPreferencePage.class),
 	READER(ReaderPreferencePage.class),
 	APPEARANCE(AppearancePreferencePage.class),
@@ -69,23 +71,27 @@ public enum Page {
 		this.parent = parent;
 	}
 
+	@Override
 	public String getNodeId() {
 		return nodeId;
 	}
 
+	@Override
 	public String getLabel() {
 		return Resources.get(labelKey);
 	}
 
+	@Override
 	public Class<? extends BasePreferencePage> getPageClass() {
 		return pageClass;
 	}
 
+	@Override
 	public Page getParent() {
 		return parent;
 	}
 
-	public static Page forClass(final Class<? extends BasePreferencePage> clazz) {
+	public static Page forClass(final Class<? extends APreferencePage> clazz) {
 		if (clazz != null) {
 			for (final Page page : Page.values()) {
 				if (clazz.equals(page.getPageClass())) {

@@ -1,6 +1,6 @@
-package it.albertus.router.gui.preference.field;
+package it.albertus.gui.preference.field;
 
-import it.albertus.router.gui.preference.field.listener.LowercaseVerifyListener;
+import it.albertus.gui.preference.field.listener.LowercaseVerifyListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.widgets.Composite;

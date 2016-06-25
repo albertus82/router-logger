@@ -1,5 +1,10 @@
 package it.albertus.router.gui.preference;
 
+import it.albertus.gui.preference.FieldEditorData;
+import it.albertus.gui.preference.FieldEditorData.FieldEditorDataBuilder;
+import it.albertus.gui.preference.FieldEditorFactory;
+import it.albertus.gui.preference.FieldEditorType;
+import it.albertus.gui.preference.IPreference;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
@@ -10,7 +15,6 @@ import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
-import it.albertus.router.gui.preference.FieldEditorData.FieldEditorDataBuilder;
 import it.albertus.router.gui.preference.page.BasePreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
@@ -45,7 +49,7 @@ import java.util.Set;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
-public enum Preference {
+public enum Preference implements IPreference {
 	LANGUAGE(Page.GENERAL, FieldEditorType.Combo, Locale.getDefault().getLanguage(), new FieldEditorDataBuilder().comboEntryNamesAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
 	LOGGER_ITERATIONS(Page.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.iterations.infinite"), Integer.toString(0) } }).build()),
 	LOGGER_CLOSE_WHEN_FINISHED(Page.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.CLOSE_WHEN_FINISHED)),
@@ -226,34 +230,42 @@ public enum Preference {
 		this.parent = parent;
 	}
 
+	@Override
 	public String getConfigurationKey() {
 		return configurationKey;
 	}
 
+	@Override
 	public String getLabel() {
 		return Resources.get(labelKey);
 	}
 
+	@Override
 	public Page getPage() {
 		return page;
 	}
 
+	@Override
 	public FieldEditorType getFieldEditorType() {
 		return fieldEditorType;
 	}
 
+	@Override
 	public String getDefaultValue() {
 		return defaultValue;
 	}
 
+	@Override
 	public FieldEditorData getFieldEditorData() {
 		return fieldEditorData;
 	}
 
+	@Override
 	public Preference getParent() {
 		return parent;
 	}
 
+	@Override
 	public Set<Preference> getChildren() {
 		final Set<Preference> preferences = EnumSet.noneOf(Preference.class);
 		for (final Preference item : Preference.values()) {
@@ -264,6 +276,7 @@ public enum Preference {
 		return preferences;
 	}
 
+	@Override
 	public FieldEditor createFieldEditor(final Composite parent) {
 		return FieldEditorFactory.createFieldEditor(fieldEditorType, configurationKey, getLabel(), parent, fieldEditorData);
 	}

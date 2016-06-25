@@ -1,7 +1,7 @@
-package it.albertus.router.gui.preference.field;
+package it.albertus.gui.preference.field;
 
-import it.albertus.router.gui.TextFormatter;
-import it.albertus.router.gui.preference.field.listener.IntegerVerifyListener;
+import it.albertus.gui.TextFormatter;
+import it.albertus.gui.preference.field.listener.IntegerVerifyListener;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.jface.layout.GridDataFactory;

@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.gui.preference.field.LocalizedListEditor;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.gui.Images;
 import it.albertus.router.resources.Resources;

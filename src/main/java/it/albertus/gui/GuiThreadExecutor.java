@@ -1,4 +1,4 @@
-package it.albertus.router.gui;
+package it.albertus.gui;
 
 import it.albertus.router.util.Logger;
 

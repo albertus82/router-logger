@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preference;
+package it.albertus.gui.preference;
 
 public enum FieldEditorType {
 	Boolean,

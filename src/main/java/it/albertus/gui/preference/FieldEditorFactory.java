@@ -1,22 +1,22 @@
-package it.albertus.router.gui.preference;
+package it.albertus.gui.preference;
 
-import it.albertus.router.gui.preference.field.ComboFieldEditor;
+import it.albertus.gui.preference.field.ComboFieldEditor;
+import it.albertus.gui.preference.field.DefaultBooleanFieldEditor;
+import it.albertus.gui.preference.field.EditableComboFieldEditor;
+import it.albertus.gui.preference.field.FormattedComboFieldEditor;
+import it.albertus.gui.preference.field.FormattedDirectoryFieldEditor;
+import it.albertus.gui.preference.field.FormattedFileFieldEditor;
+import it.albertus.gui.preference.field.FormattedIntegerFieldEditor;
+import it.albertus.gui.preference.field.FormattedStringFieldEditor;
+import it.albertus.gui.preference.field.IntegerComboFieldEditor;
+import it.albertus.gui.preference.field.PasswordFieldEditor;
+import it.albertus.gui.preference.field.ScaleIntegerFieldEditor;
+import it.albertus.gui.preference.field.ValidatedComboFieldEditor;
+import it.albertus.gui.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
-import it.albertus.router.gui.preference.field.DefaultBooleanFieldEditor;
-import it.albertus.router.gui.preference.field.EditableComboFieldEditor;
 import it.albertus.router.gui.preference.field.EmailAddressesListEditor;
-import it.albertus.router.gui.preference.field.FormattedComboFieldEditor;
-import it.albertus.router.gui.preference.field.FormattedDirectoryFieldEditor;
-import it.albertus.router.gui.preference.field.FormattedFileFieldEditor;
-import it.albertus.router.gui.preference.field.FormattedIntegerFieldEditor;
-import it.albertus.router.gui.preference.field.FormattedStringFieldEditor;
-import it.albertus.router.gui.preference.field.IntegerComboFieldEditor;
-import it.albertus.router.gui.preference.field.PasswordFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
-import it.albertus.router.gui.preference.field.ScaleIntegerFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
-import it.albertus.router.gui.preference.field.ValidatedComboFieldEditor;
-import it.albertus.router.gui.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.resources.Resources;
 

@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preference.field;
+package it.albertus.gui.preference.field;
 
 import java.util.prefs.Preferences;
 

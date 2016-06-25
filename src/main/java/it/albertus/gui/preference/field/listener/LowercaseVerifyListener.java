@@ -1,4 +1,4 @@
-package it.albertus.router.gui.preference.field.listener;
+package it.albertus.gui.preference.field.listener;
 
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
