@@ -257,22 +257,26 @@ public final class FieldEditorFactory {
 	}
 
 	private static FieldEditor createScaleIntegerFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
-		final ScaleIntegerFieldEditor scaleIntegerFieldEditor = new ScaleIntegerFieldEditor(name, label, parent);
+		int min = 0;
+		int max = 10;
+		int increment = 1;
+		int pageIncrement = 1;
+
 		if (data != null) {
 			if (data.getScaleMinimum() != null) {
-				scaleIntegerFieldEditor.setMinimum(data.getScaleMinimum());
+				min = data.getScaleMinimum();
 			}
 			if (data.getScaleMaximum() != null) {
-				scaleIntegerFieldEditor.setMaximum(data.getScaleMaximum());
+				max = data.getScaleMaximum();
 			}
 			if (data.getScaleIncrement() != null) {
-				scaleIntegerFieldEditor.setIncrement(data.getScaleIncrement());
+				increment = data.getScaleIncrement();
 			}
 			if (data.getScalePageIncrement() != null) {
-				scaleIntegerFieldEditor.setPageIncrement(data.getScalePageIncrement());
+				pageIncrement = data.getScalePageIncrement();
 			}
 		}
-		return scaleIntegerFieldEditor;
+		return new ScaleIntegerFieldEditor(name, label, parent, min, max, increment, pageIncrement);
 	}
 
 	private static FieldEditor createStringFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {

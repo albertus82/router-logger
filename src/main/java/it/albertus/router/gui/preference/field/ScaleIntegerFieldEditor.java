@@ -28,11 +28,6 @@ public class ScaleIntegerFieldEditor extends ScaleFieldEditor {
 		text = createTextControl(parent);
 	}
 
-	public ScaleIntegerFieldEditor(final String name, final String labelText, final Composite parent) {
-		super(name, labelText, parent);
-		text = createTextControl(parent);
-	}
-
 	protected Text createTextControl(final Composite parent) {
 		final Text text = new Text(parent, SWT.BORDER | SWT.TRAIL);
 		final int widthHint = TextFormatter.getWidthHint(text, Integer.toString(getMaximum()).length(), SWT.BOLD);
@@ -65,6 +60,13 @@ public class ScaleIntegerFieldEditor extends ScaleFieldEditor {
 		super.doLoad();
 		setToolTipText(getPreferenceStore().getDefaultInt(getPreferenceName()));
 		updateText();
+	}
+
+	@Override
+	public void setEnabled(final boolean enabled, final Composite parent) {
+		super.setEnabled(enabled, parent);
+		this.scale.setEnabled(enabled);
+		this.text.setEnabled(enabled);
 	}
 
 	protected void setToolTipText(final int defaultValue) {
