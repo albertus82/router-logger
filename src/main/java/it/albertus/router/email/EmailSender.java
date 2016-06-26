@@ -1,5 +1,6 @@
 package it.albertus.router.email;
 
+import it.albertus.jface.preference.field.EmailAddressesListEditor;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -26,8 +27,7 @@ import org.apache.commons.mail.SimpleEmail;
 /** Singleton. */
 public class EmailSender {
 
-	public static final String EMAIL_ADDRESSES_SPLIT_REGEX = "[,;\\s]+";
-
+	private static final String EMAIL_ADDRESSES_SPLIT_REGEX = EmailAddressesListEditor.EMAIL_ADDRESSES_SPLIT_REGEX;
 	private static final String CFG_KEY_EMAIL_HOST = "email.host";
 	private static final String CFG_KEY_EMAIL_USERNAME = "email.username";
 	private static final String CFG_KEY_EMAIL_PASSWORD = "email.password";

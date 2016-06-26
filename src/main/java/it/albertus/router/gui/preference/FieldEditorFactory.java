@@ -4,6 +4,7 @@ import it.albertus.jface.preference.FieldEditorData;
 import it.albertus.jface.preference.field.ComboFieldEditor;
 import it.albertus.jface.preference.field.DefaultBooleanFieldEditor;
 import it.albertus.jface.preference.field.EditableComboFieldEditor;
+import it.albertus.jface.preference.field.EmailAddressesListEditor;
 import it.albertus.jface.preference.field.FormattedComboFieldEditor;
 import it.albertus.jface.preference.field.FormattedDirectoryFieldEditor;
 import it.albertus.jface.preference.field.FormattedFileFieldEditor;
@@ -14,8 +15,8 @@ import it.albertus.jface.preference.field.PasswordFieldEditor;
 import it.albertus.jface.preference.field.ScaleIntegerFieldEditor;
 import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
+import it.albertus.router.gui.Images;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
-import it.albertus.router.gui.preference.field.EmailAddressesListEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
@@ -46,7 +47,7 @@ public final class FieldEditorFactory {
 		case EditableCombo:
 			return new EditableComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
 		case EmailAddresses:
-			return new EmailAddressesListEditor(name, label, parent, data.getHorizontalSpan());
+			return new EmailAddressesListEditor(name, label, parent, data.getHorizontalSpan(), Images.MAIN_ICONS);
 		case File:
 			return createFileFieldEditor(name, label, parent, data);
 		case FormattedCombo:
