@@ -135,7 +135,7 @@ public enum Preference implements IPreference {
 	EMAIL_TO_ADDRESSES(Page.EMAIL, FieldEditorType.EmailAddresses, null, new FieldEditorDataBuilder().horizontalSpan(Short.MAX_VALUE).build()),
 
 	EMAIL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
-	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, EmailSender.Defaults.SSL_PORT, new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	EMAIL_SSL_PORT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SSL_PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	EMAIL_CONNECTION_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT)),
 	EMAIL_SOCKET_TIMEOUT(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_TIMEOUT)),
 	EMAIL_RETRY_INTERVAL_SECS(Page.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.RETRY_INTERVAL_SECS)),

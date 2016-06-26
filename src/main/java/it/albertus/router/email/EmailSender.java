@@ -40,7 +40,7 @@ public class EmailSender {
 
 	public interface Defaults {
 		int PORT = 25;
-		String SSL_PORT = "465";
+		int SSL_PORT = 465;
 		boolean SSL_CONNECT = false;
 		boolean SSL_IDENTITY = false;
 		boolean STARTTLS_ENABLED = false;
@@ -205,7 +205,7 @@ public class EmailSender {
 		email.setSSLCheckServerIdentity(configuration.getBoolean("email.ssl.identity", Defaults.SSL_IDENTITY));
 		email.setSSLOnConnect(configuration.getBoolean("email.ssl.connect", Defaults.SSL_CONNECT));
 		email.setSmtpPort(configuration.getInt("email.port", Defaults.PORT));
-		email.setSslSmtpPort(configuration.getString("email.ssl.port", Defaults.SSL_PORT));
+		email.setSslSmtpPort(Integer.toString(configuration.getInt("email.ssl.port", Defaults.SSL_PORT)));
 
 		email.setHostName(configuration.getString(CFG_KEY_EMAIL_HOST));
 
