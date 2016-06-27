@@ -93,7 +93,7 @@ public enum Page implements IPage {
 	public static Page forClass(final Class<? extends BasePreferencePage> clazz) {
 		if (clazz != null) {
 			for (final Page page : Page.values()) {
-				if (clazz.equals(page.getPageClass())) {
+				if (clazz.equals(page.pageClass)) {
 					return page;
 				}
 			}
