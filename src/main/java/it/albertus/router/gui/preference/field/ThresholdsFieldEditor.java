@@ -18,6 +18,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -43,10 +45,7 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 			final Set<String> thresholds = new TreeSet<String>();
 			for (final String preferenceName : getPreferenceStore().preferenceNames()) {
 				if (preferenceName.startsWith(Thresholds.CFG_PREFIX + '.')) {
-					final String identifier = preferenceName.substring(preferenceName.indexOf('.') + 1);
-					final String expression = getPreferenceStore().getString(preferenceName);
-					thresholds.add(identifier + '=' + expression);
-					list.setData(identifier, expression);
+					thresholds.add(preferenceName.substring(preferenceName.indexOf('.') + 1) + '=' + getPreferenceStore().getString(preferenceName));
 				}
 			}
 			for (final String threshold : thresholds) {
@@ -92,8 +91,8 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 	}
 
 	protected class ThresholdDialog extends TitleAreaDialog {
-
 		private static final int TEXT_LIMIT = 255;
+		private static final String REGEX_IDENTIFIER = "[0-9A-Za-z\\.]*";
 
 		private Text textIdentifier;
 		private Text textExpression;
@@ -134,6 +133,7 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 			textIdentifier = new Text(container, SWT.BORDER);
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textIdentifier);
 			textIdentifier.setTextLimit(TEXT_LIMIT);
+			textIdentifier.addVerifyListener(new IdentifierVerifyListener());
 
 			final Label labelExpression = new Label(container, SWT.NONE);
 			labelExpression.setText(Resources.get("lbl.preferences.thresholds.expressions.expression"));
@@ -169,7 +169,7 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 
 		@Override
 		protected void okPressed() {
-			identifier = textIdentifier.getText().trim();
+			identifier = textIdentifier.getText();
 			expression = textExpression.getText();
 			super.okPressed();
 		}
@@ -185,7 +185,7 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 		private class TextKeyListener extends KeyAdapter {
 			@Override
 			public void keyReleased(final KeyEvent ke) {
-				if (textIdentifier.getText().isEmpty() || textExpression.getText().trim().isEmpty() || getList().getData(textIdentifier.getText().trim()) != null) {
+				if (textIdentifier.getText().isEmpty() || textExpression.getText().trim().isEmpty()) {
 					if (okButton.isEnabled()) {
 						okButton.setEnabled(false);
 					}
@@ -194,6 +194,15 @@ public class ThresholdsFieldEditor extends LocalizedListEditor {
 					if (!okButton.isEnabled()) {
 						okButton.setEnabled(true);
 					}
+				}
+			}
+		}
+
+		private class IdentifierVerifyListener implements VerifyListener {
+			@Override
+			public void verifyText(final VerifyEvent ve) {
+				if (!ve.text.matches(REGEX_IDENTIFIER)) {
+					ve.doit = false;
 				}
 			}
 		}
