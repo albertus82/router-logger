@@ -97,7 +97,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
-		Logger.getInstance().log(throwable);
+		try {
+			Logger.getInstance().log(throwable);
+		}
+		catch (final NoClassDefFoundError ncdfe) {
+			throwable.printStackTrace();
+		}
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
 		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.forConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
@@ -288,20 +293,25 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				server.stop();
-				joinPollingThread();
-				configuration.reload();
-				setIteration(FIRST_ITERATION);
-				setStatus(RouterLoggerStatus.STARTING);
-				new SwtThreadExecutor(shell) {
-					@Override
-					public void run() {
-						getConsole().clear();
-						dataTable.reset();
-						beforeConnect();
-						connect();
-					}
-				}.start();
+				try {
+					server.stop();
+					joinPollingThread();
+					configuration.reload();
+					setIteration(FIRST_ITERATION);
+					setStatus(RouterLoggerStatus.STARTING);
+					new SwtThreadExecutor(shell) {
+						@Override
+						public void run() {
+							getConsole().clear();
+							dataTable.reset();
+							beforeConnect();
+							connect();
+						}
+					}.start();
+				}
+				catch (final Exception e) {
+					logger.log(e);
+				}
 			}
 		}, "resetThread").start();
 	}
