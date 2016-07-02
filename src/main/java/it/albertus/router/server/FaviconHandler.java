@@ -26,8 +26,8 @@ public class FaviconHandler extends StaticResourceHandler {
 			}
 			bytes = outputStream.toByteArray();
 		}
-		catch (final IOException ioe) {
-			ioe.printStackTrace();
+		catch (final Exception e) {
+			e.printStackTrace();
 		}
 		finally {
 			try {
@@ -51,6 +51,7 @@ public class FaviconHandler extends StaticResourceHandler {
 
 	public FaviconHandler() {
 		super("/favicon.ico", RESOURCE_NAME, createHeaders());
+		setFound(favicon != null);
 	}
 
 	@Override
@@ -59,6 +60,8 @@ public class FaviconHandler extends StaticResourceHandler {
 		final byte[] response = compressResponse(favicon, exchange);
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 		exchange.getResponseBody().write(response);
+		exchange.getResponseBody().flush();
+		exchange.getResponseBody().close();
 	}
 
 }

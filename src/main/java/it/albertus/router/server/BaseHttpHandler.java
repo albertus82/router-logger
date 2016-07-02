@@ -44,6 +44,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final RouterLoggerEngine engine;
+	private boolean found = true;
 
 	protected BaseHttpHandler(final RouterLoggerEngine engine) {
 		this.engine = engine;
@@ -80,6 +81,14 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		return true;
 	}
 
+	public boolean isFound() {
+		return found;
+	}
+
+	public void setFound(final boolean found) {
+		this.found = found;
+	}
+
 	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
 		if (!configuration.getBoolean("server.enabled", BaseHttpServer.Defaults.ENABLED) || !isEnabled()) {
 			addCommonHeaders(exchange);
@@ -90,6 +99,25 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 			final byte[] response = html.toString().getBytes(getCharset());
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
+			exchange.getResponseBody().write(response);
+			exchange.close();
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
+	protected boolean isFound(final HttpExchange exchange) throws IOException {
+		if (!isFound()) {
+			addCommonHeaders(exchange);
+
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
+			html.append("<h3>").append(Resources.get("msg.server.not.found")).append("</h3>").append(NewLine.CRLF);
+			html.append(buildHtmlFooter());
+
+			final byte[] response = html.toString().getBytes(getCharset());
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length);
 			exchange.getResponseBody().write(response);
 			exchange.close();
 			return false;
@@ -130,7 +158,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	@Override
 	public void handle(final HttpExchange exchange) throws IOException {
-		if (isEnabled(exchange) && isMethodAllowed(exchange)) {
+		if (isEnabled(exchange) && isFound(exchange) && isMethodAllowed(exchange)) {
 			try {
 				service(exchange);
 			}
