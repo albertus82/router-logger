@@ -5,8 +5,6 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sun.net.httpserver.Headers;
-
 public class WebServer extends BaseHttpServer {
 
 	private static class Singleton {
@@ -34,13 +32,7 @@ public class WebServer extends BaseHttpServer {
 		handlers.add(new DisconnectHandler(engine));
 		handlers.add(new ConnectHandler(engine));
 		handlers.add(new CloseHandler(engine));
-
-		// Static resources
-		final Headers faviconHeaders = new Headers();
-		faviconHeaders.add("Content-Type", "image/x-icon");
-		faviconHeaders.add("Cache-Control", "no-transform,public,max-age=86400,s-maxage=259200");
-		handlers.add(new StaticResourceHandler("/favicon.ico", "favicon.ico", faviconHeaders));
-
+		handlers.add(new FaviconHandler());
 		return handlers;
 	}
 
