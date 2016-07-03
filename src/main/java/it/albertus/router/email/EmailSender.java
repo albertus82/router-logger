@@ -111,10 +111,6 @@ public class EmailSender {
 		}
 	}
 
-	public void init(final Console console) {
-		this.out = console;
-	}
-
 	/**
 	 * Enqueue the message for sending as soon as possible.
 	 * 

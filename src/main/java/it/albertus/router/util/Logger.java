@@ -4,10 +4,8 @@ import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
-import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
-import it.albertus.util.TerminalConsole;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,7 +34,17 @@ public class Logger {
 		return Singleton.instance;
 	}
 
-	private Logger() {}
+	private Logger() {
+		Configuration configuration;
+		try {
+			configuration = RouterLoggerConfiguration.getInstance();
+		}
+		catch (final Throwable t) {
+			t.printStackTrace();
+			configuration = null;
+		}
+		this.configuration = configuration;
+	}
 
 	public enum Destination {
 		CONSOLE,
@@ -51,16 +59,11 @@ public class Logger {
 		boolean EMAIL_IGNORE_DUPLICATES = true;
 	}
 
-	public void init(final Console console) {
-		this.out = console;
-	}
-
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	private Console out = TerminalConsole.getInstance(); // Fail-safe.
+	private final Configuration configuration;
 	private String lastEmailLog;
 
 	public boolean isDebugEnabled() {
-		return configuration.getBoolean("console.debug", Defaults.DEBUG);
+		return configuration != null ? configuration.getBoolean("console.debug", Defaults.DEBUG) : true;
 	}
 
 	public void log(final String text, final Destination... destinations) {
@@ -125,11 +128,11 @@ public class Logger {
 
 	private void logToConsole(final String text) {
 		final String base = dateFormatLog.format(new Date()) + ' ';
-		out.println(base + StringUtils.trimToEmpty(text), true);
+		System.out.println(base + StringUtils.trimToEmpty(text));
 	}
 
 	private void logToFile(final String text) throws IOException {
-		final String logDestinationDir = configuration.getString("logger.error.log.destination.path");
+		final String logDestinationDir = configuration != null ? configuration.getString("logger.error.log.destination.path") : null;
 		File logFile;
 		if (StringUtils.isNotBlank(logDestinationDir)) {
 			File logDestDir = new File(logDestinationDir.trim());
@@ -153,7 +156,7 @@ public class Logger {
 	}
 
 	private void logToEmail(final String log, final Throwable throwable) {
-		if (configuration.getBoolean("log.email", Defaults.EMAIL)) {
+		if (configuration != null && configuration.getBoolean("log.email", Defaults.EMAIL)) {
 			if (throwable == null || lastEmailLog == null || !configuration.getBoolean("log.email.ignore.duplicates", Defaults.EMAIL_IGNORE_DUPLICATES) || !lastEmailLog.equals(log)) {
 				final String subjectKey;
 				if (throwable != null) {

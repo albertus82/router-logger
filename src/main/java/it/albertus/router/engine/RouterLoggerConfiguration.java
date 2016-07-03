@@ -24,11 +24,11 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	private static class Singleton {
-		private static final RouterLoggerConfiguration CONFIGURATION = new RouterLoggerConfiguration();
+		private static final RouterLoggerConfiguration instance = new RouterLoggerConfiguration();
 	}
 
 	public static RouterLoggerConfiguration getInstance() {
-		return Singleton.CONFIGURATION;
+		return Singleton.instance;
 	}
 
 	public static final String FILE_NAME = "routerlogger.cfg";
@@ -168,7 +168,8 @@ public class RouterLoggerConfiguration extends Configuration {
 				String key = (String) objectKey;
 				if (key != null && key.startsWith(CFG_PREFIX + '.')) {
 					if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(CFG_SUFFIX_KEY) && !key.endsWith(CFG_SUFFIX_TYPE) && !key.endsWith(CFG_SUFFIX_VALUE))) {
-						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						new IllegalThresholdException(Resources.get("err.threshold.miscfg") + ' ' + Resources.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						continue;
 					}
 					final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
 					if (thresholdsAdded.contains(thresholdName)) {
@@ -178,7 +179,8 @@ public class RouterLoggerConfiguration extends Configuration {
 					final Type thresholdType = Type.getEnum(configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_TYPE));
 					final String thresholdValue = configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_VALUE);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						continue;
 					}
 					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
 					thresholdsAdded.add(thresholdName);
@@ -210,12 +212,14 @@ public class RouterLoggerConfiguration extends Configuration {
 						}
 					}
 					if (thresholdType == null) {
-						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						continue;
 					}
 					final String thresholdKey = expression.substring(0, expression.indexOf(operator) - 1);
 					final String thresholdValue = expression.substring(expression.indexOf(operator) + operator.length() + 1);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null) {
-						throw new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
+						new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						continue;
 					}
 					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
 				}
