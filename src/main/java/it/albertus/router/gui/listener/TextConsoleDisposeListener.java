@@ -17,8 +17,13 @@ public class TextConsoleDisposeListener implements DisposeListener {
 
 	@Override
 	public void widgetDisposed(final DisposeEvent de) {
-		System.setOut(sysout);
-		System.setErr(syserr);
+		try {
+			System.setOut(sysout);
+			System.setErr(syserr);
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -8,7 +8,6 @@ import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 
-import java.io.IOException;
 import java.io.PrintStream;
 
 import org.eclipse.jface.resource.JFaceResources;
@@ -49,15 +48,22 @@ public class TextConsole extends Console {
 			if (SWT.getPlatform().toLowerCase().startsWith("win")) {
 				scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 			}
-
-			// Redirect System.out & System.err to this
-			scrollable.addDisposeListener(new TextConsoleDisposeListener(System.out, System.err));
-			final PrintStream ps = new PrintStream(this);
-			System.setOut(ps);
-			System.setErr(ps);
+			redirectStreams();
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
+		}
+	}
+
+	protected void redirectStreams() {
+		scrollable.addDisposeListener(new TextConsoleDisposeListener(System.out, System.err));
+		final PrintStream ps = new PrintStream(this);
+		try {
+			System.setOut(ps);
+			System.setErr(ps);
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -66,10 +72,10 @@ public class TextConsole extends Console {
 	private StringBuilder buffer = new StringBuilder();
 
 	@Override
-	public synchronized void write(final int b) throws IOException {
+	public synchronized void write(final int b) {
 		buffer.append((char) b);
-		if (b < 0x20) {
-			print(buffer.toString());
+		if (b == newLine.charAt(newLine.length() - 1)) {
+			print(buffer.toString(), true);
 			buffer = new StringBuilder();
 		}
 	}
