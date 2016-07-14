@@ -7,6 +7,8 @@ import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.Console;
+import it.albertus.util.TerminalConsole;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,8 +65,13 @@ public class EmailSender {
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
 	private volatile Thread daemon;
+	private Console out = TerminalConsole.getInstance(); // Fail-safe.
 
 	private final Object lock = new Object();
+
+	public void init(final Console console) {
+		this.out = console;
+	}
 
 	private class EmailRunnable implements Runnable {
 
@@ -84,7 +91,7 @@ public class EmailSender {
 						}
 					}
 					else {
-						System.out.println(Resources.get("msg.email.limit", maxSendingsPerCycle));
+						out.println(Resources.get("msg.email.limit", maxSendingsPerCycle), true);
 						break;
 					}
 				}
@@ -164,7 +171,7 @@ public class EmailSender {
 		initializeEmail(email);
 		createContents(email, rle);
 		final String mimeMessageId = email.send();
-		System.out.println(Resources.get("msg.email.sent", rle.getSubject()));
+		out.println(Resources.get("msg.email.sent", rle.getSubject()), true);
 		return mimeMessageId;
 	}
 

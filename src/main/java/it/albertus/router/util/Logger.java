@@ -4,8 +4,10 @@ import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
+import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
+import it.albertus.util.TerminalConsole;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -61,6 +63,11 @@ public class Logger {
 
 	private final Configuration configuration;
 	private String lastEmailLog;
+	private Console out = TerminalConsole.getInstance(); // Fail-safe.
+
+	public void init(final Console console) {
+		this.out = console;
+	}
 
 	public boolean isDebugEnabled() {
 		return configuration != null ? configuration.getBoolean("console.debug", Defaults.DEBUG) : true;
@@ -128,7 +135,7 @@ public class Logger {
 
 	private void logToConsole(final String text) {
 		final String base = dateFormatLog.format(new Date()) + ' ';
-		System.out.println(base + StringUtils.trimToEmpty(text));
+		out.println(base + StringUtils.trimToEmpty(text), true);
 	}
 
 	private void logToFile(final String text) throws IOException {
