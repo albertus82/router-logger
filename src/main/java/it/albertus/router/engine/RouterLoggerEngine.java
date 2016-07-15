@@ -1,6 +1,5 @@
 package it.albertus.router.engine;
 
-import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
@@ -459,12 +458,6 @@ public abstract class RouterLoggerEngine {
 	}
 
 	public RouterLoggerEngine() {
-		// Inizializzazione del Logger...
-		logger.init(out);
-
-		// Inizializzazione dell'EmailSender...
-		EmailSender.getInstance().init(out);
-
 		// Inizializzazione dell'HttpServer...
 		server.init(this);
 	}

@@ -8,7 +8,7 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
-import it.albertus.util.TerminalConsole;
+import it.albertus.util.SystemConsole;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,13 +65,9 @@ public class EmailSender {
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
 	private volatile Thread daemon;
-	private Console out = TerminalConsole.getInstance(); // Fail-safe.
+	private Console out = SystemConsole.getInstance();
 
 	private final Object lock = new Object();
-
-	public void init(final Console console) {
-		this.out = console;
-	}
 
 	private class EmailRunnable implements Runnable {
 

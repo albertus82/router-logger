@@ -7,7 +7,7 @@ import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.StringUtils;
-import it.albertus.util.TerminalConsole;
+import it.albertus.util.SystemConsole;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -63,11 +63,7 @@ public class Logger {
 
 	private final Configuration configuration;
 	private String lastEmailLog;
-	private Console out = TerminalConsole.getInstance(); // Fail-safe.
-
-	public void init(final Console console) {
-		this.out = console;
-	}
+	private Console out = SystemConsole.getInstance();
 
 	public boolean isDebugEnabled() {
 		return configuration != null ? configuration.getBoolean("console.debug", Defaults.DEBUG) : true;

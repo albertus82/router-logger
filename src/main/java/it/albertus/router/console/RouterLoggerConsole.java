@@ -7,7 +7,7 @@ import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.TerminalConsole;
+import it.albertus.util.SystemConsole;
 import it.albertus.util.Version;
 
 import java.util.Map;
@@ -198,8 +198,8 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	}
 
 	@Override
-	protected TerminalConsole getConsole() {
-		return TerminalConsole.getInstance();
+	protected SystemConsole getConsole() {
+		return SystemConsole.getInstance();
 	}
 
 }

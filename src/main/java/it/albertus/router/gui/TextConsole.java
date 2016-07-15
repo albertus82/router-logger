@@ -48,7 +48,7 @@ public class TextConsole extends Console {
 			if (SWT.getPlatform().toLowerCase().startsWith("win")) {
 				scrollable.setBackground(scrollable.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 			}
-			redirectStreams();
+			redirectStreams(); // SystemConsole & System.out will print on this SWT Text Widget. 
 		}
 		else {
 			throw new IllegalStateException(Resources.get("err.already.initialized", this.getClass().getSimpleName()));
