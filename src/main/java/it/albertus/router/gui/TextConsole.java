@@ -26,7 +26,7 @@ public class TextConsole extends SystemConsole {
 
 	protected Scrollable scrollable = null;
 
-	public TextConsole(final Composite parent, final Object layoutData) {
+	protected TextConsole(final Composite parent, final Object layoutData) {
 		if (this.scrollable == null || this.scrollable.isDisposed()) {
 			createText(parent);
 			scrollable.setLayoutData(layoutData);
