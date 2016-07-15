@@ -18,8 +18,8 @@ public class ClearMenuBarSelectionListener extends ClearSelectionListener {
 				gui.getTextConsole().clear();
 			}
 		}
-		else if (gui.canClearDataTable()) {
-			if (confirm(Resources.get("msg.confirm.clear.table.text"), Resources.get("msg.confirm.clear.table.message")) && gui.canClearDataTable()) {
+		else if (gui.getDataTable().canClear()) {
+			if (confirm(Resources.get("msg.confirm.clear.table.text"), Resources.get("msg.confirm.clear.table.message")) && gui.getDataTable().canClear()) {
 				gui.getDataTable().clear();
 			}
 		}

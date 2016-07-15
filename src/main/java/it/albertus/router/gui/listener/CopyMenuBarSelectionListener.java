@@ -14,11 +14,11 @@ public class CopyMenuBarSelectionListener extends SelectionAdapter {
 	}
 
 	@Override
-	public void widgetSelected(SelectionEvent e) {
+	public void widgetSelected(final SelectionEvent se) {
 		if (gui.canCopyConsole()) {
 			gui.getTextConsole().getText().copy();
 		}
-		else if (gui.canCopyDataTable()) {
+		else if (gui.getDataTable().canCopy()) {
 			gui.getDataTable().copy();
 		}
 	}

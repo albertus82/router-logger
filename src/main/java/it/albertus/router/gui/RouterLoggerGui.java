@@ -27,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvider {
 
@@ -207,28 +208,14 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 	}
 
-	public boolean canCopyDataTable() {
-		return dataTable.getTable() != null && dataTable.getTable().getSelectionCount() > 0;
-	}
-
 	public boolean canCopyConsole() {
-		return textConsole.getText() != null && textConsole.getText().getSelectionCount() > 0 && (textConsole.getText().isFocusControl() || !canCopyDataTable());
-	}
-
-	public boolean canSelectAllDataTable() {
-		return dataTable.getTable() != null && dataTable.getTable().getItemCount() > 0;
+		final Text text = textConsole.getText();
+		return text != null && text.getSelectionCount() > 0 && (text.isFocusControl() || !dataTable.canCopy());
 	}
 
 	public boolean canSelectAllConsole() {
-		return textConsole.getText() != null && !textConsole.getText().getText().isEmpty() && (textConsole.getText().isFocusControl() || !canSelectAllDataTable());
-	}
-
-	public boolean canDeleteDataTable() {
-		return canCopyDataTable();
-	}
-
-	public boolean canClearDataTable() {
-		return canSelectAllDataTable();
+		final Text text = textConsole.getText();
+		return text != null && !text.getText().isEmpty() && (text.isFocusControl() || !dataTable.canSelectAll());
 	}
 
 	public boolean canClearConsole() {

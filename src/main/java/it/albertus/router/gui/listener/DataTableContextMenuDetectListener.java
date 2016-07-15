@@ -1,5 +1,6 @@
 package it.albertus.router.gui.listener;
 
+import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 
 import org.eclipse.swt.events.MenuDetectEvent;
@@ -9,17 +10,18 @@ public class DataTableContextMenuDetectListener implements MenuDetectListener {
 
 	private final RouterLoggerGui gui;
 
-	public DataTableContextMenuDetectListener(RouterLoggerGui gui) {
+	public DataTableContextMenuDetectListener(final RouterLoggerGui gui) {
 		this.gui = gui;
 	}
 
 	@Override
-	public void menuDetected(MenuDetectEvent e) {
-		gui.getDataTable().getCopyMenuItem().setEnabled(gui.canCopyDataTable());
-		gui.getDataTable().getDeleteMenuItem().setEnabled(gui.canDeleteDataTable());
-		gui.getDataTable().getSelectAllMenuItem().setEnabled(gui.canSelectAllDataTable());
-		gui.getDataTable().getClearMenuItem().setEnabled(gui.canClearDataTable());
-		gui.getDataTable().getContextMenu().setVisible(true);
+	public void menuDetected(final MenuDetectEvent mde) {
+		final DataTable dataTable = gui.getDataTable();
+		dataTable.getCopyMenuItem().setEnabled(dataTable.canCopy());
+		dataTable.getDeleteMenuItem().setEnabled(dataTable.canDelete());
+		dataTable.getSelectAllMenuItem().setEnabled(dataTable.canSelectAll());
+		dataTable.getClearMenuItem().setEnabled(dataTable.canClear());
+		dataTable.getContextMenu().setVisible(true);
 	}
 
 }

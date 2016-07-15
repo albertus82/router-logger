@@ -14,11 +14,11 @@ public class SelectAllMenuBarSelectionListener extends SelectionAdapter {
 	}
 
 	@Override
-	public void widgetSelected(SelectionEvent e) {
+	public void widgetSelected(final SelectionEvent se) {
 		if (gui.canSelectAllConsole()) {
 			gui.getTextConsole().getText().selectAll();
 		}
-		else if (gui.canSelectAllDataTable()) {
+		else if (gui.getDataTable().canSelectAll()) {
 			gui.getDataTable().getTable().selectAll();
 		}
 	}

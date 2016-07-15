@@ -184,6 +184,22 @@ public class DataTable {
 		}
 	}
 
+	public boolean canDelete() {
+		return canCopy();
+	}
+
+	public boolean canClear() {
+		return canSelectAll();
+	}
+
+	public boolean canCopy() {
+		return table != null && table.getSelectionCount() > 0;
+	}
+
+	public boolean canSelectAll() {
+		return table != null && table.getItemCount() > 0;
+	}
+
 	public void addRow(final int iteration, final RouterData data, final Map<Threshold, String> thresholdsReached) {
 		if (data != null && data.getData() != null && !data.getData().isEmpty()) {
 			final Map<String, String> info = data.getData();

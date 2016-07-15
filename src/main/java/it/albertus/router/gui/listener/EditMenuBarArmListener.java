@@ -19,9 +19,9 @@ public class EditMenuBarArmListener implements ArmListener {
 	}
 
 	@Override
-	public void widgetArmed(ArmEvent e) {
+	public void widgetArmed(final ArmEvent ae) {
 		final MenuItem clearMenuItem = gui.getMenuBar().getEditClearMenuItem();
-		clearMenuItem.setEnabled(gui.canClearDataTable() || gui.canClearConsole());
+		clearMenuItem.setEnabled(gui.getDataTable().canClear() || gui.canClearConsole());
 	}
 
 }

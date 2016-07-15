@@ -1,5 +1,6 @@
 package it.albertus.router.gui.listener;
 
+import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.resources.Resources;
 
@@ -12,10 +13,11 @@ public class ClearDataTableSelectionListener extends ClearSelectionListener {
 	}
 
 	@Override
-	public void widgetSelected(SelectionEvent e) {
-		if (gui.canClearDataTable()) {
-			if (confirm(Resources.get("msg.confirm.clear.table.text"), Resources.get("msg.confirm.clear.table.message")) && gui.canClearDataTable()) {
-				gui.getDataTable().clear();
+	public void widgetSelected(final SelectionEvent se) {
+		final DataTable dataTable = gui.getDataTable();
+		if (dataTable.canClear()) {
+			if (confirm(Resources.get("msg.confirm.clear.table.text"), Resources.get("msg.confirm.clear.table.message")) && dataTable.canClear()) {
+				dataTable.clear();
 			}
 		}
 	}
