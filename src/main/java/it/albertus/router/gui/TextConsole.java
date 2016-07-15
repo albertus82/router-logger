@@ -62,12 +62,25 @@ public class TextConsole extends SystemConsole {
 	private StringBuilder buffer = new StringBuilder();
 
 	@Override
-	public synchronized void write(final int b) {
+	public void write(final int b) {
 		buffer.append((char) b);
 		if (b == newLine.charAt(newLine.length() - 1)) {
+			flush();
+		}
+	}
+
+	@Override
+	public void flush() {
+		if (buffer.length() != 0) {
 			print(buffer.toString(), true);
 			buffer = new StringBuilder();
 		}
+	}
+
+	@Override
+	public void close() {
+		flush();
+		buffer = null;
 	}
 
 	public void clear() {
@@ -79,14 +92,7 @@ public class TextConsole extends SystemConsole {
 		updatePosition(value);
 	}
 
-	protected void doPrint(final String value) {
-		int maxChars;
-		try {
-			maxChars = configuration.getInt("gui.console.max.chars");
-		}
-		catch (final Exception exception) {
-			maxChars = Defaults.GUI_CONSOLE_MAX_CHARS;
-		}
+	protected void doPrint(final String value, final int maxChars) {
 		if (getText().getCharCount() < maxChars) {
 			getText().append(value);
 		}
@@ -98,7 +104,7 @@ public class TextConsole extends SystemConsole {
 	}
 
 	@Override
-	public void print(String value) {
+	public void print(final String value) {
 		// Dealing with null argument...
 		final String toPrint;
 		if (value == null) {
@@ -108,11 +114,20 @@ public class TextConsole extends SystemConsole {
 			toPrint = value;
 		}
 
+		int mc;
+		try {
+			mc = configuration.getInt("gui.console.max.chars");
+		}
+		catch (final Exception exception) {
+			mc = Defaults.GUI_CONSOLE_MAX_CHARS;
+		}
+		final int maxChars = mc;
+
 		// Actual print... (async avoids deadlocks)
 		new SwtThreadExecutor(scrollable, true) {
 			@Override
 			protected void run() {
-				doPrint(toPrint);
+				doPrint(toPrint, maxChars);
 			}
 
 			@Override
@@ -120,71 +135,6 @@ public class TextConsole extends SystemConsole {
 				failSafePrint(toPrint);
 			}
 		}.start();
-	}
-
-	@Override
-	public void print(char array[]) {
-		print(String.valueOf(array));
-	}
-
-	@Override
-	public void println() {
-		print(newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(String value) {
-		print(value + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(Object value) {
-		print(String.valueOf(value) + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(boolean value) {
-		print(String.valueOf(value) + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(char value) {
-		print(String.valueOf(value) + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(int value) {
-		print(String.valueOf(value) + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(long value) {
-		print(String.valueOf(value) + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(float value) {
-		print(String.valueOf(value) + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(double value) {
-		print(String.valueOf(value) + newLine);
-		newLine();
-	}
-
-	@Override
-	public void println(char array[]) {
-		print(String.valueOf(array) + newLine);
-		newLine();
 	}
 
 	public Text getText() {
