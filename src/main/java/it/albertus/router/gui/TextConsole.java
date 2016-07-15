@@ -5,9 +5,11 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.listener.TextConsoleDisposeListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
+import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 import it.albertus.util.SystemConsole;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import org.eclipse.jface.resource.JFaceResources;
@@ -16,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Text;
 
-public class TextConsole extends SystemConsole {
+public class TextConsole extends OutputStream {
 
 	protected static final String newLine = NewLine.SYSTEM_LINE_SEPARATOR;
 
@@ -24,11 +26,14 @@ public class TextConsole extends SystemConsole {
 		int GUI_CONSOLE_MAX_CHARS = 100000;
 	}
 
-	protected Scrollable scrollable = null;
+	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	protected final Console console = SystemConsole.getInstance();
+	protected final Scrollable scrollable;
+	protected StringBuilder buffer = new StringBuilder();
 
 	protected TextConsole(final Composite parent, final Object layoutData) {
 		if (this.scrollable == null || this.scrollable.isDisposed()) {
-			createText(parent);
+			this.scrollable = createText(parent);
 			scrollable.setLayoutData(layoutData);
 			scrollable.setFont(JFaceResources.getTextFont());
 			if (SWT.getPlatform().toLowerCase().startsWith("win")) {
@@ -41,12 +46,12 @@ public class TextConsole extends SystemConsole {
 		}
 	}
 
-	protected void createText(final Composite parent) {
-		scrollable = new Text(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	protected Scrollable createText(final Composite parent) {
+		return new Text(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 	}
 
 	protected void redirectStreams() {
-		scrollable.addDisposeListener(new TextConsoleDisposeListener(sysout, syserr));
+		scrollable.addDisposeListener(new TextConsoleDisposeListener(Console.sysout, Console.syserr));
 		final PrintStream ps = new PrintStream(this);
 		try {
 			System.setOut(ps);
@@ -56,10 +61,6 @@ public class TextConsole extends SystemConsole {
 			e.printStackTrace();
 		}
 	}
-
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
-
-	private StringBuilder buffer = new StringBuilder();
 
 	@Override
 	public void write(final int b) {
@@ -72,7 +73,7 @@ public class TextConsole extends SystemConsole {
 	@Override
 	public void flush() {
 		if (buffer.length() != 0) {
-			print(buffer.toString(), true);
+			print(buffer.toString());
 			buffer = new StringBuilder();
 		}
 	}
@@ -83,13 +84,17 @@ public class TextConsole extends SystemConsole {
 		buffer = null;
 	}
 
+	public Text getText() {
+		return (Text) scrollable;
+	}
+
 	public void clear() {
 		getText().setText("");
 	}
 
 	protected void failSafePrint(final String value) {
 		System.out.print(value);
-		updatePosition(value);
+		console.updatePosition(value);
 	}
 
 	protected void doPrint(final String value, final int maxChars) {
@@ -100,11 +105,10 @@ public class TextConsole extends SystemConsole {
 			getText().setText(value.startsWith(newLine) ? value.substring(newLine.length()) : value);
 		}
 		getText().setTopIndex(getText().getLineCount() - 1);
-		updatePosition(value);
+		console.updatePosition(value);
 	}
 
-	@Override
-	public void print(final String value) {
+	protected void print(final String value) {
 		// Dealing with null argument...
 		final String toPrint;
 		if (value == null) {
@@ -135,10 +139,6 @@ public class TextConsole extends SystemConsole {
 				failSafePrint(toPrint);
 			}
 		}.start();
-	}
-
-	public Text getText() {
-		return (Text) scrollable;
 	}
 
 }
