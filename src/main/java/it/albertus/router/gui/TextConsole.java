@@ -5,8 +5,8 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.listener.TextConsoleDisposeListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
-import it.albertus.util.Console;
 import it.albertus.util.NewLine;
+import it.albertus.util.SystemConsole;
 
 import java.io.PrintStream;
 
@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Text;
 
-public class TextConsole extends Console {
+public class TextConsole extends SystemConsole {
 
 	protected static final String newLine = NewLine.SYSTEM_LINE_SEPARATOR;
 
@@ -24,23 +24,9 @@ public class TextConsole extends Console {
 		int GUI_CONSOLE_MAX_CHARS = 100000;
 	}
 
-	private static class Singleton {
-		private static final TextConsole instance = new TextConsole();
-	}
-
-	public static TextConsole getInstance() {
-		return Singleton.instance;
-	}
-
 	protected Scrollable scrollable = null;
 
-	protected TextConsole() {}
-
-	protected void createText(final Composite parent) {
-		scrollable = new Text(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
-	}
-
-	public void init(final Composite parent, final Object layoutData) {
+	public TextConsole(final Composite parent, final Object layoutData) {
 		if (this.scrollable == null || this.scrollable.isDisposed()) {
 			createText(parent);
 			scrollable.setLayoutData(layoutData);
@@ -55,8 +41,12 @@ public class TextConsole extends Console {
 		}
 	}
 
+	protected void createText(final Composite parent) {
+		scrollable = new Text(parent, SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+	}
+
 	protected void redirectStreams() {
-		scrollable.addDisposeListener(new TextConsoleDisposeListener(System.out, System.err));
+		scrollable.addDisposeListener(new TextConsoleDisposeListener(sysout, syserr));
 		final PrintStream ps = new PrintStream(this);
 		try {
 			System.setOut(ps);
@@ -118,8 +108,8 @@ public class TextConsole extends Console {
 			toPrint = value;
 		}
 
-		// Actual print...
-		new SwtThreadExecutor(scrollable) {
+		// Actual print... (async avoids deadlocks)
+		new SwtThreadExecutor(scrollable, true) {
 			@Override
 			protected void run() {
 				doPrint(toPrint);

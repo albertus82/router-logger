@@ -41,6 +41,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	private final TrayIcon trayIcon;
 	private final MenuBar menuBar;
 	private final SashForm sashForm;
+	private final TextConsole textConsole;
 
 	/** Entry point for GUI version */
 	public static void start() {
@@ -155,7 +156,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
-		getConsole().init(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true));
+		textConsole = new TextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		shell.addListener(SWT.Close, new CloseListener(this));
 	}
@@ -207,19 +208,19 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canCopyDataTable() {
-		return this.getDataTable().getTable() != null && this.getDataTable().getTable().getSelectionCount() > 0;
+		return dataTable.getTable() != null && dataTable.getTable().getSelectionCount() > 0;
 	}
 
 	public boolean canCopyConsole() {
-		return this.getConsole().getText() != null && this.getConsole().getText().getSelectionCount() > 0 && (this.getConsole().getText().isFocusControl() || !canCopyDataTable());
+		return textConsole.getText() != null && textConsole.getText().getSelectionCount() > 0 && (textConsole.getText().isFocusControl() || !canCopyDataTable());
 	}
 
 	public boolean canSelectAllDataTable() {
-		return this.getDataTable().getTable() != null && this.getDataTable().getTable().getItemCount() > 0;
+		return dataTable.getTable() != null && dataTable.getTable().getItemCount() > 0;
 	}
 
 	public boolean canSelectAllConsole() {
-		return this.getConsole().getText() != null && !this.getConsole().getText().getText().isEmpty() && (this.getConsole().getText().isFocusControl() || !canSelectAllDataTable());
+		return textConsole.getText() != null && !textConsole.getText().getText().isEmpty() && (textConsole.getText().isFocusControl() || !canSelectAllDataTable());
 	}
 
 	public boolean canDeleteDataTable() {
@@ -302,7 +303,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					new SwtThreadExecutor(shell) {
 						@Override
 						public void run() {
-							getConsole().clear();
+							textConsole.clear();
 							dataTable.reset();
 							beforeConnect();
 							connect();
@@ -361,17 +362,16 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		return shell;
 	}
 
-	@Override
-	public TextConsole getConsole() {
-		return TextConsole.getInstance();
-	}
-
 	public MenuBar getMenuBar() {
 		return menuBar;
 	}
 
 	public DataTable getDataTable() {
 		return dataTable;
+	}
+
+	public TextConsole getTextConsole() {
+		return textConsole;
 	}
 
 	public TrayIcon getTrayIcon() {

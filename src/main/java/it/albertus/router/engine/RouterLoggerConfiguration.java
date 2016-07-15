@@ -179,7 +179,7 @@ public class RouterLoggerConfiguration extends Configuration {
 					final Type thresholdType = Type.getEnum(configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_TYPE));
 					final String thresholdValue = configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_VALUE);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-						new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						System.err.println(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 						continue;
 					}
 					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
@@ -212,13 +212,13 @@ public class RouterLoggerConfiguration extends Configuration {
 						}
 					}
 					if (thresholdType == null) {
-						new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						System.err.println(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 						continue;
 					}
 					final String thresholdKey = expression.substring(0, expression.indexOf(operator) - 1);
 					final String thresholdValue = expression.substring(expression.indexOf(operator) + operator.length() + 1);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null) {
-						new IllegalThresholdException(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						System.err.println(Resources.get("err.threshold.miscfg.name", thresholdName) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()));
 						continue;
 					}
 					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));

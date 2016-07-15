@@ -15,7 +15,7 @@ public class ClearMenuBarSelectionListener extends ClearSelectionListener {
 	public void widgetSelected(final SelectionEvent se) {
 		if (gui.canClearConsole()) {
 			if (confirm(Resources.get("msg.confirm.clear.console.text"), Resources.get("msg.confirm.clear.console.message"))) {
-				gui.getConsole().clear();
+				gui.getTextConsole().clear();
 			}
 		}
 		else if (gui.canClearDataTable()) {

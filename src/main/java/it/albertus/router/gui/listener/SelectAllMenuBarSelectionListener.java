@@ -16,7 +16,7 @@ public class SelectAllMenuBarSelectionListener extends SelectionAdapter {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		if (gui.canSelectAllConsole()) {
-			gui.getConsole().getText().selectAll();
+			gui.getTextConsole().getText().selectAll();
 		}
 		else if (gui.canSelectAllDataTable()) {
 			gui.getDataTable().getTable().selectAll();

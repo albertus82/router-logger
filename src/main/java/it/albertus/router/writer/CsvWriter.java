@@ -5,7 +5,6 @@ import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
-import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 import it.albertus.util.Zipper;
@@ -79,9 +78,7 @@ public class CsvWriter extends Writer {
 		}
 	}
 
-	@Override
-	public void init(final Console console) {
-		super.init(console);
+	public CsvWriter() {
 		sendEmail();
 	}
 

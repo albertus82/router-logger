@@ -6,6 +6,7 @@ import it.albertus.router.util.Logger;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
+import it.albertus.util.SystemConsole;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,13 +32,7 @@ public abstract class Reader {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
-
-	protected Console out;
-
-	public void init(Console console) {
-		this.out = console;
-	}
-
+	protected final Console out = SystemConsole.getInstance();
 	protected final TelnetClient telnet = new TelnetClient();
 
 	/**

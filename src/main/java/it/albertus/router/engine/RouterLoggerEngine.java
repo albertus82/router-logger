@@ -11,6 +11,7 @@ import it.albertus.router.writer.Writer;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
+import it.albertus.util.SystemConsole;
 import it.albertus.util.Version;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public abstract class RouterLoggerEngine {
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 	protected final WebServer server = WebServer.getInstance();
-	protected final Console out = getConsole();
+	protected final Console out = SystemConsole.getInstance();
 
 	private Reader reader;
 	private Writer writer;
@@ -89,7 +90,6 @@ public abstract class RouterLoggerEngine {
 		catch (final Throwable throwable) {
 			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
 		}
-		reader.init(out);
 		return reader;
 	}
 
@@ -104,7 +104,6 @@ public abstract class RouterLoggerEngine {
 		catch (final Throwable throwable) {
 			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
 		}
-		writer.init(out);
 		return writer;
 	}
 
@@ -518,8 +517,6 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 	}
-
-	protected abstract Console getConsole();
 
 	protected int getIteration() {
 		return iteration;
