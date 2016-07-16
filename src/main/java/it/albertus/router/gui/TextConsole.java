@@ -5,7 +5,6 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.listener.TextConsoleDisposeListener;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
-import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 
 import java.io.OutputStream;
@@ -19,6 +18,8 @@ import org.eclipse.swt.widgets.Text;
 
 public class TextConsole extends OutputStream {
 
+	protected static final PrintStream defaultSysOut = System.out;
+	protected static final PrintStream defaultSysErr = System.err;
 	protected static final String newLine = NewLine.SYSTEM_LINE_SEPARATOR;
 
 	public interface Defaults {
@@ -49,7 +50,7 @@ public class TextConsole extends OutputStream {
 	}
 
 	protected void redirectStreams() {
-		scrollable.addDisposeListener(new TextConsoleDisposeListener(Console.sysout, Console.syserr));
+		scrollable.addDisposeListener(new TextConsoleDisposeListener(defaultSysOut, defaultSysErr));
 		final PrintStream ps = new PrintStream(this);
 		try {
 			System.setOut(ps);
@@ -91,17 +92,18 @@ public class TextConsole extends OutputStream {
 	}
 
 	protected void failSafePrint(final String value) {
-		Console.sysout.print(value);
+		defaultSysOut.print(value);
 	}
 
 	protected void doPrint(final String value, final int maxChars) {
-		if (getText().getCharCount() < maxChars) {
-			getText().append(value);
+		final Text text = getText();
+		if (text.getCharCount() < maxChars) {
+			text.append(value);
 		}
 		else {
-			getText().setText(value.startsWith(newLine) ? value.substring(newLine.length()) : value);
+			text.setText(value.startsWith(newLine) ? value.substring(newLine.length()) : value);
 		}
-		getText().setTopIndex(getText().getLineCount() - 1);
+		text.setTopIndex(text.getLineCount() - 1);
 	}
 
 	protected void print(final String value) {

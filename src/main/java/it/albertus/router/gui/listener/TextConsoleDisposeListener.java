@@ -7,19 +7,19 @@ import org.eclipse.swt.events.DisposeListener;
 
 public class TextConsoleDisposeListener implements DisposeListener {
 
-	private final PrintStream sysout;
-	private final PrintStream syserr;
+	private final PrintStream formerSysOut;
+	private final PrintStream formerSysErr;
 
-	public TextConsoleDisposeListener(final PrintStream sysout, final PrintStream syserr) {
-		this.sysout = sysout;
-		this.syserr = syserr;
+	public TextConsoleDisposeListener(final PrintStream defaultSysOut, final PrintStream defaultSysErr) {
+		this.formerSysOut = defaultSysOut;
+		this.formerSysErr = defaultSysErr;
 	}
 
 	@Override
 	public void widgetDisposed(final DisposeEvent de) {
 		try {
-			System.setOut(sysout);
-			System.setErr(syserr);
+			System.setOut(formerSysOut);
+			System.setErr(formerSysErr);
 		}
 		catch (final Exception e) {
 			e.printStackTrace();
