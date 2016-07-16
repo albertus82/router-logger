@@ -7,7 +7,6 @@ import it.albertus.router.resources.Resources;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
-import it.albertus.util.SystemConsole;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -27,7 +26,6 @@ public class TextConsole extends OutputStream {
 	}
 
 	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	protected final Console console = SystemConsole.getInstance();
 	protected final Scrollable scrollable;
 	protected StringBuilder buffer = new StringBuilder();
 
@@ -93,8 +91,7 @@ public class TextConsole extends OutputStream {
 	}
 
 	protected void failSafePrint(final String value) {
-		System.out.print(value);
-		console.updatePosition(value);
+		Console.sysout.print(value);
 	}
 
 	protected void doPrint(final String value, final int maxChars) {
@@ -105,7 +102,6 @@ public class TextConsole extends OutputStream {
 			getText().setText(value.startsWith(newLine) ? value.substring(newLine.length()) : value);
 		}
 		getText().setTopIndex(getText().getLineCount() - 1);
-		console.updatePosition(value);
 	}
 
 	protected void print(final String value) {
