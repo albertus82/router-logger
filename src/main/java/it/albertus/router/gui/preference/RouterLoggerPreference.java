@@ -39,6 +39,7 @@ import it.albertus.router.server.WebServer;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
+import it.albertus.util.Localized;
 
 import java.util.EnumSet;
 import java.util.Locale;
@@ -57,7 +58,12 @@ public enum RouterLoggerPreference implements Preference {
 	LOGGER_HYSTERESIS_MS(RouterLoggerPage.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS)),
 	LOGGER_RETRY_COUNT(RouterLoggerPage.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.logger.retry.count.infinite"), Integer.toString(0) } }).build()),
 	LOGGER_RETRY_INTERVAL_MS(RouterLoggerPage.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS)),
-	LOGGER_ERROR_LOG_DESTINATION_PATH(RouterLoggerPage.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(Resources.get("msg.preferences.directory.dialog.message.log")).build()),
+	LOGGER_ERROR_LOG_DESTINATION_PATH(RouterLoggerPage.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(new Localized() {
+		@Override
+		public String getMessage() {
+			return Resources.get("msg.preferences.directory.dialog.message.log");
+		}
+	}).build()),
 	CONSOLE_SHOW_CONFIGURATION(RouterLoggerPage.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION)),
 	CONSOLE_DEBUG(RouterLoggerPage.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(Logger.Defaults.DEBUG)),
 	LOG_EMAIL(RouterLoggerPage.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(Logger.Defaults.EMAIL)),
@@ -102,7 +108,12 @@ public enum RouterLoggerPreference implements Preference {
 
 	WRITER_CLASS_NAME(RouterLoggerPage.WRITER, FieldEditorType.WriterCombo, RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName(), new FieldEditorDataBuilder().comboEntryNamesAndValues(WriterPreferencePage.getWriterComboOptions()).build()),
 
-	CSV_DESTINATION_PATH(RouterLoggerPage.CSV, FieldEditorType.FormattedDirectory, CsvWriter.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(Resources.get("msg.preferences.directory.dialog.message.csv")).build()),
+	CSV_DESTINATION_PATH(RouterLoggerPage.CSV, FieldEditorType.FormattedDirectory, CsvWriter.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(new Localized() {
+		@Override
+		public String getMessage() {
+			return Resources.get("msg.preferences.directory.dialog.message.csv");
+		}
+	}).build()),
 	CSV_NEWLINE_CHARACTERS(RouterLoggerPage.CSV, FieldEditorType.FormattedCombo, CsvWriter.Defaults.NEWLINE.name(), new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
 	CSV_FIELD_SEPARATOR(RouterLoggerPage.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(RouterLoggerPage.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
