@@ -6,8 +6,8 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
-import it.albertus.router.gui.preference.Preference;
-import it.albertus.router.gui.preference.Preferences;
+import it.albertus.router.gui.preference.RouterLoggerPreference;
+import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -107,7 +107,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
-		if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(shell).open(Preference.forConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
+		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().open(shell, RouterLoggerPreference.forConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
 			shell.dispose();
 			return null;
 		}
@@ -123,7 +123,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			style = SWT.ICON_WARNING | SWT.YES | SWT.NO;
 			String propertyName;
 			try {
-				propertyName = Preference.forConfigurationKey(ce.getKey()).getLabel();
+				propertyName = RouterLoggerPreference.forConfigurationKey(ce.getKey()).getLabel();
 			}
 			catch (final Exception e) {
 				propertyName = ce.getKey();
@@ -317,7 +317,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, ce);
-				if (buttonId == SWT.OK || buttonId == SWT.NO || new Preferences(RouterLoggerGui.this).open(Preference.forConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().open(RouterLoggerGui.this.shell, RouterLoggerPreference.forConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
 					logger.log(ce, Destination.CONSOLE);
 					return;
 				}

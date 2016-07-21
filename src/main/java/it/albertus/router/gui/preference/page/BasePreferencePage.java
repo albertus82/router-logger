@@ -1,35 +1,23 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.IPreference;
 import it.albertus.jface.preference.page.AbstractPreferencePage;
-import it.albertus.jface.preference.page.IPage;
+import it.albertus.jface.preference.page.Page;
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.gui.preference.Preference;
-import it.albertus.util.Configuration;
+import it.albertus.router.gui.preference.RouterLoggerPreference;
 
 public abstract class BasePreferencePage extends AbstractPreferencePage {
 
 	public BasePreferencePage() {
-		super();
+		super(RouterLoggerConfiguration.getInstance(), RouterLoggerPreference.values());
 	}
 
 	protected BasePreferencePage(final int style) {
-		super(style);
+		super(RouterLoggerConfiguration.getInstance(), RouterLoggerPreference.values(), style);
 	}
 
 	@Override
-	public IPage getPage() {
-		return Page.forClass(getClass());
-	}
-
-	@Override
-	protected IPreference[] getPreferences() {
-		return Preference.values();
-	}
-
-	@Override
-	protected Configuration getConfiguration() {
-		return RouterLoggerConfiguration.getInstance();
+	public Page getPage() {
+		return RouterLoggerPage.forClass(getClass());
 	}
 
 }

@@ -1,60 +1,36 @@
 package it.albertus.router.gui.preference;
 
-import it.albertus.jface.preference.AbstractPreferences;
-import it.albertus.jface.preference.IPreference;
-import it.albertus.jface.preference.page.IPage;
+import it.albertus.jface.preference.Preferences;
+import it.albertus.jface.preference.page.Page;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.Images;
 import it.albertus.router.gui.RouterLoggerGui;
-import it.albertus.router.gui.preference.page.Page;
+import it.albertus.router.gui.preference.page.RouterLoggerPage;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.resources.Resources.Language;
-import it.albertus.util.Configuration;
 
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
-public class Preferences extends AbstractPreferences {
+public class RouterLoggerPreferences extends Preferences {
 
 	private final RouterLoggerGui gui;
 	private boolean restartRequired = false;
 
-	public Preferences(final RouterLoggerGui gui) {
-		super(gui.getShell());
+	public RouterLoggerPreferences(final RouterLoggerGui gui) {
+		super(RouterLoggerConfiguration.getInstance(), RouterLoggerPage.values(), RouterLoggerPreference.values(), Images.MAIN_ICONS);
 		this.gui = gui;
 	}
 
-	public Preferences(final Shell parentShell) {
-		super(parentShell);
-		this.gui = null;
+	public RouterLoggerPreferences() {
+		this(null);
 	}
 
 	@Override
-	protected Configuration getConfiguration() {
-		return RouterLoggerConfiguration.getInstance();
-	}
-
-	@Override
-	protected IPage[] getPages() {
-		return Page.values();
-	}
-
-	@Override
-	protected IPreference[] getPreferences() {
-		return Preference.values();
-	}
-
-	@Override
-	protected Image[] getImages() {
-		return Images.MAIN_ICONS;
-	}
-
-	@Override
-	public int open(final IPage selectedPage) {
+	public int open(final Shell parentShell, final Page selectedPage) {
 		final Language language = Resources.getLanguage();
 
-		final int returnCode = super.open(selectedPage);
+		final int returnCode = super.open(parentShell, selectedPage);
 
 		// Check if must update texts...
 		if (gui != null && !language.equals(Resources.getLanguage())) {
@@ -62,9 +38,8 @@ public class Preferences extends AbstractPreferences {
 		}
 
 		// Check if restart is required...
-		final Configuration configuration = getConfiguration();
-		final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(Preference.READER_CLASS_NAME.getConfigurationKey()));
-		final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(Preference.WRITER_CLASS_NAME.getConfigurationKey(), Preference.WRITER_CLASS_NAME.getDefaultValue()));
+		final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(RouterLoggerPreference.READER_CLASS_NAME.getConfigurationKey()));
+		final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(RouterLoggerPreference.WRITER_CLASS_NAME.getConfigurationKey(), RouterLoggerPreference.WRITER_CLASS_NAME.getDefaultValue()));
 		if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
 			try {
 				// Check if configured classes are valid...

@@ -1,13 +1,13 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.page.IPage;
+import it.albertus.jface.preference.page.Page;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 
-public enum Page implements IPage {
+public enum RouterLoggerPage implements Page {
 	GENERAL(GeneralPreferencePage.class),
 	READER(ReaderPreferencePage.class),
 	APPEARANCE(AppearancePreferencePage.class),
@@ -31,29 +31,29 @@ public enum Page implements IPage {
 	private final String nodeId;
 	private final String labelKey;
 	private final Class<? extends BasePreferencePage> pageClass;
-	private final Page parent;
+	private final RouterLoggerPage parent;
 
-	private Page(final Class<? extends BasePreferencePage> pageClass) {
+	private RouterLoggerPage(final Class<? extends BasePreferencePage> pageClass) {
 		this(null, null, pageClass, null);
 	}
 
-	private Page(final Class<? extends BasePreferencePage> pageClass, final Page parent) {
+	private RouterLoggerPage(final Class<? extends BasePreferencePage> pageClass, final RouterLoggerPage parent) {
 		this(null, null, pageClass, parent);
 	}
 
-	private Page(final String labelKey, final Class<? extends BasePreferencePage> pageClass) {
+	private RouterLoggerPage(final String labelKey, final Class<? extends BasePreferencePage> pageClass) {
 		this(null, labelKey, pageClass, null);
 	}
 
-	private Page(final String labelKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
+	private RouterLoggerPage(final String labelKey, final Class<? extends BasePreferencePage> pageClass, final RouterLoggerPage parent) {
 		this(null, labelKey, pageClass, parent);
 	}
 
-	private Page(final String nodeId, final String labelKey, final Class<? extends BasePreferencePage> pageClass) {
+	private RouterLoggerPage(final String nodeId, final String labelKey, final Class<? extends BasePreferencePage> pageClass) {
 		this(nodeId, labelKey, pageClass, null);
 	}
 
-	private Page(final String nodeId, final String labelKey, final Class<? extends BasePreferencePage> pageClass, final Page parent) {
+	private RouterLoggerPage(final String nodeId, final String labelKey, final Class<? extends BasePreferencePage> pageClass, final RouterLoggerPage parent) {
 		if (nodeId != null && !nodeId.isEmpty()) {
 			this.nodeId = nodeId;
 		}
@@ -86,13 +86,13 @@ public enum Page implements IPage {
 	}
 
 	@Override
-	public Page getParent() {
+	public RouterLoggerPage getParent() {
 		return parent;
 	}
 
-	public static Page forClass(final Class<? extends BasePreferencePage> clazz) {
+	public static RouterLoggerPage forClass(final Class<? extends BasePreferencePage> clazz) {
 		if (clazz != null) {
-			for (final Page page : Page.values()) {
+			for (final RouterLoggerPage page : RouterLoggerPage.values()) {
 				if (clazz.equals(page.pageClass)) {
 					return page;
 				}
