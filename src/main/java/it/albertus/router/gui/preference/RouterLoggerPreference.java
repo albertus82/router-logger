@@ -1,5 +1,6 @@
 package it.albertus.router.gui.preference;
 
+import it.albertus.jface.TextConsole;
 import it.albertus.jface.preference.FieldEditorData;
 import it.albertus.jface.preference.FieldEditorData.FieldEditorDataBuilder;
 import it.albertus.jface.preference.Preference;
@@ -11,13 +12,12 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.CloseMessageBox;
 import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
-import it.albertus.router.gui.TextConsole;
 import it.albertus.router.gui.TrayIcon;
 import it.albertus.router.gui.preference.page.BasePreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
-import it.albertus.router.gui.preference.page.RouterLoggerPage;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
+import it.albertus.router.gui.preference.page.RouterLoggerPage;
 import it.albertus.router.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.router.gui.preference.page.ServerPreferencePage;
 import it.albertus.router.gui.preference.page.WriterPreferencePage;

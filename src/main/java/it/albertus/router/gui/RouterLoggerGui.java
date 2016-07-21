@@ -1,6 +1,7 @@
 package it.albertus.router.gui;
 
 import it.albertus.jface.SwtThreadExecutor;
+import it.albertus.jface.TextConsole;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.RouterLoggerStatus;
@@ -157,7 +158,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
-		textConsole = new TextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true));
+		textConsole = new TextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), configuration);
 
 		shell.addListener(SWT.Close, new CloseListener(this));
 	}
