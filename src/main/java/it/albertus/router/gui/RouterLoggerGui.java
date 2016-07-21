@@ -13,6 +13,7 @@ import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.Configured;
 import it.albertus.util.ExceptionUtils;
 
 import java.io.IOException;
@@ -158,7 +159,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
-		textConsole = new TextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), configuration);
+		textConsole = new TextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), new Configured<Integer>() {
+			@Override
+			public Integer getValue() {
+				return configuration.getInt("gui.console.max.chars");
+			}
+		});
 
 		shell.addListener(SWT.Close, new CloseListener(this));
 	}
