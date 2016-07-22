@@ -24,7 +24,7 @@ public class ReaderPreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	protected enum ReaderClass {
+	protected enum ReaderComboData {
 		TPLINK_8970(TpLink8970Reader.DEVICE_MODEL_KEY, TpLink8970Reader.class),
 		ASUS_N12E(AsusDslN12EReader.DEVICE_MODEL_KEY, AsusDslN12EReader.class),
 		ASUS_N14U(AsusDslN14UReader.DEVICE_MODEL_KEY, AsusDslN14UReader.class),
@@ -33,7 +33,7 @@ public class ReaderPreferencePage extends BasePreferencePage {
 		private final String resourceKey;
 		private final Class<? extends Reader> readerClass;
 
-		private ReaderClass(final String resourceKey, final Class<? extends Reader> readerClass) {
+		private ReaderComboData(final String resourceKey, final Class<? extends Reader> readerClass) {
 			this.resourceKey = resourceKey;
 			this.readerClass = readerClass;
 		}
@@ -48,15 +48,14 @@ public class ReaderPreferencePage extends BasePreferencePage {
 	}
 
 	public static LocalizedComboEntryNamesAndValues getReaderComboOptions() {
-		final int length = ReaderClass.values().length;
-		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues();
-		for (int i = 0; i < length; i++) {
-			final int index = i;
-			final String value = ReaderClass.values()[index].getReaderClass().getSimpleName();
+		final ReaderComboData[] values = ReaderComboData.values();
+		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
+		for (final ReaderComboData comboData : values) {
+			final String value = comboData.getReaderClass().getSimpleName();
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(ReaderClass.values()[index].getResourceKey());
+					return Resources.get(comboData.getResourceKey());
 				}
 			};
 			options.add(name, value);

@@ -19,7 +19,7 @@ public class DatabasePreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	protected enum DatabaseDriverClass {
+	protected enum DatabaseDriverComboData {
 		DB2("com.ibm.db2.jcc.DB2Driver"),
 		MYSQL("com.mysql.jdbc.Driver"),
 		ORACLE("oracle.jdbc.OracleDriver"),
@@ -28,7 +28,7 @@ public class DatabasePreferencePage extends BasePreferencePage {
 
 		private final String driverClassName;
 
-		private DatabaseDriverClass(final String driverClassName) {
+		private DatabaseDriverComboData(final String driverClassName) {
 			this.driverClassName = driverClassName;
 		}
 
@@ -38,15 +38,14 @@ public class DatabasePreferencePage extends BasePreferencePage {
 	}
 
 	public static LocalizedComboEntryNamesAndValues getDatabaseComboOptions() {
-		final int length = DatabaseDriverClass.values().length;
-		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues();
-		for (int i = 0; i < length; i++) {
-			final int index = i;
-			final String value = DatabaseDriverClass.values()[index].getDriverClassName();
+		final DatabaseDriverComboData[] values = DatabaseDriverComboData.values();
+		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
+		for (final DatabaseDriverComboData comboData : values) {
+			final String value = comboData.getDriverClassName();
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return DatabaseDriverClass.values()[index].getDriverClassName();
+					return value;
 				}
 			};
 			options.add(name, value);

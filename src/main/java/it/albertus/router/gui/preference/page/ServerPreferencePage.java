@@ -21,14 +21,13 @@ public class ServerPreferencePage extends BasePreferencePage {
 
 	public static LocalizedComboEntryNamesAndValues getLogComboOptions() {
 		final int length = 4;
-		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues();
-		for (int i = 0; i < length; i++) {
-			final int index = i;
-			final String value = Integer.toString(index);
+		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(length);
+		for (int index = 0; index < length; index++) {
+			final int value = index;
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get("lbl.preferences.server.log.request." + index);
+					return Resources.get("lbl.preferences.server.log.request." + value);
 				}
 			};
 			options.add(name, value);

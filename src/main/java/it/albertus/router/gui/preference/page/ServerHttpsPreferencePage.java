@@ -72,13 +72,12 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 	}
 
 	public static LocalizedComboEntryNamesAndValues buildComboOptionsArray(final Set<String> options) {
-		final LocalizedComboEntryNamesAndValues entries = new LocalizedComboEntryNamesAndValues();
-		for (final String algorithm : options) {
-			final String value = algorithm;
+		final LocalizedComboEntryNamesAndValues entries = new LocalizedComboEntryNamesAndValues(options.size());
+		for (final String value : options) {
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return algorithm;
+					return value;
 				}
 			};
 			entries.add(name, value);

@@ -22,14 +22,14 @@ public class WriterPreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	protected enum WriterClass {
+	protected enum WriterComboData {
 		CSV(CsvWriter.DESTINATION_KEY, CsvWriter.class),
 		DATABASE(DatabaseWriter.DESTINATION_KEY, DatabaseWriter.class);
 
 		private final String resourceKey;
 		private final Class<? extends Writer> writerClass;
 
-		private WriterClass(final String resourceKey, final Class<? extends Writer> writerClass) {
+		private WriterComboData(final String resourceKey, final Class<? extends Writer> writerClass) {
 			this.resourceKey = resourceKey;
 			this.writerClass = writerClass;
 		}
@@ -44,15 +44,14 @@ public class WriterPreferencePage extends BasePreferencePage {
 	}
 
 	public static LocalizedComboEntryNamesAndValues getWriterComboOptions() {
-		final int length = WriterClass.values().length;
-		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues();
-		for (int i = 0; i < length; i++) {
-			final int index = i;
-			final String value = WriterClass.values()[index].getWriterClass().getSimpleName();
+		final WriterComboData[] values = WriterComboData.values();
+		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
+		for (final WriterComboData comboData : values) {
+			final String value = comboData.getWriterClass().getSimpleName();
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(WriterClass.values()[index].getResourceKey());
+					return Resources.get(comboData.getResourceKey());
 				}
 			};
 			options.add(name, value);
