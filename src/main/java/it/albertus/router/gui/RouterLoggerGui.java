@@ -324,7 +324,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, ce);
-				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().open(RouterLoggerGui.this.shell, RouterLoggerPreference.forConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().open(shell, RouterLoggerPreference.forConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
 					logger.log(ce, Destination.CONSOLE);
 					return;
 				}
