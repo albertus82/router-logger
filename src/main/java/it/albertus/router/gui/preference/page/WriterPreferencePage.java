@@ -1,10 +1,12 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
+import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 import it.albertus.router.writer.Writer;
+import it.albertus.util.Localized;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -41,12 +43,19 @@ public class WriterPreferencePage extends BasePreferencePage {
 		}
 	}
 
-	public static String[][] getWriterComboOptions() {
+	public static LocalizedComboEntryNamesAndValues getWriterComboOptions() {
 		final int length = WriterClass.values().length;
-		final String[][] options = new String[length][2];
-		for (int index = 0; index < length; index++) {
-			options[index][0] = Resources.get(WriterClass.values()[index].getResourceKey());
-			options[index][1] = WriterClass.values()[index].getWriterClass().getSimpleName();
+		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues();
+		for (int i = 0; i < length; i++) {
+			final int index = i;
+			final String value = WriterClass.values()[index].getWriterClass().getSimpleName();
+			final Localized name = new Localized() {
+				@Override
+				public String getString() {
+					return Resources.get(WriterClass.values()[index].getResourceKey());
+				}
+			};
+			options.add(name, value);
 		}
 		return options;
 	}

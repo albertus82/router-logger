@@ -1,12 +1,14 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
+import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
+import it.albertus.util.Localized;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -45,12 +47,19 @@ public class ReaderPreferencePage extends BasePreferencePage {
 		}
 	}
 
-	public static String[][] getReaderComboOptions() {
+	public static LocalizedComboEntryNamesAndValues getReaderComboOptions() {
 		final int length = ReaderClass.values().length;
-		final String[][] options = new String[length][2];
-		for (int index = 0; index < length; index++) {
-			options[index][0] = Resources.get(ReaderClass.values()[index].getResourceKey());
-			options[index][1] = ReaderClass.values()[index].getReaderClass().getSimpleName();
+		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues();
+		for (int i = 0; i < length; i++) {
+			final int index = i;
+			final String value = ReaderClass.values()[index].getReaderClass().getSimpleName();
+			final Localized name = new Localized() {
+				@Override
+				public String getString() {
+					return Resources.get(ReaderClass.values()[index].getResourceKey());
+				}
+			};
+			options.add(name, value);
 		}
 		return options;
 	}

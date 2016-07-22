@@ -3,6 +3,7 @@ package it.albertus.router.gui.preference;
 import it.albertus.jface.TextConsole;
 import it.albertus.jface.preference.FieldEditorData;
 import it.albertus.jface.preference.FieldEditorData.FieldEditorDataBuilder;
+import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.jface.preference.Preference;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
@@ -51,16 +52,26 @@ import org.eclipse.swt.widgets.Composite;
 public enum RouterLoggerPreference implements Preference {
 
 	LANGUAGE(RouterLoggerPage.GENERAL, FieldEditorType.Combo, Locale.getDefault().getLanguage(), new FieldEditorDataBuilder().comboEntryNamesAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
-	LOGGER_ITERATIONS(RouterLoggerPage.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.iterations.infinite"), Integer.toString(0) } }).build()),
+	LOGGER_ITERATIONS(RouterLoggerPage.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.ITERATIONS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new LocalizedComboEntryNamesAndValues(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("lbl.preferences.iterations.infinite");
+		}
+	}, 0)).build()),
 	LOGGER_CLOSE_WHEN_FINISHED(RouterLoggerPage.GENERAL, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.CLOSE_WHEN_FINISHED)),
 	LOGGER_INTERVAL_NORMAL_MS(RouterLoggerPage.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS)),
 	LOGGER_INTERVAL_FAST_MS(RouterLoggerPage.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS)),
 	LOGGER_HYSTERESIS_MS(RouterLoggerPage.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS)),
-	LOGGER_RETRY_COUNT(RouterLoggerPage.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.logger.retry.count.infinite"), Integer.toString(0) } }).build()),
+	LOGGER_RETRY_COUNT(RouterLoggerPage.GENERAL, FieldEditorType.IntegerCombo, Integer.toString(RouterLoggerEngine.Defaults.RETRIES), new FieldEditorDataBuilder().comboEntryNamesAndValues(new LocalizedComboEntryNamesAndValues(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("lbl.preferences.logger.retry.count.infinite");
+		}
+	}, 0)).build()),
 	LOGGER_RETRY_INTERVAL_MS(RouterLoggerPage.GENERAL, FieldEditorType.FormattedInteger, Long.toString(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS)),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(RouterLoggerPage.GENERAL, FieldEditorType.FormattedDirectory, Logger.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
-		public String getMessage() {
+		public String getString() {
 			return Resources.get("msg.preferences.directory.dialog.message.log");
 		}
 	}).build()),
@@ -110,7 +121,7 @@ public enum RouterLoggerPreference implements Preference {
 
 	CSV_DESTINATION_PATH(RouterLoggerPage.CSV, FieldEditorType.FormattedDirectory, CsvWriter.Defaults.DIRECTORY, new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
-		public String getMessage() {
+		public String getString() {
 			return Resources.get("msg.preferences.directory.dialog.message.csv");
 		}
 	}).build()),
@@ -151,7 +162,12 @@ public enum RouterLoggerPreference implements Preference {
 	EMAIL_CONNECTION_TIMEOUT(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT)),
 	EMAIL_SOCKET_TIMEOUT(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.SOCKET_TIMEOUT)),
 	EMAIL_RETRY_INTERVAL_SECS(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(EmailSender.Defaults.RETRY_INTERVAL_SECS)),
-	EMAIL_MAX_SENDINGS_PER_CYCLE(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.IntegerCombo, Integer.toString(EmailSender.Defaults.MAX_SENDINGS_PER_CYCLE), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.email.max.sendings.per.cycle.unlimited"), Integer.toString(0) } }).build()),
+	EMAIL_MAX_SENDINGS_PER_CYCLE(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.IntegerCombo, Integer.toString(EmailSender.Defaults.MAX_SENDINGS_PER_CYCLE), new FieldEditorDataBuilder().comboEntryNamesAndValues(new LocalizedComboEntryNamesAndValues(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("lbl.preferences.email.max.sendings.per.cycle.unlimited");
+		}
+	}, 0)).build()),
 	EMAIL_MAX_QUEUE_SIZE(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.ScaleInteger, Byte.toString(EmailSender.Defaults.MAX_QUEUE_SIZE), new FieldEditorDataBuilder().scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(10).build()),
 	EMAIL_SSL_CONNECT(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(EmailSender.Defaults.SSL_CONNECT)),
 	EMAIL_SSL_IDENTITY(RouterLoggerPage.EMAIL_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(EmailSender.Defaults.SSL_IDENTITY)),
@@ -173,7 +189,12 @@ public enum RouterLoggerPreference implements Preference {
 	SERVER_HANDLER_CLOSE_ENABLED(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(CloseHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_STATUS_ENABLED(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.ENABLED), null, SERVER_ENABLED),
 	SERVER_HANDLER_STATUS_REFRESH(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, Boolean.toString(StatusHandler.Defaults.REFRESH), null, SERVER_HANDLER_STATUS_ENABLED),
-	SERVER_HANDLER_STATUS_REFRESH_SECS(RouterLoggerPage.SERVER, FieldEditorType.IntegerCombo, Integer.toString(StatusHandler.Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new String[][] { { Resources.get("lbl.preferences.server.handler.status.refresh.auto"), Integer.toString(0) } }).build(), SERVER_HANDLER_STATUS_REFRESH),
+	SERVER_HANDLER_STATUS_REFRESH_SECS(RouterLoggerPage.SERVER, FieldEditorType.IntegerCombo, Integer.toString(StatusHandler.Defaults.REFRESH_SECS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new LocalizedComboEntryNamesAndValues(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("lbl.preferences.server.handler.status.refresh.auto");
+		}
+	}, 0)).build(), SERVER_HANDLER_STATUS_REFRESH),
 	SERVER_LOG_REQUEST(RouterLoggerPage.SERVER, FieldEditorType.FormattedCombo, Integer.toString(BaseHttpHandler.Defaults.LOG_REQUEST), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build(), SERVER_ENABLED),
 	SERVER_THREADS(RouterLoggerPage.SERVER, FieldEditorType.ScaleInteger, Byte.toString(BaseHttpServer.Defaults.THREADS), new FieldEditorDataBuilder().scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build(), SERVER_ENABLED),
 

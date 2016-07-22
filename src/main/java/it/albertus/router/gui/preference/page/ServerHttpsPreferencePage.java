@@ -1,6 +1,8 @@
 package it.albertus.router.gui.preference.page;
 
+import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.router.server.BaseHttpServer;
+import it.albertus.util.Localized;
 
 import java.security.KeyStore;
 import java.security.Provider;
@@ -49,19 +51,19 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 		}
 	}
 
-	public static String[][] getKeyManagerFactoryComboOptions() {
+	public static LocalizedComboEntryNamesAndValues getKeyManagerFactoryComboOptions() {
 		return buildComboOptionsArray(keyManagerFactoryAlgorithms);
 	}
 
-	public static String[][] getTrustManagerFactoryComboOptions() {
+	public static LocalizedComboEntryNamesAndValues getTrustManagerFactoryComboOptions() {
 		return buildComboOptionsArray(trustManagerFactoryAlgorithms);
 	}
 
-	public static String[][] getKeyStoreAlgorithmsComboOptions() {
+	public static LocalizedComboEntryNamesAndValues getKeyStoreAlgorithmsComboOptions() {
 		return buildComboOptionsArray(keyStoreAlgorithms);
 	}
 
-	public static String[][] getSslContextAlgorithmsComboOptions() {
+	public static LocalizedComboEntryNamesAndValues getSslContextAlgorithmsComboOptions() {
 		return buildComboOptionsArray(sslContextAlgorithms);
 	}
 
@@ -69,13 +71,19 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 		return KEY_STORE_FILE_EXTENSIONS;
 	}
 
-	private static String[][] buildComboOptionsArray(final Set<String> options) {
-		final String[][] optionsArray = new String[options.size()][];
-		int index = 0;
+	public static LocalizedComboEntryNamesAndValues buildComboOptionsArray(final Set<String> options) {
+		final LocalizedComboEntryNamesAndValues entries = new LocalizedComboEntryNamesAndValues();
 		for (final String algorithm : options) {
-			optionsArray[index++] = new String[] { algorithm, algorithm };
+			final String value = algorithm;
+			final Localized name = new Localized() {
+				@Override
+				public String getString() {
+					return algorithm;
+				}
+			};
+			entries.add(name, value);
 		}
-		return optionsArray;
+		return entries;
 	}
 
 }

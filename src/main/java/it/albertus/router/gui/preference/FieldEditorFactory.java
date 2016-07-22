@@ -37,21 +37,21 @@ public final class FieldEditorFactory {
 		case Boolean:
 			return new BooleanFieldEditor(name, label, parent);
 		case Combo:
-			return new ComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+			return new ComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		case DatabaseCombo:
-			return new DatabaseComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+			return new DatabaseComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		case DefaultBoolean:
 			return new DefaultBooleanFieldEditor(name, label, parent);
 		case Directory:
 			return createDirectoryFieldEditor(name, label, parent, data);
 		case EditableCombo:
-			return new EditableComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+			return new EditableComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		case EmailAddresses:
 			return new EmailAddressesListEditor(name, label, parent, data.getHorizontalSpan(), Images.MAIN_ICONS);
 		case File:
 			return createFileFieldEditor(name, label, parent, data);
 		case FormattedCombo:
-			return new FormattedComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+			return new FormattedComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		case FormattedDirectory:
 			return createFormattedDirectoryFieldEditor(name, label, parent, data);
 		case FormattedFile:
@@ -63,11 +63,11 @@ public final class FieldEditorFactory {
 		case Integer:
 			return createIntegerFieldEditor(name, label, parent, data);
 		case IntegerCombo:
-			return new IntegerComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+			return new IntegerComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		case Password:
 			return createPasswordFieldEditor(name, label, parent, data);
 		case ReaderCombo:
-			return new ReaderComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+			return new ReaderComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		case Scale:
 			return createScaleFieldEditor(name, label, parent, data);
 		case ScaleInteger:
@@ -81,7 +81,7 @@ public final class FieldEditorFactory {
 		case WrapString:
 			return createWrapStringFieldEditor(name, label, parent, data);
 		case WriterCombo:
-			return new WriterComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+			return new WriterComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		default:
 			throw new IllegalStateException("Unsupported FieldEditor: " + type);
 		}
@@ -306,7 +306,7 @@ public final class FieldEditorFactory {
 	}
 
 	private static FieldEditor createValidatedComboFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
-		final ValidatedComboFieldEditor validatedComboFieldEditor = new ValidatedComboFieldEditor(name, label, data.getComboEntryNamesAndValues(), parent);
+		final ValidatedComboFieldEditor validatedComboFieldEditor = new ValidatedComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		if (data.getEmptyStringAllowed() != null) {
 			validatedComboFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
 		}

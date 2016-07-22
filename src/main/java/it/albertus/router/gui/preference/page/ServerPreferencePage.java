@@ -1,7 +1,9 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
+import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.router.resources.Resources;
+import it.albertus.util.Localized;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -17,12 +19,19 @@ public class ServerPreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	public static String[][] getLogComboOptions() {
+	public static LocalizedComboEntryNamesAndValues getLogComboOptions() {
 		final int length = 4;
-		final String[][] options = new String[length][2];
-		for (int index = 0; index < length; index++) {
-			options[index][1] = Integer.toString(index);
-			options[index][0] = Resources.get("lbl.preferences.server.log.request." + index);
+		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues();
+		for (int i = 0; i < length; i++) {
+			final int index = i;
+			final String value = Integer.toString(index);
+			final Localized name = new Localized() {
+				@Override
+				public String getString() {
+					return Resources.get("lbl.preferences.server.log.request." + index);
+				}
+			};
+			options.add(name, value);
 		}
 		return options;
 	}
