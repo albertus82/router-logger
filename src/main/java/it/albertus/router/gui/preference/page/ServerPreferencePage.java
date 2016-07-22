@@ -30,7 +30,7 @@ public class ServerPreferencePage extends BasePreferencePage {
 					return Resources.get("lbl.preferences.server.log.request." + value);
 				}
 			};
-			options.add(name, value);
+			options.put(name, value);
 		}
 		return options;
 	}

@@ -80,7 +80,7 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 					return value;
 				}
 			};
-			entries.add(name, value);
+			entries.put(name, value);
 		}
 		return entries;
 	}

@@ -54,7 +54,7 @@ public class WriterPreferencePage extends BasePreferencePage {
 					return Resources.get(comboData.resourceKey);
 				}
 			};
-			options.add(name, value);
+			options.put(name, value);
 		}
 		return options;
 	}

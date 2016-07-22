@@ -48,7 +48,7 @@ public class DatabasePreferencePage extends BasePreferencePage {
 					return value;
 				}
 			};
-			options.add(name, value);
+			options.put(name, value);
 		}
 		return options;
 	}

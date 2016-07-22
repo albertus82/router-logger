@@ -21,7 +21,7 @@ public class GeneralPreferencePage extends BasePreferencePage {
 					return locale.getDisplayLanguage(locale);
 				}
 			};
-			options.add(name, value);
+			options.put(name, value);
 		}
 		return options;
 	}
