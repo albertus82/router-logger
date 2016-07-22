@@ -51,11 +51,11 @@ public class ReaderPreferencePage extends BasePreferencePage {
 		final ReaderComboData[] values = ReaderComboData.values();
 		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
 		for (final ReaderComboData comboData : values) {
-			final String value = comboData.getReaderClass().getSimpleName();
+			final String value = comboData.readerClass.getSimpleName();
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(comboData.getResourceKey());
+					return Resources.get(comboData.resourceKey);
 				}
 			};
 			options.add(name, value);

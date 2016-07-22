@@ -41,7 +41,7 @@ public class DatabasePreferencePage extends BasePreferencePage {
 		final DatabaseDriverComboData[] values = DatabaseDriverComboData.values();
 		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
 		for (final DatabaseDriverComboData comboData : values) {
-			final String value = comboData.getDriverClassName();
+			final String value = comboData.driverClassName;
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {

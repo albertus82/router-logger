@@ -47,11 +47,11 @@ public class WriterPreferencePage extends BasePreferencePage {
 		final WriterComboData[] values = WriterComboData.values();
 		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
 		for (final WriterComboData comboData : values) {
-			final String value = comboData.getWriterClass().getSimpleName();
+			final String value = comboData.writerClass.getSimpleName();
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(comboData.getResourceKey());
+					return Resources.get(comboData.resourceKey);
 				}
 			};
 			options.add(name, value);
