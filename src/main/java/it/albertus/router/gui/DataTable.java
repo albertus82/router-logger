@@ -300,7 +300,17 @@ public class DataTable {
 
 					// Limitatore righe in tabella...
 					if (table.getItemCount() > maxItems) {
-						table.remove(maxItems);
+						if (table.getItemCount() == maxItems + 1) {
+							table.remove(table.getItemCount() - 1);
+						}
+						else {
+							table.setRedraw(false);
+							do {
+								table.remove(table.getItemCount() - 1);
+							}
+							while (table.getItemCount() > maxItems);
+							table.setRedraw(true);
+						}
 					}
 				}
 			}.start();
