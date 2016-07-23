@@ -126,6 +126,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`gui.console.max.chars`**= dimensione massima della console, in caratteri; la console viene automaticamente ripulita al raggiungimento della soglia per limitare l'utilizzo di memoria (default: `50000` caratteri).
 * **`gui.important.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno evidenziati nella tabella (default: vuoto). Gli stessi valori saranno mostrati anche nel suggerimento che compare soffermandosi con il mouse sull'eventuale icona di RouterLogger nell'area di notifica.
 * **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.important.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
+* **`gui.clipboard.max.chars`**= dimensione massima degli appunti, in caratteri. Dimensioni eccessive possono causare un'elevata occupazione di memoria (default: `100000` caratteri).
 
 ##### Console
 

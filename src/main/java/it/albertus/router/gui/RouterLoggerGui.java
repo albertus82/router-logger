@@ -37,6 +37,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	public interface Defaults extends RouterLoggerEngine.Defaults {
 		boolean GUI_START_MINIMIZED = false;
+		int GUI_CLIPBOARD_MAX_CHARS = 100000;
 	}
 
 	private final Shell shell;

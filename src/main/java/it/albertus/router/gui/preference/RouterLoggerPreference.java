@@ -108,6 +108,7 @@ public enum RouterLoggerPreference implements Preference {
 	GUI_TABLE_COLUMNS_PACK(RouterLoggerPage.APPEARANCE, FieldEditorType.DefaultBoolean, Boolean.toString(DataTable.Defaults.COLUMNS_PACK)),
 	GUI_TABLE_COLUMNS_PADDING_RIGHT(RouterLoggerPage.APPEARANCE, FieldEditorType.ScaleInteger, Byte.toString(DataTable.Defaults.COLUMNS_PADDING_RIGHT), new FieldEditorDataBuilder().scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(10).build()),
 	GUI_CONSOLE_MAX_CHARS(RouterLoggerPage.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS), new FieldEditorDataBuilder().textLimit(6).build()),
+	GUI_CLIPBOARD_MAX_CHARS(RouterLoggerPage.APPEARANCE, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS), new FieldEditorDataBuilder().integerValidRange(0, 128 * 1024).build()),
 	GUI_MINIMIZE_TRAY(RouterLoggerPage.APPEARANCE, FieldEditorType.DefaultBoolean, Boolean.toString(TrayIcon.Defaults.GUI_MINIMIZE_TRAY)),
 	GUI_TRAY_TOOLTIP(RouterLoggerPage.APPEARANCE, FieldEditorType.DefaultBoolean, Boolean.toString(TrayIcon.Defaults.GUI_TRAY_TOOLTIP), null, GUI_MINIMIZE_TRAY),
 	GUI_START_MINIMIZED(RouterLoggerPage.APPEARANCE, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerGui.Defaults.GUI_START_MINIMIZED)),

@@ -28,6 +28,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -129,9 +130,6 @@ public class DataTable {
 	/** Copies the current selection to the clipboard. */
 	public void copy() {
 		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
-			if (table.getSelectionCount() > 1) {
-				System.gc(); // La copia puo' richiedere molta memoria!
-			}
 			StringBuilder data = new StringBuilder();
 
 			// Testata...
@@ -139,19 +137,47 @@ public class DataTable {
 				data.append(column.getText()).append(FIELD_SEPARATOR);
 			}
 			data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
+			if (data.length() > configuration.getInt("gui.clipboard.max.chars", RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
+				final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_WARNING);
+				messageBox.setText(Resources.get("lbl.window.title"));
+				messageBox.setMessage(Resources.get("err.clipboard.cannot.copy"));
+				messageBox.open();
+				return;
+			}
 
 			// Dati selezionati (ogni TableItem rappresenta una riga)...
+			boolean limited = false;
+			final int columnCount = table.getColumnCount();
 			for (final TableItem item : table.getSelection()) {
-				for (int i = 0; i < table.getColumnCount(); i++) {
-					data.append(item.getText(i)).append(FIELD_SEPARATOR);
+				final StringBuilder row = new StringBuilder();
+				for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+					row.append(item.getText(columnIndex));
+					if (columnIndex != columnCount - 1) {
+						row.append(FIELD_SEPARATOR);
+					}
+					else {
+						row.append(NewLine.SYSTEM_LINE_SEPARATOR);
+					}
 				}
-				data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
+				if (row.length() + data.length() > configuration.getInt("gui.clipboard.max.chars", RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
+					limited = true;
+					break;
+				}
+				else {
+					data.append(row);
+				}
 			}
 
 			// Inserimento dati negli appunti...
 			final Clipboard clipboard = new Clipboard(table.getDisplay());
 			clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
 			clipboard.dispose();
+			if (limited) {
+				final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_WARNING);
+				messageBox.setText(Resources.get("lbl.window.title"));
+				messageBox.setMessage(Resources.get("err.clipboard.limited.copy", data.length()));
+				messageBox.open();
+			}
 		}
 	}
 
