@@ -54,7 +54,7 @@ L'applicazione crea una tabella per memorizzare i dati (se non presente), e a og
 Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi accedere alla configurazione  (men&ugrave; **Strumenti**) e compilare le seguenti opzioni nella scheda **Salvataggio > Database**:
 
 * **Nome classe driver**: nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
-* **URL di connessione**: URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
+* **URL di connessione JDBC**: URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
 * **Nome utente**: nome utente per accedere al database.
 * **Password**: password per accedere al database.
 
@@ -126,7 +126,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`gui.console.max.chars`**= dimensione massima della console, in caratteri; la console viene automaticamente ripulita al raggiungimento della soglia per limitare l'utilizzo di memoria (default: `50000` caratteri).
 * **`gui.important.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno evidenziati nella tabella (default: vuoto). Gli stessi valori saranno mostrati anche nel suggerimento che compare soffermandosi con il mouse sull'eventuale icona di RouterLogger nell'area di notifica.
 * **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.important.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
-* **`gui.clipboard.max.chars`**= dimensione massima degli appunti, in caratteri. (default: `100000` caratteri). **In ambiente Linux/GTK, non impostare mai valori superiori a 131072 (128 KiB), in caso contrario potrebbero verificarsi problemi dovuti all'esaurimento della memoria.**
+* **`gui.clipboard.max.chars`**= dimensione massima degli appunti, in caratteri. (default: `100000` caratteri). **In ambiente Linux/GTK, non impostare mai valori superiori a `131072` (128 KiB), in caso contrario potrebbero verificarsi problemi dovuti all'esaurimento della memoria.**
 
 ##### Console
 
