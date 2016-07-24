@@ -137,7 +137,7 @@ public class DataTable {
 				data.append(column.getText()).append(FIELD_SEPARATOR);
 			}
 			data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
-			if (data.length() > configuration.getInt("gui.clipboard.max.chars", RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
+			if (data.length() > configuration.getInt(RouterLoggerGui.CFG_KEY_GUI_CLIPBOARD_MAX_CHARS, RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
 				final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_WARNING);
 				messageBox.setText(Resources.get("lbl.window.title"));
 				messageBox.setMessage(Resources.get("err.clipboard.cannot.copy"));
@@ -159,7 +159,7 @@ public class DataTable {
 						row.append(NewLine.SYSTEM_LINE_SEPARATOR);
 					}
 				}
-				if (row.length() + data.length() > configuration.getInt("gui.clipboard.max.chars", RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
+				if (row.length() + data.length() > configuration.getInt(RouterLoggerGui.CFG_KEY_GUI_CLIPBOARD_MAX_CHARS, RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
 					limited = true;
 					break;
 				}
@@ -173,7 +173,7 @@ public class DataTable {
 			clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
 			clipboard.dispose();
 			if (limited) {
-				final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_WARNING);
+				final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_INFORMATION);
 				messageBox.setText(Resources.get("lbl.window.title"));
 				messageBox.setMessage(Resources.get("err.clipboard.limited.copy", data.length()));
 				messageBox.open();

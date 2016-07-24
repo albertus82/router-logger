@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Text;
 
 public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvider {
 
+	public static final String CFG_KEY_GUI_CLIPBOARD_MAX_CHARS = "gui.clipboard.max.chars";
+
 	private static final float SASH_MAGNIFICATION_FACTOR = 1.5f;
 
 	public interface Defaults extends RouterLoggerEngine.Defaults {
