@@ -158,11 +158,12 @@ public class CsvWriter extends Writer {
 
 	protected String buildCsvHeader(final RouterData info) {
 		final String fieldSeparator = getFieldSeparator();
+		final String fieldSeparatorReplacement = getFieldSeparatorReplacement();
 
 		final StringBuilder header = new StringBuilder(Resources.get("lbl.column.timestamp.text")).append(fieldSeparator);
 		header.append(Resources.get("lbl.column.response.time.text")).append(fieldSeparator); // Response time
 		for (String field : info.getData().keySet()) {
-			header.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
+			header.append(field.replace(fieldSeparator, fieldSeparatorReplacement)).append(fieldSeparator);
 		}
 		header.replace(header.length() - fieldSeparator.length(), header.length(), getRecordSeparator());
 		return header.toString();
@@ -170,11 +171,12 @@ public class CsvWriter extends Writer {
 
 	protected String buildCsvRow(final RouterData info) {
 		final String fieldSeparator = getFieldSeparator();
+		final String fieldSeparatorReplacement = getFieldSeparatorReplacement();
 
 		final StringBuilder row = new StringBuilder(dateFormatColumn.format(info.getTimestamp())).append(fieldSeparator);
 		row.append(info.getResponseTime()).append(fieldSeparator); // Response time
 		for (String field : info.getData().values()) {
-			row.append(field.replace(fieldSeparator, getFieldSeparatorReplacement())).append(fieldSeparator);
+			row.append(field.replace(fieldSeparator, fieldSeparatorReplacement)).append(fieldSeparator);
 		}
 		row.replace(row.length() - fieldSeparator.length(), row.length(), getRecordSeparator());
 		return row.toString();
