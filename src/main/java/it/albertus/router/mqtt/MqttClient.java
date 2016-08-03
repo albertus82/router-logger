@@ -1,6 +1,5 @@
 package it.albertus.router.mqtt;
 
-import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
@@ -56,35 +55,46 @@ public class MqttClient {
 
 	public void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
-			try {
-				client = new org.eclipse.paho.client.mqttv3.MqttClient(configuration.getString(CFG_KEY_MQTT_SERVER_URI), configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID));
-				final MqttConnectOptions options = new MqttConnectOptions();
-				//options.setServerURIs(new String[] {"tcp://192.168.1.5:1883"});
-				final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
-				if (username != null && !username.isEmpty()) {
-					options.setUserName(username);
-				}
-				final char[] password = configuration.getCharArray(CFG_KEY_MQTT_PASSWORD);
-				if (password != null && password.length > 0) {
-					options.setPassword(password);
-				}
-				options.setKeepAliveInterval(configuration.getInt(CFG_KEY_MQTT_KEEP_ALIVE_INTERVAL, Defaults.KEEP_ALIVE_INTERVAL));
-				options.setConnectionTimeout(configuration.getInt(CFG_KEY_MQTT_CONNECTION_TIMEOUT, Defaults.CONNECTION_TIMEOUT));
-				options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
-				options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
-				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
-				client.connect(options);
+			final MqttConnectOptions options = new MqttConnectOptions();
+			//options.setServerURIs(new String[] {"tcp://192.168.1.5:1883"});
+			final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
+			if (username != null && !username.isEmpty()) {
+				options.setUserName(username);
 			}
-			catch (final Exception e) {
-				Logger.getInstance().log(e);
+			final char[] password = configuration.getCharArray(CFG_KEY_MQTT_PASSWORD);
+			if (password != null && password.length > 0) {
+				options.setPassword(password);
 			}
+			options.setKeepAliveInterval(configuration.getInt(CFG_KEY_MQTT_KEEP_ALIVE_INTERVAL, Defaults.KEEP_ALIVE_INTERVAL));
+			options.setConnectionTimeout(configuration.getInt(CFG_KEY_MQTT_CONNECTION_TIMEOUT, Defaults.CONNECTION_TIMEOUT));
+			options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
+			options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
+			options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
+			doConnect(options);
 		}
 	}
 
-	public void publish(final RouterData routerData) {
+	private synchronized void doConnect(final MqttConnectOptions options) {
+		try {
+			client = new org.eclipse.paho.client.mqttv3.MqttClient(configuration.getString(CFG_KEY_MQTT_SERVER_URI), configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID));
+			client.connect(options);
+		}
+		catch (final Exception e) {
+			Logger.getInstance().log(e);
+		}
+	}
+
+	public void publish(final Object payload) {
+		publish(payload.toString());
+	}
+
+	public void publish(final String payload) {
+		publish(payload.getBytes());
+	}
+
+	public void publish(final byte[] payload) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && client != null) {
-			final MqttMessage message = new MqttMessage();
-			message.setPayload(routerData.toString().getBytes());
+			final MqttMessage message = new MqttMessage(payload);
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_MESSAGE_RETAINED, Defaults.MESSAGE_RETAINED));
 			message.setQos(configuration.getByte(CFG_KEY_MQTT_MESSAGE_QOS, Defaults.MESSAGE_QOS));
 			try {
@@ -93,18 +103,18 @@ public class MqttClient {
 				}
 				client.publish(configuration.getString(CFG_KEY_MQTT_TOPIC, Defaults.TOPIC), message);
 			}
-			catch (Exception e) {
+			catch (final Exception e) {
 				Logger.getInstance().log(e);
 			}
 		}
 	}
 
-	public void disconnect() {
+	public synchronized void disconnect() {
 		if (client != null && client.isConnected()) {
 			try {
 				client.disconnect();
 			}
-			catch (Exception e) {
+			catch (final Exception e) {
 				Logger.getInstance().log(e);
 			}
 		}
