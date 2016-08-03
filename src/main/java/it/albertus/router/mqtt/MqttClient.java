@@ -8,6 +8,7 @@ import it.albertus.util.Configuration;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+/** @Singleton */
 public class MqttClient {
 
 	public static final byte QOS_MIN = 0;
