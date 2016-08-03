@@ -83,7 +83,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			routerLogger.disconnect(true);
 			display.dispose();
 			routerLogger.joinPollingThread();
-			routerLogger.server.stop();
+			routerLogger.httpServer.stop();
+			routerLogger.mqttClient.disconnect();
 			routerLogger.removeShutdownHook();
 		}
 		routerLogger.printGoodbye();
@@ -292,7 +293,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			@Override
 			public void run() {
 				try {
-					server.stop();
+					httpServer.stop();
+					mqttClient.disconnect();
 					joinPollingThread();
 					configuration.reload();
 					setIteration(FIRST_ITERATION);

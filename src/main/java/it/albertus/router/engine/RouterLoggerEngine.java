@@ -1,6 +1,7 @@
 package it.albertus.router.engine;
 
 import it.albertus.router.email.ThresholdsEmailSender;
+import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.server.WebServer;
@@ -43,7 +44,8 @@ public abstract class RouterLoggerEngine {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
-	protected final WebServer server = WebServer.getInstance();
+	protected final WebServer httpServer = WebServer.getInstance();
+	protected final MqttClient mqttClient = MqttClient.getInstance();
 	protected final Console out = SystemConsole.getInstance();
 
 	private Reader reader;
@@ -131,7 +133,8 @@ public abstract class RouterLoggerEngine {
 
 	protected void beforeConnect() {
 		printWelcome();
-		server.start();
+		httpServer.start();
+		mqttClient.connect();
 		initReaderAndWriter();
 		printDeviceModel();
 	}
@@ -149,7 +152,8 @@ public abstract class RouterLoggerEngine {
 					catch (final Exception e) {/* Ignore */}
 				}
 				release();
-				server.stop();
+				httpServer.stop();
+				mqttClient.disconnect();
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
@@ -366,6 +370,8 @@ public abstract class RouterLoggerEngine {
 
 			writer.saveInfo(currentData);
 
+			mqttClient.publish(currentData);
+
 			/* Impostazione stato di allerta e gestione isteresi... */
 			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(currentData);
 			boolean importantThresholdReached = false;
@@ -458,7 +464,7 @@ public abstract class RouterLoggerEngine {
 
 	public RouterLoggerEngine() {
 		// Inizializzazione dell'HttpServer...
-		server.init(this);
+		httpServer.init(this);
 	}
 
 	protected void initReaderAndWriter() {

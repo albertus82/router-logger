@@ -58,7 +58,8 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			finally {
 				routerLogger.disconnect(true);
 				routerLogger.joinPollingThread();
-				routerLogger.server.stop();
+				routerLogger.httpServer.stop();
+				routerLogger.mqttClient.disconnect();
 				routerLogger.removeShutdownHook();
 			}
 			routerLogger.printGoodbye();
@@ -177,7 +178,8 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				server.stop();
+				httpServer.stop();
+				mqttClient.disconnect();
 				joinPollingThread();
 				configuration.reload();
 				setIteration(FIRST_ITERATION);
