@@ -13,6 +13,7 @@ import it.albertus.jface.preference.field.FormattedStringFieldEditor;
 import it.albertus.jface.preference.field.IntegerComboFieldEditor;
 import it.albertus.jface.preference.field.PasswordFieldEditor;
 import it.albertus.jface.preference.field.ScaleIntegerFieldEditor;
+import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.Images;
@@ -76,6 +77,8 @@ public final class FieldEditorFactory {
 			return createStringFieldEditor(name, label, parent, data);
 		case Thresholds:
 			return new ThresholdsFieldEditor(name, label, parent);
+		case Uri:
+			return new UriListEditor(name, label, parent, data.getHorizontalSpan(), Images.MAIN_ICONS);
 		case ValidatedCombo:
 			return createValidatedComboFieldEditor(name, label, parent, data);
 		case WrapString:

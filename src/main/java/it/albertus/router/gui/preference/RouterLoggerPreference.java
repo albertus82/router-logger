@@ -210,7 +210,7 @@ public enum RouterLoggerPreference implements Preference {
 	SERVER_SSL_TMF_ALGORITHM(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, BaseHttpServer.Defaults.SSL_TMF_ALGORITHM, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
 
 	MQTT_ACTIVE(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.ACTIVE)),
-	MQTT_SERVER_URI(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, null, null, MQTT_ACTIVE),
+	MQTT_SERVER_URI(RouterLoggerPage.MQTT, FieldEditorType.Uri, null, new FieldEditorDataBuilder().horizontalSpan(0).build(), MQTT_ACTIVE),
 	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, null, null, MQTT_ACTIVE),
 	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, null, null, MQTT_ACTIVE),
 	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.CLEAN_SESSION), null, MQTT_ACTIVE),

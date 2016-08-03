@@ -1,5 +1,6 @@
 package it.albertus.router.mqtt;
 
+import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
@@ -55,8 +56,9 @@ public class MqttClient {
 
 	public void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
+			try {
 			final MqttConnectOptions options = new MqttConnectOptions();
-			//options.setServerURIs(new String[] {"tcp://192.168.1.5:1883"});
+			options.setServerURIs(configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX));
 			final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
 			if (username != null && !username.isEmpty()) {
 				options.setUserName(username);
@@ -71,12 +73,15 @@ public class MqttClient {
 			options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
 			options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
 			doConnect(options);
+			} catch (Exception e) {
+				Logger.getInstance().log(e);
+			}
 		}
 	}
 
 	private synchronized void doConnect(final MqttConnectOptions options) {
 		try {
-			client = new org.eclipse.paho.client.mqttv3.MqttClient(configuration.getString(CFG_KEY_MQTT_SERVER_URI), configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID));
+			client = new org.eclipse.paho.client.mqttv3.MqttClient(configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX)[0], configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID));
 			client.connect(options);
 		}
 		catch (final Exception e) {

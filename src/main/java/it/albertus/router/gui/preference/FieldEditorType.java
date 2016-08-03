@@ -24,5 +24,6 @@ public enum FieldEditorType {
 	Directory,
 	FormattedDirectory,
 	EmailAddresses,
+	Uri,
 	Thresholds;
 }
