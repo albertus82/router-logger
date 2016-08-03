@@ -85,7 +85,7 @@ public class MqttClient {
 	}
 
 	public void publish(final Object payload) {
-		publish(payload.toString());
+		publish(String.valueOf(payload));
 	}
 
 	public void publish(final String payload) {
