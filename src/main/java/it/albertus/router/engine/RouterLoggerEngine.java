@@ -1,7 +1,7 @@
 package it.albertus.router.engine;
 
 import it.albertus.router.email.ThresholdsEmailSender;
-import it.albertus.router.mqtt.MqttClient;
+import it.albertus.router.mqtt.RouterLoggerMqttClient;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.server.WebServer;
@@ -45,7 +45,7 @@ public abstract class RouterLoggerEngine {
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 	protected final WebServer httpServer = WebServer.getInstance();
-	protected final MqttClient mqttClient = MqttClient.getInstance();
+	protected final RouterLoggerMqttClient mqttClient = RouterLoggerMqttClient.getInstance();
 	protected final Console out = SystemConsole.getInstance();
 
 	private Reader reader;

@@ -10,13 +10,14 @@ import it.albertus.util.ConfigurationException;
 
 import java.util.Arrays;
 
+import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 /** @Singleton */
-public class MqttClient {
+public class RouterLoggerMqttClient {
 
 	public static final byte QOS_MIN = 0;
 	public static final byte QOS_MAX = 2;
@@ -49,18 +50,18 @@ public class MqttClient {
 	}
 
 	private static class Singleton {
-		private static final MqttClient instance = new MqttClient();
+		private static final RouterLoggerMqttClient instance = new RouterLoggerMqttClient();
 	}
 
-	public static MqttClient getInstance() {
+	public static RouterLoggerMqttClient getInstance() {
 		return Singleton.instance;
 	}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	private volatile org.eclipse.paho.client.mqttv3.MqttClient client;
+	private volatile MqttClient client;
 	private MqttCallback callback;
 
-	private MqttClient() {}
+	private RouterLoggerMqttClient() {}
 
 	public void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
