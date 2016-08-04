@@ -294,9 +294,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			public void run() {
 				try {
 					httpServer.stop();
-					mqttClient.disconnect();
 					joinPollingThread();
 					configuration.reload();
+					mqttClient.disconnect();
 					setIteration(FIRST_ITERATION);
 					setStatus(RouterLoggerStatus.STARTING);
 					new SwtThreadExecutor(shell) {

@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ThreadUtils;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class DummyReader extends Reader {
 
 	@Override
 	public boolean connect() {
-		out.println(Resources.get("msg.dummy.connect"));
+		logger.log(Resources.get("msg.dummy.connect"), Destination.CONSOLE);
 		if (CONNECTION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
 		}
@@ -76,12 +77,12 @@ public class DummyReader extends Reader {
 
 	@Override
 	public void logout() {
-		out.println(Resources.get("msg.dummy.logout"), true);
+		logger.log(Resources.get("msg.dummy.logout"), Destination.CONSOLE);
 	}
 
 	@Override
 	public void disconnect() {
-		out.println(Resources.get("msg.dummy.disconnect"), true);
+		logger.log(Resources.get("msg.dummy.disconnect"), Destination.CONSOLE);
 	}
 
 }

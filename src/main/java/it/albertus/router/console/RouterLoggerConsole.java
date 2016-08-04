@@ -179,9 +179,9 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			@Override
 			public void run() {
 				httpServer.stop();
-				mqttClient.disconnect();
 				joinPollingThread();
 				configuration.reload();
+				mqttClient.disconnect();
 				setIteration(FIRST_ITERATION);
 				setStatus(RouterLoggerStatus.STARTING);
 				out.println();

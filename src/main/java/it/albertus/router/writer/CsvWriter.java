@@ -114,14 +114,14 @@ public class CsvWriter extends Writer {
 				// Create new file...
 				closeOutputFile();
 				csvFileWriter = new BufferedWriter(new FileWriter(file));
-				out.println(Resources.get("msg.logging.to.file", path), true);
+				logger.log(Resources.get("msg.logging.to.file", path), Destination.CONSOLE);
 				csvFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (csvFileWriter == null) {
 				// Open existing file...
 				csvFileWriter = new BufferedWriter(new FileWriter(file, true));
-				out.println(Resources.get("msg.logging.to.file", path), true);
+				logger.log(Resources.get("msg.logging.to.file", path), Destination.CONSOLE);
 			}
 			csvFileWriter.append(buildCsvRow(info));
 			csvFileWriter.flush();
@@ -209,7 +209,7 @@ public class CsvWriter extends Writer {
 	protected void closeOutputFile() {
 		if (csvFileWriter != null) {
 			try {
-				out.println(Resources.get("msg.closing.output.file"), true);
+				logger.log(Resources.get("msg.closing.output.file"), Destination.CONSOLE);
 				csvFileWriter.close();
 				csvFileWriter = null;
 			}

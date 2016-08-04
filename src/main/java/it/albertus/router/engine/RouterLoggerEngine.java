@@ -187,7 +187,7 @@ public abstract class RouterLoggerEngine {
 					message.append(' ').append(Resources.get("msg.wait.reconnection.retry", index, retries));
 				}
 				message.append(' ').append(Resources.get("msg.wait.reconnection.time", retryIntervalInMillis));
-				out.println(message.toString(), true);
+				logger.log(message.toString(), Destination.CONSOLE);
 				try {
 					interruptible = true;
 					Thread.sleep(retryIntervalInMillis);
@@ -245,7 +245,7 @@ public abstract class RouterLoggerEngine {
 						exit = true; // Se non si sono verificati errori.
 					}
 					catch (InterruptedException ie) {
-						out.println(Resources.get("msg.loop.interrupted"), true);
+						logger.log(Resources.get("msg.loop.interrupted"), Destination.CONSOLE);
 					}
 					catch (IOException ioe) {
 						if (!exit) {
@@ -433,7 +433,7 @@ public abstract class RouterLoggerEngine {
 				if (adjustedWaitTimeInMillis > 0L) {
 					if (disconnectionRequested) {
 						final String formattedDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date(System.currentTimeMillis() + adjustedWaitTimeInMillis));
-						out.println(Resources.get("msg.reconnection.info", formattedDate), true);
+						logger.log(Resources.get("msg.reconnection.info", formattedDate), Destination.CONSOLE);
 					}
 					interruptible = true;
 					Thread.sleep(adjustedWaitTimeInMillis);

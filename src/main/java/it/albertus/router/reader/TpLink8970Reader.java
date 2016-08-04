@@ -1,6 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger.Destination;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class TpLink8970Reader extends Reader {
 
 	@Override
 	public void logout() throws IOException {
-		out.println(Resources.get("msg.logging.out"), true);
+		logger.log(Resources.get("msg.logging.out"), Destination.CONSOLE);
 		writeToTelnet("logout");
 	}
 

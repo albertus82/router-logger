@@ -167,7 +167,7 @@ public class EmailSender {
 		initializeEmail(email);
 		createContents(email, rle);
 		final String mimeMessageId = email.send();
-		out.println(Resources.get("msg.email.sent", rle.getSubject()), true);
+		Logger.getInstance().log(Resources.get("msg.email.sent", rle.getSubject()), Destination.CONSOLE);
 		return mimeMessageId;
 	}
 
