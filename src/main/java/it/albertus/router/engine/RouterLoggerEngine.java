@@ -134,7 +134,6 @@ public abstract class RouterLoggerEngine {
 	protected void beforeConnect() {
 		printWelcome();
 		httpServer.start();
-		mqttClient.connect();
 		initReaderAndWriter();
 		printDeviceModel();
 	}
@@ -383,7 +382,7 @@ public abstract class RouterLoggerEngine {
 			}
 
 			if (importantThresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI				
+				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
 				doSetStatus(RouterLoggerStatus.WARNING);
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();

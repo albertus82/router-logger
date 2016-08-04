@@ -57,23 +57,24 @@ public class MqttClient {
 	public void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
 			try {
-			final MqttConnectOptions options = new MqttConnectOptions();
-			options.setServerURIs(configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX));
-			final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
-			if (username != null && !username.isEmpty()) {
-				options.setUserName(username);
+				final MqttConnectOptions options = new MqttConnectOptions();
+				options.setServerURIs(configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX));
+				final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
+				if (username != null && !username.isEmpty()) {
+					options.setUserName(username);
+				}
+				final char[] password = configuration.getCharArray(CFG_KEY_MQTT_PASSWORD);
+				if (password != null && password.length > 0) {
+					options.setPassword(password);
+				}
+				options.setKeepAliveInterval(configuration.getInt(CFG_KEY_MQTT_KEEP_ALIVE_INTERVAL, Defaults.KEEP_ALIVE_INTERVAL));
+				options.setConnectionTimeout(configuration.getInt(CFG_KEY_MQTT_CONNECTION_TIMEOUT, Defaults.CONNECTION_TIMEOUT));
+				options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
+				options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
+				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
+				doConnect(options);
 			}
-			final char[] password = configuration.getCharArray(CFG_KEY_MQTT_PASSWORD);
-			if (password != null && password.length > 0) {
-				options.setPassword(password);
-			}
-			options.setKeepAliveInterval(configuration.getInt(CFG_KEY_MQTT_KEEP_ALIVE_INTERVAL, Defaults.KEEP_ALIVE_INTERVAL));
-			options.setConnectionTimeout(configuration.getInt(CFG_KEY_MQTT_CONNECTION_TIMEOUT, Defaults.CONNECTION_TIMEOUT));
-			options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
-			options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
-			options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
-			doConnect(options);
-			} catch (Exception e) {
+			catch (final Exception e) {
 				Logger.getInstance().log(e);
 			}
 		}
@@ -98,15 +99,17 @@ public class MqttClient {
 	}
 
 	public void publish(final byte[] payload) {
-		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && client != null) {
+		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
 			final MqttMessage message = new MqttMessage(payload);
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_MESSAGE_RETAINED, Defaults.MESSAGE_RETAINED));
 			message.setQos(configuration.getByte(CFG_KEY_MQTT_MESSAGE_QOS, Defaults.MESSAGE_QOS));
+			if (client == null || (client != null && !client.isConnected() && configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT))) {
+				connect();
+			}
 			try {
-				if (!client.isConnected() && configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT)) {
-					connect();
+				if (client != null && client.isConnected()) {
+					client.publish(configuration.getString(CFG_KEY_MQTT_TOPIC, Defaults.TOPIC), message);
 				}
-				client.publish(configuration.getString(CFG_KEY_MQTT_TOPIC, Defaults.TOPIC), message);
 			}
 			catch (final Exception e) {
 				Logger.getInstance().log(e);
@@ -118,6 +121,7 @@ public class MqttClient {
 		if (client != null && client.isConnected()) {
 			try {
 				client.disconnect();
+				client = null;
 			}
 			catch (final Exception e) {
 				Logger.getInstance().log(e);
