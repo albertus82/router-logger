@@ -4,6 +4,7 @@ import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 /** @Singleton */
 public class MqttClient {
@@ -54,13 +56,17 @@ public class MqttClient {
 		return Singleton.instance;
 	}
 
-	protected volatile org.eclipse.paho.client.mqttv3.MqttClient client;
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private volatile org.eclipse.paho.client.mqttv3.MqttClient client;
+	private MqttCallback callback;
 
 	private MqttClient() {}
 
 	public void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
+			if (callback == null) {
+				callback = new MqttCallback(); // Lazy initialization.
+			}
 			final Logger logger = Logger.getInstance();
 			try {
 				final MqttConnectOptions options = new MqttConnectOptions();
@@ -81,13 +87,16 @@ public class MqttClient {
 				options.setConnectionTimeout(configuration.getInt(CFG_KEY_MQTT_CONNECTION_TIMEOUT, Defaults.CONNECTION_TIMEOUT));
 				options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
 				options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
-				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
+				options.setAutomaticReconnect(false); // configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
 				final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
 				doConnect(clientId, options);
 				System.out.println(Resources.get("msg.mqtt.connected", Arrays.toString(options.getServerURIs()), clientId));
 				if (logger.isDebugEnabled()) {
 					System.out.println(options.toString().trim());
 				}
+			}
+			catch (final MqttPersistenceException mpe) {
+				logger.log(mpe, Destination.CONSOLE, Destination.FILE);
 			}
 			catch (final Exception e) {
 				logger.log(e);
@@ -97,6 +106,7 @@ public class MqttClient {
 
 	private synchronized void doConnect(final String clientId, final MqttConnectOptions options) throws MqttException {
 		client = new org.eclipse.paho.client.mqttv3.MqttClient(options.getServerURIs()[0], clientId);
+		client.setCallback(callback);
 		client.connect(options);
 	}
 
@@ -143,8 +153,10 @@ public class MqttClient {
 	}
 
 	private synchronized void doDisconnect() throws MqttException {
-		if (client != null && client.isConnected()) {
-			client.disconnect();
+		if (client != null) {
+			if (client.isConnected()) {
+				client.disconnect();
+			}
 			client = null;
 		}
 	}
