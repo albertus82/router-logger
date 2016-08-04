@@ -369,8 +369,6 @@ public abstract class RouterLoggerEngine {
 
 			writer.saveInfo(currentData);
 
-			mqttClient.publish(currentData);
-
 			/* Impostazione stato di allerta e gestione isteresi... */
 			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(currentData);
 			boolean importantThresholdReached = false;
@@ -401,6 +399,9 @@ public abstract class RouterLoggerEngine {
 			}
 			// Aggiorna l'interfaccia
 			showInfo(currentData, allThresholdsReached);
+
+			// Pubblica via MQTT
+			mqttClient.publish(currentData);
 
 			if (exit) {
 				break;
