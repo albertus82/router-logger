@@ -2,10 +2,15 @@ package it.albertus.router.mqtt;
 
 import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
 import it.albertus.util.Configuration;
+import it.albertus.util.ConfigurationException;
+
+import java.util.Arrays;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /** @Singleton */
@@ -56,9 +61,14 @@ public class MqttClient {
 
 	public void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
+			final Logger logger = Logger.getInstance();
 			try {
 				final MqttConnectOptions options = new MqttConnectOptions();
-				options.setServerURIs(configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX));
+				final String[] serverURIs = configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX);
+				if (serverURIs == null || serverURIs.length == 0 || serverURIs[0].trim().isEmpty()) {
+					throw new ConfigurationException(Resources.get("err.mqtt.cfg.error.uri"), CFG_KEY_MQTT_SERVER_URI);
+				}
+				options.setServerURIs(serverURIs);
 				final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
 				if (username != null && !username.isEmpty()) {
 					options.setUserName(username);
@@ -72,22 +82,22 @@ public class MqttClient {
 				options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
 				options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
 				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
-				doConnect(options);
+				final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
+				doConnect(clientId, options);
+				System.out.println(Resources.get("msg.mqtt.connected", Arrays.toString(options.getServerURIs()), clientId));
+				if (logger.isDebugEnabled()) {
+					System.out.println(options.toString().trim());
+				}
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(e);
+				logger.log(e);
 			}
 		}
 	}
 
-	private synchronized void doConnect(final MqttConnectOptions options) {
-		try {
-			client = new org.eclipse.paho.client.mqttv3.MqttClient(configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX)[0], configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID));
-			client.connect(options);
-		}
-		catch (final Exception e) {
-			Logger.getInstance().log(e);
-		}
+	private synchronized void doConnect(final String clientId, final MqttConnectOptions options) throws MqttException {
+		client = new org.eclipse.paho.client.mqttv3.MqttClient(options.getServerURIs()[0], clientId);
+		client.connect(options);
 	}
 
 	public void publish(final Object payload) {
@@ -100,16 +110,13 @@ public class MqttClient {
 
 	public void publish(final byte[] payload) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
+			final String topic = configuration.getString(CFG_KEY_MQTT_TOPIC, Defaults.TOPIC);
 			final MqttMessage message = new MqttMessage(payload);
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_MESSAGE_RETAINED, Defaults.MESSAGE_RETAINED));
 			message.setQos(configuration.getByte(CFG_KEY_MQTT_MESSAGE_QOS, Defaults.MESSAGE_QOS));
-			if (client == null || (client != null && !client.isConnected() && configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT))) {
-				connect();
-			}
+			final boolean automaticReconnect = configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT);
 			try {
-				if (client != null && client.isConnected()) {
-					client.publish(configuration.getString(CFG_KEY_MQTT_TOPIC, Defaults.TOPIC), message);
-				}
+				doPublish(topic, message, automaticReconnect);
 			}
 			catch (final Exception e) {
 				Logger.getInstance().log(e);
@@ -117,15 +124,28 @@ public class MqttClient {
 		}
 	}
 
-	public synchronized void disconnect() {
+	private synchronized void doPublish(final String topic, final MqttMessage message, final boolean automaticReconnect) throws MqttException {
+		if (client == null || (client != null && !client.isConnected() && automaticReconnect)) {
+			connect();
+		}
 		if (client != null && client.isConnected()) {
-			try {
-				client.disconnect();
-				client = null;
-			}
-			catch (final Exception e) {
-				Logger.getInstance().log(e);
-			}
+			client.publish(topic, message);
+		}
+	}
+
+	public void disconnect() {
+		try {
+			doDisconnect();
+		}
+		catch (final Exception e) {
+			Logger.getInstance().log(e);
+		}
+	}
+
+	private synchronized void doDisconnect() throws MqttException {
+		if (client != null && client.isConnected()) {
+			client.disconnect();
+			client = null;
 		}
 	}
 
