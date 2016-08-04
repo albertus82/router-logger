@@ -213,15 +213,15 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_SERVER_URI(RouterLoggerPage.MQTT, FieldEditorType.Uri, null, new FieldEditorDataBuilder().horizontalSpan(0).build(), MQTT_ACTIVE),
 	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, null, null, MQTT_ACTIVE),
 	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, null, null, MQTT_ACTIVE),
-	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.CLEAN_SESSION), null, MQTT_ACTIVE),
-	MQTT_AUTOMATIC_RECONNECT(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.AUTOMATIC_RECONNECT), null, MQTT_ACTIVE),
 	MQTT_CLIENT_ID(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, MqttClient.Defaults.CLIENT_ID, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_ACTIVE),
-	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT, FieldEditorType.FormattedInteger, Integer.toString(MqttClient.Defaults.CONNECTION_TIMEOUT), null, MQTT_ACTIVE),
-	MQTT_KEEP_ALIVE_INTERVAL(RouterLoggerPage.MQTT, FieldEditorType.FormattedInteger, Integer.toString(MqttClient.Defaults.KEEP_ALIVE_INTERVAL), null, MQTT_ACTIVE),
-	MQTT_MAX_INFLIGHT(RouterLoggerPage.MQTT, FieldEditorType.FormattedInteger, Integer.toString(MqttClient.Defaults.MAX_INFLIGHT), null, MQTT_ACTIVE),
 	MQTT_TOPIC(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, MqttClient.Defaults.TOPIC, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_ACTIVE),
 	MQTT_MESSAGE_QOS(RouterLoggerPage.MQTT, FieldEditorType.ScaleInteger, Byte.toString(MqttClient.Defaults.MESSAGE_QOS), new FieldEditorDataBuilder().scaleMinimum(MqttClient.QOS_MIN).scaleMaximum(MqttClient.QOS_MAX).scaleIncrement(1).scalePageIncrement(1).build(), MQTT_ACTIVE),
-	MQTT_MESSAGE_RETAINED(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.MESSAGE_RETAINED), null, MQTT_ACTIVE);
+	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.CLEAN_SESSION)),
+	MQTT_AUTOMATIC_RECONNECT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.AUTOMATIC_RECONNECT)),
+	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(MqttClient.Defaults.CONNECTION_TIMEOUT)),
+	MQTT_KEEP_ALIVE_INTERVAL(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(MqttClient.Defaults.KEEP_ALIVE_INTERVAL)),
+	MQTT_MAX_INFLIGHT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(MqttClient.Defaults.MAX_INFLIGHT)),
+	MQTT_MESSAGE_RETAINED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(MqttClient.Defaults.MESSAGE_RETAINED));
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

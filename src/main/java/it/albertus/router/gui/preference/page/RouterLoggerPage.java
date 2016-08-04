@@ -25,7 +25,8 @@ public enum RouterLoggerPage implements Page {
 	EMAIL_CC_BCC(CcBccEmailPreferencePage.class, EMAIL),
 	SERVER(ServerPreferencePage.class),
 	SERVER_HTTPS(ServerHttpsPreferencePage.class, SERVER),
-	MQTT(MqttPreferencePage.class);
+	MQTT(MqttPreferencePage.class),
+	MQTT_ADVANCED(AdvancedMqttPreferencePage.class, MQTT);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
