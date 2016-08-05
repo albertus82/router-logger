@@ -5,6 +5,7 @@ import it.albertus.jface.preference.FieldEditorData;
 import it.albertus.jface.preference.FieldEditorData.FieldEditorDataBuilder;
 import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.jface.preference.Preference;
+import it.albertus.jface.preference.page.AbstractPreferencePage;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
@@ -14,7 +15,7 @@ import it.albertus.router.gui.CloseMessageBox;
 import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TrayIcon;
-import it.albertus.router.gui.preference.page.BasePreferencePage;
+import it.albertus.router.gui.preference.page.CsvPreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
@@ -88,7 +89,7 @@ public enum RouterLoggerPreference implements Preference {
 	ROUTER_PORT(RouterLoggerPage.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.ROUTER_PORT), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
 	SOCKET_TIMEOUT_MS(RouterLoggerPage.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS)),
 	CONNECTION_TIMEOUT_MS(RouterLoggerPage.READER, FieldEditorType.FormattedInteger, Integer.toString(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS)),
-	TELNET_NEWLINE_CHARACTERS(RouterLoggerPage.READER, FieldEditorType.FormattedCombo, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
+	TELNET_NEWLINE_CHARACTERS(RouterLoggerPage.READER, FieldEditorType.FormattedCombo, Reader.Defaults.TELNET_NEWLINE_CHARACTERS, new FieldEditorDataBuilder().comboEntryNamesAndValues(AbstractPreferencePage.getNewLineComboOptions()).build()),
 	READER_LOG_CONNECTED(RouterLoggerPage.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.LOG_CONNECTED)),
 	READER_WAIT_DISCONNECTED(RouterLoggerPage.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED)),
 	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD(RouterLoggerPage.READER, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD), null, READER_WAIT_DISCONNECTED),
@@ -127,8 +128,8 @@ public enum RouterLoggerPreference implements Preference {
 			return Resources.get("msg.preferences.directory.dialog.message.csv");
 		}
 	}).build()),
-	CSV_NEWLINE_CHARACTERS(RouterLoggerPage.CSV, FieldEditorType.FormattedCombo, CsvWriter.Defaults.NEWLINE.name(), new FieldEditorDataBuilder().comboEntryNamesAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
-	CSV_FIELD_SEPARATOR(RouterLoggerPage.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	CSV_NEWLINE_CHARACTERS(RouterLoggerPage.CSV, FieldEditorType.FormattedCombo, CsvWriter.Defaults.NEWLINE.name(), new FieldEditorDataBuilder().comboEntryNamesAndValues(AbstractPreferencePage.getNewLineComboOptions()).build()),
+	CSV_FIELD_SEPARATOR(RouterLoggerPage.CSV, FieldEditorType.DelimiterCombo, CsvWriter.Defaults.FIELD_SEPARATOR, new FieldEditorDataBuilder().emptyStringAllowed(false).comboEntryNamesAndValues(CsvPreferencePage.getSeparatorComboOptions()).build()),
 	CSV_FIELD_SEPARATOR_REPLACEMENT(RouterLoggerPage.CSV, FieldEditorType.FormattedString, CsvWriter.Defaults.FIELD_SEPARATOR_REPLACEMENT, new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	CSV_EMAIL(RouterLoggerPage.CSV, FieldEditorType.DefaultBoolean, Boolean.toString(CsvWriter.Defaults.EMAIL)),
 

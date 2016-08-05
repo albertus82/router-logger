@@ -18,6 +18,7 @@ import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.Images;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
+import it.albertus.router.gui.preference.field.DelimiterComboFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
@@ -43,6 +44,8 @@ public final class FieldEditorFactory {
 			return new DatabaseComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
 		case DefaultBoolean:
 			return new DefaultBooleanFieldEditor(name, label, parent);
+		case DelimiterCombo:
+			return createDelimiterComboFieldEditor(name, label, parent, data);
 		case Directory:
 			return createDirectoryFieldEditor(name, label, parent, data);
 		case EditableCombo:
@@ -88,6 +91,14 @@ public final class FieldEditorFactory {
 		default:
 			throw new IllegalStateException("Unsupported FieldEditor: " + type);
 		}
+	}
+
+	private static FieldEditor createDelimiterComboFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
+		final DelimiterComboFieldEditor delimiterComboFieldEditor = new DelimiterComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+		if (data.getEmptyStringAllowed() != null) {
+			delimiterComboFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
+		}
+		return delimiterComboFieldEditor;
 	}
 
 	private static FieldEditor createDirectoryFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {

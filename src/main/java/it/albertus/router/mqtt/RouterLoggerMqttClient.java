@@ -54,6 +54,26 @@ public class RouterLoggerMqttClient {
 		return Singleton.instance;
 	}
 
+	private class MqttClientStartThread extends Thread {
+
+		private final MqttConnectOptions options;
+
+		private MqttClientStartThread(final MqttConnectOptions options) {
+			this.setName("mqttClientStartThread");
+			this.setDaemon(true);
+			this.options = options;
+		}
+
+		public void run() {
+			try {
+				client.connect(options);
+			}
+			catch (final Exception e) {
+				Logger.getInstance().log(e);
+			}
+		}
+	}
+
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private volatile MqttClient client;
 
@@ -61,7 +81,6 @@ public class RouterLoggerMqttClient {
 
 	public void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
-			final Logger logger = Logger.getInstance();
 			try {
 				final MqttConnectOptions options = new MqttConnectOptions();
 				final String[] serverURIs = configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX);
@@ -88,11 +107,8 @@ public class RouterLoggerMqttClient {
 					System.out.println(options.toString().trim());
 				}
 			}
-			//			catch (final MqttPersistenceException mpe) {
-			//				logger.log(mpe, Destination.CONSOLE, Destination.FILE);
-			//			}
 			catch (final Exception e) {
-				logger.log(e);
+				Logger.getInstance().log(e);
 			}
 		}
 	}
@@ -101,7 +117,12 @@ public class RouterLoggerMqttClient {
 		if (client == null) {
 			client = new org.eclipse.paho.client.mqttv3.MqttClient(options.getServerURIs()[0], clientId);
 			client.setCallback(new MqttCallback(clientId));
-			client.connect(options);
+			final Thread starter = new MqttClientStartThread(options);
+			starter.start();
+			try {
+				starter.join();
+			}
+			catch (final InterruptedException ie) {/* Ignore */}
 		}
 	}
 
@@ -138,11 +159,13 @@ public class RouterLoggerMqttClient {
 	}
 
 	public void disconnect() {
+		final Logger logger = Logger.getInstance();
 		try {
 			doDisconnect();
+			logger.log(Resources.get("msg.mqtt.disconnected"), Destination.CONSOLE);
 		}
 		catch (final Exception e) {
-			Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
+			logger.log(e, Destination.CONSOLE, Destination.FILE);
 		}
 	}
 
