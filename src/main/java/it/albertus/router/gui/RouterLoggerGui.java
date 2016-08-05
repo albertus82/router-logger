@@ -230,7 +230,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canClearConsole() {
-		return canSelectAllConsole();
+		final Text text = textConsole.getText();
+		return text != null && !text.getText().isEmpty();
 	}
 
 	/** Avvia il ciclo. */

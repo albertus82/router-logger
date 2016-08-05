@@ -5,9 +5,9 @@ import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.events.SelectionEvent;
 
-public class ClearMenuBarSelectionListener extends ClearSelectionListener {
+public class ClearConsoleSelectionListener extends ClearSelectionListener {
 
-	public ClearMenuBarSelectionListener(final RouterLoggerGui gui) {
+	public ClearConsoleSelectionListener(final RouterLoggerGui gui) {
 		super(gui);
 	}
 
@@ -16,11 +16,6 @@ public class ClearMenuBarSelectionListener extends ClearSelectionListener {
 		if (gui.canClearConsole()) {
 			if (confirm(Resources.get("msg.confirm.clear.console.text"), Resources.get("msg.confirm.clear.console.message"))) {
 				gui.getTextConsole().clear();
-			}
-		}
-		else if (gui.getDataTable().canClear()) {
-			if (confirm(Resources.get("msg.confirm.clear.table.text"), Resources.get("msg.confirm.clear.table.message")) && gui.getDataTable().canClear()) {
-				gui.getDataTable().clear();
 			}
 		}
 	}

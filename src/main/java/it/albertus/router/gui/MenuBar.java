@@ -2,13 +2,15 @@ package it.albertus.router.gui;
 
 import it.albertus.jface.SwtUtils;
 import it.albertus.router.gui.listener.AboutSelectionListener;
-import it.albertus.router.gui.listener.ClearMenuBarSelectionListener;
+import it.albertus.router.gui.listener.ClearConsoleSelectionListener;
+import it.albertus.router.gui.listener.ClearDataTableSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.ConnectSelectionListener;
 import it.albertus.router.gui.listener.ConnectionMenuBarArmListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.DisconnectSelectionListener;
+import it.albertus.router.gui.listener.EditClearSubMenuArmListener;
 import it.albertus.router.gui.listener.EditMenuBarArmListener;
 import it.albertus.router.gui.listener.PreferencesSelectionListener;
 import it.albertus.router.gui.listener.RestartSelectionListener;
@@ -40,7 +42,11 @@ public class MenuBar {
 	private final MenuItem editCopyMenuItem;
 	private final MenuItem editDeleteMenuItem;
 	private final MenuItem editSelectAllMenuItem;
-	private final MenuItem editClearMenuItem;
+
+	private final Menu editClearSubMenu;
+	private final MenuItem editClearSubMenuItem;
+	private final MenuItem editClearDataTableMenuItem;
+	private final MenuItem editClearConsoleMenuItem;
 
 	private final Menu connectionMenu;
 	private final MenuItem connectionMenuHeader;
@@ -100,9 +106,20 @@ public class MenuBar {
 
 		new MenuItem(editMenu, SWT.SEPARATOR);
 
-		editClearMenuItem = new MenuItem(editMenu, SWT.PUSH);
-		editClearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
-		editClearMenuItem.addSelectionListener(new ClearMenuBarSelectionListener(gui));
+		editClearSubMenuItem = new MenuItem(editMenu, SWT.CASCADE);
+		editClearSubMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+
+		editClearSubMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		editClearSubMenuItem.setMenu(editClearSubMenu);
+		editClearSubMenuItem.addArmListener(new EditClearSubMenuArmListener(gui));
+
+		editClearDataTableMenuItem = new MenuItem(editClearSubMenu, SWT.PUSH);
+		editClearDataTableMenuItem.setText(Resources.get("lbl.menu.item.clear.table"));
+		editClearDataTableMenuItem.addSelectionListener(new ClearDataTableSelectionListener(gui));
+
+		editClearConsoleMenuItem = new MenuItem(editClearSubMenu, SWT.PUSH);
+		editClearConsoleMenuItem.setText(Resources.get("lbl.menu.item.clear.console"));
+		editClearConsoleMenuItem.addSelectionListener(new ClearConsoleSelectionListener(gui));
 
 		/* Connection */
 		connectionMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
@@ -152,7 +169,9 @@ public class MenuBar {
 		editCopyMenuItem.setText(Resources.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
 		editDeleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + SwtUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
 		editSelectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_SELECT_ALL));
-		editClearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+		editClearSubMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+		editClearDataTableMenuItem.setText(Resources.get("lbl.menu.item.clear.table"));
+		editClearConsoleMenuItem.setText(Resources.get("lbl.menu.item.clear.console"));
 		connectionMenuHeader.setText(Resources.get("lbl.menu.header.connection"));
 		connectionConnectItem.setText(Resources.get("lbl.menu.item.connect"));
 		connectionDisconnectItem.setText(Resources.get("lbl.menu.item.disconnect"));
@@ -202,8 +221,20 @@ public class MenuBar {
 		return editSelectAllMenuItem;
 	}
 
-	public MenuItem getEditClearMenuItem() {
-		return editClearMenuItem;
+	public Menu getEditClearSubMenu() {
+		return editClearSubMenu;
+	}
+
+	public MenuItem getEditClearSubMenuItem() {
+		return editClearSubMenuItem;
+	}
+
+	public MenuItem getEditClearDataTableMenuItem() {
+		return editClearDataTableMenuItem;
+	}
+
+	public MenuItem getEditClearConsoleMenuItem() {
+		return editClearConsoleMenuItem;
 	}
 
 	public Menu getConnectionMenu() {
