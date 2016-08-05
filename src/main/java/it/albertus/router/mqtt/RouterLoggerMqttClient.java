@@ -64,6 +64,7 @@ public class RouterLoggerMqttClient {
 			this.options = options;
 		}
 
+		@Override
 		public void run() {
 			try {
 				client.connect(options);
