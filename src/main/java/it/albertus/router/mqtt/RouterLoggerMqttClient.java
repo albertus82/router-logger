@@ -116,7 +116,7 @@ public class RouterLoggerMqttClient {
 
 	private synchronized void doConnect(final String clientId, final MqttConnectOptions options) throws MqttException {
 		if (client == null) {
-			client = new org.eclipse.paho.client.mqttv3.MqttClient(options.getServerURIs()[0], clientId);
+			client = new MqttClient(options.getServerURIs()[0], clientId);
 			client.setCallback(new MqttCallback(clientId));
 			final Thread starter = new MqttClientStartThread(options);
 			starter.start();
