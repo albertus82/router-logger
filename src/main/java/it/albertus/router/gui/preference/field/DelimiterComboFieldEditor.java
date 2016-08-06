@@ -15,6 +15,7 @@ public class DelimiterComboFieldEditor extends ValidatedComboFieldEditor {
 		return value != null ? value : "";
 	}
 
+	@Override
 	protected void cleanComboText() {
 		final String oldText = getComboBoxControl().getText();
 		final String newText = getNameForValue(oldText);
