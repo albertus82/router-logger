@@ -18,9 +18,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 /** @Singleton */
 public class RouterLoggerMqttClient {
 
-	public static final byte QOS_MIN = 0;
-	public static final byte QOS_MAX = 2;
-
 	private static final String CFG_KEY_MQTT_TOPIC = "mqtt.topic";
 	private static final String CFG_KEY_MQTT_MESSAGE_QOS = "mqtt.message.qos";
 	private static final String CFG_KEY_MQTT_MESSAGE_RETAINED = "mqtt.message.retained";
