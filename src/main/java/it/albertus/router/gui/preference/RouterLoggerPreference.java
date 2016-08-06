@@ -19,6 +19,7 @@ import it.albertus.router.gui.preference.page.AdvancedMqttPreferencePage;
 import it.albertus.router.gui.preference.page.CsvPreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
+import it.albertus.router.gui.preference.page.MqttPreferencePage;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
 import it.albertus.router.gui.preference.page.RouterLoggerPage;
 import it.albertus.router.gui.preference.page.ServerHttpsPreferencePage;
@@ -212,12 +213,12 @@ public enum RouterLoggerPreference implements Preference {
 	SERVER_SSL_TMF_ALGORITHM(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, BaseHttpServer.Defaults.SSL_TMF_ALGORITHM, new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build(), SERVER_SSL_ENABLED),
 
 	MQTT_ACTIVE(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.ACTIVE)),
-	MQTT_SERVER_URI(RouterLoggerPage.MQTT, FieldEditorType.Uri, null, new FieldEditorDataBuilder().horizontalSpan(0).build(), MQTT_ACTIVE),
+	MQTT_SERVER_URI(RouterLoggerPage.MQTT, FieldEditorType.Uri, null, new FieldEditorDataBuilder().horizontalSpan(2).build(), MQTT_ACTIVE),
 	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, null, null, MQTT_ACTIVE),
 	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, null, null, MQTT_ACTIVE),
 	MQTT_CLIENT_ID(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.CLIENT_ID, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_ACTIVE),
 	MQTT_TOPIC(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.TOPIC, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_ACTIVE),
-	MQTT_MESSAGE_QOS(RouterLoggerPage.MQTT, FieldEditorType.ScaleInteger, Byte.toString(RouterLoggerMqttClient.Defaults.MESSAGE_QOS), new FieldEditorDataBuilder().scaleMinimum(RouterLoggerMqttClient.QOS_MIN).scaleMaximum(RouterLoggerMqttClient.QOS_MAX).scaleIncrement(1).scalePageIncrement(1).build(), MQTT_ACTIVE),
+	MQTT_MESSAGE_QOS(RouterLoggerPage.MQTT, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.MESSAGE_QOS), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build(), MQTT_ACTIVE),
 	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.CLEAN_SESSION)),
 	MQTT_AUTOMATIC_RECONNECT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.AUTOMATIC_RECONNECT)),
 	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT)),

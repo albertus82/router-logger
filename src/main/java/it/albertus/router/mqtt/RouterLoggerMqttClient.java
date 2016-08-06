@@ -46,7 +46,7 @@ public class RouterLoggerMqttClient {
 		boolean CLEAN_SESSION = MqttConnectOptions.CLEAN_SESSION_DEFAULT;
 		boolean AUTOMATIC_RECONNECT = true;
 		boolean MESSAGE_RETAINED = false;
-		byte MESSAGE_QOS = MqttQos.AT_LEAST_ONCE.getValue();
+		byte MESSAGE_QOS = MqttQos.AT_MOST_ONCE.getValue();
 		byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
 	}
 
