@@ -8,16 +8,16 @@ public enum MqttQos {
 	AT_LEAST_ONCE(1, "lbl.mqtt.qos.1"),
 	EXACTLY_ONCE(2, "lbl.mqtt.qos.2");
 
-	private final byte level;
+	private final byte value;
 	private final String resourceKey;
 
-	private MqttQos(final int level, final String resourceKey) {
-		this.level = (byte) level;
+	private MqttQos(final int value, final String resourceKey) {
+		this.value = (byte) value;
 		this.resourceKey = resourceKey;
 	}
 
 	public byte getValue() {
-		return level;
+		return value;
 	}
 
 	public String getDescription() {
