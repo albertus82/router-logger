@@ -8,6 +8,8 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 
+import java.io.UnsupportedEncodingException;
+
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -32,6 +34,7 @@ public class RouterLoggerMqttClient {
 	private static final String CFG_KEY_MQTT_SERVER_URI = "mqtt.server.uri";
 	private static final String CFG_KEY_MQTT_ACTIVE = "mqtt.active";
 	private static final String CFG_KEY_MQTT_AUTOMATIC_RECONNECT = "mqtt.automatic.reconnect";
+	private static final String CFG_KEY_MQTT_VERSION = "mqtt.version";
 
 	public interface Defaults {
 		boolean ACTIVE = false;
@@ -43,7 +46,8 @@ public class RouterLoggerMqttClient {
 		boolean CLEAN_SESSION = MqttConnectOptions.CLEAN_SESSION_DEFAULT;
 		boolean AUTOMATIC_RECONNECT = true;
 		boolean MESSAGE_RETAINED = false;
-		byte MESSAGE_QOS = 1;
+		byte MESSAGE_QOS = MqttQos.AT_LEAST_ONCE.getValue();
+		byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
 	}
 
 	private static class Singleton {
@@ -102,6 +106,7 @@ public class RouterLoggerMqttClient {
 				options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
 				options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
 				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
+				options.setMqttVersion(configuration.getByte(CFG_KEY_MQTT_VERSION, Defaults.MQTT_VERSION));
 				final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
 				doConnect(clientId, options);
 				if (Logger.getInstance().isDebugEnabled()) {
@@ -132,7 +137,12 @@ public class RouterLoggerMqttClient {
 	}
 
 	public void publish(final String payload) {
-		publish(payload.getBytes());
+		try {
+			publish(payload.getBytes("UTF-8"));
+		}
+		catch (final UnsupportedEncodingException uee) {
+			publish(payload.getBytes());
+		}
 	}
 
 	public void publish(final byte[] payload) {

@@ -15,6 +15,7 @@ import it.albertus.router.gui.CloseMessageBox;
 import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TrayIcon;
+import it.albertus.router.gui.preference.page.AdvancedMqttPreferencePage;
 import it.albertus.router.gui.preference.page.CsvPreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
 import it.albertus.router.gui.preference.page.GeneralPreferencePage;
@@ -222,7 +223,8 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT)),
 	MQTT_KEEP_ALIVE_INTERVAL(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL)),
 	MQTT_MAX_INFLIGHT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT)),
-	MQTT_MESSAGE_RETAINED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.MESSAGE_RETAINED));
+	MQTT_MESSAGE_RETAINED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.MESSAGE_RETAINED)),
+	MQTT_VERSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.MQTT_VERSION), new FieldEditorDataBuilder().comboEntryNamesAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
