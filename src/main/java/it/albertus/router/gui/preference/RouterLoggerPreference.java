@@ -225,7 +225,12 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_KEEP_ALIVE_INTERVAL(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL)),
 	MQTT_MAX_INFLIGHT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT)),
 	MQTT_MESSAGE_RETAINED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.MESSAGE_RETAINED)),
-	MQTT_VERSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.MQTT_VERSION), new FieldEditorDataBuilder().comboEntryNamesAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build());
+	MQTT_VERSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.MQTT_VERSION), new FieldEditorDataBuilder().comboEntryNamesAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
+	MQTT_LWT_ENABLED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.LWT_ENABLED)),
+	MQTT_LWT_TOPIC(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.LWT_TOPIC, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_LWT_ENABLED),
+	MQTT_LWT_PAYLOAD(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.WrapString, null, null, MQTT_LWT_ENABLED),
+	MQTT_LWT_QOS(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.LWT_QOS), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build(), MQTT_LWT_ENABLED),
+	MQTT_LWT_RETAINED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.LWT_RETAINED), null, MQTT_LWT_ENABLED);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

@@ -18,6 +18,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 /** @Singleton */
 public class RouterLoggerMqttClient {
 
+	public static final String PREFERRED_CHARSET = "UTF-8";
+
 	private static final String CFG_KEY_MQTT_TOPIC = "mqtt.topic";
 	private static final String CFG_KEY_MQTT_MESSAGE_QOS = "mqtt.message.qos";
 	private static final String CFG_KEY_MQTT_MESSAGE_RETAINED = "mqtt.message.retained";
@@ -32,11 +34,16 @@ public class RouterLoggerMqttClient {
 	private static final String CFG_KEY_MQTT_ACTIVE = "mqtt.active";
 	private static final String CFG_KEY_MQTT_AUTOMATIC_RECONNECT = "mqtt.automatic.reconnect";
 	private static final String CFG_KEY_MQTT_VERSION = "mqtt.version";
+	private static final String CFG_KEY_MQTT_LWT_RETAINED = "mqtt.lwt.retained";
+	private static final String CFG_KEY_MQTT_LWT_QOS = "mqtt.lwt.qos";
+	private static final String CFG_KEY_MQTT_LWT_PAYLOAD = "mqtt.lwt.payload";
+	private static final String CFG_KEY_MQTT_LWT_TOPIC = "mqtt.lwt.topic";
+	private static final String CFG_KEY_MQTT_LWT_ENABLED = "mqtt.lwt.enabled";
 
 	public interface Defaults {
 		boolean ACTIVE = false;
 		String CLIENT_ID = "RouterLogger";
-		String TOPIC = "router/status";
+		String TOPIC = "router/logger/data";
 		int KEEP_ALIVE_INTERVAL = MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT;
 		int CONNECTION_TIMEOUT = MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT;
 		int MAX_INFLIGHT = MqttConnectOptions.MAX_INFLIGHT_DEFAULT;
@@ -45,6 +52,10 @@ public class RouterLoggerMqttClient {
 		boolean MESSAGE_RETAINED = false;
 		byte MESSAGE_QOS = MqttQos.AT_MOST_ONCE.getValue();
 		byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
+		boolean LWT_ENABLED = false;
+		String LWT_TOPIC = "router/logger/status";
+		byte LWT_QOS = MqttQos.EXACTLY_ONCE.getValue();
+		boolean LWT_RETAINED = true;
 	}
 
 	private static class Singleton {
@@ -104,7 +115,23 @@ public class RouterLoggerMqttClient {
 				options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
 				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
 				options.setMqttVersion(configuration.getByte(CFG_KEY_MQTT_VERSION, Defaults.MQTT_VERSION));
-				// TODO LWT
+
+				if (configuration.getBoolean(CFG_KEY_MQTT_LWT_ENABLED, Defaults.LWT_ENABLED)) {
+					final String lwtTopic = configuration.getString(CFG_KEY_MQTT_LWT_TOPIC, Defaults.LWT_TOPIC);
+					if (lwtTopic != null && !lwtTopic.isEmpty()) {
+						final int lwtQos = configuration.getByte(CFG_KEY_MQTT_LWT_QOS, Defaults.LWT_QOS);
+						final boolean lwtRetained = configuration.getBoolean(CFG_KEY_MQTT_LWT_RETAINED, Defaults.LWT_RETAINED);
+						final String lwtPayloadStr = configuration.getString(CFG_KEY_MQTT_LWT_PAYLOAD, "");
+						byte[] lwtPayload;
+						try {
+							lwtPayload = lwtPayloadStr.getBytes(PREFERRED_CHARSET);
+						}
+						catch (final UnsupportedEncodingException uee) {
+							lwtPayload = lwtPayloadStr.getBytes();
+						}
+						options.setWill(lwtTopic, lwtPayload, lwtQos, lwtRetained);
+					}
+				}
 				final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
 				doConnect(clientId, options);
 				if (Logger.getInstance().isDebugEnabled()) {
@@ -131,19 +158,30 @@ public class RouterLoggerMqttClient {
 	}
 
 	public void publish(final Object payload) {
-		publish(String.valueOf(payload));
+		if (payload != null) {
+			publish(payload.toString());
+		}
+		else {
+			publish("");
+		}
 	}
 
-	public void publish(final String payload) {
+	public void publish(String payload) {
+		if (payload == null) {
+			payload = "";
+		}
 		try {
-			publish(payload.getBytes("UTF-8"));
+			publish(payload.getBytes(PREFERRED_CHARSET));
 		}
 		catch (final UnsupportedEncodingException uee) {
 			publish(payload.getBytes());
 		}
 	}
 
-	public void publish(final byte[] payload) {
+	public void publish(byte[] payload) {
+		if (payload == null) {
+			payload = "".getBytes();
+		}
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_TOPIC, Defaults.TOPIC);
 			final MqttMessage message = new MqttMessage(payload);
