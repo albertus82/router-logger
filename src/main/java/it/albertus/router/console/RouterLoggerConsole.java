@@ -58,8 +58,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			finally {
 				routerLogger.disconnect(true);
 				routerLogger.joinPollingThread();
-				routerLogger.httpServer.stop();
-				routerLogger.mqttClient.disconnect();
+				routerLogger.stopNetworkServices();
 				routerLogger.removeShutdownHook();
 			}
 			routerLogger.printGoodbye();

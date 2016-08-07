@@ -4,16 +4,18 @@ import it.albertus.router.resources.Resources;
 
 public enum MqttQos {
 
-	AT_MOST_ONCE(0, "lbl.mqtt.qos.0"),
-	AT_LEAST_ONCE(1, "lbl.mqtt.qos.1"),
-	EXACTLY_ONCE(2, "lbl.mqtt.qos.2");
+	AT_MOST_ONCE(0),
+	AT_LEAST_ONCE(1),
+	EXACTLY_ONCE(2);
+
+	private static final String RESOURCE_KEY_PREFIX = "lbl.mqtt.qos.";
 
 	private final byte value;
 	private final String resourceKey;
 
-	private MqttQos(final int value, final String resourceKey) {
+	private MqttQos(final int value) {
 		this.value = (byte) value;
-		this.resourceKey = resourceKey;
+		this.resourceKey = RESOURCE_KEY_PREFIX + value;
 	}
 
 	public byte getValue() {

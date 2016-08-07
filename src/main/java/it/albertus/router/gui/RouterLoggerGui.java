@@ -83,8 +83,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			routerLogger.disconnect(true);
 			display.dispose();
 			routerLogger.joinPollingThread();
-			routerLogger.httpServer.stop();
-			routerLogger.mqttClient.disconnect();
+			routerLogger.stopNetworkServices();
 			routerLogger.removeShutdownHook();
 		}
 		routerLogger.printGoodbye();

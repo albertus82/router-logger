@@ -154,8 +154,7 @@ public abstract class RouterLoggerEngine {
 					catch (final Exception e) {/* Ignore */}
 				}
 				release();
-				httpServer.stop();
-				mqttClient.disconnect();
+				stopNetworkServices();
 			}
 		};
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
@@ -525,6 +524,12 @@ public abstract class RouterLoggerEngine {
 				logger.log(e);
 			}
 		}
+	}
+
+	protected void stopNetworkServices() {
+		httpServer.stop();
+		setStatus(RouterLoggerStatus.CLOSED);
+		mqttClient.disconnect();
 	}
 
 	protected int getIteration() {

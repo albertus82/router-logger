@@ -3,22 +3,25 @@ package it.albertus.router.engine;
 import it.albertus.router.resources.Resources;
 
 public enum RouterLoggerStatus {
-	STARTING("lbl.status.starting"),
-	CONNECTING("lbl.status.connecting"),
-	AUTHENTICATING("lbl.status.authenticating"),
-	OK("lbl.status.ok"),
-	INFO("lbl.status.info"),
-	WARNING("lbl.status.warning"),
-	DISCONNECTING("lbl.status.disconnecting"),
-	DISCONNECTED("lbl.status.disconnected"),
-	RECONNECTING("lbl.status.reconnecting"),
-	ERROR("lbl.status.error"),
-	ABEND("lbl.status.abend");
+	STARTING,
+	CONNECTING,
+	AUTHENTICATING,
+	OK,
+	INFO,
+	WARNING,
+	DISCONNECTING,
+	DISCONNECTED,
+	RECONNECTING,
+	ERROR,
+	CLOSED,
+	ABEND;
+
+	private static final String RESOURCE_KEY_PREFIX = "lbl.status.";
 
 	private final String resourceKey;
 
-	private RouterLoggerStatus(final String resourceKey) {
-		this.resourceKey = resourceKey;
+	private RouterLoggerStatus() {
+		this.resourceKey = RESOURCE_KEY_PREFIX + name().toLowerCase().replace('_', '.');
 	}
 
 	public String getDescription() {
