@@ -1,28 +1,27 @@
 package it.albertus.router.mqtt;
 
 import it.albertus.jface.preference.field.UriListEditor;
+import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Jsonable;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 
-import java.io.UnsupportedEncodingException;
+import java.io.Serializable;
+import java.util.Date;
 
-import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
+
 /** @Singleton */
-public class RouterLoggerMqttClient {
+public class RouterLoggerMqttClient extends BaseMqttClient {
 
-	public static final String PREFERRED_CHARSET = "UTF-8";
-
-	private static final String CFG_KEY_MQTT_TOPIC = "mqtt.topic";
-	private static final String CFG_KEY_MQTT_MESSAGE_QOS = "mqtt.message.qos";
-	private static final String CFG_KEY_MQTT_MESSAGE_RETAINED = "mqtt.message.retained";
 	private static final String CFG_KEY_MQTT_CLEAN_SESSION = "mqtt.clean.session";
 	private static final String CFG_KEY_MQTT_MAX_INFLIGHT = "mqtt.max.inflight";
 	private static final String CFG_KEY_MQTT_CONNECTION_TIMEOUT = "mqtt.connection.timeout";
@@ -34,28 +33,36 @@ public class RouterLoggerMqttClient {
 	private static final String CFG_KEY_MQTT_ACTIVE = "mqtt.active";
 	private static final String CFG_KEY_MQTT_AUTOMATIC_RECONNECT = "mqtt.automatic.reconnect";
 	private static final String CFG_KEY_MQTT_VERSION = "mqtt.version";
-	private static final String CFG_KEY_MQTT_LWT_RETAINED = "mqtt.lwt.retained";
-	private static final String CFG_KEY_MQTT_LWT_QOS = "mqtt.lwt.qos";
-	private static final String CFG_KEY_MQTT_LWT_PAYLOAD = "mqtt.lwt.payload";
-	private static final String CFG_KEY_MQTT_LWT_TOPIC = "mqtt.lwt.topic";
-	private static final String CFG_KEY_MQTT_LWT_ENABLED = "mqtt.lwt.enabled";
+
+	private static final String CFG_KEY_MQTT_DATA_ENABLED = "mqtt.data.enabled";
+	private static final String CFG_KEY_MQTT_DATA_TOPIC = "mqtt.data.topic";
+	private static final String CFG_KEY_MQTT_DATA_QOS = "mqtt.data.qos";
+	private static final String CFG_KEY_MQTT_DATA_RETAINED = "mqtt.data.retained";
+
+	private static final String CFG_KEY_MQTT_STATUS_ENABLED = "mqtt.status.enabled";
+	private static final String CFG_KEY_MQTT_STATUS_TOPIC = "mqtt.status.topic";
+	private static final String CFG_KEY_MQTT_STATUS_QOS = "mqtt.status.qos";
+	private static final String CFG_KEY_MQTT_STATUS_RETAINED = "mqtt.status.retained";
 
 	public interface Defaults {
 		boolean ACTIVE = false;
 		String CLIENT_ID = "RouterLogger";
-		String TOPIC = "router/logger/data";
 		int KEEP_ALIVE_INTERVAL = MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT;
 		int CONNECTION_TIMEOUT = MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT;
 		int MAX_INFLIGHT = MqttConnectOptions.MAX_INFLIGHT_DEFAULT;
 		boolean CLEAN_SESSION = MqttConnectOptions.CLEAN_SESSION_DEFAULT;
 		boolean AUTOMATIC_RECONNECT = true;
-		boolean MESSAGE_RETAINED = false;
-		byte MESSAGE_QOS = MqttQos.AT_MOST_ONCE.getValue();
 		byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
-		boolean LWT_ENABLED = false;
-		String LWT_TOPIC = "router/logger/status";
-		byte LWT_QOS = MqttQos.EXACTLY_ONCE.getValue();
-		boolean LWT_RETAINED = true;
+
+		boolean DATA_ENABLED = true;
+		String DATA_TOPIC = "router/logger/data";
+		byte DATA_QOS = MqttQos.AT_MOST_ONCE.getValue();
+		boolean DATA_RETAINED = true;
+
+		boolean STATUS_ENABLED = true;
+		String STATUS_TOPIC = "router/logger/status";
+		byte STATUS_QOS = MqttQos.EXACTLY_ONCE.getValue();
+		boolean STATUS_RETAINED = true;
 	}
 
 	private static class Singleton {
@@ -66,33 +73,12 @@ public class RouterLoggerMqttClient {
 		return Singleton.instance;
 	}
 
-	private class MqttClientStartThread extends Thread {
-
-		private final MqttConnectOptions options;
-
-		private MqttClientStartThread(final MqttConnectOptions options) {
-			this.setName("mqttClientStartThread");
-			this.setDaemon(true);
-			this.options = options;
-		}
-
-		@Override
-		public void run() {
-			try {
-				client.connect(options);
-			}
-			catch (final Exception e) {
-				Logger.getInstance().log(e);
-			}
-		}
-	}
-
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
-	private volatile MqttClient client;
 
 	private RouterLoggerMqttClient() {}
 
-	public void connect() {
+	@Override
+	protected void connect() {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
 			try {
 				final MqttConnectOptions options = new MqttConnectOptions();
@@ -116,20 +102,10 @@ public class RouterLoggerMqttClient {
 				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
 				options.setMqttVersion(configuration.getByte(CFG_KEY_MQTT_VERSION, Defaults.MQTT_VERSION));
 
-				if (configuration.getBoolean(CFG_KEY_MQTT_LWT_ENABLED, Defaults.LWT_ENABLED)) {
-					final String lwtTopic = configuration.getString(CFG_KEY_MQTT_LWT_TOPIC, Defaults.LWT_TOPIC);
+				if (configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
+					final String lwtTopic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
 					if (lwtTopic != null && !lwtTopic.isEmpty()) {
-						final int lwtQos = configuration.getByte(CFG_KEY_MQTT_LWT_QOS, Defaults.LWT_QOS);
-						final boolean lwtRetained = configuration.getBoolean(CFG_KEY_MQTT_LWT_RETAINED, Defaults.LWT_RETAINED);
-						final String lwtPayloadStr = configuration.getString(CFG_KEY_MQTT_LWT_PAYLOAD, "");
-						byte[] lwtPayload;
-						try {
-							lwtPayload = lwtPayloadStr.getBytes(PREFERRED_CHARSET);
-						}
-						catch (final UnsupportedEncodingException uee) {
-							lwtPayload = lwtPayloadStr.getBytes();
-						}
-						options.setWill(lwtTopic, lwtPayload, lwtQos, lwtRetained);
+						options.setWill(lwtTopic, createPayload(new StatusPayload(RouterLoggerStatus.ABEND).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
 					}
 				}
 				final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
@@ -144,67 +120,7 @@ public class RouterLoggerMqttClient {
 		}
 	}
 
-	private synchronized void doConnect(final String clientId, final MqttConnectOptions options) throws MqttException {
-		if (client == null) {
-			client = new MqttClient(options.getServerURIs()[0], clientId);
-			client.setCallback(new MqttCallback(clientId));
-			final Thread starter = new MqttClientStartThread(options);
-			starter.start();
-			try {
-				starter.join();
-			}
-			catch (final InterruptedException ie) {/* Ignore */}
-		}
-	}
-
-	public void publish(final Object payload) {
-		if (payload != null) {
-			publish(payload.toString());
-		}
-		else {
-			publish("");
-		}
-	}
-
-	public void publish(String payload) {
-		if (payload == null) {
-			payload = "";
-		}
-		try {
-			publish(payload.getBytes(PREFERRED_CHARSET));
-		}
-		catch (final UnsupportedEncodingException uee) {
-			publish(payload.getBytes());
-		}
-	}
-
-	public void publish(byte[] payload) {
-		if (payload == null) {
-			payload = "".getBytes();
-		}
-		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
-			final String topic = configuration.getString(CFG_KEY_MQTT_TOPIC, Defaults.TOPIC);
-			final MqttMessage message = new MqttMessage(payload);
-			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_MESSAGE_RETAINED, Defaults.MESSAGE_RETAINED));
-			message.setQos(configuration.getByte(CFG_KEY_MQTT_MESSAGE_QOS, Defaults.MESSAGE_QOS));
-			try {
-				doPublish(topic, message);
-			}
-			catch (final Exception e) {
-				Logger.getInstance().log(e);
-			}
-		}
-	}
-
-	private synchronized void doPublish(final String topic, final MqttMessage message) throws MqttException {
-		if (client == null) {
-			connect(); // Lazy connection.
-		}
-		if (client != null && client.isConnected()) {
-			client.publish(topic, message);
-		}
-	}
-
+	@Override
 	public void disconnect() {
 		final Logger logger = Logger.getInstance();
 		try {
@@ -216,19 +132,68 @@ public class RouterLoggerMqttClient {
 		}
 	}
 
-	private synchronized void doDisconnect() throws MqttException {
-		if (client != null) {
-			if (client.isConnected()) {
-				try {
-					client.disconnect();
-				}
-				catch (final Exception e) {
-					Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
-					client.disconnectForcibly();
-				}
+	public void publish(final RouterData data) {
+		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED)) {
+			final String topic = configuration.getString(CFG_KEY_MQTT_DATA_TOPIC, Defaults.DATA_TOPIC);
+			final MqttMessage message = new MqttMessage(createPayload(data.toJson()));
+			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_DATA_RETAINED, Defaults.DATA_RETAINED));
+			message.setQos(configuration.getByte(CFG_KEY_MQTT_DATA_QOS, Defaults.DATA_QOS));
+			try {
+				doPublish(topic, message);
 			}
-			client.close();
-			client = null;
+			catch (final Exception e) {
+				Logger.getInstance().log(e);
+			}
+		}
+	}
+
+	public void publish(final RouterLoggerStatus status) {
+		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
+			final String topic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
+			final MqttMessage message = new MqttMessage(createPayload(new StatusPayload(status).toJson()));
+			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
+			message.setQos(configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS));
+			try {
+				doPublish(topic, message);
+			}
+			catch (final Exception e) {
+				Logger.getInstance().log(e);
+			}
+		}
+	}
+
+	private class StatusPayload implements Serializable, Jsonable {
+
+		private static final long serialVersionUID = 5256787032583885024L;
+
+		private final Date timestamp;
+		private final String status;
+		private final String description;
+
+		public StatusPayload(final RouterLoggerStatus status) {
+			this.status = status.name();
+			this.description = status.getDescription();
+			if (!RouterLoggerStatus.ABEND.equals(status)) {
+				this.timestamp = new Date();
+			}
+			else {
+				this.timestamp = null;
+			}
+		}
+
+		@Override
+		public String toString() {
+			return "StatusPayload [timestamp=" + timestamp + ", status=" + status + ", description=" + description + "]";
+		}
+
+		@Override
+		public String toJson() {
+			final StringBuilder json = new StringBuilder("{");
+			if (timestamp != null) {
+				json.append("\"timestamp\":\"" + ISO8601Utils.format(timestamp, true, defaultTimeZone) + "\",");
+			}
+			json.append("\"status\":\"" + status + "\",\"description\":\"" + description + "\"}");
+			return json.toString();
 		}
 	}
 

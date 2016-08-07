@@ -12,17 +12,17 @@ public enum RouterLoggerStatus {
 	DISCONNECTING("lbl.status.disconnecting"),
 	DISCONNECTED("lbl.status.disconnected"),
 	RECONNECTING("lbl.status.reconnecting"),
-	ERROR("lbl.status.error");
+	ERROR("lbl.status.error"),
+	ABEND("lbl.status.abend");
 
-	private final String key;
+	private final String resourceKey;
 
-	private RouterLoggerStatus(String key) {
-		this.key = key;
+	private RouterLoggerStatus(final String resourceKey) {
+		this.resourceKey = resourceKey;
 	}
 
-	@Override
-	public String toString() {
-		return Resources.get(this.key);
+	public String getDescription() {
+		return Resources.get(resourceKey);
 	}
 
 }

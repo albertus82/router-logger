@@ -1,12 +1,17 @@
 package it.albertus.router.engine;
 
+import it.albertus.router.util.Jsonable;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 
-public class RouterData implements Serializable {
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
 
-	private static final long serialVersionUID = 4673990924602102371L;
+public class RouterData implements Serializable, Jsonable {
+
+	private static final long serialVersionUID = -9084896320968670667L;
 
 	private final Date timestamp;
 	private final int responseTime;
@@ -37,6 +42,24 @@ public class RouterData implements Serializable {
 	@Override
 	public String toString() {
 		return "RouterData [timestamp=" + timestamp + ", responseTime=" + responseTime + ", data=" + data + "]";
+	}
+
+	@Override
+	public String toJson() {
+		final StringBuilder json = new StringBuilder("{\"timestamp\":\"" + ISO8601Utils.format(timestamp, true, defaultTimeZone) + "\",\"responseTime\":" + responseTime);
+		if (data != null && !data.isEmpty()) {
+			json.append(",\"data\":{");
+			int index = 0;
+			for (final Entry<String, String> entry : data.entrySet()) {
+				json.append('"').append(entry.getKey()).append("\":\"").append(entry.getValue()).append("\"");
+				if (++index < data.size()) {
+					json.append(',');
+				}
+			}
+			json.append("}");
+		}
+		json.append("}");
+		return json.toString();
 	}
 
 }

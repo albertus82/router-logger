@@ -79,6 +79,9 @@ public abstract class RouterLoggerEngine {
 	private final void doSetStatus(RouterLoggerStatus status) {
 		this.previousStatus = this.currentStatus;
 		this.currentStatus = status;
+		if (!currentStatus.equals(previousStatus)) {
+			mqttClient.publish(status);
+		}
 	}
 
 	protected Reader createReader() {

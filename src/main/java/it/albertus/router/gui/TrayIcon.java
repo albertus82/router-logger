@@ -203,7 +203,7 @@ public class TrayIcon {
 	private String getBaseToolTipText(final RouterLoggerStatus status) {
 		final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
 		if (status != null) {
-			sb.append(" (").append(status.toString()).append(')');
+			sb.append(" (").append(status.getDescription()).append(')');
 		}
 		return sb.toString();
 	}
