@@ -76,10 +76,11 @@ public abstract class RouterLoggerEngine {
 		doSetStatus(status);
 	}
 
-	private final void doSetStatus(RouterLoggerStatus status) {
+	private final void doSetStatus(final RouterLoggerStatus status) {
+		boolean first = this.previousStatus == null;
 		this.previousStatus = this.currentStatus;
 		this.currentStatus = status;
-		if (!currentStatus.equals(previousStatus)) {
+		if (!this.currentStatus.equals(this.previousStatus) || first) {
 			mqttClient.publish(status);
 		}
 	}
@@ -136,6 +137,7 @@ public abstract class RouterLoggerEngine {
 
 	protected void beforeConnect() {
 		printWelcome();
+		setStatus(RouterLoggerStatus.STARTING);
 		httpServer.start();
 		initReaderAndWriter();
 		printDeviceModel();

@@ -2,7 +2,6 @@ package it.albertus.router.console;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -182,7 +181,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				configuration.reload();
 				mqttClient.disconnect();
 				setIteration(FIRST_ITERATION);
-				setStatus(RouterLoggerStatus.STARTING);
 				out.println();
 				beforeConnect();
 				connect();

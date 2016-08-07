@@ -298,7 +298,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					configuration.reload();
 					mqttClient.disconnect();
 					setIteration(FIRST_ITERATION);
-					setStatus(RouterLoggerStatus.STARTING);
 					new SwtThreadExecutor(shell) {
 						@Override
 						public void run() {
