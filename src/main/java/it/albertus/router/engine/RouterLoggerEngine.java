@@ -508,7 +508,7 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 		else {
-			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
+			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getDescription()), Destination.CONSOLE);
 		}
 	}
 

@@ -165,7 +165,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				pollingThread.start();
 			}
 			else {
-				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().toString()), Destination.CONSOLE);
+				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getDescription()), Destination.CONSOLE);
 			}
 		}
 	}
