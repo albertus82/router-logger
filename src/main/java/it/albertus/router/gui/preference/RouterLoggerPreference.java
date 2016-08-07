@@ -220,6 +220,12 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_DATA_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.DATA_ENABLED)),
 	MQTT_DATA_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.DATA_TOPIC, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_DATA_ENABLED),
 	MQTT_DATA_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.DATA_QOS), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build(), MQTT_DATA_ENABLED),
+	MQTT_DATA_THROTTLING_MS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.IntegerCombo, Long.toString(RouterLoggerMqttClient.Defaults.DATA_THROTTLING_IN_MILLIS), new FieldEditorDataBuilder().comboEntryNamesAndValues(new LocalizedComboEntryNamesAndValues(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("lbl.preferences.mqtt.data.throttling.disabled");
+		}
+	}, 0)).build(), MQTT_DATA_ENABLED),
 	MQTT_DATA_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.DATA_ENABLED), null, MQTT_DATA_ENABLED),
 	MQTT_STATUS_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.STATUS_ENABLED)),
 	MQTT_STATUS_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.STATUS_TOPIC, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_STATUS_ENABLED),

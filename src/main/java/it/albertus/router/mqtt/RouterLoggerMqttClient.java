@@ -38,6 +38,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private static final String CFG_KEY_MQTT_DATA_TOPIC = "mqtt.data.topic";
 	private static final String CFG_KEY_MQTT_DATA_QOS = "mqtt.data.qos";
 	private static final String CFG_KEY_MQTT_DATA_RETAINED = "mqtt.data.retained";
+	private static final String CFG_KEY_MQTT_DATA_THROTTLING_MS = "mqtt.data.throttling.ms";
 
 	private static final String CFG_KEY_MQTT_STATUS_ENABLED = "mqtt.status.enabled";
 	private static final String CFG_KEY_MQTT_STATUS_TOPIC = "mqtt.status.topic";
@@ -58,6 +59,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		String DATA_TOPIC = "router/logger/data";
 		byte DATA_QOS = MqttQos.AT_MOST_ONCE.getValue();
 		boolean DATA_RETAINED = true;
+		long DATA_THROTTLING_IN_MILLIS = 0;
 
 		boolean STATUS_ENABLED = true;
 		String STATUS_TOPIC = "router/logger/status";
@@ -74,6 +76,8 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+
+	private long lastMessageTime;
 
 	private RouterLoggerMqttClient() {}
 
@@ -130,7 +134,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	}
 
 	public void publish(final RouterData data) {
-		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED)) {
+		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastMessageTime > configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_DATA_TOPIC, Defaults.DATA_TOPIC);
 			final MqttMessage message = new MqttMessage(createPayload(data.toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_DATA_RETAINED, Defaults.DATA_RETAINED));
@@ -141,6 +145,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			catch (final Exception e) {
 				Logger.getInstance().log(e);
 			}
+			lastMessageTime = System.currentTimeMillis();
 		}
 	}
 
@@ -161,14 +166,14 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 
 	private class StatusPayload implements Serializable, Jsonable {
 
-		private static final long serialVersionUID = 5256787032583885024L;
+		private static final long serialVersionUID = -6762977503263438592L;
 
 		private final Date timestamp;
 		private final String status;
 		private final String description;
 
 		public StatusPayload(final RouterLoggerStatus status) {
-			this.status = status.name();
+			this.status = status.toString();
 			this.description = status.getDescription();
 			if (!RouterLoggerStatus.ABEND.equals(status)) {
 				this.timestamp = new Date();
