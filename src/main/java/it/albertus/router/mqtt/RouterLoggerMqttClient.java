@@ -79,43 +79,41 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 
 	@Override
 	protected void connect() {
-		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE)) {
-			try {
-				final MqttConnectOptions options = new MqttConnectOptions();
-				final String[] serverURIs = configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX);
-				if (serverURIs == null || serverURIs.length == 0 || serverURIs[0].trim().isEmpty()) {
-					throw new ConfigurationException(Resources.get("err.mqtt.cfg.error.uri"), CFG_KEY_MQTT_SERVER_URI);
-				}
-				options.setServerURIs(serverURIs);
-				final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
-				if (username != null && !username.isEmpty()) {
-					options.setUserName(username);
-				}
-				final char[] password = configuration.getCharArray(CFG_KEY_MQTT_PASSWORD);
-				if (password != null && password.length > 0) {
-					options.setPassword(password);
-				}
-				options.setKeepAliveInterval(configuration.getInt(CFG_KEY_MQTT_KEEP_ALIVE_INTERVAL, Defaults.KEEP_ALIVE_INTERVAL));
-				options.setConnectionTimeout(configuration.getInt(CFG_KEY_MQTT_CONNECTION_TIMEOUT, Defaults.CONNECTION_TIMEOUT));
-				options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
-				options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
-				options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
-				options.setMqttVersion(configuration.getByte(CFG_KEY_MQTT_VERSION, Defaults.MQTT_VERSION));
-				if (configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
-					final String lwtTopic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
-					if (lwtTopic != null && !lwtTopic.isEmpty()) {
-						options.setWill(lwtTopic, createPayload(new StatusPayload(RouterLoggerStatus.ABEND).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
-					}
-				}
-				final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
-				doConnect(clientId, options);
-				if (Logger.getInstance().isDebugEnabled()) {
-					System.out.println(options.toString().trim());
+		try {
+			final MqttConnectOptions options = new MqttConnectOptions();
+			final String[] serverURIs = configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX);
+			if (serverURIs == null || serverURIs.length == 0 || serverURIs[0].trim().isEmpty()) {
+				throw new ConfigurationException(Resources.get("err.mqtt.cfg.error.uri"), CFG_KEY_MQTT_SERVER_URI);
+			}
+			options.setServerURIs(serverURIs);
+			final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
+			if (username != null && !username.isEmpty()) {
+				options.setUserName(username);
+			}
+			final char[] password = configuration.getCharArray(CFG_KEY_MQTT_PASSWORD);
+			if (password != null && password.length > 0) {
+				options.setPassword(password);
+			}
+			options.setKeepAliveInterval(configuration.getInt(CFG_KEY_MQTT_KEEP_ALIVE_INTERVAL, Defaults.KEEP_ALIVE_INTERVAL));
+			options.setConnectionTimeout(configuration.getInt(CFG_KEY_MQTT_CONNECTION_TIMEOUT, Defaults.CONNECTION_TIMEOUT));
+			options.setMaxInflight(configuration.getInt(CFG_KEY_MQTT_MAX_INFLIGHT, Defaults.MAX_INFLIGHT));
+			options.setCleanSession(configuration.getBoolean(CFG_KEY_MQTT_CLEAN_SESSION, Defaults.CLEAN_SESSION));
+			options.setAutomaticReconnect(configuration.getBoolean(CFG_KEY_MQTT_AUTOMATIC_RECONNECT, Defaults.AUTOMATIC_RECONNECT));
+			options.setMqttVersion(configuration.getByte(CFG_KEY_MQTT_VERSION, Defaults.MQTT_VERSION));
+			if (configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
+				final String lwtTopic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
+				if (lwtTopic != null && !lwtTopic.isEmpty()) {
+					options.setWill(lwtTopic, createPayload(new StatusPayload(RouterLoggerStatus.ABEND).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
 				}
 			}
-			catch (final Exception e) {
-				Logger.getInstance().log(e);
+			final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
+			doConnect(clientId, options);
+			if (Logger.getInstance().isDebugEnabled()) {
+				System.out.println(options.toString().trim());
 			}
+		}
+		catch (final Exception e) {
+			Logger.getInstance().log(e);
 		}
 	}
 
