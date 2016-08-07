@@ -32,7 +32,7 @@ public abstract class BaseMqttClient {
 				client.connect(options);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
+				Logger.getInstance().log(e);
 			}
 		}
 	}
