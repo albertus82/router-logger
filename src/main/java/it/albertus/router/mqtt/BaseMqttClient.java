@@ -1,5 +1,8 @@
 package it.albertus.router.mqtt;
 
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+
 import java.io.UnsupportedEncodingException;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -29,7 +32,7 @@ public abstract class BaseMqttClient {
 				client.connect(options);
 			}
 			catch (final Exception e) {
-				e.printStackTrace();
+				Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
 			}
 		}
 	}
@@ -41,7 +44,7 @@ public abstract class BaseMqttClient {
 			doDisconnect();
 		}
 		catch (final Exception e) {
-			e.printStackTrace();
+			Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
 		}
 	}
 
@@ -74,7 +77,7 @@ public abstract class BaseMqttClient {
 					client.disconnect();
 				}
 				catch (final Exception e) {
-					e.printStackTrace();
+					Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
 					client.disconnectForcibly();
 				}
 			}
