@@ -5,6 +5,7 @@ import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
+import it.albertus.router.writer.DummyWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.Localized;
 
@@ -24,7 +25,8 @@ public class WriterPreferencePage extends BasePreferencePage {
 
 	protected enum WriterComboData {
 		CSV(CsvWriter.DESTINATION_KEY, CsvWriter.class),
-		DATABASE(DatabaseWriter.DESTINATION_KEY, DatabaseWriter.class);
+		DATABASE(DatabaseWriter.DESTINATION_KEY, DatabaseWriter.class),
+		DUMMY(DummyWriter.DESTINATION_KEY, DummyWriter.class);
 
 		private final String resourceKey;
 		private final Class<? extends Writer> writerClass;
