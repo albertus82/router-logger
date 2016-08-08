@@ -6,6 +6,7 @@ import it.albertus.router.util.Logger.Destination;
 import java.io.UnsupportedEncodingException;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -48,9 +49,9 @@ public abstract class BaseMqttClient {
 		}
 	}
 
-	protected synchronized void doConnect(final String clientId, final MqttConnectOptions options) throws MqttException {
+	protected synchronized void doConnect(final String clientId, final MqttConnectOptions options, final MqttClientPersistence persistence) throws MqttException {
 		if (client == null) {
-			client = new MqttClient(options.getServerURIs()[0], clientId);
+			client = new MqttClient(options.getServerURIs()[0], clientId, persistence);
 			client.setCallback(new MqttCallback(clientId));
 			final Thread starter = new MqttClientStartThread(options);
 			starter.start();

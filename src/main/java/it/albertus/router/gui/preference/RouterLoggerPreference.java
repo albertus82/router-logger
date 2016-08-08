@@ -236,7 +236,15 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT)),
 	MQTT_KEEP_ALIVE_INTERVAL(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL)),
 	MQTT_MAX_INFLIGHT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT)),
-	MQTT_VERSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.MQTT_VERSION), new FieldEditorDataBuilder().comboEntryNamesAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build());
+	MQTT_VERSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.MQTT_VERSION), new FieldEditorDataBuilder().comboEntryNamesAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
+	MQTT_PERSISTENCE_FILE_ACTIVE(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_ACTIVE)),
+	MQTT_PERSISTENCE_FILE_CUSTOM(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_CUSTOM), null, MQTT_PERSISTENCE_FILE_ACTIVE),
+	MQTT_PERSISTENCE_FILE_PATH(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedDirectory, System.getProperty("user.dir"), new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("msg.preferences.directory.dialog.message.mqtt");
+		}
+	}).build(), MQTT_PERSISTENCE_FILE_CUSTOM);
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

@@ -14,8 +14,11 @@ import it.albertus.util.ConfigurationException;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 
@@ -33,6 +36,9 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private static final String CFG_KEY_MQTT_ACTIVE = "mqtt.active";
 	private static final String CFG_KEY_MQTT_AUTOMATIC_RECONNECT = "mqtt.automatic.reconnect";
 	private static final String CFG_KEY_MQTT_VERSION = "mqtt.version";
+	private static final String CFG_KEY_MQTT_PERSISTENCE_FILE_ACTIVE = "mqtt.persistence.file.active";
+	private static final String CFG_KEY_MQTT_PERSISTENCE_FILE_CUSTOM = "mqtt.persistence.file.custom";
+	private static final String CFG_KEY_MQTT_PERSISTENCE_FILE_PATH = "mqtt.persistence.file.path";
 
 	private static final String CFG_KEY_MQTT_DATA_ENABLED = "mqtt.data.enabled";
 	private static final String CFG_KEY_MQTT_DATA_TOPIC = "mqtt.data.topic";
@@ -54,6 +60,8 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		boolean CLEAN_SESSION = MqttConnectOptions.CLEAN_SESSION_DEFAULT;
 		boolean AUTOMATIC_RECONNECT = true;
 		byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
+		boolean PERSISTENCE_FILE_ACTIVE = false;
+		boolean PERSISTENCE_FILE_CUSTOM = false;
 
 		boolean DATA_ENABLED = true;
 		String DATA_TOPIC = "router/logger/data";
@@ -110,8 +118,24 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 					options.setWill(lwtTopic, createPayload(new StatusPayload(RouterLoggerStatus.ABEND).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
 				}
 			}
+
 			final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
-			doConnect(clientId, options);
+
+			final MqttClientPersistence persistence;
+			if (configuration.getBoolean(CFG_KEY_MQTT_PERSISTENCE_FILE_ACTIVE, Defaults.PERSISTENCE_FILE_ACTIVE)) {
+				final String directory = configuration.getString(CFG_KEY_MQTT_PERSISTENCE_FILE_PATH);
+				if (configuration.getBoolean(CFG_KEY_MQTT_PERSISTENCE_FILE_CUSTOM, Defaults.PERSISTENCE_FILE_CUSTOM) && directory != null && !directory.isEmpty()) {
+					persistence = new MqttDefaultFilePersistence(directory);
+				}
+				else {
+					persistence = new MqttDefaultFilePersistence();
+				}
+			}
+			else {
+				persistence = new MemoryPersistence();
+			}
+
+			doConnect(clientId, options, persistence);
 			if (Logger.getInstance().isDebugEnabled()) {
 				System.out.println(options.toString().trim());
 			}
