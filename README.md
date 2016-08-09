@@ -13,7 +13,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 >Molti dispositivi hanno l'interfaccia Telnet disabilitata per impostazione predefinita, occorre pertanto abilitarla tramite configurazione web prima di poter utilizzare l'applicazione.
 
 
-### Installazione e avvio
+## Installazione e avvio
 
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz** adatta alla propria piattaforma, possibilmente la pi&ugrave; recente;
 	* per **[Raspberry Pi](http://www.raspberrypi.org)** o altre piattaforme non direttamente supportate, scaricare la release **`other`**;
@@ -42,13 +42,13 @@ Al primo avvio sar&agrave; necessario accedere alla configurazione, scheda **Rou
 
 Una volta configurato, il programma si connetter&agrave; al router e inizier&agrave; a interrogarlo ciclicamente, memorizzando di volta in volta le informazioni sullo stato della connessione in una mappa chiave-valore, dove le chiavi sono i nomi (o etichette) dei parametri di funzionamento del modem router/linea ADSL. A ogni interrogazione, questa mappa viene rigenerata e il suo contenuto viene di norma aggiunto ad un file in formato CSV, ma &egrave; anche possibile configurare il salvataggio in una tabella di un database.  
 
-##### Salvataggio su file CSV
+#### Salvataggio su file CSV
 
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file. Per attivare questo tipo di salvataggio non occorre configurare nulla: questa &egrave; la modalit&agrave; predefinita.
 
 Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa occorre accedere alla configurazione (men&ugrave; **Strumenti**) e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
 
-##### Salvataggio su database relazionale
+#### Salvataggio su database relazionale
 
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
 Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi accedere alla configurazione  (men&ugrave; **Strumenti**) e compilare le seguenti opzioni nella scheda **Salvataggio > Database**:
@@ -63,7 +63,7 @@ Infine, impostare la seguente opzione nella scheda **Salvataggio**:
 * **Destinazione/Classe Writer**: [**Database**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
 
 
-### Interfaccia a riga di comando
+## Interfaccia a riga di comando
 
 &Egrave; disponibile un'opzione che consente di avviare l'applicazione in modalit&agrave; riga di comando (senza interfaccia grafica):
 
@@ -79,7 +79,7 @@ In questo caso, prima del primo avvio, occorre modificare manualmente il file di
 * **`router.password`**= password per accedere al router (normalmente &egrave; la stessa usata per accedere all'interfaccia grafica tramite browser).
 
 
-### Configurazione avanzata
+## Configurazione avanzata
 
 Se si utilizza l'interfaccia grafica, &egrave; possibile accedere alla configurazione dal men&ugrave; **Strumenti > Configurazione...**. Utilizzando l'interfaccia a riga di comando, invece, occorre modificare manualmente il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) con un editor di testo come Blocco note.
 
@@ -89,7 +89,7 @@ Tutte le propriet&agrave; che non vengono configurate esplicitamente assumono un
 
 Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi&agrave; viste per la configurazione di base. Le seguenti impostazioni sono tutte facoltative, salvo diversa indicazione.
 
-##### Impostazioni generali
+#### Impostazioni generali
 
 * **`logger.iterations`**= numero di iterazioni da effettuare. Normalmente l'applicazione registra l'attivit&agrave; del modem per un tempo indefinito, ossia finch&eacute; non viene chiusa dall'utente, ma &egrave; possibile indicare un numero di iterazioni massimo dopo il quale l'applicazione si chiuder&agrave; automaticamente. Valori minori o uguali a zero equivalgono a infinito (default: `0`).
 	* **`logger.close.when.finished`**= specifica se l'applicazione debba chiudersi automaticamente dopo l'ultima iterazione. Ininfluente se il numero di iterazioni &egrave; infinito (default: `false`).
@@ -101,7 +101,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`logger.error.log.destination.path`**= percorso in cui saranno salvati eventuali file registro (`.log`) contenenti i dettagli degli errori occorsi durante l'esecuzione del programma (default: stessa cartella del programma).
 * **`language`**= codice nazione (`en`, `it`, ...) che determina la lingua dell'interfaccia (default: lingua di sistema; se non disponibile: `en`).
 
-##### Rete
+#### Rete
 
 * **`socket.timeout.ms`**= timeout del socket in millisecondi, ossia il tempo di inattivit&agrave; massimo *durante la comunicazione* con il server, trascorso il quale si assume che la comunicazione si sia interrotta (default: `30000` ms). Questo valore deve essere sempre maggiore dell'intervallo tra le richieste (`logger.interval.normal.ms`).
 * **`connection.timeout.ms`**= timeout della connessione in millisecondi, ossia il tempo di attesa massimo *in fase di connessione*, trascorso il quale si assume che il server non sia raggiungibile (default: `20000` ms).
@@ -114,7 +114,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 	* **`reader.wait.disconnected.interval.threshold`**= disconnette solo se l'intervallo &egrave; superiore ad una certa soglia configurabile con la propriet&agrave; `reader.wait.disconnected.interval.threshold.ms` (default: `true`).
 	* **`reader.wait.disconnected.interval.threshold.ms`**= l'intervallo minimo al di sotto del quale non viene effettuata la disconnessione, in millisecondi (default: `1000` ms).
 
-##### Interfaccia grafica (GUI)
+#### Interfaccia grafica (GUI)
 
 * **`gui.table.items.max`**= numero massimo di righe contenute nella tabella a video; al raggiungimento del limite, le righe pi&ugrave; vecchie vengono cancellate. Questa impostazione non influisce in alcun modo sul salvataggio delle informazioni ma ha effetto unicamente sull'interfaccia grafica dell'applicazione (default: `2000`, valori maggiori comportano una maggiore occupazione di memoria).
 * **`gui.table.columns.pack`**= riduce al minimo la larghezza delle colonne della tabella a video adattandola ai valori e ignorando la larghezza dei nomi delle chiavi in intestazione (default: `false`).
@@ -128,7 +128,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.important.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 * **`gui.clipboard.max.chars`**= dimensione massima degli appunti, in caratteri. (default: `100000` caratteri). **In ambiente Linux/GTK, non impostare mai valori superiori a `131072` (128 KiB), in caso contrario potrebbero verificarsi problemi dovuti all'esaurimento della memoria.**
 
-##### Console
+#### Console
 
 * **`console.animation`**= specifica se si desidera visualizzare una piccola animazione in console che segnala il funzionamento dell'applicazione (default: `true`).
 * **`console.show.configuration`**= specifica se si desidera visualizzare l'elenco delle propriet&agrave; attive del [`routerlogger.cfg`](src/main/config/routerlogger.cfg) all'avvio dell'applicazione (default: `false`).
@@ -137,7 +137,7 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`console.debug`**= in caso di errore, stampa messaggi dettagliati (default: `false`).
 
 
-#### Sorgente (modello di router)
+### Sorgente (modello di router)
 
 La selezione del modello di modem router da interrogare si effettua configurando nel [`routerlogger.cfg`](src/main/config/routerlogger.cfg) la seguente propriet&agrave;:
 
@@ -149,28 +149,28 @@ La selezione del modello di modem router da interrogare si effettua configurando
 	* [**`DummyReader`**](src/main/java/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
 	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
-###### TP-Link TD-W8970 V1
+##### TP-Link TD-W8970 V1
 
 * **`tplink.8970.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `adsl show info`).
 * **`tplink.8970.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: non valorizzato, di conseguenza non vengono estratte queste informazioni).
 
-###### ASUS DSL-N12E
+##### ASUS DSL-N12E
 
 * **`asus.dsln12e.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `show wan adsl`).
 * **`asus.dsln12e.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: `show wan interface`).
 
-###### ASUS DSL-N14U
+##### ASUS DSL-N14U
 
 * **`asus.dsln14u.command.info.adsl`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (default: `tcapi show Info_Adsl`).
 * **`asus.dsln14u.command.info.wan`**: comando da inviare al router per ottenere informazioni sullo stato della connessione ad Internet (default: non valorizzato, di conseguenza non vengono estratte queste informazioni).
 
-###### D-Link DSL-2750B
+##### D-Link DSL-2750B
 
 * **`dlink.2750.command.info.adsl.status`**: comando da inviare al router per ottenere informazioni sullo stato della portante ADSL (Up/Down) (default: `adsl status`).
 * **`dlink.2750.command.info.adsl.snr`**: comando da inviare al router per ottenere informazioni sul rapporto segnale/rumore della linea ADSL (default: `adsl snr`).
 
 
-#### Destinazione (file, database, ...)
+### Destinazione (file, database, ...)
 
 La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la seguente propriet&agrave;:
 * **`writer.class.name`**: identifica la classe che si occupa del salvataggio delle informazioni, e pu&ograve; assumere i valori seguenti:
@@ -179,7 +179,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 	* [**`DummyWriter`**](src/main/java/it/albertus/router/writer/DummyWriter.java): nessuna scrittura (utile a scopo di test).
 	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/main/java/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
 
-###### CSV
+##### CSV
 
 * **`csv.destination.path`**= percorso in cui saranno salvati i file CSV generati (default: directory dell'applicazione).
 * **`csv.newline.characters`**= specifica come deve essere rappresentato il ritorno a capo nei file CSV generati. Se questa propriet&agrave; non &egrave; presente (o &egrave; commentata), viene utilizzata la rappresentazione specifica della piattaforma su cui si esegue l'applicazione. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
@@ -189,7 +189,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 * **`csv.field.separator`**= separatore dei campi utilizzato nei file CSV generati (default: `;`, compatibile con Microsoft Excel).
 * **`csv.field.separator.replacement`**= poich&eacute; il testo da scrivere nei file CSV non deve mai contenere il separatore, tutte le eventuali occorrenze del separatore saranno sostituite da questa stringa (default: `,`).
 
-###### Database
+##### Database
 
 * **`database.driver.class.name`**= nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
 * **`database.url`**= URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
@@ -204,7 +204,7 @@ La selezione della modalit&agrave; di salvataggio delle informazioni si effettua
 * **`database.column.name.max.length`**= lunghezza massima dei nomi delle colonne, superata la quale il nome viene troncato (default: `30`).
 
 
-#### Soglie
+### Soglie
 
 Le soglie permettono di specificare dei valori limite per uno o pi&ugrave; parametri di funzionamento del dispositivo; lo scopo &egrave; di poter incrementare la frequenza di interrogazione nelle situazioni critiche, in modo da aggiungere informazioni che potrebbero essere utili per la diagnosi di eventuali problemi della linea.
 
@@ -212,7 +212,7 @@ Nel caso delle linee ADSL, ad esempio, un parametro che determina la stabilit&ag
 
 Quando una soglia viene raggiunta, il periodo di registrazione passa da quello normale, definito dalla propriet&agrave; `logger.interval.normal.ms` (default 5 secondi), a quello definito dalla propriet&agrave; `logger.interval.fast.ms` (default un secondo).
 
-##### Configurazione
+#### Configurazione
 
 Ogni soglia &egrave; costituita da una propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) definita come segue:
 
@@ -233,7 +233,7 @@ Il prefisso `threshold.` &egrave; obbligatorio perch&eacute; segnala all'applica
 
 L'*identificativo univoco soglia* pu&ograve; essere un qualsiasi testo senza spazi n&eacute; carattere `=`.
 
-##### Esempio
+#### Esempio
 
 Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
 
@@ -254,7 +254,7 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 
 >Gli unici suffissi ammessi per le propriet&agrave; relative alle soglie (`threshold.`) sono `.key`, `.type` e `.value`.
 
->##### Esempio di configurazione alternativa (vecchio stile)
+>#### Esempio di configurazione alternativa (vecchio stile)
 
 >Aggiungendo le seguenti tre righe al file [`routerlogger.cfg`](src/main/config/routerlogger.cfg), si imposter&agrave; una soglia di 10.0 dB per il SNR; qualora il valore del SNR dovesse scendere al di sotto di 10.0 dB, la frequenza (o, pi&ugrave; precisamente, il periodo) di logging passerebbe da 5000 a 1000 millisecondi.
 
@@ -264,14 +264,14 @@ threshold.snr.down.type=lt
 threshold.snr.down.value=100
 >```
 
-##### Esclusioni
+#### Esclusioni
 
 Pu&ograve; capitare che, al raggiungimento di una o pi&ugrave; soglie specifiche, non si desideri incrementare la frequenza di registrazione n&eacute; ricevere eventuali segnalazioni via email; il caso tipico &egrave; quello della velocit&agrave; di downstream agganciata, che in alcuni casi potrebbe essere inferiore al normale. In questi casi pu&ograve; comunque risultare utile un avviso nell'area di notifica e una particolare evidenziazione nella tabella a video (solo versione con interfaccia grafica), come normalmente avviene quando una soglia viene raggiunta. Per ottenere questo comportamento, valorizzare opportunamente le seguenti propriet&agrave; nel file [`routerlogger.cfg`](src/main/config/routerlogger.cfg):
 * **`thresholds.excluded`**= elenco, separato da delimitatore, degli identificativi univoci delle soglie per le quali, al raggiungimento, non si desidera n&eacute; l'incremento della frequenza di registrazione, n&eacute; l'invio di segnalazioni via email.
 * **`thresholds.excluded.separator`**= delimitatore (o espressione regolare) usato per separare gli identificativi univoci delle soglie specificati nella propriet&agrave; `thresholds.excluded` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche negli identificativi delle soglie.
 
 
-#### Email
+### Email
 
 &Egrave; possibile configurare RouterLogger in modo che invii comunicazioni via email. Questa funzionalit&agrave; &egrave; particolarmente utile se si esegue il programma in un dispositivo dedicato o comunque non presidiato, come un [Raspberry Pi](https://www.raspberrypi.org).
 
@@ -309,7 +309,7 @@ Per consentire l'invio delle email occorre avere un account di posta elettronica
 L'invio funziona senza problemi con [Gmail](https://mail.google.com), a patto di [consentire l'accesso alle applicazioni "meno sicure"](http://www.google.com/settings/security/lesssecureapps); per questo motivo &egrave; consigliabile creare un account dedicato a RouterLogger.
 
 
-#### Server web
+### Server web
 
 RouterLogger pu&ograve; esporre una semplice interfaccia web che consente di:
 
@@ -341,7 +341,7 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 	* **`3`**: registrazione nel registro a video e su file.
 * **`server.threads`**= numero di thread dedicati alla gestione delle richieste HTTP. Bench&eacute; valori inferiori o uguali al numero di thread del processore possano garantire una risposta pi&ugrave; pronta da parte del server, valori eccessivi possono provocare grave degrado prestazionale (default: `1`).
 
-##### HTTPS
+#### HTTPS
 
 Per aumentare il livello di sicurezza della comunicazione con RouterLogger, &egrave; possibile abilitare il protocollo di comunicazione sicura HTTPS. Questa funzione richiede la presenza di un certificato SSL sul sistema che esegue l'applicazione. Per creare un certificato SSL in modo semplice e veloce, &egrave; possibile utilizzare il comando **keytool**, che prevede una sintassi del seguente tipo:
 
@@ -369,7 +369,7 @@ Le seguenti propriet&agrave; consentono di personalizzare ulteriormente la confi
 * **`server.ssl.protocol`**= Protocollo SSL utilizzato (default: `TLS`).
 
 
-#### Client MQTT (Message Queuing Telemetry Transport)
+### Client MQTT (Message Queuing Telemetry Transport)
 
 RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messaggi sullo stato della connessione e del programma stesso. Per attivare e configurare il client MQTT sono disponibili le seguenti opzioni:
 
@@ -401,9 +401,9 @@ RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messag
 * **`mqtt.status.retained`**= specifica se l'ultimo messaggio contenente lo stato dell'applicazione deve essere mantenuto sul server (default: `true`).
 
 
-### Estensione
+## Estensione
 
-##### Supporto di altri modelli di router
+#### Supporto di altri modelli di router
 
 &Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java).
 
@@ -426,7 +426,7 @@ All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
 
-##### Modalit&agrave; di salvataggio alternative
+#### Modalit&agrave; di salvataggio alternative
 
 Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o database SQL, si pu&ograve; estendere la classe astratta [**`Writer`**](src/main/java/it/albertus/router/writer/Writer.java) e sar&agrave; ovviamente necessario implementare i due metodi seguenti:
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute, con le modalit&agrave; desiderate.
@@ -437,7 +437,7 @@ Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che quest'ultima sia aggiunta automaticamente al *classpath*.
 
 
-### Riconoscimenti
+## Riconoscimenti
 
 Quest'applicazione include componenti realizzati da [Apache Software Foundation](lib/license/apache-2.0.txt) e da [Eclipse Foundation](lib/license/eclipse-1.0.txt).
 
