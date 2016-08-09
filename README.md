@@ -373,32 +373,32 @@ Le seguenti propriet&agrave; consentono di personalizzare ulteriormente la confi
 
 RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messaggi sullo stato della connessione e del programma stesso. Per attivare e configurare il client MQTT sono disponibili le seguenti opzioni:
 
-* **`mqtt.active=`**= abilita il client MQTT (default: `false`).
-* **`mqtt.server.uri=`**= elenco, separato da `|`, delle URI di collegamento al server MQTT. Tipicamente &egrave; sufficiente inserire un unico valore (es. `tcp://192.168.1.100:1883`).
-* **`mqtt.username=`**= nome utente per la connessione al server MQTT (se richiesto dal server).
-* **`mqtt.password=`**= password per la connessione al server MQTT (se richiesta dal server).
-* **`mqtt.clean.session=`**= se attiva, questa opzione disabilita la persistenza della sessione del client. Questa opzione dovrebbe essere mantenuta sempre attiva, in quanto RouterLogger si limita a pubblicare messaggi (default: `true`).
-* **`mqtt.automatic.reconnect=`**= specifica se ritentare automaticamente la connessione in caso di problemi di comunicazione (default: `true`).
-* **`mqtt.client.id=`**= identificativo univoco del client (default: `RouterLogger`).
-* **`mqtt.connection.timeout=`**= timeout della connessione in secondi, ossia il tempo di attesa massimo *in fase di connessione*, trascorso il quale si assume che il server non sia raggiungibile (default: `30` secondi).
-* **`mqtt.keep.alive.interval=`**= tempo di inattivit&agrave; massimo *durante la comunicazione* con il server, in secondi, trascorso il quale si assume che la comunicazione si sia interrotta (default: `60` secondi).
-* **`mqtt.max.inflight=`**= numero massimo di messaggi in transito (default: `10`).
-* **`mqtt.version=`**= versione del protocollo MQTT. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
-	* **`0`**: se possibile *3.1.1*, in caso contrario *3.1*.
+* **`mqtt.active`**= abilita il client MQTT (default: `false`).
+* **`mqtt.server.uri`**= elenco, separato da `|`, delle URI di collegamento al server MQTT. Tipicamente &egrave; sufficiente inserire un unico valore (es. `tcp://192.168.1.100:1883`).
+* **`mqtt.username`**= nome utente per la connessione al server MQTT (se richiesto dal server).
+* **`mqtt.password`**= password per la connessione al server MQTT (se richiesta dal server).
+* **`mqtt.clean.session`**= se attiva, questa opzione disabilita la persistenza della sessione del client. Questa opzione dovrebbe essere mantenuta sempre attiva, in quanto RouterLogger si limita a pubblicare messaggi (default: `true`).
+* **`mqtt.automatic.reconnect`**= specifica se ritentare automaticamente la connessione in caso di problemi di comunicazione (default: `true`).
+* **`mqtt.client.id`**= identificativo univoco del client (default: `RouterLogger`).
+* **`mqtt.connection.timeout`**= timeout della connessione in secondi, ossia il tempo di attesa massimo *in fase di connessione*, trascorso il quale si assume che il server non sia raggiungibile (default: `30` secondi).
+* **`mqtt.keep.alive.interval`**= tempo di inattivit&agrave; massimo *durante la comunicazione* con il server, in secondi, trascorso il quale si assume che la comunicazione si sia interrotta (default: `60` secondi).
+* **`mqtt.max.inflight`**= numero massimo di messaggi in transito (default: `10`).
+* **`mqtt.version`**= versione del protocollo MQTT. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
+	* **`0`**: se possibile *3.1.1*, in caso contrario *3.1* (default).
 	* **`3`**: *3.1*.
 	* **`4`**: *3.1.1*.
-* **`mqtt.persistence.file.active=`**= abilita la persistenza su file dei messaggi in transito con QoS 1 o 2. Se questa opzione e' disattivata, i messaggi vengono mantenuti in memoria e quindi vengono persi in caso di arresto dell'applicazione (default: `false`).
-* **`mqtt.persistence.file.custom=`**= abilita la selezione di un percorso specifico per la persistenza dei messaggi in transito (default: `false`).
-* **`mqtt.persistence.file.path=`**= directory di base per la persistenza dei messaggi in transito (default: directory da cui &egrave; stato avviato il programma).
-* **`mqtt.data.enabled=`**= abilita la pubblicazione dei messaggi contenenti le informazioni sulla connessione (default: `true`).
-* **`mqtt.data.topic=`**= topic (argomento) per i messaggi contenenti le informazioni sulla connessione (default: `router/logger/data`).
-* **`mqtt.data.qos=`**= Livello QoS per i messaggi contenenti le informazioni sulla connessione (default: `0`).
-* **`mqtt.data.retained=`**= specifica se l'ultimo messaggio contenente le informazioni sulla connessione deve essere mantenuto sul server (default: `true`).
-* **`mqtt.data.throttling.ms=`**= intervallo minimo tra l'invio dei messaggi contenenti le informazioni sulla connessione. Di norma viene inviato un messaggio per ogni iterazione, ma pu&ograve; essere utile impostare questo valore per evitare un sovraccarico dei client riceventi o del broker (default `0`, ossia nessun intervallo minimo).
-* **`mqtt.status.enabled=`**= abilita la pubblicazione dei messaggi contenenti lo stato dell'applicazione (default: `true`).
-* **`mqtt.status.topic=`**= topic (argomento) per i messaggi contenenti lo stato dell'applicazione (default: `router/logger/status`).
-* **`mqtt.status.qos=`**= Livello QoS per i messaggi contenenti lo stato dell'applicazione (default: `2`).
-* **`mqtt.status.retained=`**= specifica se l'ultimo messaggio contenente lo stato dell'applicazione deve essere mantenuto sul server (default: `true`).
+* **`mqtt.persistence.file.active`**= abilita la persistenza su file dei messaggi in transito con QoS 1 o 2. Se questa opzione &egrave; disattivata, i messaggi vengono mantenuti in memoria e quindi vengono persi in caso di arresto dell'applicazione (default: `false`).
+* **`mqtt.persistence.file.custom`**= abilita la selezione di un percorso specifico per la persistenza dei messaggi in transito (default: `false`).
+* **`mqtt.persistence.file.path`**= directory di base per la persistenza dei messaggi in transito (default: directory da cui &egrave; stato avviato il programma).
+* **`mqtt.data.enabled`**= abilita la pubblicazione dei messaggi contenenti le informazioni sulla connessione (default: `true`).
+* **`mqtt.data.topic`**= topic (argomento) dei messaggi contenenti le informazioni sulla connessione (default: `router/logger/data`).
+* **`mqtt.data.qos`**= Livello QoS dei messaggi contenenti le informazioni sulla connessione (default: `0`).
+* **`mqtt.data.retained`**= specifica se l'ultimo messaggio contenente le informazioni sulla connessione deve essere mantenuto sul server (default: `true`).
+* **`mqtt.data.throttling.ms`**= intervallo minimo tra l'invio dei messaggi contenenti le informazioni sulla connessione. Di norma viene inviato un messaggio per ogni iterazione, ma pu&ograve; essere utile impostare questo valore per evitare un sovraccarico dei client riceventi o del broker (default `0`, ossia nessun intervallo minimo).
+* **`mqtt.status.enabled`**= abilita la pubblicazione dei messaggi contenenti lo stato dell'applicazione (default: `true`).
+* **`mqtt.status.topic`**= topic (argomento) dei messaggi contenenti lo stato dell'applicazione (default: `router/logger/status`).
+* **`mqtt.status.qos`**= Livello QoS dei messaggi contenenti lo stato dell'applicazione (default: `2`).
+* **`mqtt.status.retained`**= specifica se l'ultimo messaggio contenente lo stato dell'applicazione deve essere mantenuto sul server (default: `true`).
 
 
 ### Estensione
