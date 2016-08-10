@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Shell;
 public class RouterLoggerPreferences extends Preferences {
 
 	private final RouterLoggerGui gui;
-	private boolean restartRequired = false;
 
 	public RouterLoggerPreferences(final RouterLoggerGui gui) {
 		super(RouterLoggerConfiguration.getInstance(), RouterLoggerPage.values(), RouterLoggerPreference.values(), Images.MAIN_ICONS);
@@ -37,23 +36,21 @@ public class RouterLoggerPreferences extends Preferences {
 			gui.getMenuBar().updateTexts();
 		}
 
-		// Check if restart is required...
-		final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(RouterLoggerPreference.READER_CLASS_NAME.getConfigurationKey()));
-		final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(RouterLoggerPreference.WRITER_CLASS_NAME.getConfigurationKey(), RouterLoggerPreference.WRITER_CLASS_NAME.getDefaultValue()));
-		if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
-			try {
-				// Check if configured classes are valid...
-				Class.forName(configuredReaderClassName, false, this.getClass().getClassLoader());
-				Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
-				restartRequired = true; // Restart dialog will be shown.
+		if (!restartRequired) {
+			// Check if restart is required...
+			final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(RouterLoggerPreference.READER_CLASS_NAME.getConfigurationKey()));
+			final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(RouterLoggerPreference.WRITER_CLASS_NAME.getConfigurationKey(), RouterLoggerPreference.WRITER_CLASS_NAME.getDefaultValue()));
+			if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
+				try {
+					// Check if configured classes are valid...
+					Class.forName(configuredReaderClassName, false, this.getClass().getClassLoader());
+					Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
+					restartRequired = true; // Restart dialog will be shown.
+				}
+				catch (final Throwable t) {}
 			}
-			catch (final Throwable t) {}
 		}
 		return returnCode;
-	}
-
-	public boolean isRestartRequired() {
-		return restartRequired;
 	}
 
 }

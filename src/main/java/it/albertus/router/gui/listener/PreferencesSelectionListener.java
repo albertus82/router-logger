@@ -1,5 +1,6 @@
 package it.albertus.router.gui.listener;
 
+import it.albertus.jface.preference.Preferences;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Resources;
@@ -20,7 +21,7 @@ public class PreferencesSelectionListener extends SelectionAdapter {
 
 	@Override
 	public void widgetSelected(final SelectionEvent se) {
-		final RouterLoggerPreferences preferences = new RouterLoggerPreferences(gui);
+		final Preferences preferences = new RouterLoggerPreferences(gui);
 		try {
 			preferences.open(gui.getShell());
 		}

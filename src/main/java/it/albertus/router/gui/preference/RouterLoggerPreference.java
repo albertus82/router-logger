@@ -6,6 +6,7 @@ import it.albertus.jface.preference.FieldEditorData.FieldEditorDataBuilder;
 import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
 import it.albertus.jface.preference.Preference;
 import it.albertus.jface.preference.page.AbstractPreferencePage;
+import it.albertus.jface.preference.page.Page;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
@@ -217,6 +218,7 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, null, null, MQTT_ACTIVE),
 	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, null, null, MQTT_ACTIVE),
 	MQTT_CLIENT_ID(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.CLIENT_ID, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_ACTIVE),
+
 	MQTT_DATA_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.DATA_ENABLED), null, MQTT_ACTIVE),
 	MQTT_DATA_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.DATA_TOPIC, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_DATA_ENABLED),
 	MQTT_DATA_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.DATA_QOS), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build(), MQTT_DATA_ENABLED),
@@ -231,6 +233,7 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_STATUS_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, RouterLoggerMqttClient.Defaults.STATUS_TOPIC, new FieldEditorDataBuilder().emptyStringAllowed(false).build(), MQTT_STATUS_ENABLED),
 	MQTT_STATUS_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, Byte.toString(RouterLoggerMqttClient.Defaults.STATUS_QOS), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build(), MQTT_STATUS_ENABLED),
 	MQTT_STATUS_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.STATUS_RETAINED), null, MQTT_STATUS_ENABLED),
+
 	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.CLEAN_SESSION), null, MQTT_ACTIVE),
 	MQTT_AUTOMATIC_RECONNECT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, Boolean.toString(RouterLoggerMqttClient.Defaults.AUTOMATIC_RECONNECT), null, MQTT_ACTIVE),
 	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, Integer.toString(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT), null, MQTT_ACTIVE),
@@ -248,35 +251,36 @@ public enum RouterLoggerPreference implements Preference {
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
-	private final RouterLoggerPage page;
+	private final Page page;
 	private final FieldEditorType fieldEditorType;
 	private final String defaultValue;
 	private final FieldEditorData fieldEditorData;
-	private final RouterLoggerPreference parent;
+	private final Preference parent;
 	private final String configurationKey;
 	private final String labelKey;
+	private final boolean restartRequired;
 
-	private RouterLoggerPreference(final RouterLoggerPage page, final FieldEditorType fieldEditorType) {
-		this(page, fieldEditorType, null, null, null, null, null);
+	private RouterLoggerPreference(final Page page, final FieldEditorType fieldEditorType) {
+		this(page, fieldEditorType, null, null, null, null, null, false);
 	}
 
-	private RouterLoggerPreference(final RouterLoggerPage page, final FieldEditorType fieldEditorType, final String defaultValue) {
-		this(page, fieldEditorType, defaultValue, null, null, null, null);
+	private RouterLoggerPreference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue) {
+		this(page, fieldEditorType, defaultValue, null, null, null, null, false);
 	}
 
-	private RouterLoggerPreference(final RouterLoggerPage page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData) {
-		this(page, fieldEditorType, defaultValue, fieldEditorData, null, null, null);
+	private RouterLoggerPreference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData) {
+		this(page, fieldEditorType, defaultValue, fieldEditorData, null, null, null, false);
 	}
 
-	private RouterLoggerPreference(final RouterLoggerPage page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final RouterLoggerPreference parent) {
-		this(page, fieldEditorType, defaultValue, fieldEditorData, parent, null, null);
+	private RouterLoggerPreference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final Preference parent) {
+		this(page, fieldEditorType, defaultValue, fieldEditorData, parent, null, null, false);
 	}
 
-	private RouterLoggerPreference(final RouterLoggerPage page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final RouterLoggerPreference parent, final String configurationKey) {
-		this(page, fieldEditorType, defaultValue, fieldEditorData, parent, configurationKey, null);
+	private RouterLoggerPreference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final Preference parent, final String configurationKey) {
+		this(page, fieldEditorType, defaultValue, fieldEditorData, parent, configurationKey, null, false);
 	}
 
-	private RouterLoggerPreference(final RouterLoggerPage page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final RouterLoggerPreference parent, final String configurationKey, final String labelKey) {
+	private RouterLoggerPreference(final Page page, final FieldEditorType fieldEditorType, final String defaultValue, final FieldEditorData fieldEditorData, final Preference parent, final String configurationKey, final String labelKey, final boolean restartRequired) {
 		// Configuration key...
 		if (configurationKey != null && !configurationKey.isEmpty()) {
 			this.configurationKey = configurationKey;
@@ -298,6 +302,7 @@ public enum RouterLoggerPreference implements Preference {
 		this.fieldEditorType = fieldEditorType;
 		this.page = page;
 		this.parent = parent;
+		this.restartRequired = restartRequired;
 	}
 
 	@Override
@@ -311,7 +316,7 @@ public enum RouterLoggerPreference implements Preference {
 	}
 
 	@Override
-	public RouterLoggerPage getPage() {
+	public Page getPage() {
 		return page;
 	}
 
@@ -321,12 +326,17 @@ public enum RouterLoggerPreference implements Preference {
 	}
 
 	@Override
-	public RouterLoggerPreference getParent() {
+	public Preference getParent() {
 		return parent;
 	}
 
 	@Override
-	public Set<RouterLoggerPreference> getChildren() {
+	public boolean isRestartRequired() {
+		return restartRequired;
+	}
+
+	@Override
+	public Set<? extends Preference> getChildren() {
 		final Set<RouterLoggerPreference> preferences = EnumSet.noneOf(RouterLoggerPreference.class);
 		for (final RouterLoggerPreference item : RouterLoggerPreference.values()) {
 			if (this.equals(item.getParent())) {
@@ -341,7 +351,7 @@ public enum RouterLoggerPreference implements Preference {
 		return FieldEditorFactory.createFieldEditor(fieldEditorType, configurationKey, getLabel(), parent, fieldEditorData);
 	}
 
-	public static RouterLoggerPreference forConfigurationKey(final String configurationKey) {
+	public static Preference forConfigurationKey(final String configurationKey) {
 		if (configurationKey != null) {
 			for (final RouterLoggerPreference preference : RouterLoggerPreference.values()) {
 				if (configurationKey.equals(preference.configurationKey)) {
