@@ -26,6 +26,7 @@ import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManagerFactory;
 
 import com.sun.net.httpserver.Authenticator;
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
@@ -36,6 +37,7 @@ public abstract class BaseHttpServer {
 	public interface Defaults {
 		int PORT = 8080;
 		boolean ENABLED = false;
+		boolean AUTHENTICATION = true;
 		byte THREADS = 1;
 		boolean SSL_ENABLED = false;
 		String SSL_KEYSTORE_TYPE = "JKS";
@@ -88,7 +90,10 @@ public abstract class BaseHttpServer {
 
 	protected void createContexts() {
 		for (final BaseHttpHandler handler : createHandlers()) {
-			httpServer.createContext(handler.getPath(), handler).setAuthenticator(authenticator);
+			final HttpContext httpContext = httpServer.createContext(handler.getPath(), handler);
+			if (configuration.getBoolean("server.authentication", Defaults.AUTHENTICATION)) {
+				httpContext.setAuthenticator(authenticator);
+			}
 		}
 	}
 

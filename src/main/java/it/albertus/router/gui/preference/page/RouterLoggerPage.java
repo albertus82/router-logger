@@ -25,6 +25,7 @@ public enum RouterLoggerPage implements Page {
 	EMAIL_ADVANCED(AdvancedEmailPreferencePage.class, EMAIL),
 	EMAIL_CC_BCC(CcBccEmailPreferencePage.class, EMAIL),
 	SERVER(ServerPreferencePage.class),
+	SERVER_HANDLER(ServerHandlerPreferencePage.class, SERVER),
 	SERVER_HTTPS(ServerHttpsPreferencePage.class, SERVER),
 	MQTT(MqttPreferencePage.class),
 	MQTT_MESSAGES(MqttMessagesPreferencePage.class, MQTT),
