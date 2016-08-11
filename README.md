@@ -322,8 +322,9 @@ RouterLogger pu&ograve; esporre una semplice interfaccia web che consente di:
 Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 
 * **`server.enabled`**= abilita il server web (default: `false`).
-* **`server.username`**= nome utente per l'accesso all'interfaccia web.
-* **`server.password`**= password per l'accesso all'interfaccia web.
+* **`server.authentication`**= richiede autenticazione con nome utente e password per l'accesso all'interfaccia web. Per motivi di sicurezza, questa opzione dovrebbe essere mantenuta sempre attiva (default: `true`).
+	* **`server.username`**= nome utente per l'accesso all'interfaccia web.
+	* **`server.password`**= password per l'accesso all'interfaccia web.
 * **`server.port`**= porta del server web (default: `8080`).
 * **`server.compress.response`**= abilita la compressione dati, quando possibile (default: `false`).
 * **`server.handler.root.enabled`**= abilita la pagina **Home** (default: `true`).
