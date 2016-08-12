@@ -1,6 +1,8 @@
 RouterLogger
 ============
 
+[![Build Status](https://travis-ci.org/Albertus82/RouterLogger.svg?branch=master)](https://travis-ci.org/Albertus82/RouterLogger)
+
 **RouterLogger** &egrave; una semplice applicazione per la registrazione dello stato della connessione ADSL, che include implementazioni specifiche per i seguenti router:
 * **TP-Link TD-W8970 V1**
 * **ASUS DSL-N12E**
