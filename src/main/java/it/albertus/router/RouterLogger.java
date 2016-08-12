@@ -3,7 +3,7 @@ package it.albertus.router;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.gui.RouterLoggerGui;
 
-public class RouterLogger {
+public class RouterLogger {_
 
 	/** Unique entry point */
 	public static final void main(final String args[]) {
