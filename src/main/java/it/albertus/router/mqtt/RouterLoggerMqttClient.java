@@ -149,8 +149,9 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	public void disconnect() {
 		final Logger logger = Logger.getInstance();
 		try {
-			doDisconnect();
-			logger.log(Resources.get("msg.mqtt.disconnected"), Destination.CONSOLE);
+			if (doDisconnect()) {
+				logger.log(Resources.get("msg.mqtt.disconnected"), Destination.CONSOLE);
+			}
 		}
 		catch (final Exception e) {
 			logger.log(e, Destination.CONSOLE, Destination.FILE);

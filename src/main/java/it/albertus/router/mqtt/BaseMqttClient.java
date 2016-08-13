@@ -71,7 +71,7 @@ public abstract class BaseMqttClient {
 		}
 	}
 
-	protected synchronized void doDisconnect() throws MqttException {
+	protected synchronized boolean doDisconnect() throws MqttException {
 		if (client != null) {
 			if (client.isConnected()) {
 				try {
@@ -84,6 +84,10 @@ public abstract class BaseMqttClient {
 			}
 			client.close();
 			client = null;
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 
