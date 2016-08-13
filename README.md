@@ -374,7 +374,7 @@ Le seguenti propriet&agrave; consentono di personalizzare ulteriormente la confi
 
 ### Client MQTT (Message Queuing Telemetry Transport)
 
-RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messaggi sullo stato della connessione e del programma stesso. Per attivare e configurare il client MQTT sono disponibili le seguenti opzioni:
+RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messaggi [JSON](http://www.json.org) sullo stato della connessione e del programma stesso. Per attivare e configurare il client MQTT sono disponibili le seguenti opzioni:
 
 * **`mqtt.active`**= abilita il client MQTT (default: `false`).
 * **`mqtt.server.uri`**= elenco, separato da `|`, delle URI di collegamento al server MQTT. Tipicamente &egrave; sufficiente inserire un unico valore (es. `tcp://192.168.1.100:1883`).
