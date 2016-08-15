@@ -4,23 +4,21 @@ import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
+import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.util.Jsonable;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
-
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
 
 /** @Singleton */
 public class RouterLoggerMqttClient extends BaseMqttClient {
@@ -46,6 +44,12 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private static final String CFG_KEY_MQTT_DATA_RETAINED = "mqtt.data.retained";
 	private static final String CFG_KEY_MQTT_DATA_THROTTLING_MS = "mqtt.data.throttling.ms";
 
+	private static final String CFG_KEY_MQTT_THRESHOLDS_ENABLED = "mqtt.thresholds.enabled";
+	private static final String CFG_KEY_MQTT_THRESHOLDS_TOPIC = "mqtt.thresholds.topic";
+	private static final String CFG_KEY_MQTT_THRESHOLDS_QOS = "mqtt.thresholds.qos";
+	private static final String CFG_KEY_MQTT_THRESHOLDS_RETAINED = "mqtt.thresholds.retained";
+	private static final String CFG_KEY_MQTT_THRESHOLDS_THROTTLING_MS = "mqtt.thresholds.throttling.ms";
+
 	private static final String CFG_KEY_MQTT_STATUS_ENABLED = "mqtt.status.enabled";
 	private static final String CFG_KEY_MQTT_STATUS_TOPIC = "mqtt.status.topic";
 	private static final String CFG_KEY_MQTT_STATUS_QOS = "mqtt.status.qos";
@@ -69,6 +73,12 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		boolean DATA_RETAINED = true;
 		long DATA_THROTTLING_IN_MILLIS = 0;
 
+		boolean THRESHOLDS_ENABLED = true;
+		String THRESHOLDS_TOPIC = "router/logger/thresholds";
+		byte THRESHOLDS_QOS = MqttQos.AT_MOST_ONCE.getValue();
+		boolean THRESHOLDS_RETAINED = true;
+		long THRESHOLDS_THROTTLING_IN_MILLIS = 0;
+
 		boolean STATUS_ENABLED = true;
 		String STATUS_TOPIC = "router/logger/status";
 		byte STATUS_QOS = MqttQos.EXACTLY_ONCE.getValue();
@@ -85,7 +95,8 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
-	private long lastMessageTime;
+	private long lastDataMessageTime;
+	private long lastThresholdsMessageTime;
 
 	private RouterLoggerMqttClient() {}
 
@@ -159,7 +170,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	}
 
 	public void publish(final RouterData data) {
-		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastMessageTime >= configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
+		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastDataMessageTime >= configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_DATA_TOPIC, Defaults.DATA_TOPIC);
 			final MqttMessage message = new MqttMessage(createPayload(data.toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_DATA_RETAINED, Defaults.DATA_RETAINED));
@@ -170,7 +181,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			catch (final Exception e) {
 				Logger.getInstance().log(e);
 			}
-			lastMessageTime = System.currentTimeMillis();
+			lastDataMessageTime = System.currentTimeMillis();
 		}
 	}
 
@@ -189,38 +200,19 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		}
 	}
 
-	private class StatusPayload implements Serializable, Jsonable {
-
-		private static final long serialVersionUID = -6762977503263438592L;
-
-		private final Date timestamp;
-		private final String status;
-		private final String description;
-
-		public StatusPayload(final RouterLoggerStatus status) {
-			this.status = status.toString();
-			this.description = status.getDescription();
-			if (!RouterLoggerStatus.ABEND.equals(status)) {
-				this.timestamp = new Date();
+	public void publish(Map<Threshold, String> thresholdsReached, final Date timestamp) {
+		if (thresholdsReached != null && !thresholdsReached.isEmpty() && configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_THRESHOLDS_ENABLED, Defaults.THRESHOLDS_ENABLED) && System.currentTimeMillis() - lastThresholdsMessageTime >= configuration.getLong(CFG_KEY_MQTT_THRESHOLDS_THROTTLING_MS, Defaults.THRESHOLDS_THROTTLING_IN_MILLIS)) {
+			final String topic = configuration.getString(CFG_KEY_MQTT_THRESHOLDS_TOPIC, Defaults.THRESHOLDS_TOPIC);
+			final MqttMessage message = new MqttMessage(createPayload(new ThresholdsPayload(thresholdsReached, timestamp).toJson()));
+			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_THRESHOLDS_RETAINED, Defaults.THRESHOLDS_RETAINED));
+			message.setQos(configuration.getByte(CFG_KEY_MQTT_THRESHOLDS_QOS, Defaults.THRESHOLDS_QOS));
+			try {
+				doPublish(topic, message);
 			}
-			else {
-				this.timestamp = null;
+			catch (final Exception e) {
+				Logger.getInstance().log(e);
 			}
-		}
-
-		@Override
-		public String toString() {
-			return "StatusPayload [timestamp=" + timestamp + ", status=" + status + ", description=" + description + "]";
-		}
-
-		@Override
-		public String toJson() {
-			final StringBuilder json = new StringBuilder("{");
-			if (timestamp != null) {
-				json.append("\"timestamp\":\"").append(ISO8601Utils.format(timestamp, true, defaultTimeZone)).append("\",");
-			}
-			json.append("\"status\":\"").append(status).append("\",\"description\":\"").append(description).append("\"}");
-			return json.toString();
+			lastThresholdsMessageTime = System.currentTimeMillis();
 		}
 	}
 

@@ -406,6 +406,9 @@ public abstract class RouterLoggerEngine {
 
 			// Pubblica via MQTT
 			mqttClient.publish(currentData);
+			if (importantThresholdReached) {
+				mqttClient.publish(allThresholdsReached, currentData.getTimestamp());
+			}
 
 			if (exit) {
 				break;

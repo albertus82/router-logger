@@ -231,10 +231,22 @@ public enum RouterLoggerPreference implements Preference {
 		}
 	}, 0)).build()),
 	MQTT_DATA_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_RETAINED).parent(MQTT_DATA_ENABLED).build()),
+
 	MQTT_STATUS_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_ENABLED).parent(MQTT_ENABLED).build()),
 	MQTT_STATUS_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_TOPIC).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	MQTT_STATUS_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_QOS).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
 	MQTT_STATUS_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_RETAINED).parent(MQTT_STATUS_ENABLED).build()),
+
+	MQTT_THRESHOLDS_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_ENABLED).parent(MQTT_ENABLED).build()),
+	MQTT_THRESHOLDS_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_TOPIC).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	MQTT_THRESHOLDS_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_QOS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
+	MQTT_THRESHOLDS_THROTTLING_MS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.IntegerCombo, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(new LocalizedComboEntryNamesAndValues(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("lbl.preferences.mqtt.thresholds.throttling.disabled");
+		}
+	}, 0)).build()),
+	MQTT_THRESHOLDS_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_RETAINED).parent(MQTT_THRESHOLDS_ENABLED).build()),
 
 	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build()),
 	MQTT_AUTOMATIC_RECONNECT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.AUTOMATIC_RECONNECT).parent(MQTT_ENABLED).build()),
