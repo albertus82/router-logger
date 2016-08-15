@@ -402,6 +402,11 @@ RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messag
 * **`mqtt.status.topic`**= topic (argomento) dei messaggi contenenti lo stato dell'applicazione (default: `router/logger/status`).
 * **`mqtt.status.qos`**= Livello QoS dei messaggi contenenti lo stato dell'applicazione (default: `2`).
 * **`mqtt.status.retained`**= specifica se l'ultimo messaggio contenente lo stato dell'applicazione deve essere mantenuto sul server (default: `true`).
+* **`mqtt.thresholds.enabled`**= abilita la pubblicazione dei messaggi contenenti le soglie raggiunte (default: `true`).
+* **`mqtt.thresholds.topic`**= topic (argomento) dei messaggi contenenti le soglie raggiunte (default: `router/logger/data`).
+* **`mqtt.thresholds.qos`**= Livello QoS dei messaggi contenenti le soglie raggiunte (default: `0`).
+* **`mqtt.thresholds.retained`**= specifica se l'ultimo messaggio contenente le soglie raggiunte deve essere mantenuto sul server (default: `true`).
+* **`mqtt.thresholds.throttling.ms`**= intervallo minimo tra l'invio dei messaggi contenenti le raggiunte. Di norma viene inviato un messaggio per ogni iterazione in cui risulta raggiunta almeno una soglia non esclusa, ma pu&ograve; essere utile impostare questo valore per evitare un sovraccarico dei client riceventi o del broker, anche in ragione del fatto che quando viene raggiunta una soglia, tipicamente la frequenza di interrogazione aumenta (default `0`, ossia nessun intervallo minimo).
 
 
 ## Estensione
