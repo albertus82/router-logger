@@ -46,7 +46,7 @@ public class RouterData implements Serializable, Jsonable {
 
 	@Override
 	public String toJson() {
-		final StringBuilder json = new StringBuilder("{\"timestamp\":\"" + ISO8601Utils.format(timestamp, true, defaultTimeZone) + "\",\"responseTime\":" + responseTime);
+		final StringBuilder json = new StringBuilder("{\"timestamp\":\"").append(ISO8601Utils.format(timestamp, true, defaultTimeZone)).append("\",\"responseTime\":").append(responseTime);
 		if (data != null && !data.isEmpty()) {
 			json.append(",\"data\":{");
 			int index = 0;

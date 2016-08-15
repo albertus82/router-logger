@@ -33,10 +33,10 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private static final String CFG_KEY_MQTT_USERNAME = "mqtt.username";
 	private static final String CFG_KEY_MQTT_CLIENT_ID = "mqtt.client.id";
 	private static final String CFG_KEY_MQTT_SERVER_URI = "mqtt.server.uri";
-	private static final String CFG_KEY_MQTT_ACTIVE = "mqtt.active";
+	private static final String CFG_KEY_MQTT_ENABLED = "mqtt.enabled";
 	private static final String CFG_KEY_MQTT_AUTOMATIC_RECONNECT = "mqtt.automatic.reconnect";
 	private static final String CFG_KEY_MQTT_VERSION = "mqtt.version";
-	private static final String CFG_KEY_MQTT_PERSISTENCE_FILE_ACTIVE = "mqtt.persistence.file.active";
+	private static final String CFG_KEY_MQTT_PERSISTENCE_FILE_ENABLED = "mqtt.persistence.file.enabled";
 	private static final String CFG_KEY_MQTT_PERSISTENCE_FILE_CUSTOM = "mqtt.persistence.file.custom";
 	private static final String CFG_KEY_MQTT_PERSISTENCE_FILE_PATH = "mqtt.persistence.file.path";
 
@@ -52,7 +52,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private static final String CFG_KEY_MQTT_STATUS_RETAINED = "mqtt.status.retained";
 
 	public interface Defaults {
-		boolean ACTIVE = false;
+		boolean ENABLED = false;
 		String CLIENT_ID = "RouterLogger";
 		int KEEP_ALIVE_INTERVAL = MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT;
 		int CONNECTION_TIMEOUT = MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT;
@@ -60,7 +60,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		boolean CLEAN_SESSION = MqttConnectOptions.CLEAN_SESSION_DEFAULT;
 		boolean AUTOMATIC_RECONNECT = true;
 		byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
-		boolean PERSISTENCE_FILE_ACTIVE = false;
+		boolean PERSISTENCE_FILE_ENABLED = false;
 		boolean PERSISTENCE_FILE_CUSTOM = false;
 
 		boolean DATA_ENABLED = true;
@@ -122,7 +122,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			final String clientId = configuration.getString(CFG_KEY_MQTT_CLIENT_ID, Defaults.CLIENT_ID);
 
 			final MqttClientPersistence persistence;
-			if (configuration.getBoolean(CFG_KEY_MQTT_PERSISTENCE_FILE_ACTIVE, Defaults.PERSISTENCE_FILE_ACTIVE)) {
+			if (configuration.getBoolean(CFG_KEY_MQTT_PERSISTENCE_FILE_ENABLED, Defaults.PERSISTENCE_FILE_ENABLED)) {
 				final String directory = configuration.getString(CFG_KEY_MQTT_PERSISTENCE_FILE_PATH);
 				if (configuration.getBoolean(CFG_KEY_MQTT_PERSISTENCE_FILE_CUSTOM, Defaults.PERSISTENCE_FILE_CUSTOM) && directory != null && !directory.isEmpty()) {
 					persistence = new MqttDefaultFilePersistence(directory);
@@ -159,7 +159,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	}
 
 	public void publish(final RouterData data) {
-		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastMessageTime >= configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
+		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastMessageTime >= configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_DATA_TOPIC, Defaults.DATA_TOPIC);
 			final MqttMessage message = new MqttMessage(createPayload(data.toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_DATA_RETAINED, Defaults.DATA_RETAINED));
@@ -175,7 +175,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	}
 
 	public void publish(final RouterLoggerStatus status) {
-		if (configuration.getBoolean(CFG_KEY_MQTT_ACTIVE, Defaults.ACTIVE) && configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
+		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
 			final MqttMessage message = new MqttMessage(createPayload(new StatusPayload(status).toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
@@ -217,9 +217,9 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		public String toJson() {
 			final StringBuilder json = new StringBuilder("{");
 			if (timestamp != null) {
-				json.append("\"timestamp\":\"" + ISO8601Utils.format(timestamp, true, defaultTimeZone) + "\",");
+				json.append("\"timestamp\":\"").append(ISO8601Utils.format(timestamp, true, defaultTimeZone)).append("\",");
 			}
-			json.append("\"status\":\"" + status + "\",\"description\":\"" + description + "\"}");
+			json.append("\"status\":\"").append(status).append("\",\"description\":\"").append(description).append("\"}");
 			return json.toString();
 		}
 	}
