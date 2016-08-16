@@ -81,7 +81,7 @@ public abstract class RouterLoggerEngine {
 		this.previousStatus = this.currentStatus;
 		this.currentStatus = status;
 		if (!this.currentStatus.equals(this.previousStatus) || first) {
-			mqttClient.publish(status);
+			mqttClient.publishStatus(status);
 		}
 	}
 
@@ -407,9 +407,9 @@ public abstract class RouterLoggerEngine {
 			showInfo(currentData, allThresholdsReached);
 
 			// Pubblica via MQTT
-			mqttClient.publish(currentData);
+			mqttClient.publishData(currentData);
 			if (importantThresholdReached) {
-				mqttClient.publish(allThresholdsReached, currentData.getTimestamp());
+				mqttClient.publishThresholds(allThresholdsReached, currentData.getTimestamp());
 			}
 
 			if (exit) {

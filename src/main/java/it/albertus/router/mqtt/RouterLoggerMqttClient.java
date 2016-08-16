@@ -169,7 +169,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publish(final RouterData data) {
+	public void publishData(final RouterData data) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastDataMessageTime >= configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_DATA_TOPIC, Defaults.DATA_TOPIC);
 			final MqttMessage message = new MqttMessage(createPayload(data.toJson()));
@@ -185,7 +185,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publish(final RouterLoggerStatus status) {
+	public void publishStatus(final RouterLoggerStatus status) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
 			final MqttMessage message = new MqttMessage(createPayload(new StatusPayload(status).toJson()));
@@ -200,7 +200,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publish(Map<Threshold, String> thresholdsReached, final Date timestamp) {
+	public void publishThresholds(Map<Threshold, String> thresholdsReached, final Date timestamp) {
 		if (thresholdsReached != null && !thresholdsReached.isEmpty() && configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_THRESHOLDS_ENABLED, Defaults.THRESHOLDS_ENABLED) && System.currentTimeMillis() - lastThresholdsMessageTime >= configuration.getLong(CFG_KEY_MQTT_THRESHOLDS_THROTTLING_MS, Defaults.THRESHOLDS_THROTTLING_IN_MILLIS)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_THRESHOLDS_TOPIC, Defaults.THRESHOLDS_TOPIC);
 			final MqttMessage message = new MqttMessage(createPayload(new ThresholdsPayload(thresholdsReached, timestamp).toJson()));
