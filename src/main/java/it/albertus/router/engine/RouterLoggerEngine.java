@@ -54,7 +54,7 @@ public abstract class RouterLoggerEngine {
 	protected Thread pollingThread;
 	private volatile boolean interruptible = false;
 	protected volatile boolean exit = false;
-	protected Thread shutdownHook;
+	private Thread shutdownHook;
 
 	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
 	private RouterLoggerStatus previousStatus = null;
@@ -150,8 +150,10 @@ public abstract class RouterLoggerEngine {
 			@Override
 			public void run() {
 				if (reader != null) {
+					setStatus(RouterLoggerStatus.DISCONNECTING);
 					try {
 						reader.disconnect();
+						setStatus(RouterLoggerStatus.DISCONNECTED);
 					}
 					catch (final Exception e) {/* Ignore */}
 				}
@@ -168,7 +170,7 @@ public abstract class RouterLoggerEngine {
 			try {
 				Runtime.getRuntime().removeShutdownHook(shutdownHook);
 			}
-			catch (Exception e) {}
+			catch (Exception e) {/* Ignore */}
 		}
 	}
 
