@@ -104,7 +104,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	protected void connect() {
 		try {
 			final MqttConnectOptions options = new MqttConnectOptions();
-			final String[] serverURIs = configuration.getString(CFG_KEY_MQTT_SERVER_URI).split(UriListEditor.URI_SPLIT_REGEX);
+			final String[] serverURIs = configuration.getString(CFG_KEY_MQTT_SERVER_URI, "").split(UriListEditor.URI_SPLIT_REGEX);
 			if (serverURIs == null || serverURIs.length == 0 || serverURIs[0].trim().isEmpty()) {
 				throw new ConfigurationException(Resources.get("err.mqtt.cfg.error.uri"), CFG_KEY_MQTT_SERVER_URI);
 			}
