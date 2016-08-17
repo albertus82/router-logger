@@ -9,6 +9,7 @@ public class PreferenceData {
 	private final boolean restartRequired;
 	private final String configurationKey;
 	private final String labelResourceKey;
+	private final boolean separator;
 
 	public String getDefaultValue() {
 		return defaultValue;
@@ -30,12 +31,17 @@ public class PreferenceData {
 		return labelResourceKey;
 	}
 
+	public boolean hasSeparator() {
+		return separator;
+	}
+
 	public static class PreferenceDataBuilder {
 		private String defaultValue;
 		private Preference parent;
 		private boolean restartRequired;
 		private String configurationKey;
 		private String labelResourceKey;
+		private boolean separator;
 
 		public PreferenceDataBuilder defaultValue(final String defaultValue) {
 			this.defaultValue = defaultValue;
@@ -87,9 +93,22 @@ public class PreferenceData {
 			return this;
 		}
 
-		public PreferenceDataBuilder restartRequired(final boolean restartRequired) {
+		private PreferenceDataBuilder restartRequired(final boolean restartRequired) {
 			this.restartRequired = restartRequired;
 			return this;
+		}
+
+		public PreferenceDataBuilder restartRequired() {
+			return restartRequired(true);
+		}
+
+		private PreferenceDataBuilder separator(final boolean separator) {
+			this.separator = separator;
+			return this;
+		}
+
+		public PreferenceDataBuilder separator() {
+			return separator(true);
 		}
 
 		public PreferenceDataBuilder configurationKey(final String configurationKey) {
@@ -113,6 +132,7 @@ public class PreferenceData {
 		this.restartRequired = builder.restartRequired;
 		this.configurationKey = builder.configurationKey;
 		this.labelResourceKey = builder.labelResourceKey;
+		this.separator = builder.separator;
 	}
 
 }

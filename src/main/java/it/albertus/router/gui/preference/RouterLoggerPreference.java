@@ -183,14 +183,14 @@ public enum RouterLoggerPreference implements Preference {
 	EMAIL_CC_ADDRESSES(RouterLoggerPage.EMAIL_CC_BCC, FieldEditorType.EmailAddresses, new FieldEditorDataBuilder().horizontalSpan(0).build()),
 	EMAIL_BCC_ADDRESSES(RouterLoggerPage.EMAIL_CC_BCC, FieldEditorType.EmailAddresses, new FieldEditorDataBuilder().horizontalSpan(0).build()),
 
-	SERVER_ENABLED(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.ENABLED).restartRequired(true).build()),
-	SERVER_PORT(RouterLoggerPage.SERVER, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.PORT).restartRequired(true).parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
-	SERVER_AUTHENTICATION(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().parent(SERVER_ENABLED).defaultValue(BaseHttpServer.Defaults.AUTHENTICATION).restartRequired(true).build()),
+	SERVER_ENABLED(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.ENABLED).restartRequired().build()),
+	SERVER_PORT(RouterLoggerPage.SERVER, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.PORT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().integerValidRange(1, 65535).build()),
+	SERVER_AUTHENTICATION(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().parent(SERVER_ENABLED).defaultValue(BaseHttpServer.Defaults.AUTHENTICATION).restartRequired().build()),
 	SERVER_USERNAME(RouterLoggerPage.SERVER, FieldEditorType.FormattedString, new PreferenceDataBuilder().parent(SERVER_AUTHENTICATION).build()),
 	SERVER_PASSWORD(RouterLoggerPage.SERVER, FieldEditorType.Password, new PreferenceDataBuilder().parent(SERVER_AUTHENTICATION).build()),
 	SERVER_COMPRESS_RESPONSE(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(BaseHttpHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_ENABLED).build()),
 	SERVER_LOG_REQUEST(RouterLoggerPage.SERVER, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().defaultValue(BaseHttpHandler.Defaults.LOG_REQUEST).parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerPreferencePage.getLogComboOptions()).build()),
-	SERVER_THREADS(RouterLoggerPage.SERVER, FieldEditorType.ScaleInteger, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.THREADS).restartRequired(true).parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
+	SERVER_THREADS(RouterLoggerPage.SERVER, FieldEditorType.ScaleInteger, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.THREADS).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
 
 	SERVER_HANDLER_ROOT_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RootHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_RESTART_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RestartHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
@@ -206,20 +206,20 @@ public enum RouterLoggerPreference implements Preference {
 		}
 	}, 0)).build()),
 
-	SERVER_SSL_ENABLED(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(BaseHttpServer.Defaults.SSL_ENABLED).parent(SERVER_ENABLED).build()),
-	SERVER_SSL_KEYSTORE_TYPE(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired(true).defaultValue(BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
-	SERVER_SSL_KEYSTORE_FILE(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.FormattedFile, new PreferenceDataBuilder().restartRequired(true).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().fileExtensions(ServerHttpsPreferencePage.getKeyStoreFileExtensions()).build()),
-	SERVER_SSL_STOREPASS(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired(true).parent(SERVER_SSL_ENABLED).build()),
-	SERVER_SSL_KEYPASS(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired(true).parent(SERVER_SSL_ENABLED).build()),
-	SERVER_SSL_PROTOCOL(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired(true).defaultValue(BaseHttpServer.Defaults.SSL_PROTOCOL).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getSslContextAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
-	SERVER_SSL_KMF_ALGORITHM(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired(true).defaultValue(BaseHttpServer.Defaults.SSL_KMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
-	SERVER_SSL_TMF_ALGORITHM(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired(true).defaultValue(BaseHttpServer.Defaults.SSL_TMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_ENABLED(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_ENABLED).parent(SERVER_ENABLED).build()),
+	SERVER_SSL_KEYSTORE_TYPE(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_KEYSTORE_FILE(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.FormattedFile, new PreferenceDataBuilder().restartRequired().parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().fileExtensions(ServerHttpsPreferencePage.getKeyStoreFileExtensions()).build()),
+	SERVER_SSL_STOREPASS(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired().parent(SERVER_SSL_ENABLED).build()),
+	SERVER_SSL_KEYPASS(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired().parent(SERVER_SSL_ENABLED).build()),
+	SERVER_SSL_PROTOCOL(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_PROTOCOL).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getSslContextAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_KMF_ALGORITHM(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_KMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getKeyManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_TMF_ALGORITHM(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_TMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
 
 	MQTT_ENABLED(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.ENABLED).build()),
-	MQTT_SERVER_URI(RouterLoggerPage.MQTT, FieldEditorType.Uri, new PreferenceDataBuilder().restartRequired(true).parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().horizontalSpan(2).build()),
-	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired(true).parent(MQTT_ENABLED).build()),
-	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired(true).parent(MQTT_ENABLED).build()),
-	MQTT_CLIENT_ID(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.CLIENT_ID).parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	MQTT_SERVER_URI(RouterLoggerPage.MQTT, FieldEditorType.Uri, new PreferenceDataBuilder().restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().horizontalSpan(2).build()),
+	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired().parent(MQTT_ENABLED).build()),
+	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired().parent(MQTT_ENABLED).build()),
+	MQTT_CLIENT_ID(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLIENT_ID).parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 
 	MQTT_DATA_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_ENABLED).parent(MQTT_ENABLED).build()),
 	MQTT_DATA_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_TOPIC).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
@@ -232,12 +232,12 @@ public enum RouterLoggerPreference implements Preference {
 	}, 0)).build()),
 	MQTT_DATA_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_RETAINED).parent(MQTT_DATA_ENABLED).build()),
 
-	MQTT_STATUS_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_ENABLED).parent(MQTT_ENABLED).build()),
-	MQTT_STATUS_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_TOPIC).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	MQTT_STATUS_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_QOS).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
-	MQTT_STATUS_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.STATUS_RETAINED).parent(MQTT_STATUS_ENABLED).build()),
+	MQTT_STATUS_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().separator().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_ENABLED).parent(MQTT_ENABLED).build()),
+	MQTT_STATUS_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_TOPIC).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	MQTT_STATUS_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_QOS).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
+	MQTT_STATUS_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_RETAINED).parent(MQTT_STATUS_ENABLED).build()),
 
-	MQTT_THRESHOLDS_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_ENABLED).parent(MQTT_ENABLED).build()),
+	MQTT_THRESHOLDS_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().separator().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_ENABLED).parent(MQTT_ENABLED).build()),
 	MQTT_THRESHOLDS_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_TOPIC).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	MQTT_THRESHOLDS_QOS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_QOS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
 	MQTT_THRESHOLDS_THROTTLING_MS(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.IntegerCombo, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(new LocalizedComboEntryNamesAndValues(new Localized() {
@@ -248,15 +248,15 @@ public enum RouterLoggerPreference implements Preference {
 	}, 0)).build()),
 	MQTT_THRESHOLDS_RETAINED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_RETAINED).parent(MQTT_THRESHOLDS_ENABLED).build()),
 
-	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build()),
-	MQTT_AUTOMATIC_RECONNECT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.AUTOMATIC_RECONNECT).parent(MQTT_ENABLED).build()),
-	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT).parent(MQTT_ENABLED).build()),
-	MQTT_KEEP_ALIVE_INTERVAL(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL).parent(MQTT_ENABLED).build()),
-	MQTT_MAX_INFLIGHT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT).parent(MQTT_ENABLED).build()),
-	MQTT_VERSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.MQTT_VERSION).parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
-	MQTT_PERSISTENCE_FILE_ENABLED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_ENABLED).parent(MQTT_ENABLED).build()),
-	MQTT_PERSISTENCE_FILE_CUSTOM(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired(true).defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_CUSTOM).parent(MQTT_PERSISTENCE_FILE_ENABLED).build()),
-	MQTT_PERSISTENCE_FILE_PATH(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedDirectory, new PreferenceDataBuilder().restartRequired(true).defaultValue(System.getProperty("user.dir")).parent(MQTT_PERSISTENCE_FILE_CUSTOM).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(new Localized() {
+	MQTT_CLEAN_SESSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build()),
+	MQTT_AUTOMATIC_RECONNECT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.AUTOMATIC_RECONNECT).parent(MQTT_ENABLED).build()),
+	MQTT_CONNECTION_TIMEOUT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT).parent(MQTT_ENABLED).build()),
+	MQTT_KEEP_ALIVE_INTERVAL(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL).parent(MQTT_ENABLED).build()),
+	MQTT_MAX_INFLIGHT(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedInteger, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT).parent(MQTT_ENABLED).build()),
+	MQTT_VERSION(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MQTT_VERSION).parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().comboEntryNamesAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
+	MQTT_PERSISTENCE_FILE_ENABLED(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_ENABLED).parent(MQTT_ENABLED).build()),
+	MQTT_PERSISTENCE_FILE_CUSTOM(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_CUSTOM).parent(MQTT_PERSISTENCE_FILE_ENABLED).build()),
+	MQTT_PERSISTENCE_FILE_PATH(RouterLoggerPage.MQTT_ADVANCED, FieldEditorType.FormattedDirectory, new PreferenceDataBuilder().restartRequired().defaultValue(System.getProperty("user.dir")).parent(MQTT_PERSISTENCE_FILE_CUSTOM).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
 			return Resources.get("msg.preferences.directory.dialog.message.mqtt");
@@ -273,6 +273,7 @@ public enum RouterLoggerPreference implements Preference {
 	private final String configurationKey;
 	private final String labelKey;
 	private final boolean restartRequired;
+	private final boolean separator;
 
 	private RouterLoggerPreference(final Page page, final FieldEditorType fieldEditorType) {
 		this(page, fieldEditorType, null, null);
@@ -305,6 +306,7 @@ public enum RouterLoggerPreference implements Preference {
 			this.defaultValue = preferenceData.getDefaultValue();
 			this.parent = preferenceData.getParent();
 			this.restartRequired = preferenceData.isRestartRequired();
+			this.separator = preferenceData.hasSeparator();
 		}
 		else {
 			this.configurationKey = name().toLowerCase().replace('_', '.');
@@ -312,6 +314,7 @@ public enum RouterLoggerPreference implements Preference {
 			this.restartRequired = false;
 			this.defaultValue = null;
 			this.parent = null;
+			this.separator = false;
 		}
 		this.fieldEditorData = fieldEditorData;
 		this.fieldEditorType = fieldEditorType;
@@ -346,6 +349,11 @@ public enum RouterLoggerPreference implements Preference {
 	@Override
 	public boolean isRestartRequired() {
 		return restartRequired;
+	}
+
+	@Override
+	public boolean hasSeparator() {
+		return separator;
 	}
 
 	@Override

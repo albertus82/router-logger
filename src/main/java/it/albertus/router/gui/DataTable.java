@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -67,7 +68,7 @@ public class DataTable {
 
 	private int iteration;
 
-	private final Table table;
+	private final TableViewer tableViewer;
 
 	private final Menu contextMenu;
 	private final MenuItem copyMenuItem;
@@ -86,7 +87,8 @@ public class DataTable {
 	 * combinazioni di tasti saranno ignorate.
 	 */
 	protected DataTable(final Composite parent, final Object layoutData, final RouterLoggerGui gui) {
-		table = new Table(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		tableViewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		final Table table = tableViewer.getTable();
 		table.setLayoutData(layoutData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -129,84 +131,96 @@ public class DataTable {
 
 	/** Copies the current selection to the clipboard. */
 	public void copy() {
-		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
-			StringBuilder data = new StringBuilder();
+		if (tableViewer != null) {
+			final Table table = tableViewer.getTable();
+			if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
+				StringBuilder data = new StringBuilder();
 
-			// Testata...
-			for (final TableColumn column : table.getColumns()) {
-				data.append(column.getText()).append(FIELD_SEPARATOR);
-			}
-			data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
-			if (data.length() > configuration.getInt(RouterLoggerGui.CFG_KEY_GUI_CLIPBOARD_MAX_CHARS, RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
-				final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_WARNING);
-				messageBox.setText(Resources.get("lbl.window.title"));
-				messageBox.setMessage(Resources.get("err.clipboard.cannot.copy"));
-				messageBox.open();
-				return;
-			}
+				// Testata...
+				for (final TableColumn column : table.getColumns()) {
+					data.append(column.getText()).append(FIELD_SEPARATOR);
+				}
+				data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
+				if (data.length() > configuration.getInt(RouterLoggerGui.CFG_KEY_GUI_CLIPBOARD_MAX_CHARS, RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
+					final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_WARNING);
+					messageBox.setText(Resources.get("lbl.window.title"));
+					messageBox.setMessage(Resources.get("err.clipboard.cannot.copy"));
+					messageBox.open();
+					return;
+				}
 
-			// Dati selezionati (ogni TableItem rappresenta una riga)...
-			boolean limited = false;
-			final int columnCount = table.getColumnCount();
-			for (final TableItem item : table.getSelection()) {
-				final StringBuilder row = new StringBuilder();
-				for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-					row.append(item.getText(columnIndex));
-					if (columnIndex != columnCount - 1) {
-						row.append(FIELD_SEPARATOR);
+				// Dati selezionati (ogni TableItem rappresenta una riga)...
+				boolean limited = false;
+				final int columnCount = table.getColumnCount();
+				for (final TableItem item : table.getSelection()) {
+					final StringBuilder row = new StringBuilder();
+					for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+						row.append(item.getText(columnIndex));
+						if (columnIndex != columnCount - 1) {
+							row.append(FIELD_SEPARATOR);
+						}
+						else {
+							row.append(NewLine.SYSTEM_LINE_SEPARATOR);
+						}
+					}
+					if (row.length() + data.length() > configuration.getInt(RouterLoggerGui.CFG_KEY_GUI_CLIPBOARD_MAX_CHARS, RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
+						limited = true;
+						break;
 					}
 					else {
-						row.append(NewLine.SYSTEM_LINE_SEPARATOR);
+						data.append(row);
 					}
 				}
-				if (row.length() + data.length() > configuration.getInt(RouterLoggerGui.CFG_KEY_GUI_CLIPBOARD_MAX_CHARS, RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
-					limited = true;
-					break;
-				}
-				else {
-					data.append(row);
-				}
-			}
 
-			// Inserimento dati negli appunti...
-			final Clipboard clipboard = new Clipboard(table.getDisplay());
-			clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
-			clipboard.dispose();
-			if (limited) {
-				final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_INFORMATION);
-				messageBox.setText(Resources.get("lbl.window.title"));
-				messageBox.setMessage(Resources.get("err.clipboard.limited.copy", data.length()));
-				messageBox.open();
+				// Inserimento dati negli appunti...
+				final Clipboard clipboard = new Clipboard(table.getDisplay());
+				clipboard.setContents(new String[] { data.toString() }, new TextTransfer[] { TextTransfer.getInstance() });
+				clipboard.dispose();
+				if (limited) {
+					final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_INFORMATION);
+					messageBox.setText(Resources.get("lbl.window.title"));
+					messageBox.setMessage(Resources.get("err.clipboard.limited.copy", data.length()));
+					messageBox.open();
+				}
 			}
 		}
 	}
 
 	public void delete() {
-		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
-			table.setRedraw(false);
-			table.remove(table.getSelectionIndices());
-			table.setRedraw(true);
+		if (tableViewer != null) {
+			final Table table = tableViewer.getTable();
+			if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0 && table.getSelectionCount() > 0) {
+				table.setRedraw(false);
+				table.remove(table.getSelectionIndices());
+				table.setRedraw(true);
+			}
 		}
 	}
 
 	public void clear() {
-		if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0) {
-			table.setRedraw(false);
-			table.removeAll();
-			table.setRedraw(true);
+		if (tableViewer != null) {
+			final Table table = tableViewer.getTable();
+			if (table != null && !table.isDisposed() && table.getColumns() != null && table.getColumns().length != 0) {
+				table.setRedraw(false);
+				table.removeAll();
+				table.setRedraw(true);
+			}
 		}
 	}
 
 	public void reset() {
-		if (table != null && !table.isDisposed()) {
-			table.setRedraw(false);
-			table.removeAll();
-			iteration = 0;
-			for (final TableColumn tc : table.getColumns()) {
-				tc.dispose();
+		if (tableViewer != null) {
+			final Table table = tableViewer.getTable();
+			if (table != null && !table.isDisposed()) {
+				table.setRedraw(false);
+				table.removeAll();
+				iteration = 0;
+				for (final TableColumn tc : table.getColumns()) {
+					tc.dispose();
+				}
+				table.setData(TableDataKey.INITIALIZED.toString(), false);
+				table.setRedraw(true);
 			}
-			table.setData(TableDataKey.INITIALIZED.toString(), false);
-			table.setRedraw(true);
 		}
 	}
 
@@ -219,11 +233,11 @@ public class DataTable {
 	}
 
 	public boolean canCopy() {
-		return table != null && table.getSelectionCount() > 0;
+		return tableViewer != null && tableViewer.getTable() != null && tableViewer.getTable().getSelectionCount() > 0;
 	}
 
 	public boolean canSelectAll() {
-		return table != null && table.getItemCount() > 0;
+		return tableViewer != null && tableViewer.getTable() != null && tableViewer.getTable().getItemCount() > 0;
 	}
 
 	public void addRow(final int iteration, final RouterData data, final Map<Threshold, String> thresholdsReached) {
@@ -231,6 +245,7 @@ public class DataTable {
 			final Map<String, String> info = data.getData();
 			final String timestamp = dateFormatTable.format(data.getTimestamp());
 			final int maxItems = configuration.getInt("gui.table.items.max", Defaults.MAX_ITEMS);
+			final Table table = tableViewer.getTable();
 			new SwtThreadExecutor(table) {
 				@Override
 				protected void run() {
@@ -368,8 +383,12 @@ public class DataTable {
 		}
 	}
 
+	public TableViewer getTableViewer() {
+		return tableViewer;
+	}
+
 	public Table getTable() {
-		return table;
+		return tableViewer != null ? tableViewer.getTable() : null;
 	}
 
 	public Menu getContextMenu() {
