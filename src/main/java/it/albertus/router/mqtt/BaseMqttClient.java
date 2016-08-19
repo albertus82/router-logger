@@ -5,6 +5,7 @@ import it.albertus.router.util.Logger.Destination;
 
 import java.io.UnsupportedEncodingException;
 
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -68,6 +69,15 @@ public abstract class BaseMqttClient {
 		}
 		if (client != null && client.isConnected()) {
 			client.publish(topic, message);
+		}
+	}
+
+	protected synchronized void doSubscribe(final String topic, final int qos, final IMqttMessageListener listener) throws MqttException {
+		if (client == null) {
+			connect(); // Lazy connection.
+		}
+		if (client != null && client.isConnected()) {
+			client.subscribe(topic, qos, listener);
 		}
 	}
 
