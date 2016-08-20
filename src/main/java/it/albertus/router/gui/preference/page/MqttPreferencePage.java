@@ -1,7 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
-import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
+import it.albertus.jface.preference.LocalizedNamesAndValues;
 import it.albertus.router.mqtt.MqttQos;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Localized;
@@ -20,9 +20,9 @@ public class MqttPreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	public static LocalizedComboEntryNamesAndValues getMqttQosComboOptions() {
+	public static LocalizedNamesAndValues getMqttQosComboOptions() {
 		final MqttQos[] values = MqttQos.values();
-		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
+		final LocalizedNamesAndValues options = new LocalizedNamesAndValues(values.length);
 		for (final MqttQos qos : values) {
 			final byte value = qos.getValue();
 			final Localized name = new Localized() {

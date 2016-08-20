@@ -1,7 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
-import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
+import it.albertus.jface.preference.LocalizedNamesAndValues;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Localized;
 
@@ -19,9 +19,9 @@ public class ServerPreferencePage extends BasePreferencePage {
 		return header;
 	}
 
-	public static LocalizedComboEntryNamesAndValues getLogComboOptions() {
+	public static LocalizedNamesAndValues getLogComboOptions() {
 		final int length = 4;
-		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(length);
+		final LocalizedNamesAndValues options = new LocalizedNamesAndValues(length);
 		for (int index = 0; index < length; index++) {
 			final int value = index;
 			final Localized name = new Localized() {

@@ -1,7 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
-import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
+import it.albertus.jface.preference.LocalizedNamesAndValues;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
@@ -45,9 +45,9 @@ public class WriterPreferencePage extends BasePreferencePage {
 		}
 	}
 
-	public static LocalizedComboEntryNamesAndValues getWriterComboOptions() {
+	public static LocalizedNamesAndValues getWriterComboOptions() {
 		final WriterComboData[] values = WriterComboData.values();
-		final LocalizedComboEntryNamesAndValues options = new LocalizedComboEntryNamesAndValues(values.length);
+		final LocalizedNamesAndValues options = new LocalizedNamesAndValues(values.length);
 		for (final WriterComboData comboData : values) {
 			final String value = comboData.writerClass.getSimpleName();
 			final Localized name = new Localized() {

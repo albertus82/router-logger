@@ -3,6 +3,7 @@ package it.albertus.router.gui.preference;
 import it.albertus.jface.preference.FieldEditorData;
 import it.albertus.jface.preference.field.ComboFieldEditor;
 import it.albertus.jface.preference.field.DefaultBooleanFieldEditor;
+import it.albertus.jface.preference.field.DelimiterComboFieldEditor;
 import it.albertus.jface.preference.field.EditableComboFieldEditor;
 import it.albertus.jface.preference.field.EmailAddressesListEditor;
 import it.albertus.jface.preference.field.FormattedComboFieldEditor;
@@ -18,7 +19,6 @@ import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.router.gui.Images;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
-import it.albertus.router.gui.preference.field.DelimiterComboFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
@@ -39,9 +39,9 @@ public final class FieldEditorFactory {
 		case Boolean:
 			return new BooleanFieldEditor(name, label, parent);
 		case Combo:
-			return new ComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+			return new ComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case DatabaseCombo:
-			return new DatabaseComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+			return new DatabaseComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case DefaultBoolean:
 			return new DefaultBooleanFieldEditor(name, label, parent);
 		case DelimiterCombo:
@@ -49,13 +49,13 @@ public final class FieldEditorFactory {
 		case Directory:
 			return createDirectoryFieldEditor(name, label, parent, data);
 		case EditableCombo:
-			return new EditableComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+			return new EditableComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case EmailAddresses:
 			return new EmailAddressesListEditor(name, label, parent, data.getHorizontalSpan(), Images.MAIN_ICONS);
 		case File:
 			return createFileFieldEditor(name, label, parent, data);
 		case FormattedCombo:
-			return new FormattedComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+			return new FormattedComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case FormattedDirectory:
 			return createFormattedDirectoryFieldEditor(name, label, parent, data);
 		case FormattedFile:
@@ -67,11 +67,11 @@ public final class FieldEditorFactory {
 		case Integer:
 			return createIntegerFieldEditor(name, label, parent, data);
 		case IntegerCombo:
-			return new IntegerComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+			return new IntegerComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case Password:
 			return createPasswordFieldEditor(name, label, parent, data);
 		case ReaderCombo:
-			return new ReaderComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+			return new ReaderComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case Scale:
 			return createScaleFieldEditor(name, label, parent, data);
 		case ScaleInteger:
@@ -87,14 +87,14 @@ public final class FieldEditorFactory {
 		case WrapString:
 			return createWrapStringFieldEditor(name, label, parent, data);
 		case WriterCombo:
-			return new WriterComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+			return new WriterComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		default:
 			throw new IllegalStateException("Unsupported FieldEditor: " + type);
 		}
 	}
 
 	private static FieldEditor createDelimiterComboFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
-		final DelimiterComboFieldEditor delimiterComboFieldEditor = new DelimiterComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+		final DelimiterComboFieldEditor delimiterComboFieldEditor = new DelimiterComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		if (data.getEmptyStringAllowed() != null) {
 			delimiterComboFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
 		}
@@ -320,7 +320,7 @@ public final class FieldEditorFactory {
 	}
 
 	private static FieldEditor createValidatedComboFieldEditor(final String name, final String label, final Composite parent, final FieldEditorData data) {
-		final ValidatedComboFieldEditor validatedComboFieldEditor = new ValidatedComboFieldEditor(name, label, data.getComboEntryNamesAndValues().toArray(), parent);
+		final ValidatedComboFieldEditor validatedComboFieldEditor = new ValidatedComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		if (data.getEmptyStringAllowed() != null) {
 			validatedComboFieldEditor.setEmptyStringAllowed(data.getEmptyStringAllowed());
 		}

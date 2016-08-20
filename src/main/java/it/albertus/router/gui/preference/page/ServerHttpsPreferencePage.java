@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.LocalizedComboEntryNamesAndValues;
+import it.albertus.jface.preference.LocalizedNamesAndValues;
 import it.albertus.router.server.BaseHttpServer;
 import it.albertus.util.Localized;
 
@@ -51,19 +51,19 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 		}
 	}
 
-	public static LocalizedComboEntryNamesAndValues getKeyManagerFactoryComboOptions() {
+	public static LocalizedNamesAndValues getKeyManagerFactoryComboOptions() {
 		return buildComboOptionsArray(keyManagerFactoryAlgorithms);
 	}
 
-	public static LocalizedComboEntryNamesAndValues getTrustManagerFactoryComboOptions() {
+	public static LocalizedNamesAndValues getTrustManagerFactoryComboOptions() {
 		return buildComboOptionsArray(trustManagerFactoryAlgorithms);
 	}
 
-	public static LocalizedComboEntryNamesAndValues getKeyStoreAlgorithmsComboOptions() {
+	public static LocalizedNamesAndValues getKeyStoreAlgorithmsComboOptions() {
 		return buildComboOptionsArray(keyStoreAlgorithms);
 	}
 
-	public static LocalizedComboEntryNamesAndValues getSslContextAlgorithmsComboOptions() {
+	public static LocalizedNamesAndValues getSslContextAlgorithmsComboOptions() {
 		return buildComboOptionsArray(sslContextAlgorithms);
 	}
 
@@ -71,8 +71,8 @@ public class ServerHttpsPreferencePage extends ServerPreferencePage {
 		return KEY_STORE_FILE_EXTENSIONS;
 	}
 
-	public static LocalizedComboEntryNamesAndValues buildComboOptionsArray(final Set<String> options) {
-		final LocalizedComboEntryNamesAndValues entries = new LocalizedComboEntryNamesAndValues(options.size());
+	public static LocalizedNamesAndValues buildComboOptionsArray(final Set<String> options) {
+		final LocalizedNamesAndValues entries = new LocalizedNamesAndValues(options.size());
 		for (final String value : options) {
 			final Localized name = new Localized() {
 				@Override
