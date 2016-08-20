@@ -121,10 +121,6 @@ public abstract class BaseMqttClient {
 		return payload;
 	}
 
-	public boolean isConnected() {
-		return client != null && client.isConnected();
-	}
-
 	public MqttClient getClient() {
 		return client;
 	}
