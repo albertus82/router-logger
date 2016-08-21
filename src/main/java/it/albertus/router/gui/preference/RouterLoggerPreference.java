@@ -220,6 +220,7 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired().parent(MQTT_ENABLED).build()),
 	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired().parent(MQTT_ENABLED).build()),
 	MQTT_CLIENT_ID(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLIENT_ID).parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	MQTT_CONNECT_RETRY(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECT_RETRY).parent(MQTT_ENABLED).build()),
 
 	MQTT_DATA_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_ENABLED).parent(MQTT_ENABLED).build()),
 	MQTT_DATA_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_TOPIC).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),

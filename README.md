@@ -381,7 +381,8 @@ RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messag
 * **`mqtt.username`**= nome utente per la connessione al server MQTT (se richiesto dal server).
 * **`mqtt.password`**= password per la connessione al server MQTT (se richiesta dal server).
 * **`mqtt.clean.session`**= se attiva, questa opzione disabilita la persistenza della sessione del client. Questa opzione dovrebbe essere mantenuta sempre attiva, in quanto RouterLogger si limita a pubblicare messaggi (default: `true`).
-* **`mqtt.automatic.reconnect`**= specifica se ritentare automaticamente la connessione in caso di problemi di comunicazione (default: `true`).
+* **`mqtt.automatic.reconnect`**= specifica se tentare automaticamente la riconnessione in caso di disconnessione dovuta a problemi di rete (default: `true`).
+* **`mqtt.connect.retry`**= specifica se ritentare automaticamente la connessione in caso di problemi di comunicazione (default: `true`).
 * **`mqtt.client.id`**= identificativo univoco del client (default: `RouterLogger`).
 * **`mqtt.connection.timeout`**= timeout della connessione in secondi, ossia il tempo di attesa massimo *in fase di connessione*, trascorso il quale si assume che il server non sia raggiungibile (default: `30` secondi).
 * **`mqtt.keep.alive.interval`**= tempo di inattivit&agrave; massimo *durante la comunicazione* con il server, in secondi, trascorso il quale si assume che la comunicazione si sia interrotta (default: `60` secondi).

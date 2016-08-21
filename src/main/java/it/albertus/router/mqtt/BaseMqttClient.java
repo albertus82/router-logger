@@ -21,11 +21,13 @@ public abstract class BaseMqttClient {
 	protected class MqttClientStartThread extends Thread {
 
 		private final MqttConnectOptions options;
+		private final boolean retry;
 
-		protected MqttClientStartThread(final MqttConnectOptions options) {
+		protected MqttClientStartThread(final MqttConnectOptions options, final boolean retry) {
 			this.setName("mqttClientStartThread");
 			this.setDaemon(true);
 			this.options = options;
+			this.retry = retry;
 		}
 
 		@Override
@@ -34,7 +36,18 @@ public abstract class BaseMqttClient {
 				client.connect(options);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(e);
+				final Logger logger = Logger.getInstance();
+				logger.log(e.getCause(), Destination.CONSOLE);
+				logger.log(e, Destination.FILE, Destination.EMAIL);
+				if (retry) {
+					try {
+						client.close();
+					}
+					catch (final MqttException me) {
+						logger.log(me);
+					}
+					client = null;
+				}
 			}
 		}
 	}
@@ -50,11 +63,11 @@ public abstract class BaseMqttClient {
 		}
 	}
 
-	protected synchronized void doConnect(final String clientId, final MqttConnectOptions options, final MqttClientPersistence persistence) throws MqttException {
+	protected synchronized void doConnect(final String clientId, final MqttConnectOptions options, final MqttClientPersistence persistence, final boolean retry) throws MqttException {
 		if (client == null) {
 			client = new MqttClient(options.getServerURIs()[0], clientId, persistence);
 			client.setCallback(new MqttCallback(clientId));
-			final Thread starter = new MqttClientStartThread(options);
+			final Thread starter = new MqttClientStartThread(options, retry);
 			starter.start();
 			try {
 				starter.join();

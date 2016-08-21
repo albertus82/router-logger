@@ -28,6 +28,10 @@ public class Logger {
 	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
 	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+	private synchronized String formatTimestamp(final Date timestamp) {
+		return dateFormatLog.format(timestamp);
+	}
+
 	private static class Singleton {
 		private static final Logger instance = new Logger();
 	}
@@ -130,7 +134,7 @@ public class Logger {
 	}
 
 	private void logToConsole(final String text) {
-		final String base = dateFormatLog.format(new Date()) + ' ';
+		final String base = formatTimestamp(new Date()) + ' ';
 		out.println(base + StringUtils.trimToEmpty(text), true);
 	}
 
