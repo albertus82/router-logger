@@ -26,10 +26,10 @@ public class Logger {
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE, Destination.EMAIL };
 
 	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
-	private static final DateFormat dateFormatLog = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private static final DateFormat timestampFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-	private synchronized String formatTimestamp(final Date timestamp) {
-		return dateFormatLog.format(timestamp);
+	private static synchronized String formatTimestamp(final Date timestamp) {
+		return timestampFormat.format(timestamp);
 	}
 
 	private static class Singleton {
