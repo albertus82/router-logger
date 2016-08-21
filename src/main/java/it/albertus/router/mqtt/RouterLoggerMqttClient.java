@@ -150,7 +150,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 
 			doConnect(clientId, options, persistence, configuration.getBoolean(CFG_KEY_MQTT_CONNECT_RETRY, Defaults.CONNECT_RETRY));
 			if (Logger.getInstance().isDebugEnabled()) {
-				System.out.println(options.toString().trim());
+				System.out.println(options.toString().trim() + "======");
 			}
 		}
 		catch (final Exception e) {
