@@ -65,6 +65,7 @@ public class TrayIcon {
 		case STARTING:
 		case CONNECTING:
 		case DISCONNECTED:
+		case CLOSED:
 			return Images.TRAY_ICON_INACTIVE;
 		case RECONNECTING:
 			return Images.TRAY_ICON_INACTIVE_CLOCK;
