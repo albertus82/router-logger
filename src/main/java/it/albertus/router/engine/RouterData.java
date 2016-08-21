@@ -1,6 +1,6 @@
 package it.albertus.router.engine;
 
-import it.albertus.router.util.Jsonable;
+import it.albertus.util.Jsonable;
 
 import java.io.Serializable;
 import java.util.Date;
