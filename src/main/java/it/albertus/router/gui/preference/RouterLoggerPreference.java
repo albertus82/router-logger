@@ -5,6 +5,8 @@ import it.albertus.jface.preference.FieldEditorData;
 import it.albertus.jface.preference.FieldEditorData.FieldEditorDataBuilder;
 import it.albertus.jface.preference.LocalizedNamesAndValues;
 import it.albertus.jface.preference.Preference;
+import it.albertus.jface.preference.PreferenceData;
+import it.albertus.jface.preference.PreferenceData.PreferenceDataBuilder;
 import it.albertus.jface.preference.page.AbstractPreferencePage;
 import it.albertus.jface.preference.page.Page;
 import it.albertus.router.console.RouterLoggerConsole;
@@ -16,7 +18,6 @@ import it.albertus.router.gui.CloseMessageBox;
 import it.albertus.router.gui.DataTable;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TrayIcon;
-import it.albertus.router.gui.preference.PreferenceData.PreferenceDataBuilder;
 import it.albertus.router.gui.preference.page.AdvancedMqttPreferencePage;
 import it.albertus.router.gui.preference.page.CsvPreferencePage;
 import it.albertus.router.gui.preference.page.DatabasePreferencePage;
@@ -220,7 +221,7 @@ public enum RouterLoggerPreference implements Preference {
 	MQTT_USERNAME(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired().parent(MQTT_ENABLED).build()),
 	MQTT_PASSWORD(RouterLoggerPage.MQTT, FieldEditorType.Password, new PreferenceDataBuilder().restartRequired().parent(MQTT_ENABLED).build()),
 	MQTT_CLIENT_ID(RouterLoggerPage.MQTT, FieldEditorType.FormattedString, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLIENT_ID).parent(MQTT_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
-	MQTT_CONNECT_RETRY(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECT_RETRY).parent(MQTT_ENABLED).build()),
+	MQTT_CONNECT_RETRY(RouterLoggerPage.MQTT, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().separator().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECT_RETRY).parent(MQTT_ENABLED).build()),
 
 	MQTT_DATA_ENABLED(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_ENABLED).parent(MQTT_ENABLED).build()),
 	MQTT_DATA_TOPIC(RouterLoggerPage.MQTT_MESSAGES, FieldEditorType.FormattedString, new PreferenceDataBuilder().defaultValue(RouterLoggerMqttClient.Defaults.DATA_TOPIC).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
