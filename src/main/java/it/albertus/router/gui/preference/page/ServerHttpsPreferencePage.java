@@ -15,7 +15,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-public class ServerHttpsPreferencePage extends ServerPreferencePage {
+public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 
 	private static final String[] KEY_STORE_FILE_EXTENSIONS = { "*.JKS;*.jks", "*.P12;*.p12;*.PFX;*.pfx", "*.*" };
 
