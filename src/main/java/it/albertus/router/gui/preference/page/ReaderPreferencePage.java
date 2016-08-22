@@ -1,6 +1,5 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.TextFormatter;
 import it.albertus.jface.preference.LocalizedNamesAndValues;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
@@ -10,19 +9,7 @@ import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Localized;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-
-public class ReaderPreferencePage extends BasePreferencePage {
-
-	@Override
-	protected Control createHeader() {
-		final Label header = new Label(getFieldEditorParent(), SWT.WRAP);
-		TextFormatter.setBoldFontStyle(header);
-		header.setText(Resources.get("lbl.preferences.reader.header"));
-		return header;
-	}
+public class ReaderPreferencePage extends RestartHeaderPreferencePage {
 
 	protected enum ReaderComboData {
 		TPLINK_8970(TpLink8970Reader.DEVICE_MODEL_KEY, TpLink8970Reader.class),
