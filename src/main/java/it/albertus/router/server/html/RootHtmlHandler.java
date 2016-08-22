@@ -1,4 +1,4 @@
-package it.albertus.router.server;
+package it.albertus.router.server.html;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class RootHandler extends BaseHttpHandler {
+public class RootHtmlHandler extends BaseHtmlHandler {
 
 	public interface Defaults {
 		boolean ENABLED = true;
@@ -21,7 +21,7 @@ public class RootHandler extends BaseHttpHandler {
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
-	protected RootHandler(RouterLoggerEngine engine) {
+	public RootHtmlHandler(RouterLoggerEngine engine) {
 		super(engine);
 	}
 
@@ -35,8 +35,8 @@ public class RootHandler extends BaseHttpHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.home")));
 		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(version.getDate()).append(")</h3>").append(NewLine.CRLF.toString());
 
-		if (configuration.getBoolean(StatusHandler.CFG_KEY_ENABLED, StatusHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(StatusHandler.PATH).append("\" method=\"").append(StatusHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
+		if (configuration.getBoolean(StatusHtmlHandler.CFG_KEY_ENABLED, StatusHtmlHandler.Defaults.ENABLED)) {
+			html.append("<form action=\"").append(StatusHtmlHandler.PATH).append("\" method=\"").append(StatusHtmlHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
 		}
 		if (configuration.getBoolean(RestartHandler.CFG_KEY_ENABLED, RestartHandler.Defaults.ENABLED)) {
 			html.append("<form action=\"").append(RestartHandler.PATH).append("\" method=\"").append(RestartHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.restart")).append("\" onclick=\"return confirm('").append(Resources.get("msg.confirm.restart.message")).append("')\" /></form>").append(NewLine.CRLF.toString());

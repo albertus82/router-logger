@@ -1,4 +1,4 @@
-package it.albertus.router.server;
+package it.albertus.router.server.html;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Resources;
@@ -9,18 +9,18 @@ import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class DisconnectHandler extends BaseHttpHandler {
+public class CloseHandler extends BaseHtmlHandler {
 
 	public interface Defaults {
 		boolean ENABLED = false;
 	}
 
-	public static final String PATH = "/disconnect";
+	public static final String PATH = "/close";
 	public static final String[] METHODS = { "POST" };
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
+	protected static final String CFG_KEY_ENABLED = "server.handler.close.enabled";
 
-	protected DisconnectHandler(final RouterLoggerEngine engine) {
+	public CloseHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
 
@@ -30,17 +30,15 @@ public class DisconnectHandler extends BaseHttpHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.disconnect")));
-		final boolean accepted = engine.canDisconnect();
-		if (accepted) {
-			engine.disconnect();
-		}
-		html.append("<h3>").append(accepted ? Resources.get("msg.server.accepted") : Resources.get("msg.server.not.acceptable")).append("</h3>").append(NewLine.CRLF.toString());
-		html.append(buildHtmlHomeButton());
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.close")));
+		html.append("<h3>").append(Resources.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_UNAVAILABLE, response.length);
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
 		exchange.getResponseBody().write(response);
+		exchange.getResponseBody().close();
+		exchange.close();
+		engine.close();
 	}
 
 	@Override

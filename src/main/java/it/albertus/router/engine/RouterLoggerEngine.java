@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class RouterLoggerEngine {
@@ -56,9 +57,10 @@ public abstract class RouterLoggerEngine {
 	protected volatile boolean exit = false;
 	private Thread shutdownHook;
 
-	private RouterLoggerStatus currentStatus = RouterLoggerStatus.STARTING;
-	private RouterLoggerStatus previousStatus = null;
 	private RouterData currentData;
+	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(new HashMap<Threshold, String>(0), new Date());
+	private RouterLoggerStatus currentStatus = new RouterLoggerStatus(Status.STARTING);
+	private RouterLoggerStatus previousStatus = null;
 
 	private volatile int iteration = FIRST_ITERATION;
 	private boolean connected = false;
@@ -72,16 +74,15 @@ public abstract class RouterLoggerEngine {
 		return previousStatus;
 	}
 
-	protected void setStatus(RouterLoggerStatus status) {
+	protected void setStatus(final Status status) {
 		doSetStatus(status);
 	}
 
-	private final void doSetStatus(final RouterLoggerStatus status) {
-		boolean first = this.previousStatus == null;
-		this.previousStatus = this.currentStatus;
-		this.currentStatus = status;
-		if (!this.currentStatus.equals(this.previousStatus) || first) {
-			mqttClient.publishStatus(status);
+	private final void doSetStatus(final Status newStatus) {
+		if (!currentStatus.getStatus().equals(newStatus)) {
+			previousStatus = currentStatus;
+			currentStatus = new RouterLoggerStatus(newStatus);
+			mqttClient.publishStatus(currentStatus);
 		}
 	}
 
@@ -137,7 +138,7 @@ public abstract class RouterLoggerEngine {
 
 	protected void beforeConnect() {
 		printWelcome();
-		setStatus(RouterLoggerStatus.STARTING);
+		setStatus(Status.STARTING);
 		httpServer.start();
 		initReaderAndWriter();
 		printDeviceModel();
@@ -150,10 +151,10 @@ public abstract class RouterLoggerEngine {
 			@Override
 			public void run() {
 				if (reader != null) {
-					setStatus(RouterLoggerStatus.DISCONNECTING);
+					setStatus(Status.DISCONNECTING);
 					try {
 						reader.disconnect();
-						setStatus(RouterLoggerStatus.DISCONNECTED);
+						setStatus(Status.DISCONNECTED);
 					}
 					catch (final Exception e) {/* Ignore */}
 				}
@@ -186,7 +187,7 @@ public abstract class RouterLoggerEngine {
 			}
 			// Gestione riconnessione in caso di errore...
 			if (index > 0) {
-				setStatus(RouterLoggerStatus.RECONNECTING);
+				setStatus(Status.RECONNECTING);
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
 				final StringBuilder message = new StringBuilder(Resources.get("msg.wait.reconnection"));
 				if (retries > 0) {
@@ -210,7 +211,7 @@ public abstract class RouterLoggerEngine {
 
 			/* Avvio della procedura... */
 			try {
-				setStatus(RouterLoggerStatus.CONNECTING);
+				setStatus(Status.CONNECTING);
 				interruptible = true;
 				connected = reader.connect();
 			}
@@ -218,7 +219,7 @@ public abstract class RouterLoggerEngine {
 				/* Configurazione non valida */
 				logger.log(re);
 				exit = true;
-				setStatus(RouterLoggerStatus.ERROR);
+				setStatus(Status.ERROR);
 				continue;
 			}
 			finally {
@@ -227,7 +228,7 @@ public abstract class RouterLoggerEngine {
 
 			// Log in...
 			if (connected && !exit) {
-				setStatus(RouterLoggerStatus.AUTHENTICATING);
+				setStatus(Status.AUTHENTICATING);
 				try {
 					interruptible = true;
 					loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
@@ -241,7 +242,7 @@ public abstract class RouterLoggerEngine {
 
 				// Loop...
 				if (loggedIn && !exit) {
-					setStatus(RouterLoggerStatus.OK);
+					setStatus(Status.OK);
 					if (configuration.getBoolean("reader.log.connected", Defaults.LOG_CONNECTED)) {
 						logger.log(Resources.get("msg.reader.connected", reader.getDeviceModel()), Destination.FILE, Destination.EMAIL);
 					}
@@ -286,7 +287,7 @@ public abstract class RouterLoggerEngine {
 					// In caso di autenticazione fallita, si esce subito per evitare il blocco dell'account.
 					else {
 						exit = true;
-						setStatus(RouterLoggerStatus.ERROR);
+						setStatus(Status.ERROR);
 					}
 					reader.disconnect();
 				}
@@ -296,14 +297,14 @@ public abstract class RouterLoggerEngine {
 					reader.disconnect();
 				}
 				else {
-					setStatus(RouterLoggerStatus.ERROR);
+					setStatus(Status.ERROR);
 				}
 			}
 		}
 
 		release();
-		if (!RouterLoggerStatus.ERROR.equals(currentStatus)) {
-			setStatus(RouterLoggerStatus.DISCONNECTED);
+		if (!Status.ERROR.equals(currentStatus)) {
+			setStatus(Status.DISCONNECTED);
 		}
 
 		if (configuration.getBoolean("logger.close.when.finished", Defaults.CLOSE_WHEN_FINISHED) && iteration >= configuration.getInt("logger.iterations", Defaults.ITERATIONS)) {
@@ -376,9 +377,11 @@ public abstract class RouterLoggerEngine {
 			writer.saveInfo(currentData);
 
 			/* Impostazione stato di allerta e gestione isteresi... */
-			final Map<Threshold, String> allThresholdsReached = configuration.getThresholds().getReached(currentData);
+			final Map<Threshold, String> thresholdsReached = configuration.getThresholds().getReached(currentData);
+			currentThresholdsReached = new ThresholdsReached(thresholdsReached, currentData.getTimestamp());
+
 			boolean importantThresholdReached = false;
-			for (final Threshold threshold : allThresholdsReached.keySet()) {
+			for (final Threshold threshold : thresholdsReached.keySet()) {
 				if (!threshold.isExcluded()) {
 					importantThresholdReached = true;
 					break;
@@ -387,29 +390,29 @@ public abstract class RouterLoggerEngine {
 
 			if (importantThresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
 				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
-				doSetStatus(RouterLoggerStatus.WARNING);
+				doSetStatus(Status.WARNING);
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
 					if (configuration.getBoolean("thresholds.email", Defaults.THRESHOLDS_EMAIL)) {
-						ThresholdsEmailSender.getInstance().send(allThresholdsReached, currentData);
+						ThresholdsEmailSender.getInstance().send(thresholdsReached, currentData);
 					}
 				}
 			}
-			else if (!allThresholdsReached.isEmpty()) {
+			else if (!thresholdsReached.isEmpty()) {
 				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
-				doSetStatus(RouterLoggerStatus.INFO);
+				doSetStatus(Status.INFO);
 			}
 			else {
 				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
-				doSetStatus(RouterLoggerStatus.OK);
+				doSetStatus(Status.OK);
 			}
 			// Aggiorna l'interfaccia
-			showInfo(currentData, allThresholdsReached);
+			showInfo(currentData, thresholdsReached);
 
 			// Pubblica via MQTT
 			mqttClient.publishData(currentData);
 			if (importantThresholdReached) {
-				mqttClient.publishThresholds(allThresholdsReached, currentData.getTimestamp());
+				mqttClient.publishThresholds(currentThresholdsReached);
 			}
 
 			if (exit) {
@@ -420,7 +423,7 @@ public abstract class RouterLoggerEngine {
 			if (iterations <= 0 || iteration < iterations) {
 
 				final long waitTimeInMillis;
-				if (RouterLoggerStatus.WARNING.equals(currentStatus)) {
+				if (Status.WARNING.equals(currentStatus)) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
 				else {
@@ -485,11 +488,11 @@ public abstract class RouterLoggerEngine {
 	}
 
 	public boolean canConnect() {
-		return (getReader() != null && getWriter() != null && RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
+		return (getReader() != null && getWriter() != null && Status.STARTING.equals(getCurrentStatus().getStatus()) || Status.DISCONNECTED.equals(getCurrentStatus().getStatus()) || Status.ERROR.equals(getCurrentStatus().getStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
 	}
 
 	public boolean canDisconnect() {
-		return !(RouterLoggerStatus.STARTING.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTED.equals(getCurrentStatus()) || RouterLoggerStatus.ERROR.equals(getCurrentStatus()) || RouterLoggerStatus.DISCONNECTING.equals(getCurrentStatus()));
+		return !(Status.STARTING.equals(getCurrentStatus().getStatus()) || Status.DISCONNECTED.equals(getCurrentStatus().getStatus()) || Status.ERROR.equals(getCurrentStatus().getStatus()) || Status.DISCONNECTING.equals(getCurrentStatus().getStatus()));
 	}
 
 	public abstract void connect();
@@ -501,7 +504,7 @@ public abstract class RouterLoggerEngine {
 
 	protected void disconnect(final boolean force) {
 		if (canDisconnect() || force) {
-			setStatus(RouterLoggerStatus.DISCONNECTING);
+			setStatus(Status.DISCONNECTING);
 			exit = true;
 			if (pollingThread != null && isInterruptible()) {
 				try {
@@ -513,7 +516,7 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 		else {
-			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getDescription()), Destination.CONSOLE);
+			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
 		}
 	}
 
@@ -535,7 +538,7 @@ public abstract class RouterLoggerEngine {
 
 	protected void stopNetworkServices() {
 		httpServer.stop();
-		setStatus(RouterLoggerStatus.CLOSED);
+		setStatus(Status.CLOSED);
 		mqttClient.disconnect();
 	}
 
@@ -549,6 +552,10 @@ public abstract class RouterLoggerEngine {
 
 	public RouterData getCurrentData() {
 		return currentData;
+	}
+
+	public ThresholdsReached getCurrentThresholdsReached() {
+		return currentThresholdsReached;
 	}
 
 	public Reader getReader() {

@@ -35,14 +35,15 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
-import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
-import it.albertus.router.server.CloseHandler;
-import it.albertus.router.server.ConnectHandler;
-import it.albertus.router.server.DisconnectHandler;
-import it.albertus.router.server.RestartHandler;
-import it.albertus.router.server.RootHandler;
-import it.albertus.router.server.StatusHandler;
+import it.albertus.router.server.html.BaseHtmlHandler;
+import it.albertus.router.server.html.CloseHandler;
+import it.albertus.router.server.html.ConnectHandler;
+import it.albertus.router.server.html.DisconnectHandler;
+import it.albertus.router.server.html.RestartHandler;
+import it.albertus.router.server.html.RootHtmlHandler;
+import it.albertus.router.server.html.StatusHtmlHandler;
+import it.albertus.router.server.json.BaseJsonHandler;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
@@ -189,23 +190,24 @@ public enum RouterLoggerPreference implements Preference {
 	SERVER_AUTHENTICATION(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().parent(SERVER_ENABLED).defaultValue(BaseHttpServer.Defaults.AUTHENTICATION).restartRequired().build()),
 	SERVER_USERNAME(RouterLoggerPage.SERVER, FieldEditorType.FormattedString, new PreferenceDataBuilder().parent(SERVER_AUTHENTICATION).build()),
 	SERVER_PASSWORD(RouterLoggerPage.SERVER, FieldEditorType.Password, new PreferenceDataBuilder().parent(SERVER_AUTHENTICATION).build()),
-	SERVER_COMPRESS_RESPONSE(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(BaseHttpHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_ENABLED).build()),
-	SERVER_LOG_REQUEST(RouterLoggerPage.SERVER, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().defaultValue(BaseHttpHandler.Defaults.LOG_REQUEST).parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().namesAndValues(ServerPreferencePage.getLogComboOptions()).build()),
+	SERVER_COMPRESS_RESPONSE(RouterLoggerPage.SERVER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(BaseHtmlHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_ENABLED).build()),
+	SERVER_LOG_REQUEST(RouterLoggerPage.SERVER, FieldEditorType.FormattedCombo, new PreferenceDataBuilder().defaultValue(BaseHtmlHandler.Defaults.LOG_REQUEST).parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().namesAndValues(ServerPreferencePage.getLogComboOptions()).build()),
 	SERVER_THREADS(RouterLoggerPage.SERVER, FieldEditorType.ScaleInteger, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.THREADS).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
 
-	SERVER_HANDLER_ROOT_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RootHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
+	SERVER_HANDLER_ROOT_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_RESTART_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(RestartHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_CONNECT_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(ConnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_DISCONNECT_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(DisconnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_CLOSE_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(CloseHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
-	SERVER_HANDLER_STATUS_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(StatusHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
-	SERVER_HANDLER_STATUS_REFRESH(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(StatusHandler.Defaults.REFRESH).parent(SERVER_HANDLER_STATUS_ENABLED).build()),
-	SERVER_HANDLER_STATUS_REFRESH_SECS(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.IntegerCombo, new PreferenceDataBuilder().defaultValue(StatusHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDataBuilder().namesAndValues(new LocalizedNamesAndValues(new Localized() {
+	SERVER_HANDLER_STATUS_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(StatusHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
+	SERVER_HANDLER_STATUS_REFRESH(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().defaultValue(StatusHtmlHandler.Defaults.REFRESH).parent(SERVER_HANDLER_STATUS_ENABLED).build()),
+	SERVER_HANDLER_STATUS_REFRESH_SECS(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.IntegerCombo, new PreferenceDataBuilder().defaultValue(StatusHtmlHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDataBuilder().namesAndValues(new LocalizedNamesAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Resources.get("lbl.preferences.server.handler.status.refresh.auto");
 		}
 	}, 0)).build()),
+	SERVER_HANDLER_JSON_ENABLED(RouterLoggerPage.SERVER_HANDLER, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().separator().defaultValue(BaseJsonHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 
 	SERVER_SSL_ENABLED(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.DefaultBoolean, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_SSL_KEYSTORE_TYPE(RouterLoggerPage.SERVER_HTTPS, FieldEditorType.ValidatedCombo, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().namesAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),

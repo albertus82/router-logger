@@ -1,4 +1,4 @@
-package it.albertus.router.server;
+package it.albertus.router.server.html;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class StatusHandler extends BaseHttpHandler {
+public class StatusHtmlHandler extends BaseHtmlHandler {
 
 	public interface Defaults {
 		boolean ENABLED = true;
@@ -36,7 +36,7 @@ public class StatusHandler extends BaseHttpHandler {
 		}
 	};
 
-	protected StatusHandler(final RouterLoggerEngine engine) {
+	public StatusHtmlHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
 
@@ -53,7 +53,7 @@ public class StatusHandler extends BaseHttpHandler {
 
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.status")));
-		html.append("<h3>").append(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().getDescription()).append("</h3>").append(NewLine.CRLF);
+		html.append("<h3>").append(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().getStatus().getDescription()).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {

@@ -4,7 +4,7 @@ import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.jface.TextConsole;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.engine.RouterLoggerStatus;
+import it.albertus.router.engine.Status;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.preference.RouterLoggerPreference;
@@ -192,7 +192,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
 		if (trayIcon != null) {
-			trayIcon.updateTrayItem(getCurrentStatus(), info);
+			trayIcon.updateTrayItem(getCurrentStatus().getStatus(), info);
 		}
 
 		/* Stampa eventuali soglie raggiunte in console */
@@ -281,7 +281,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				pollingThread.start();
 			}
 			else {
-				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getDescription()), Destination.CONSOLE);
+				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
 			}
 		}
 	}
@@ -348,7 +348,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	@Override
-	protected void setStatus(RouterLoggerStatus status) {
+	protected void setStatus(Status status) {
 		super.setStatus(status);
 		if (trayIcon != null) {
 			trayIcon.updateTrayItem(status);

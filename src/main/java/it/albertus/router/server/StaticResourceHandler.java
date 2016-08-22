@@ -1,5 +1,7 @@
 package it.albertus.router.server;
 
+import it.albertus.router.server.html.BaseHtmlHandler;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +14,7 @@ import javax.activation.MimetypesFileTypeMap;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-public class StaticResourceHandler extends BaseHttpHandler {
+public class StaticResourceHandler extends BaseHtmlHandler {
 
 	public static final String[] METHODS = { "GET" };
 
