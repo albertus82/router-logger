@@ -34,6 +34,7 @@ public class RouterLoggerPreferences extends Preferences {
 		// Check if must update texts...
 		if (gui != null && !language.equals(Resources.getLanguage())) {
 			gui.getMenuBar().updateTexts();
+			gui.getDataTable().updateTexts();
 		}
 
 		if (!restartRequired) {

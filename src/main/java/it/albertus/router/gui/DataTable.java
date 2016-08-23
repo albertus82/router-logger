@@ -383,6 +383,13 @@ public class DataTable {
 		}
 	}
 
+	public void updateTexts() {
+		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
+		deleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + SwtUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
+		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_SELECT_ALL));
+		clearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+	}
+
 	public TableViewer getTableViewer() {
 		return tableViewer;
 	}
