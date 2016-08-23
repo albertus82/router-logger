@@ -303,7 +303,7 @@ public abstract class RouterLoggerEngine {
 		}
 
 		release();
-		if (!Status.ERROR.equals(currentStatus)) {
+		if (!Status.ERROR.equals(currentStatus.getStatus())) {
 			setStatus(Status.DISCONNECTED);
 		}
 
@@ -423,7 +423,7 @@ public abstract class RouterLoggerEngine {
 			if (iterations <= 0 || iteration < iterations) {
 
 				final long waitTimeInMillis;
-				if (Status.WARNING.equals(currentStatus)) {
+				if (Status.WARNING.equals(currentStatus.getStatus())) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
 				else {
