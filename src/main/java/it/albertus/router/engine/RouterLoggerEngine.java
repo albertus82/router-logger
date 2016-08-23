@@ -18,8 +18,8 @@ import it.albertus.util.Version;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class RouterLoggerEngine {
@@ -43,6 +43,8 @@ public abstract class RouterLoggerEngine {
 
 	protected static final int FIRST_ITERATION = 1;
 
+	private static final String CFG_KEY_LOGGER_INTERVAL_NORMAL_MS = "logger.interval.normal.ms";
+
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
 	protected final WebServer httpServer = WebServer.getInstance();
@@ -58,9 +60,10 @@ public abstract class RouterLoggerEngine {
 	private Thread shutdownHook;
 
 	private RouterData currentData;
-	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(new HashMap<Threshold, String>(0), new Date());
+	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(Collections.<Threshold, String> emptyMap(), new Date());
 	private RouterLoggerStatus currentStatus = new RouterLoggerStatus(Status.STARTING);
 	private RouterLoggerStatus previousStatus = null;
+	private long waitTimeInMillis = configuration.getLong(CFG_KEY_LOGGER_INTERVAL_NORMAL_MS, Defaults.INTERVAL_NORMAL_IN_MILLIS);
 
 	private volatile int iteration = FIRST_ITERATION;
 	private boolean connected = false;
@@ -84,6 +87,10 @@ public abstract class RouterLoggerEngine {
 			currentStatus = new RouterLoggerStatus(newStatus);
 			mqttClient.publishStatus(currentStatus);
 		}
+	}
+
+	public long getWaitTimeInMillis() {
+		return waitTimeInMillis;
 	}
 
 	protected Reader createReader() {
@@ -411,9 +418,7 @@ public abstract class RouterLoggerEngine {
 
 			// Pubblica via MQTT
 			mqttClient.publishData(currentData);
-			if (importantThresholdReached) {
-				mqttClient.publishThresholds(currentThresholdsReached);
-			}
+			mqttClient.publishThresholds(currentThresholdsReached);
 
 			if (exit) {
 				break;
@@ -421,13 +426,11 @@ public abstract class RouterLoggerEngine {
 
 			// All'ultimo giro non deve esserci il tempo di attesa tra le iterazioni.
 			if (iterations <= 0 || iteration < iterations) {
-
-				final long waitTimeInMillis;
 				if (Status.WARNING.equals(currentStatus.getStatus())) {
 					waitTimeInMillis = configuration.getLong("logger.interval.fast.ms", Defaults.INTERVAL_FAST_IN_MILLIS);
 				}
 				else {
-					waitTimeInMillis = configuration.getLong("logger.interval.normal.ms", Defaults.INTERVAL_NORMAL_IN_MILLIS);
+					waitTimeInMillis = configuration.getLong(CFG_KEY_LOGGER_INTERVAL_NORMAL_MS, Defaults.INTERVAL_NORMAL_IN_MILLIS);
 				}
 
 				// Disconnect if requested...

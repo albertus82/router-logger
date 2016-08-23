@@ -46,7 +46,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		if (configuration.getBoolean("server.handler.status.refresh", Defaults.REFRESH)) {
 			int refresh = configuration.getInt("server.handler.status.refresh.secs", Defaults.REFRESH_SECS);
 			if (refresh <= 0) { // Auto
-				refresh = Math.max(1, Long.valueOf(configuration.getLong("logger.interval.normal.ms", RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS) / 1000).intValue() - 1);
+				refresh = Math.max(1, Long.valueOf(engine.getWaitTimeInMillis() / 1000).intValue() - 1);
 			}
 			exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
 		}
