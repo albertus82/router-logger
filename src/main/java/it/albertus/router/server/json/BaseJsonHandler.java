@@ -16,7 +16,7 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 		boolean ENABLED = true;
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.json.enabled";
+	protected static final String CFG_KEY_SERVER_HANDLER_JSON_ENABLED = "server.handler.json.enabled";
 
 	protected final RouterLoggerEngine engine;
 
@@ -59,7 +59,7 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
+		return configuration.getBoolean(CFG_KEY_SERVER_HANDLER_JSON_ENABLED, Defaults.ENABLED);
 	}
 
 	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
@@ -71,6 +71,11 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 		else {
 			return true;
 		}
+	}
+
+	protected void addRefreshHeader(final HttpExchange exchange) {
+		final int refresh = Math.max(1, Long.valueOf(engine.getWaitTimeInMillis() / 1000).intValue() - 1);
+		exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
 	}
 
 }

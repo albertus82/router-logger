@@ -1,10 +1,11 @@
 package it.albertus.router.dto;
 
 import it.albertus.router.engine.Threshold;
+import it.albertus.util.Jsonable;
 
 import java.io.Serializable;
 
-public class ThresholdDto implements Serializable {
+public class ThresholdDto implements Serializable, Jsonable {
 
 	private static final long serialVersionUID = 3881838273700131909L;
 
@@ -22,30 +23,6 @@ public class ThresholdDto implements Serializable {
 		this.value = threshold.getValue();
 		this.excluded = threshold.isExcluded();
 		this.detected = value;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public String getDetected() {
-		return detected;
-	}
-
-	public boolean isExcluded() {
-		return excluded;
 	}
 
 	@Override
@@ -100,6 +77,15 @@ public class ThresholdDto implements Serializable {
 	@Override
 	public String toString() {
 		return "ThresholdDto [name=" + name + ", key=" + key + ", type=" + type + ", value=" + value + ", excluded=" + excluded + ", detected=" + detected + "]";
+	}
+
+	@Override
+	public String toJson() {
+		final StringBuilder json = new StringBuilder();
+		json.append("{\"name\":\"").append(name).append("\",\"key\":\"").append(key).append("\",\"type\":\"").append(type).append("\",\"value\":\"").append(value).append("\"");
+		json.append(",\"excluded\":").append(excluded);
+		json.append(",\"detected\":\"").append(detected).append("\"}");
+		return json.toString();
 	}
 
 }

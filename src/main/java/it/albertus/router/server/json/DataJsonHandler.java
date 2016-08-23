@@ -19,10 +19,9 @@ public class DataJsonHandler extends BaseJsonHandler {
 
 	@Override
 	public void service(final HttpExchange exchange) throws IOException {
-		final int refresh = Math.max(1, Long.valueOf(engine.getWaitTimeInMillis() / 1000).intValue() - 1);
-		exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
-
 		final byte[] payload = Payload.createPayload(new RouterDataDto(engine.getCurrentData()).toJson());
+
+		addRefreshHeader(exchange);
 
 		final String currentEtag = generateEtag(payload);
 
