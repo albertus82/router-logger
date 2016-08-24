@@ -28,6 +28,7 @@ import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
@@ -70,6 +71,8 @@ public final class FieldEditorFactory {
 			return new IntegerComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case Password:
 			return createPasswordFieldEditor(name, label, parent, data);
+		case Radio:
+			return new RadioGroupFieldEditor(name, label, data.getRadioNumColumns(), data.getNamesAndValues().toArray(), parent, data.getRadioUseGroup() != null ? data.getRadioUseGroup() : false);
 		case ReaderCombo:
 			return new ReaderComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
 		case Scale:

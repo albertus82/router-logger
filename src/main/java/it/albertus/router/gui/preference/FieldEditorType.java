@@ -22,6 +22,7 @@ public enum FieldEditorType {
 	ReaderCombo,
 	ValidatedCombo,
 	WriterCombo,
+	Radio,
 	Directory,
 	FormattedDirectory,
 	EmailAddresses,
