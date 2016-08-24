@@ -1,8 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.LocalizedNamesAndValues;
+import it.albertus.jface.preference.StaticNamesAndValues;
 import it.albertus.router.server.BaseHttpServer;
-import it.albertus.util.Localized;
 
 import java.security.KeyStore;
 import java.security.Provider;
@@ -51,19 +50,19 @@ public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 		}
 	}
 
-	public static LocalizedNamesAndValues getKeyManagerFactoryComboOptions() {
+	public static StaticNamesAndValues getKeyManagerFactoryComboOptions() {
 		return buildComboOptionsArray(keyManagerFactoryAlgorithms);
 	}
 
-	public static LocalizedNamesAndValues getTrustManagerFactoryComboOptions() {
+	public static StaticNamesAndValues getTrustManagerFactoryComboOptions() {
 		return buildComboOptionsArray(trustManagerFactoryAlgorithms);
 	}
 
-	public static LocalizedNamesAndValues getKeyStoreAlgorithmsComboOptions() {
+	public static StaticNamesAndValues getKeyStoreAlgorithmsComboOptions() {
 		return buildComboOptionsArray(keyStoreAlgorithms);
 	}
 
-	public static LocalizedNamesAndValues getSslContextAlgorithmsComboOptions() {
+	public static StaticNamesAndValues getSslContextAlgorithmsComboOptions() {
 		return buildComboOptionsArray(sslContextAlgorithms);
 	}
 
@@ -71,16 +70,10 @@ public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 		return KEY_STORE_FILE_EXTENSIONS;
 	}
 
-	public static LocalizedNamesAndValues buildComboOptionsArray(final Set<String> options) {
-		final LocalizedNamesAndValues entries = new LocalizedNamesAndValues(options.size());
+	public static StaticNamesAndValues buildComboOptionsArray(final Set<String> options) {
+		final StaticNamesAndValues entries = new StaticNamesAndValues(options.size());
 		for (final String value : options) {
-			final Localized name = new Localized() {
-				@Override
-				public String getString() {
-					return value;
-				}
-			};
-			entries.put(name, value);
+			entries.put(value, value);
 		}
 		return entries;
 	}

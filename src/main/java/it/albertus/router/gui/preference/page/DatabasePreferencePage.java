@@ -1,9 +1,8 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
-import it.albertus.jface.preference.LocalizedNamesAndValues;
+import it.albertus.jface.preference.StaticNamesAndValues;
 import it.albertus.router.resources.Resources;
-import it.albertus.util.Localized;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -37,18 +36,12 @@ public class DatabasePreferencePage extends BasePreferencePage {
 		}
 	}
 
-	public static LocalizedNamesAndValues getDatabaseComboOptions() {
+	public static StaticNamesAndValues getDatabaseComboOptions() {
 		final DatabaseDriverComboData[] values = DatabaseDriverComboData.values();
-		final LocalizedNamesAndValues options = new LocalizedNamesAndValues(values.length);
+		final StaticNamesAndValues options = new StaticNamesAndValues(values.length);
 		for (final DatabaseDriverComboData comboData : values) {
 			final String value = comboData.driverClassName;
-			final Localized name = new Localized() {
-				@Override
-				public String getString() {
-					return value;
-				}
-			};
-			options.put(name, value);
+			options.put(value, value);
 		}
 		return options;
 	}
