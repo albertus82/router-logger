@@ -14,6 +14,8 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 
 	public interface Defaults {
 		boolean ENABLED = true;
+		boolean REFRESH = true;
+		int REFRESH_SECS = 0;
 	}
 
 	protected static final String CFG_KEY_SERVER_HANDLER_JSON_ENABLED = "server.handler.json.enabled";
@@ -74,8 +76,13 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 	}
 
 	protected void addRefreshHeader(final HttpExchange exchange) {
-		final int refresh = Math.max(1, Long.valueOf(engine.getWaitTimeInMillis() / 1000).intValue() - 1);
-		exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
+		if (configuration.getBoolean("server.handler.json.refresh", Defaults.REFRESH)) {
+			int refresh = configuration.getInt("server.handler.json.refresh.secs", Defaults.REFRESH_SECS);
+			if (refresh <= 0) { // Auto
+				refresh = Math.max(1, Long.valueOf(engine.getWaitTimeInMillis() / 1000).intValue() - 1);
+			}
+			exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
+		}
 	}
 
 }

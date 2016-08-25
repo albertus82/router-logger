@@ -225,10 +225,17 @@ public enum RouterLoggerPreference implements Preference {
 	SERVER_HANDLER_STATUS_REFRESH_SECS(RouterLoggerPage.SERVER_HANDLER, IntegerComboFieldEditor.class, new PreferenceDataBuilder().defaultValue(StatusHtmlHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDataBuilder().namesAndValues(new LocalizedNamesAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.server.handler.status.refresh.auto");
+			return Resources.get("lbl.preferences.server.handler.refresh.auto");
 		}
 	}, 0)).build()),
 	SERVER_HANDLER_JSON_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().separator().defaultValue(BaseJsonHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
+	SERVER_HANDLER_JSON_REFRESH(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(BaseJsonHandler.Defaults.REFRESH).parent(SERVER_HANDLER_JSON_ENABLED).build()),
+	SERVER_HANDLER_JSON_REFRESH_SECS(RouterLoggerPage.SERVER_HANDLER, IntegerComboFieldEditor.class, new PreferenceDataBuilder().defaultValue(BaseJsonHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_JSON_REFRESH).build(), new FieldEditorDataBuilder().namesAndValues(new LocalizedNamesAndValues(new Localized() {
+		@Override
+		public String getString() {
+			return Resources.get("lbl.preferences.server.handler.refresh.auto");
+		}
+	}, 0)).build()),
 
 	SERVER_SSL_ENABLED(RouterLoggerPage.SERVER_HTTPS, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_SSL_KEYSTORE_TYPE(RouterLoggerPage.SERVER_HTTPS, ValidatedComboFieldEditor.class, new PreferenceDataBuilder().restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDataBuilder().namesAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
