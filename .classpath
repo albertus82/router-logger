@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/config"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/javax.mail-1.5.5.jar" sourcepath="lib/src/javax.mail-1.5.5-sources.jar"/>
+	<classpathentry kind="lib" path="lib/javax.mail-1.5.6.jar" sourcepath="lib/src/javax.mail-1.5.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-email-1.4.jar" sourcepath="lib/src/commons-email-1.4-src.zip"/>
 	<classpathentry kind="lib" path="lib/commons-net-3.5.jar" sourcepath="lib/src/commons-net-3.5-src.zip"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.paho.client.mqttv3-1.1.0.jar" sourcepath="lib/src/org.eclipse.paho.client.mqttv3-1.1.0-sources.jar"/>
