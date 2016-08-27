@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.LocalizedNamesAndValues;
+import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -34,9 +34,9 @@ public class ReaderPreferencePage extends RestartHeaderPreferencePage {
 		}
 	}
 
-	public static LocalizedNamesAndValues getReaderComboOptions() {
+	public static LocalizedLabelsAndValues getReaderComboOptions() {
 		final ReaderComboData[] values = ReaderComboData.values();
-		final LocalizedNamesAndValues options = new LocalizedNamesAndValues(values.length);
+		final LocalizedLabelsAndValues options = new LocalizedLabelsAndValues(values.length);
 		for (final ReaderComboData comboData : values) {
 			final String value = comboData.readerClass.getSimpleName();
 			final Localized name = new Localized() {

@@ -15,16 +15,16 @@ public class RouterLoggerFieldEditorFactory extends FieldEditorFactory {
 	@Override
 	public FieldEditor createFieldEditor(final Class<? extends FieldEditor> type, final String name, final String label, final Composite parent, final FieldEditorData data) {
 		if (DatabaseComboFieldEditor.class.equals(type)) {
-			return new DatabaseComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
+			return new DatabaseComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
 		}
 		if (ReaderComboFieldEditor.class.equals(type)) {
-			return new ReaderComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
+			return new ReaderComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
 		}
 		if (ThresholdsFieldEditor.class.equals(type)) {
 			return new ThresholdsFieldEditor(name, label, parent);
 		}
 		if (WriterComboFieldEditor.class.equals(type)) {
-			return new WriterComboFieldEditor(name, label, data.getNamesAndValues().toArray(), parent);
+			return new WriterComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
 		}
 		return super.createFieldEditor(type, name, label, parent, data);
 	}

@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.LocalizedNamesAndValues;
+import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Localized;
 
@@ -22,9 +22,9 @@ public class CsvPreferencePage extends BasePreferencePage {
 		}
 	}
 
-	public static LocalizedNamesAndValues getSeparatorComboOptions() {
+	public static LocalizedLabelsAndValues getSeparatorComboOptions() {
 		final Separator[] values = Separator.values();
-		final LocalizedNamesAndValues options = new LocalizedNamesAndValues(values.length);
+		final LocalizedLabelsAndValues options = new LocalizedLabelsAndValues(values.length);
 		for (final Separator separator : values) {
 			final String value = separator.separator;
 			final Localized name = new Localized() {

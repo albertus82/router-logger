@@ -1,7 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
-import it.albertus.jface.preference.StaticNamesAndValues;
+import it.albertus.jface.preference.StaticLabelsAndValues;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.SWT;
@@ -36,9 +36,9 @@ public class DatabasePreferencePage extends BasePreferencePage {
 		}
 	}
 
-	public static StaticNamesAndValues getDatabaseComboOptions() {
+	public static StaticLabelsAndValues getDatabaseComboOptions() {
 		final DatabaseDriverComboData[] values = DatabaseDriverComboData.values();
-		final StaticNamesAndValues options = new StaticNamesAndValues(values.length);
+		final StaticLabelsAndValues options = new StaticLabelsAndValues(values.length);
 		for (final DatabaseDriverComboData comboData : values) {
 			final String value = comboData.driverClassName;
 			options.put(value, value);

@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.LocalizedNamesAndValues;
+import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Localized;
 
@@ -8,8 +8,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
 public class AdvancedMqttPreferencePage extends RestartHeaderPreferencePage {
 
-	public static LocalizedNamesAndValues getMqttVersionComboOptions() {
-		final LocalizedNamesAndValues options = new LocalizedNamesAndValues(3);
+	public static LocalizedLabelsAndValues getMqttVersionComboOptions() {
+		final LocalizedLabelsAndValues options = new LocalizedLabelsAndValues(3);
 		Localized name = new Localized() {
 			@Override
 			public String getString() {

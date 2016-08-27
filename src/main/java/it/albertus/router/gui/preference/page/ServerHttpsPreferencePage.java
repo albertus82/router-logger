@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.preference.StaticNamesAndValues;
+import it.albertus.jface.preference.StaticLabelsAndValues;
 import it.albertus.router.server.BaseHttpServer;
 
 import java.security.KeyStore;
@@ -50,19 +50,19 @@ public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 		}
 	}
 
-	public static StaticNamesAndValues getKeyManagerFactoryComboOptions() {
+	public static StaticLabelsAndValues getKeyManagerFactoryComboOptions() {
 		return buildComboOptionsArray(keyManagerFactoryAlgorithms);
 	}
 
-	public static StaticNamesAndValues getTrustManagerFactoryComboOptions() {
+	public static StaticLabelsAndValues getTrustManagerFactoryComboOptions() {
 		return buildComboOptionsArray(trustManagerFactoryAlgorithms);
 	}
 
-	public static StaticNamesAndValues getKeyStoreAlgorithmsComboOptions() {
+	public static StaticLabelsAndValues getKeyStoreAlgorithmsComboOptions() {
 		return buildComboOptionsArray(keyStoreAlgorithms);
 	}
 
-	public static StaticNamesAndValues getSslContextAlgorithmsComboOptions() {
+	public static StaticLabelsAndValues getSslContextAlgorithmsComboOptions() {
 		return buildComboOptionsArray(sslContextAlgorithms);
 	}
 
@@ -70,8 +70,8 @@ public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 		return KEY_STORE_FILE_EXTENSIONS;
 	}
 
-	public static StaticNamesAndValues buildComboOptionsArray(final Set<String> options) {
-		final StaticNamesAndValues entries = new StaticNamesAndValues(options.size());
+	public static StaticLabelsAndValues buildComboOptionsArray(final Set<String> options) {
+		final StaticLabelsAndValues entries = new StaticLabelsAndValues(options.size());
 		for (final String value : options) {
 			entries.put(value, value);
 		}
