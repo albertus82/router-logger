@@ -36,7 +36,7 @@ import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.TrayIcon;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
-import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.field.ThresholdsListEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 import it.albertus.router.gui.preference.page.AdvancedMqttPreferencePage;
 import it.albertus.router.gui.preference.page.CsvPreferencePage;
@@ -174,7 +174,7 @@ public enum RouterLoggerPreference implements Preference {
 	DATABASE_COLUMN_NAME_PREFIX(RouterLoggerPage.DATABASE, DefaultStringFieldEditor.class, new PreferenceDataBuilder().defaultValue(DatabaseWriter.Defaults.COLUMN_NAME_PREFIX).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
 	DATABASE_COLUMN_NAME_MAX_LENGTH(RouterLoggerPage.DATABASE, DefaultIntegerFieldEditor.class, new PreferenceDataBuilder().defaultValue(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH).build(), new FieldEditorDataBuilder().textLimit(2).build()),
 
-	THRESHOLDS_EXPRESSIONS(RouterLoggerPage.THRESHOLDS, ThresholdsFieldEditor.class),
+	THRESHOLDS_EXPRESSIONS(RouterLoggerPage.THRESHOLDS, ThresholdsListEditor.class),
 	THRESHOLDS_SPLIT(RouterLoggerPage.THRESHOLDS, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT).build()),
 	THRESHOLDS_EMAIL(RouterLoggerPage.THRESHOLDS, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(RouterLoggerEngine.Defaults.THRESHOLDS_EMAIL).build()),
 	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(RouterLoggerPage.THRESHOLDS, DefaultIntegerFieldEditor.class, new PreferenceDataBuilder().defaultValue(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS).parent(THRESHOLDS_EMAIL).build()),

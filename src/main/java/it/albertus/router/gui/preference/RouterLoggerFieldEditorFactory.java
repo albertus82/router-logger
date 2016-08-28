@@ -4,7 +4,7 @@ import it.albertus.jface.preference.FieldEditorData;
 import it.albertus.jface.preference.FieldEditorFactory;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
-import it.albertus.router.gui.preference.field.ThresholdsFieldEditor;
+import it.albertus.router.gui.preference.field.ThresholdsListEditor;
 import it.albertus.router.gui.preference.field.WriterComboFieldEditor;
 
 import org.eclipse.jface.preference.FieldEditor;
@@ -20,8 +20,8 @@ public class RouterLoggerFieldEditorFactory extends FieldEditorFactory {
 		if (ReaderComboFieldEditor.class.equals(type)) {
 			return new ReaderComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
 		}
-		if (ThresholdsFieldEditor.class.equals(type)) {
-			return new ThresholdsFieldEditor(name, label, parent);
+		if (ThresholdsListEditor.class.equals(type)) {
+			return new ThresholdsListEditor(name, label, parent);
 		}
 		if (WriterComboFieldEditor.class.equals(type)) {
 			return new WriterComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
