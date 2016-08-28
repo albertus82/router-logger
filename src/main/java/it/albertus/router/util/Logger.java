@@ -193,7 +193,8 @@ public class Logger {
 	private static File getDefaultFile() {
 		File logFile;
 		try {
-			logFile = new File(new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
+			final String parent = new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent();
+			logFile = new File((parent != null ? parent : "") + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 		}
 		catch (final Exception e1) {
 			try {

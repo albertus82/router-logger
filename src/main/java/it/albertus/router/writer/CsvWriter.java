@@ -228,7 +228,8 @@ public class CsvWriter extends Writer {
 	protected static File getDefaultFile() {
 		File csvFile;
 		try {
-			csvFile = new File(new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent() + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
+			final String parent = new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent();
+			csvFile = new File((parent != null ? parent : "") + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
 		}
 		catch (final Exception e1) {
 			try {
