@@ -11,14 +11,17 @@ import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
 import it.albertus.router.resources.Resources;
+import it.albertus.router.util.Logger;
 import it.albertus.util.NewLine;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -26,6 +29,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -41,6 +45,8 @@ public class DataTable {
 
 	private static final String CFG_KEY_GUI_TABLE_COLUMNS_PADDING_RIGHT = "gui.table.columns.padding.right";
 	private static final String CFG_KEY_GUI_TABLE_COLUMNS_PACK = "gui.table.columns.pack";
+	private static final String CFG_KEY_GUI_IMPORTANT_KEYS_COLOR = "gui.important.keys.color";
+	private static final String CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR = "gui.thresholds.reached.color";
 
 	private static final DateFormat dateFormatTable = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
@@ -48,6 +54,8 @@ public class DataTable {
 		int MAX_ITEMS = 2000;
 		boolean COLUMNS_PACK = false;
 		byte COLUMNS_PADDING_RIGHT = 0;
+		String IMPORTANT_KEY_BACKGROUND_COLOR = "255,255,0";
+		String THRESHOLDS_REACHED_FOREGROUD_COLOR = "255,0,0";
 	}
 
 	enum TableDataKey {
@@ -75,9 +83,6 @@ public class DataTable {
 	private final MenuItem deleteMenuItem;
 	private final MenuItem selectAllMenuItem;
 	private final MenuItem clearMenuItem;
-
-	private final Color importantKeyBackgroundColor;
-	private final Color thresholdReachedForegroudColor;
 
 	/**
 	 * Solo i <tt>MenuItem</tt> che fanno parte di una barra dei men&ugrave; con
@@ -124,9 +129,6 @@ public class DataTable {
 		clearMenuItem.addSelectionListener(new ClearDataTableSelectionListener(gui));
 
 		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
-
-		importantKeyBackgroundColor = table.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
-		thresholdReachedForegroudColor = table.getDisplay().getSystemColor(SWT.COLOR_RED);
 	}
 
 	/** Copies the current selection to the clipboard. */
@@ -284,6 +286,7 @@ public class DataTable {
 					item.setText(i++, timestamp);
 					item.setText(i++, Integer.toString(data.getResponseTime()));
 
+					final Color importantKeyBackgroundColor = getImportantKeyBackgroundColor();
 					for (final String key : info.keySet()) {
 						// Grassetto...
 						if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
@@ -300,9 +303,10 @@ public class DataTable {
 						}
 
 						// Colore per i valori oltre soglia...
+						final Color thresholdsReachedForegroundColor = getThresholdsReachedForegroundColor();
 						for (final Threshold threshold : thresholdsReached.keySet()) {
 							if (key.equals(threshold.getKey())) {
-								item.setForeground(i, thresholdReachedForegroudColor);
+								item.setForeground(i, thresholdsReachedForegroundColor);
 								break;
 							}
 						}
@@ -357,8 +361,35 @@ public class DataTable {
 		}
 	}
 
+	public Color getThresholdsReachedForegroundColor() {
+		return getColor(CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR, Defaults.THRESHOLDS_REACHED_FOREGROUD_COLOR);
+	}
+
+	public Color getImportantKeyBackgroundColor() {
+		return getColor(CFG_KEY_GUI_IMPORTANT_KEYS_COLOR, Defaults.IMPORTANT_KEY_BACKGROUND_COLOR);
+	}
+
+	private Color getColor(final String configurationKey, final String defaultColorKey) {
+		String colorKey = configuration.getString(configurationKey, defaultColorKey);
+		RGB thresholdReachedForegroudColorData;
+		try {
+			thresholdReachedForegroudColorData = StringConverter.asRGB(colorKey);
+		}
+		catch (final Exception e) {
+			Logger.getInstance().log(Resources.get("err.invalid.color", colorKey));
+			colorKey = defaultColorKey;
+			thresholdReachedForegroudColorData = StringConverter.asRGB(colorKey);
+		}
+		final ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+		if (!colorRegistry.hasValueFor(colorKey)) {
+			colorRegistry.put(colorKey, thresholdReachedForegroudColorData);
+		}
+		final Color thresholdReachedForegroudColor = colorRegistry.get(colorKey);
+		return thresholdReachedForegroudColor;
+	}
+
 	/** Consente la determinazione automatica della larghezza del campo. */
-	private void setSampleNumber(final TableItem tableItem, final int size) {
+	private static void setSampleNumber(final TableItem tableItem, final int size) {
 		final char[] sample = new char[size];
 		for (int i = 0; i < size; i++) {
 			sample[i] = SAMPLE_CHAR;
@@ -366,7 +397,7 @@ public class DataTable {
 		tableItem.setText(String.valueOf(sample));
 	}
 
-	private void addRightMargin(final TableItem item, final int index, final byte margin) {
+	private static void addRightMargin(final TableItem item, final int index, final byte margin) {
 		if (margin > 0) {
 			String text = item.getText(index);
 			for (byte i = 0; i < margin; i++) {
@@ -376,7 +407,7 @@ public class DataTable {
 		}
 	}
 
-	private void removeRightMargin(final TableItem item, final int index, final byte margin) {
+	private static void removeRightMargin(final TableItem item, final int index, final byte margin) {
 		if (margin > 0) {
 			final String text = item.getText(index);
 			item.setText(index, text.substring(0, text.length() - margin));

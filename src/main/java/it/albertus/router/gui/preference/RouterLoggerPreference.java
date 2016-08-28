@@ -8,7 +8,6 @@ import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.jface.preference.Preference;
 import it.albertus.jface.preference.PreferenceData;
 import it.albertus.jface.preference.PreferenceData.PreferenceDataBuilder;
-import it.albertus.jface.preference.field.ComboFieldEditor;
 import it.albertus.jface.preference.field.DefaultBooleanFieldEditor;
 import it.albertus.jface.preference.field.DefaultComboFieldEditor;
 import it.albertus.jface.preference.field.DefaultDirectoryFieldEditor;
@@ -74,6 +73,8 @@ import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Set;
 
+import org.eclipse.jface.preference.ColorFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
@@ -131,8 +132,10 @@ public enum RouterLoggerPreference implements Preference {
 	DLINK_2750_COMMAND_INFO_ADSL_SNR(RouterLoggerPage.DLINK_2750, DefaultStringFieldEditor.class, new PreferenceDataBuilder().defaultValue(DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR).build()),
 
 	GUI_TABLE_ITEMS_MAX(RouterLoggerPage.APPEARANCE, DefaultIntegerFieldEditor.class, new PreferenceDataBuilder().defaultValue(DataTable.Defaults.MAX_ITEMS).build(), new FieldEditorDataBuilder().textLimit(4).build()),
-	GUI_IMPORTANT_KEYS(RouterLoggerPage.APPEARANCE, WrapStringFieldEditor.class),
+	GUI_IMPORTANT_KEYS(RouterLoggerPage.APPEARANCE, WrapStringFieldEditor.class, new FieldEditorDataBuilder().textHeight(3).build()),
 	GUI_IMPORTANT_KEYS_SEPARATOR(RouterLoggerPage.APPEARANCE, DefaultStringFieldEditor.class, new PreferenceDataBuilder().defaultValue(RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).build(), new FieldEditorDataBuilder().emptyStringAllowed(false).build()),
+	GUI_IMPORTANT_KEYS_COLOR(RouterLoggerPage.APPEARANCE, ColorFieldEditor.class, new PreferenceDataBuilder().defaultValue(DataTable.Defaults.IMPORTANT_KEY_BACKGROUND_COLOR).build()),
+	GUI_THRESHOLDS_REACHED_COLOR(RouterLoggerPage.APPEARANCE, ColorFieldEditor.class, new PreferenceDataBuilder().defaultValue(DataTable.Defaults.THRESHOLDS_REACHED_FOREGROUD_COLOR).build()),
 	GUI_TABLE_COLUMNS_PACK(RouterLoggerPage.APPEARANCE, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().restartRequired().defaultValue(DataTable.Defaults.COLUMNS_PACK).build()),
 	GUI_TABLE_COLUMNS_PADDING_RIGHT(RouterLoggerPage.APPEARANCE, ScaleIntegerFieldEditor.class, new PreferenceDataBuilder().restartRequired().defaultValue(DataTable.Defaults.COLUMNS_PADDING_RIGHT).build(), new FieldEditorDataBuilder().scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(10).build()),
 	GUI_CONSOLE_MAX_CHARS(RouterLoggerPage.APPEARANCE, DefaultIntegerFieldEditor.class, new PreferenceDataBuilder().defaultValue(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS).build(), new FieldEditorDataBuilder().textLimit(6).build()),
