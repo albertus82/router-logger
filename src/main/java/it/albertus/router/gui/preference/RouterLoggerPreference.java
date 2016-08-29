@@ -219,10 +219,6 @@ public enum RouterLoggerPreference implements Preference {
 	SERVER_THREADS(RouterLoggerPage.SERVER, ScaleIntegerFieldEditor.class, new PreferenceDataBuilder().defaultValue(BaseHttpServer.Defaults.THREADS).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDataBuilder().scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
 
 	SERVER_HANDLER_ROOT_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
-	SERVER_HANDLER_RESTART_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(RestartHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
-	SERVER_HANDLER_CONNECT_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(ConnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
-	SERVER_HANDLER_DISCONNECT_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(DisconnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
-	SERVER_HANDLER_CLOSE_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(CloseHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_STATUS_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(StatusHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_STATUS_REFRESH(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(StatusHtmlHandler.Defaults.REFRESH).parent(SERVER_HANDLER_STATUS_ENABLED).build()),
 	SERVER_HANDLER_STATUS_REFRESH_SECS(RouterLoggerPage.SERVER_HANDLER, IntegerComboFieldEditor.class, new PreferenceDataBuilder().defaultValue(StatusHtmlHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDataBuilder().labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
@@ -231,6 +227,10 @@ public enum RouterLoggerPreference implements Preference {
 			return Resources.get("lbl.preferences.server.handler.refresh.auto");
 		}
 	}, 0)).build()),
+	SERVER_HANDLER_RESTART_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().separator().defaultValue(RestartHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
+	SERVER_HANDLER_CONNECT_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(ConnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
+	SERVER_HANDLER_DISCONNECT_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(DisconnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
+	SERVER_HANDLER_CLOSE_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(CloseHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_JSON_ENABLED(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().separator().defaultValue(BaseJsonHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build()),
 	SERVER_HANDLER_JSON_REFRESH(RouterLoggerPage.SERVER_HANDLER, DefaultBooleanFieldEditor.class, new PreferenceDataBuilder().defaultValue(BaseJsonHandler.Defaults.REFRESH).parent(SERVER_HANDLER_JSON_ENABLED).build()),
 	SERVER_HANDLER_JSON_REFRESH_SECS(RouterLoggerPage.SERVER_HANDLER, IntegerComboFieldEditor.class, new PreferenceDataBuilder().defaultValue(BaseJsonHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_JSON_REFRESH).build(), new FieldEditorDataBuilder().labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
