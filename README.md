@@ -9,7 +9,7 @@ RouterLogger
 * **ASUS DSL-N14U**
 * **D-Link DSL-2750B**
 
-![Screenshot](https://cloud.githubusercontent.com/assets/8672431/17514770/b5845334-5e34-11e6-9cf9-48c9540b4521.png)
+![Screenshot](https://cloud.githubusercontent.com/assets/8672431/18045080/4b5dbbc4-6dd1-11e6-9461-251ec9b344d6.png)
 
 Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggior parte dei modem router ADSL odierni, pertanto &egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di una tale interfaccia che permetta di recuperare informazioni sullo stato della connessione.
 >Molti dispositivi hanno l'interfaccia Telnet disabilitata per impostazione predefinita, occorre pertanto abilitarla tramite configurazione web prima di poter utilizzare l'applicazione.
@@ -340,7 +340,7 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 * **`server.handler.status.refresh`**= aggiorna automaticamente la pagina **Stato** inserendo l'header HTTP *Refresh* (default: `false`).
 * **`server.handler.status.refresh.secs`**= intervallo di aggiornamento della pagina **Stato**, in secondi (default: `5`).
 * **`server.handler.json.enabled`**= abilita le risorse JSON (default: `true`).
-* **`server.handler.json.refresh`**= aggiorna automaticamente le risorse JSON inserendo l'header HTTP *Refresh* (default:`true`).
+* **`server.handler.json.refresh`**= aggiorna automaticamente le risorse JSON inserendo l'header HTTP *Refresh* (default: `true`).
 * **`server.handler.json.refresh.secs`**= ntervallo di aggiornamento delle risorse JSON, in secondi (default: `0`, ossia *autodetermina*).
 * **`server.log.request`**= regola il livello di registrazione delle richieste HTTP ricevute dall'applicazione. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
 	* **`0`**: nessuna registrazione.
