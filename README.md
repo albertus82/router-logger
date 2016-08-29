@@ -129,6 +129,8 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 * **`gui.important.keys`**= elenco, separato da delimitatore, dei nomi delle chiavi i cui valori saranno evidenziati nella tabella (default: vuoto). Gli stessi valori saranno mostrati anche nel suggerimento che compare soffermandosi con il mouse sull'eventuale icona di RouterLogger nell'area di notifica.
 * **`gui.important.keys.separator`**= delimitatore (o espressione regolare) usato per separare i nomi delle chiavi specificate nella propriet&agrave; `gui.important.keys` (default: `,`). Scegliere un delimitatore che non contenga sequenze di caratteri presenti anche nei nomi delle chiavi.
 * **`gui.clipboard.max.chars`**= dimensione massima degli appunti, in caratteri. (default: `100000` caratteri). **In ambiente Linux/GTK, non impostare mai valori superiori a `131072` (128 KiB), in caso contrario potrebbero verificarsi problemi dovuti all'esaurimento della memoria.**
+* **`gui.important.keys.color`**= codice RGB del colore di evidenziazione delle colonne della tabella (default: `255,255,0`, ossia giallo).
+* **`gui.thresholds.reached.color`**= codice RGB del colore dei valori oltre soglia in tabella (default: `255,0,0` ossia rosso).
 
 #### Console
 
@@ -335,8 +337,11 @@ Per attivare e configurare il server web sono disponibili le seguenti opzioni:
 * **`server.handler.disconnect.enabled`**= abilita la funzione **Disconnetti** (default: `false`).
 * **`server.handler.restart.enabled`**= abilita la funzione **Riavvia** (default: `false`).
 * **`server.handler.status.enabled`**= abilita la funzione **Stato** (default: `true`).
-* **`server.handler.status.refresh`**= aggiorna automaticamente la pagina **Stato** (default: `false`).
+* **`server.handler.status.refresh`**= aggiorna automaticamente la pagina **Stato** inserendo l'header HTTP *Refresh* (default: `false`).
 * **`server.handler.status.refresh.secs`**= intervallo di aggiornamento della pagina **Stato**, in secondi (default: `5`).
+* **`server.handler.json.enabled`**= abilita le risorse JSON (default: `true`).
+* **`server.handler.json.refresh`**= aggiorna automaticamente le risorse JSON inserendo l'header HTTP *Refresh* (default:`true`).
+* **`server.handler.json.refresh.secs`**= ntervallo di aggiornamento delle risorse JSON, in secondi (default: `0`, ossia *autodetermina*).
 * **`server.log.request`**= regola il livello di registrazione delle richieste HTTP ricevute dall'applicazione. La propriet&agrave; pu&ograve; assumere uno tra i seguenti valori:
 	* **`0`**: nessuna registrazione.
 	* **`1`**: registrazione nel registro a video (default).
@@ -376,7 +381,7 @@ Le seguenti propriet&agrave; consentono di personalizzare ulteriormente la confi
 
 RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messaggi [JSON](http://www.json.org) sullo stato della connessione e del programma stesso. Per attivare e configurare il client MQTT sono disponibili le seguenti opzioni:
 
-* **`mqtt.active`**= abilita il client MQTT (default: `false`).
+* **`mqtt.enabled`**= abilita il client MQTT (default: `false`).
 * **`mqtt.server.uri`**= elenco, separato da `|`, delle URI di collegamento al server MQTT. Tipicamente &egrave; sufficiente inserire un unico valore (es. `tcp://192.168.1.100:1883`).
 * **`mqtt.username`**= nome utente per la connessione al server MQTT (se richiesto dal server).
 * **`mqtt.password`**= password per la connessione al server MQTT (se richiesta dal server).
@@ -391,7 +396,7 @@ RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messag
 	* **`0`**: se possibile *3.1.1*, in caso contrario *3.1* (default).
 	* **`3`**: *3.1*.
 	* **`4`**: *3.1.1*.
-* **`mqtt.persistence.file.active`**= abilita la persistenza su file dei messaggi in transito con QoS 1 o 2. Se questa opzione &egrave; disattivata, i messaggi vengono mantenuti in memoria e quindi vengono persi in caso di arresto dell'applicazione (default: `false`).
+* **`mqtt.persistence.file.enabled`**= abilita la persistenza su file dei messaggi in transito con QoS 1 o 2. Se questa opzione &egrave; disattivata, i messaggi vengono mantenuti in memoria e quindi vengono persi in caso di arresto dell'applicazione (default: `false`).
 * **`mqtt.persistence.file.custom`**= abilita la selezione di un percorso specifico per la persistenza dei messaggi in transito (default: `false`).
 * **`mqtt.persistence.file.path`**= directory di base per la persistenza dei messaggi in transito (default: directory da cui &egrave; stato avviato il programma).
 * **`mqtt.data.enabled`**= abilita la pubblicazione dei messaggi contenenti le informazioni sulla connessione (default: `true`).
