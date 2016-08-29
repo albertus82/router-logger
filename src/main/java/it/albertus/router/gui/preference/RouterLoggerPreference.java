@@ -308,7 +308,7 @@ public enum RouterLoggerPreference implements Preference {
 	private final FieldEditorData fieldEditorData;
 	private final Preference parent;
 	private final String configurationKey;
-	private final String labelKey;
+	private final Localized label;
 	private final boolean restartRequired;
 	private final boolean separator;
 
@@ -333,12 +333,17 @@ public enum RouterLoggerPreference implements Preference {
 			else {
 				this.configurationKey = name().toLowerCase().replace('_', '.');
 			}
-			final String labelKey = preferenceData.getLabelResourceKey();
-			if (labelKey != null && !labelKey.isEmpty()) {
-				this.labelKey = labelKey;
+			final Localized label = preferenceData.getLabel();
+			if (label != null) {
+				this.label = label;
 			}
 			else {
-				this.labelKey = LABEL_KEY_PREFIX + this.configurationKey;
+				this.label = new Localized() {
+					@Override
+					public String getString() {
+						return Resources.get(LABEL_KEY_PREFIX + RouterLoggerPreference.this.configurationKey);
+					}
+				};
 			}
 			this.defaultValue = preferenceData.getDefaultValue();
 			this.parent = preferenceData.getParent();
@@ -347,7 +352,12 @@ public enum RouterLoggerPreference implements Preference {
 		}
 		else {
 			this.configurationKey = name().toLowerCase().replace('_', '.');
-			this.labelKey = LABEL_KEY_PREFIX + this.configurationKey;
+			this.label = new Localized() {
+				@Override
+				public String getString() {
+					return Resources.get(LABEL_KEY_PREFIX + RouterLoggerPreference.this.configurationKey);
+				}
+			};
 			this.restartRequired = false;
 			this.defaultValue = null;
 			this.parent = null;
@@ -365,7 +375,7 @@ public enum RouterLoggerPreference implements Preference {
 
 	@Override
 	public String getLabel() {
-		return Resources.get(labelKey);
+		return label.getString();
 	}
 
 	@Override
