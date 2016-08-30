@@ -2,14 +2,14 @@ package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.TextFormatter;
 import it.albertus.jface.preference.StaticLabelsAndValues;
-import it.albertus.jface.preference.page.AbstractPreferencePage;
+import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.router.resources.Resources;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-public class DatabasePreferencePage extends AbstractPreferencePage {
+public class DatabasePreferencePage extends BasePreferencePage {
 
 	@Override
 	protected Control createHeader() {
