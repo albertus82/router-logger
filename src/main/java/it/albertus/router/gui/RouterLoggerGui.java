@@ -112,7 +112,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
-		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().open(shell, RouterLoggerPreference.forConfigurationKey(((ConfigurationException) throwable).getKey()).getPage()) != Window.OK) {
+		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, RouterLoggerPreference.forConfigurationKey(((ConfigurationException) throwable).getKey()).getPageDefinition()) != Window.OK) {
 			shell.dispose();
 			return null;
 		}
@@ -328,7 +328,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, ce);
-				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().open(shell, RouterLoggerPreference.forConfigurationKey((ce).getKey()).getPage()) != Window.OK) {
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, RouterLoggerPreference.forConfigurationKey((ce).getKey()).getPageDefinition()) != Window.OK) {
 					logger.log(ce, Destination.CONSOLE);
 					return;
 				}

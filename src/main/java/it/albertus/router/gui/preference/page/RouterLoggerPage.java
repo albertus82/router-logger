@@ -1,14 +1,14 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.page.AbstractPreferencePage;
-import it.albertus.jface.preference.page.Page;
+import it.albertus.jface.preference.page.PageDefinition;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Resources;
 
-public enum RouterLoggerPage implements Page {
+public enum RouterLoggerPage implements PageDefinition {
 	GENERAL(GeneralPreferencePage.class),
 	READER(ReaderPreferencePage.class),
 	APPEARANCE(AppearancePreferencePage.class),
@@ -36,13 +36,13 @@ public enum RouterLoggerPage implements Page {
 	private final String nodeId;
 	private final String labelKey;
 	private final Class<? extends AbstractPreferencePage> pageClass;
-	private final Page parent;
+	private final PageDefinition parent;
 
 	private RouterLoggerPage(final Class<? extends AbstractPreferencePage> pageClass) {
 		this(null, null, pageClass, null);
 	}
 
-	private RouterLoggerPage(final Class<? extends AbstractPreferencePage> pageClass, final Page parent) {
+	private RouterLoggerPage(final Class<? extends AbstractPreferencePage> pageClass, final PageDefinition parent) {
 		this(null, null, pageClass, parent);
 	}
 
@@ -50,7 +50,7 @@ public enum RouterLoggerPage implements Page {
 		this(null, labelKey, pageClass, null);
 	}
 
-	private RouterLoggerPage(final String labelKey, final Class<? extends AbstractPreferencePage> pageClass, final Page parent) {
+	private RouterLoggerPage(final String labelKey, final Class<? extends AbstractPreferencePage> pageClass, final PageDefinition parent) {
 		this(null, labelKey, pageClass, parent);
 	}
 
@@ -58,7 +58,7 @@ public enum RouterLoggerPage implements Page {
 		this(nodeId, labelKey, pageClass, null);
 	}
 
-	private RouterLoggerPage(final String nodeId, final String labelKey, final Class<? extends AbstractPreferencePage> pageClass, final Page parent) {
+	private RouterLoggerPage(final String nodeId, final String labelKey, final Class<? extends AbstractPreferencePage> pageClass, final PageDefinition parent) {
 		if (nodeId != null && !nodeId.isEmpty()) {
 			this.nodeId = nodeId;
 		}
@@ -91,11 +91,11 @@ public enum RouterLoggerPage implements Page {
 	}
 
 	@Override
-	public Page getParent() {
+	public PageDefinition getParent() {
 		return parent;
 	}
 
-	public static Page forClass(final Class<? extends AbstractPreferencePage> clazz) {
+	public static PageDefinition forClass(final Class<? extends AbstractPreferencePage> clazz) {
 		if (clazz != null) {
 			for (final RouterLoggerPage page : RouterLoggerPage.values()) {
 				if (clazz.equals(page.pageClass)) {

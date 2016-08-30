@@ -1,7 +1,7 @@
 package it.albertus.router.gui.preference;
 
 import it.albertus.jface.preference.Preferences;
-import it.albertus.jface.preference.page.Page;
+import it.albertus.jface.preference.page.PageDefinition;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.Images;
@@ -26,10 +26,10 @@ public class RouterLoggerPreferences extends Preferences {
 	}
 
 	@Override
-	public int open(final Shell parentShell, final Page selectedPage) {
+	public int openDialog(final Shell parentShell, final PageDefinition selectedPage) {
 		final Language language = Resources.getLanguage();
 
-		final int returnCode = super.open(parentShell, selectedPage);
+		final int returnCode = super.openDialog(parentShell, selectedPage);
 
 		// Check if must update texts...
 		if (gui != null && !language.equals(Resources.getLanguage())) {
