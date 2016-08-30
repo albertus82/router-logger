@@ -348,11 +348,15 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	@Override
-	protected void setStatus(Status status) {
-		super.setStatus(status);
-		if (trayIcon != null) {
+	protected boolean setStatus(Status status) {
+		final boolean update = super.setStatus(status);
+		if (update && trayIcon != null) {
 			trayIcon.updateTrayItem(status);
+			if (Status.WARNING.equals(getCurrentStatus().getStatus())) {
+				trayIcon.setShowToolTip(true);
+			}
 		}
+		return update;
 	}
 
 	@Override

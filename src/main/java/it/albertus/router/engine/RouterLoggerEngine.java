@@ -77,16 +77,14 @@ public abstract class RouterLoggerEngine {
 		return previousStatus;
 	}
 
-	protected void setStatus(final Status status) {
-		doSetStatus(status);
-	}
-
-	private final void doSetStatus(final Status newStatus) {
-		if (!currentStatus.getStatus().equals(newStatus)) {
+	protected boolean setStatus(final Status newStatus) {
+		final boolean update = !currentStatus.getStatus().equals(newStatus);
+		if (update) {
 			previousStatus = currentStatus;
 			currentStatus = new RouterLoggerStatus(newStatus);
 			mqttClient.publishStatus(currentStatus);
 		}
+		return update;
 	}
 
 	public long getWaitTimeInMillis() {
@@ -396,8 +394,7 @@ public abstract class RouterLoggerEngine {
 			}
 
 			if (importantThresholdReached || System.currentTimeMillis() - hysteresis < configuration.getLong("logger.hysteresis.ms", Defaults.HYSTERESIS_IN_MILLIS)) {
-				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
-				doSetStatus(Status.WARNING);
+				setStatus(Status.WARNING);
 				if (importantThresholdReached) {
 					hysteresis = System.currentTimeMillis();
 					if (configuration.getBoolean("thresholds.email", Defaults.THRESHOLDS_EMAIL)) {
@@ -406,12 +403,10 @@ public abstract class RouterLoggerEngine {
 				}
 			}
 			else if (!thresholdsReached.isEmpty()) {
-				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
-				doSetStatus(Status.INFO);
+				setStatus(Status.INFO);
 			}
 			else {
-				// Normalmente chiamare setStatus(...) per garantire l'aggiornamento della GUI
-				doSetStatus(Status.OK);
+				setStatus(Status.OK);
 			}
 			// Aggiorna l'interfaccia
 			showInfo(currentData, thresholdsReached);
