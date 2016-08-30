@@ -95,15 +95,4 @@ public enum RouterLoggerPage implements PageDefinition {
 		return parent;
 	}
 
-	public static PageDefinition forClass(final Class<? extends AbstractPreferencePage> clazz) {
-		if (clazz != null) {
-			for (final RouterLoggerPage page : RouterLoggerPage.values()) {
-				if (clazz.equals(page.pageClass)) {
-					return page;
-				}
-			}
-		}
-		return null;
-	}
-
 }

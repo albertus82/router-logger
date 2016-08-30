@@ -1,10 +1,11 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
+import it.albertus.jface.preference.page.AbstractPreferencePage;
 import it.albertus.router.resources.Resources;
 import it.albertus.util.Localized;
 
-public class CsvPreferencePage extends BasePreferencePage {
+public class CsvPreferencePage extends AbstractPreferencePage {
 
 	private enum Separator {
 		COMMA("lbl.preferences.separator.comma", ","),

@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
-public class DLink2750PreferencePage extends BasePreferencePage {
+import it.albertus.jface.preference.page.AbstractPreferencePage;
+
+public class DLink2750PreferencePage extends AbstractPreferencePage {
 
 }

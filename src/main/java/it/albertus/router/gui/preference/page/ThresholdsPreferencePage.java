@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
-public class ThresholdsPreferencePage extends BasePreferencePage {
+import it.albertus.jface.preference.page.AbstractPreferencePage;
+
+public class ThresholdsPreferencePage extends AbstractPreferencePage {
 
 }

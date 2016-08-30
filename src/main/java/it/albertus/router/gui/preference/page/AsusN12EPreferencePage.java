@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
-public class AsusN12EPreferencePage extends BasePreferencePage {
+import it.albertus.jface.preference.page.AbstractPreferencePage;
+
+public class AsusN12EPreferencePage extends AbstractPreferencePage {
 
 }

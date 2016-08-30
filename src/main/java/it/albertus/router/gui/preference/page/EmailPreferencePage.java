@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
-public class EmailPreferencePage extends BasePreferencePage {
+import it.albertus.jface.preference.page.AbstractPreferencePage;
+
+public class EmailPreferencePage extends AbstractPreferencePage {
 
 }
