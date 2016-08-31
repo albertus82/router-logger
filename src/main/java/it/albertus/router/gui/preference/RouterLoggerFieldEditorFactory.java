@@ -13,7 +13,8 @@ import org.eclipse.swt.widgets.Composite;
 public class RouterLoggerFieldEditorFactory extends FieldEditorFactory {
 
 	@Override
-	public FieldEditor createFieldEditor(final Class<? extends FieldEditor> type, final String name, final String label, final Composite parent, final FieldEditorDetails details) {
+	public FieldEditor createFieldEditor(final String name, final String label, final Composite parent, final FieldEditorDetails details) {
+		final Class<? extends FieldEditor> type = details.getFieldEditorClass();
 		if (DatabaseComboFieldEditor.class.equals(type)) {
 			return new DatabaseComboFieldEditor(name, label, details.getLabelsAndValues().toArray(), parent);
 		}
@@ -26,7 +27,7 @@ public class RouterLoggerFieldEditorFactory extends FieldEditorFactory {
 		if (WriterComboFieldEditor.class.equals(type)) {
 			return new WriterComboFieldEditor(name, label, details.getLabelsAndValues().toArray(), parent);
 		}
-		return super.createFieldEditor(type, name, label, parent, details);
+		return super.createFieldEditor(name, label, parent, details);
 	}
 
 }
