@@ -1,6 +1,6 @@
 package it.albertus.router.gui.preference;
 
-import it.albertus.jface.preference.FieldEditorData;
+import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorFactory;
 import it.albertus.router.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.router.gui.preference.field.ReaderComboFieldEditor;
@@ -13,20 +13,20 @@ import org.eclipse.swt.widgets.Composite;
 public class RouterLoggerFieldEditorFactory extends FieldEditorFactory {
 
 	@Override
-	public FieldEditor createFieldEditor(final Class<? extends FieldEditor> type, final String name, final String label, final Composite parent, final FieldEditorData data) {
+	public FieldEditor createFieldEditor(final Class<? extends FieldEditor> type, final String name, final String label, final Composite parent, final FieldEditorDetails details) {
 		if (DatabaseComboFieldEditor.class.equals(type)) {
-			return new DatabaseComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
+			return new DatabaseComboFieldEditor(name, label, details.getLabelsAndValues().toArray(), parent);
 		}
 		if (ReaderComboFieldEditor.class.equals(type)) {
-			return new ReaderComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
+			return new ReaderComboFieldEditor(name, label, details.getLabelsAndValues().toArray(), parent);
 		}
 		if (ThresholdsListEditor.class.equals(type)) {
 			return new ThresholdsListEditor(name, label, parent);
 		}
 		if (WriterComboFieldEditor.class.equals(type)) {
-			return new WriterComboFieldEditor(name, label, data.getLabelsAndValues().toArray(), parent);
+			return new WriterComboFieldEditor(name, label, details.getLabelsAndValues().toArray(), parent);
 		}
-		return super.createFieldEditor(type, name, label, parent, data);
+		return super.createFieldEditor(type, name, label, parent, details);
 	}
 
 }
