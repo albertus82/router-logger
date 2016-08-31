@@ -17,7 +17,7 @@ public class RouterLoggerPreferences extends Preferences {
 	private final RouterLoggerGui gui;
 
 	public RouterLoggerPreferences(final RouterLoggerGui gui) {
-		super(RouterLoggerConfiguration.getInstance(), PageDefinition.values(), RouterLoggerPreference.values(), Images.MAIN_ICONS);
+		super(RouterLoggerConfiguration.getInstance(), PageDefinition.values(), Preference.values(), Images.MAIN_ICONS);
 		this.gui = gui;
 	}
 
@@ -39,8 +39,8 @@ public class RouterLoggerPreferences extends Preferences {
 
 		if (!restartRequired) {
 			// Check if restart is required...
-			final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(RouterLoggerPreference.READER_CLASS_NAME.getName()));
-			final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(RouterLoggerPreference.WRITER_CLASS_NAME.getName(), RouterLoggerPreference.WRITER_CLASS_NAME.getDefaultValue()));
+			final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(Preference.READER_CLASS_NAME.getName()));
+			final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(Preference.WRITER_CLASS_NAME.getName(), Preference.WRITER_CLASS_NAME.getDefaultValue()));
 			if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
 				try {
 					// Check if configured classes are valid...

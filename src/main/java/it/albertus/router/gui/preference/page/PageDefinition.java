@@ -14,6 +14,7 @@ import it.albertus.util.Localized;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 public enum PageDefinition implements IPreferencePageDefinition {
+
 	GENERAL(new PreferencePageDefinitionBuilder().pageClass(GeneralPreferencePage.class).build()),
 	READER(new PreferencePageDefinitionBuilder().pageClass(ReaderPreferencePage.class).build()),
 	APPEARANCE(new PreferencePageDefinitionBuilder().pageClass(RestartHeaderPreferencePage.class).build()),
@@ -45,8 +46,8 @@ public enum PageDefinition implements IPreferencePageDefinition {
 	WRITER(new PreferencePageDefinitionBuilder().pageClass(WriterPreferencePage.class).build()),
 	CSV(new PreferencePageDefinitionBuilder().pageClass(CsvPreferencePage.class).parent(WRITER).build()),
 	DATABASE(new PreferencePageDefinitionBuilder().pageClass(DatabasePreferencePage.class).parent(WRITER).build()),
-	THRESHOLDS(),
-	EMAIL(),
+	THRESHOLDS,
+	EMAIL,
 	EMAIL_ADVANCED(new PreferencePageDefinitionBuilder().parent(EMAIL).build()),
 	EMAIL_CC_BCC(new PreferencePageDefinitionBuilder().parent(EMAIL).build()),
 	SERVER(new PreferencePageDefinitionBuilder().pageClass(ServerPreferencePage.class).build()),

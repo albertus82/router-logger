@@ -7,7 +7,7 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Status;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
-import it.albertus.router.gui.preference.RouterLoggerPreference;
+import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.util.Logger;
@@ -112,7 +112,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
-		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, RouterLoggerPreference.forName(((ConfigurationException) throwable).getKey()).getPageDefinition()) != Window.OK) {
+		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName(((ConfigurationException) throwable).getKey()).getPageDefinition()) != Window.OK) {
 			shell.dispose();
 			return null;
 		}
@@ -128,7 +128,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			style = SWT.ICON_WARNING | SWT.YES | SWT.NO;
 			String propertyName;
 			try {
-				propertyName = RouterLoggerPreference.forName(ce.getKey()).getLabel();
+				propertyName = Preference.forName(ce.getKey()).getLabel();
 			}
 			catch (final Exception e) {
 				propertyName = ce.getKey();
@@ -328,7 +328,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, ce);
-				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, RouterLoggerPreference.forName((ce).getKey()).getPageDefinition()) != Window.OK) {
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName((ce).getKey()).getPageDefinition()) != Window.OK) {
 					logger.log(ce, Destination.CONSOLE);
 					return;
 				}
