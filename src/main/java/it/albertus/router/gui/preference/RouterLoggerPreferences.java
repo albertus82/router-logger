@@ -1,7 +1,7 @@
 package it.albertus.router.gui.preference;
 
 import it.albertus.jface.preference.Preferences;
-import it.albertus.jface.preference.page.PageDefinition;
+import it.albertus.jface.preference.page.IPageDefinition;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.Images;
@@ -26,7 +26,7 @@ public class RouterLoggerPreferences extends Preferences {
 	}
 
 	@Override
-	public int openDialog(final Shell parentShell, final PageDefinition selectedPage) {
+	public int openDialog(final Shell parentShell, final IPageDefinition selectedPage) {
 		final Language language = Resources.getLanguage();
 
 		final int returnCode = super.openDialog(parentShell, selectedPage);

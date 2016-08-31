@@ -23,7 +23,7 @@ import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.jface.preference.page.BasePreferencePage;
-import it.albertus.jface.preference.page.PageDefinition;
+import it.albertus.jface.preference.page.IPageDefinition;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
@@ -302,7 +302,7 @@ public enum RouterLoggerPreference implements Preference {
 
 	private static final FieldEditorFactory fieldEditorFactory = new RouterLoggerFieldEditorFactory();
 
-	private final PageDefinition pageDefinition;
+	private final IPageDefinition pageDefinition;
 	private final Class<? extends FieldEditor> fieldEditorType;
 	private final String defaultValue;
 	private final FieldEditorData fieldEditorData;
@@ -312,19 +312,19 @@ public enum RouterLoggerPreference implements Preference {
 	private final boolean restartRequired;
 	private final boolean separator;
 
-	private RouterLoggerPreference(final PageDefinition page, final Class<? extends FieldEditor> fieldEditorType) {
+	private RouterLoggerPreference(final IPageDefinition page, final Class<? extends FieldEditor> fieldEditorType) {
 		this(page, fieldEditorType, null, null);
 	}
 
-	private RouterLoggerPreference(final PageDefinition page, final Class<? extends FieldEditor> fieldEditorType, final PreferenceData preferenceData) {
+	private RouterLoggerPreference(final IPageDefinition page, final Class<? extends FieldEditor> fieldEditorType, final PreferenceData preferenceData) {
 		this(page, fieldEditorType, preferenceData, null);
 	}
 
-	private RouterLoggerPreference(final PageDefinition page, final Class<? extends FieldEditor> fieldEditorType, final FieldEditorData fieldEditorData) {
+	private RouterLoggerPreference(final IPageDefinition page, final Class<? extends FieldEditor> fieldEditorType, final FieldEditorData fieldEditorData) {
 		this(page, fieldEditorType, null, fieldEditorData);
 	}
 
-	private RouterLoggerPreference(final PageDefinition page, final Class<? extends FieldEditor> fieldEditorType, final PreferenceData preferenceData, final FieldEditorData fieldEditorData) {
+	private RouterLoggerPreference(final IPageDefinition page, final Class<? extends FieldEditor> fieldEditorType, final PreferenceData preferenceData, final FieldEditorData fieldEditorData) {
 		if (preferenceData != null) {
 			final String configurationKey = preferenceData.getConfigurationKey();
 			if (configurationKey != null && !configurationKey.isEmpty()) {
@@ -379,7 +379,7 @@ public enum RouterLoggerPreference implements Preference {
 	}
 
 	@Override
-	public PageDefinition getPageDefinition() {
+	public IPageDefinition getPageDefinition() {
 		return pageDefinition;
 	}
 
