@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
+import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;

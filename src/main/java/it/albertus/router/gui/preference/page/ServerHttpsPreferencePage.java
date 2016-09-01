@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.StaticLabelsAndValues;
+import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
 import it.albertus.router.server.BaseHttpServer;
 
 import java.security.KeyStore;

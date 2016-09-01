@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
+import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;

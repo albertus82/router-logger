@@ -1,9 +1,10 @@
 package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.page.BasePreferencePage;
-import it.albertus.jface.preference.page.IPreferencePageDefinition;
-import it.albertus.jface.preference.page.PreferencePageDefinition;
-import it.albertus.jface.preference.page.PreferencePageDefinition.PreferencePageDefinitionBuilder;
+import it.albertus.jface.preference.page.IPageDefinition;
+import it.albertus.jface.preference.page.PageDefinitionDetails;
+import it.albertus.jface.preference.page.PageDefinitionDetails.PageDefinitionDetailsBuilder;
+import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -13,68 +14,68 @@ import it.albertus.util.Localized;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 
-public enum PageDefinition implements IPreferencePageDefinition {
+public enum PageDefinition implements IPageDefinition {
 
-	GENERAL(new PreferencePageDefinitionBuilder().pageClass(GeneralPreferencePage.class).build()),
-	READER(new PreferencePageDefinitionBuilder().pageClass(ReaderPreferencePage.class).build()),
-	APPEARANCE(new PreferencePageDefinitionBuilder().pageClass(RestartHeaderPreferencePage.class).build()),
-	CONSOLE(new PreferencePageDefinitionBuilder().parent(APPEARANCE).build()),
-	TPLINK_8970(new PreferencePageDefinitionBuilder().label(new Localized() {
+	GENERAL(new PageDefinitionDetailsBuilder().pageClass(GeneralPreferencePage.class).build()),
+	READER(new PageDefinitionDetailsBuilder().pageClass(ReaderPreferencePage.class).build()),
+	APPEARANCE(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).build()),
+	CONSOLE(new PageDefinitionDetailsBuilder().parent(APPEARANCE).build()),
+	READER_TPLINK_8970(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
 			return Resources.get(TpLink8970Reader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
-	ASUS_N12E(new PreferencePageDefinitionBuilder().label(new Localized() {
+	READER_ASUS_N12E(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
 			return Resources.get(AsusDslN12EReader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
-	ASUS_N14U(new PreferencePageDefinitionBuilder().label(new Localized() {
+	READER_ASUS_N14U(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
 			return Resources.get(AsusDslN14UReader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
-	DLINK_2750(new PreferencePageDefinitionBuilder().label(new Localized() {
+	READER_DLINK_2750(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
 			return Resources.get(DLinkDsl2750Reader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
-	WRITER(new PreferencePageDefinitionBuilder().pageClass(WriterPreferencePage.class).build()),
-	CSV(new PreferencePageDefinitionBuilder().pageClass(CsvPreferencePage.class).parent(WRITER).build()),
-	DATABASE(new PreferencePageDefinitionBuilder().pageClass(DatabasePreferencePage.class).parent(WRITER).build()),
+	WRITER(new PageDefinitionDetailsBuilder().pageClass(WriterPreferencePage.class).build()),
+	CSV(new PageDefinitionDetailsBuilder().pageClass(CsvPreferencePage.class).parent(WRITER).build()),
+	DATABASE(new PageDefinitionDetailsBuilder().pageClass(DatabasePreferencePage.class).parent(WRITER).build()),
 	THRESHOLDS,
 	EMAIL,
-	EMAIL_ADVANCED(new PreferencePageDefinitionBuilder().parent(EMAIL).build()),
-	EMAIL_CC_BCC(new PreferencePageDefinitionBuilder().parent(EMAIL).build()),
-	SERVER(new PreferencePageDefinitionBuilder().pageClass(ServerPreferencePage.class).build()),
-	SERVER_HANDLER(new PreferencePageDefinitionBuilder().parent(SERVER).build()),
-	SERVER_HTTPS(new PreferencePageDefinitionBuilder().pageClass(ServerHttpsPreferencePage.class).parent(SERVER).build()),
-	MQTT(new PreferencePageDefinitionBuilder().pageClass(MqttPreferencePage.class).build()),
-	MQTT_MESSAGES(new PreferencePageDefinitionBuilder().pageClass(RestartHeaderPreferencePage.class).parent(MQTT).build()),
-	MQTT_ADVANCED(new PreferencePageDefinitionBuilder().pageClass(AdvancedMqttPreferencePage.class).parent(MQTT).build());
+	EMAIL_ADVANCED(new PageDefinitionDetailsBuilder().parent(EMAIL).build()),
+	EMAIL_CC_BCC(new PageDefinitionDetailsBuilder().parent(EMAIL).build()),
+	SERVER(new PageDefinitionDetailsBuilder().pageClass(ServerPreferencePage.class).build()),
+	SERVER_HANDLER(new PageDefinitionDetailsBuilder().parent(SERVER).build()),
+	SERVER_HTTPS(new PageDefinitionDetailsBuilder().pageClass(ServerHttpsPreferencePage.class).parent(SERVER).build()),
+	MQTT(new PageDefinitionDetailsBuilder().pageClass(MqttPreferencePage.class).build()),
+	MQTT_MESSAGES(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).parent(MQTT).build()),
+	MQTT_ADVANCED(new PageDefinitionDetailsBuilder().pageClass(AdvancedMqttPreferencePage.class).parent(MQTT).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 
-	private final IPreferencePageDefinition pageDefinition;
+	private final PageDefinitionDetails pageDefinitionDetails;
 
 	PageDefinition() {
-		this(new PreferencePageDefinition());
+		this(new PageDefinitionDetailsBuilder().build());
 	}
 
-	PageDefinition(final PreferencePageDefinition pageDefinition) {
-		this.pageDefinition = pageDefinition;
-		if (pageDefinition.getNodeId() == null) {
-			pageDefinition.setNodeId(name().toLowerCase().replace('_', '.'));
+	PageDefinition(final PageDefinitionDetails pageDefinitionDetails) {
+		this.pageDefinitionDetails = pageDefinitionDetails;
+		if (pageDefinitionDetails.getNodeId() == null) {
+			pageDefinitionDetails.setNodeId(name().toLowerCase().replace('_', '.'));
 		}
-		if (pageDefinition.getLabel() == null) {
-			pageDefinition.setLabel(new Localized() {
+		if (pageDefinitionDetails.getLabel() == null) {
+			pageDefinitionDetails.setLabel(new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(LABEL_KEY_PREFIX + pageDefinition.getNodeId());
+					return Resources.get(LABEL_KEY_PREFIX + pageDefinitionDetails.getNodeId());
 				}
 			});
 		}
@@ -82,27 +83,27 @@ public enum PageDefinition implements IPreferencePageDefinition {
 
 	@Override
 	public String getNodeId() {
-		return pageDefinition.getNodeId();
+		return pageDefinitionDetails.getNodeId();
 	}
 
 	@Override
-	public Localized getLabel() {
-		return pageDefinition.getLabel();
+	public String getLabel() {
+		return pageDefinitionDetails.getLabel().getString();
 	}
 
 	@Override
 	public Class<? extends BasePreferencePage> getPageClass() {
-		return pageDefinition.getPageClass();
+		return pageDefinitionDetails.getPageClass();
 	}
 
 	@Override
-	public IPreferencePageDefinition getParent() {
-		return pageDefinition.getParent();
+	public IPageDefinition getParent() {
+		return pageDefinitionDetails.getParent();
 	}
 
 	@Override
 	public ImageDescriptor getImage() {
-		return pageDefinition.getImage();
+		return pageDefinitionDetails.getImage();
 	}
 
 }
