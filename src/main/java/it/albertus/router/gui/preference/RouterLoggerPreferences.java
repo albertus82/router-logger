@@ -9,18 +9,16 @@ import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.page.PageDefinition;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.resources.Resources.Language;
-import it.albertus.util.Configuration;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 
 public class RouterLoggerPreferences extends Preferences {
 
 	private final RouterLoggerGui gui;
-	private final Configuration configuration;
 
 	public RouterLoggerPreferences(final RouterLoggerGui gui) {
 		super(RouterLoggerConfiguration.getInstance(), PageDefinition.values(), Preference.values(), Images.MAIN_ICONS);
-		this.configuration = RouterLoggerConfiguration.getInstance();
 		this.gui = gui;
 	}
 
@@ -40,16 +38,17 @@ public class RouterLoggerPreferences extends Preferences {
 			gui.getDataTable().updateTexts();
 		}
 
-		if (!restartRequired) {
+		if (!isRestartRequired()) {
 			// Check if restart is required...
-			final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(configuration.getString(Preference.READER_CLASS_NAME.getName()));
-			final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(configuration.getString(Preference.WRITER_CLASS_NAME.getName(), Preference.WRITER_CLASS_NAME.getDefaultValue()));
+			final IPreferenceStore preferenceStore = getPreferenceDialog().getPreferenceStore();
+			final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(preferenceStore.getString(Preference.READER_CLASS_NAME.getName()));
+			final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(preferenceStore.getString(Preference.WRITER_CLASS_NAME.getName()));
 			if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
 				try {
 					// Check if configured classes are valid...
 					Class.forName(configuredReaderClassName, false, this.getClass().getClassLoader());
 					Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
-					restartRequired = true; // Restart dialog will be shown.
+					setRestartRequired(true); // Restart dialog will be shown.
 				}
 				catch (final Throwable t) {}
 			}
