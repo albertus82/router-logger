@@ -9,15 +9,18 @@ import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.page.PageDefinition;
 import it.albertus.router.resources.Resources;
 import it.albertus.router.resources.Resources.Language;
+import it.albertus.util.Configuration;
 
 import org.eclipse.swt.widgets.Shell;
 
 public class RouterLoggerPreferences extends Preferences {
 
 	private final RouterLoggerGui gui;
+	private final Configuration configuration;
 
 	public RouterLoggerPreferences(final RouterLoggerGui gui) {
 		super(RouterLoggerConfiguration.getInstance(), PageDefinition.values(), Preference.values(), Images.MAIN_ICONS);
+		this.configuration = RouterLoggerConfiguration.getInstance();
 		this.gui = gui;
 	}
 
