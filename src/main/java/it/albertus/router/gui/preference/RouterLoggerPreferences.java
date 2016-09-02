@@ -18,7 +18,7 @@ public class RouterLoggerPreferences extends Preferences {
 	private final RouterLoggerGui gui;
 
 	public RouterLoggerPreferences(final RouterLoggerGui gui) {
-		super(RouterLoggerConfiguration.getInstance(), PageDefinition.values(), Preference.values(), Images.MAIN_ICONS);
+		super(PageDefinition.values(), Preference.values(), RouterLoggerConfiguration.getInstance(), Images.MAIN_ICONS);
 		this.gui = gui;
 	}
 
