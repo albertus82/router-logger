@@ -74,7 +74,7 @@ import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.server.BaseHttpServer;
 import it.albertus.router.server.html.BaseHtmlHandler;
 import it.albertus.router.server.html.CloseHandler;
@@ -104,7 +104,7 @@ public enum Preference implements IPreference {
 	LOGGER_ITERATIONS(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.ITERATIONS).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.iterations.infinite");
+			return Messages.get("lbl.preferences.iterations.infinite");
 		}
 	}, 0)).build()),
 	LOGGER_CLOSE_WHEN_FINISHED(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.CLOSE_WHEN_FINISHED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -114,14 +114,14 @@ public enum Preference implements IPreference {
 	LOGGER_RETRY_COUNT(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRIES).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.logger.retry.count.infinite");
+			return Messages.get("lbl.preferences.logger.retry.count.infinite");
 		}
 	}, 0)).build()),
 	LOGGER_RETRY_INTERVAL_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(Logger.Defaults.DIRECTORY).build(), new FieldEditorDetailsBuilder(DefaultDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("msg.preferences.directory.dialog.message.log");
+			return Messages.get("msg.preferences.directory.dialog.message.log");
 		}
 	}).build()),
 	CONSOLE_SHOW_CONFIGURATION(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -174,7 +174,7 @@ public enum Preference implements IPreference {
 	CSV_DESTINATION_PATH(new PreferenceDetailsBuilder(CSV).defaultValue(CsvWriter.Defaults.DIRECTORY).build(), new FieldEditorDetailsBuilder(DefaultDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("msg.preferences.directory.dialog.message.csv");
+			return Messages.get("msg.preferences.directory.dialog.message.csv");
 		}
 	}).build()),
 	CSV_NEWLINE_CHARACTERS(new PreferenceDetailsBuilder(CSV).defaultValue(CsvWriter.Defaults.NEWLINE.name()).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
@@ -217,7 +217,7 @@ public enum Preference implements IPreference {
 	EMAIL_MAX_SENDINGS_PER_CYCLE(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.MAX_SENDINGS_PER_CYCLE).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.email.max.sendings.per.cycle.unlimited");
+			return Messages.get("lbl.preferences.email.max.sendings.per.cycle.unlimited");
 		}
 	}, 0)).build()),
 	EMAIL_MAX_QUEUE_SIZE(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.MAX_QUEUE_SIZE).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(10).build()),
@@ -244,7 +244,7 @@ public enum Preference implements IPreference {
 	SERVER_HANDLER_STATUS_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.server.handler.refresh.auto");
+			return Messages.get("lbl.preferences.server.handler.refresh.auto");
 		}
 	}, 0)).build()),
 	SERVER_HANDLER_RESTART_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(RestartHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -256,7 +256,7 @@ public enum Preference implements IPreference {
 	SERVER_HANDLER_JSON_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_JSON_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.server.handler.refresh.auto");
+			return Messages.get("lbl.preferences.server.handler.refresh.auto");
 		}
 	}, 0)).build()),
 
@@ -282,7 +282,7 @@ public enum Preference implements IPreference {
 	MQTT_DATA_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_THROTTLING_IN_MILLIS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.mqtt.data.throttling.disabled");
+			return Messages.get("lbl.preferences.mqtt.data.throttling.disabled");
 		}
 	}, 0)).build()),
 	MQTT_DATA_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_RETAINED).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -298,7 +298,7 @@ public enum Preference implements IPreference {
 	MQTT_THRESHOLDS_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("lbl.preferences.mqtt.thresholds.throttling.disabled");
+			return Messages.get("lbl.preferences.mqtt.thresholds.throttling.disabled");
 		}
 	}, 0)).build()),
 	MQTT_THRESHOLDS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_RETAINED).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -314,7 +314,7 @@ public enum Preference implements IPreference {
 	MQTT_PERSISTENCE_FILE_PATH(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(System.getProperty("user.dir")).parent(MQTT_PERSISTENCE_FILE_CUSTOM).build(), new FieldEditorDetailsBuilder(DefaultDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get("msg.preferences.directory.dialog.message.mqtt");
+			return Messages.get("msg.preferences.directory.dialog.message.mqtt");
 		}
 	}).build());
 
@@ -335,7 +335,7 @@ public enum Preference implements IPreference {
 			preferenceDetails.setLabel(new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(LABEL_KEY_PREFIX + preferenceDetails.getName());
+					return Messages.get(LABEL_KEY_PREFIX + preferenceDetails.getName());
 				}
 			});
 		}

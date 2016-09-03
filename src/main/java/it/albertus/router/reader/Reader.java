@@ -1,7 +1,7 @@
 package it.albertus.router.reader;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
@@ -53,7 +53,7 @@ public abstract class Reader {
 			routerAddress = configuration.getString(CFG_KEY_ROUTER_ADDRESS, Defaults.ROUTER_ADDRESS).trim();
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_ADDRESS);
+			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_ADDRESS);
 		}
 
 		final int routerPort;
@@ -61,7 +61,7 @@ public abstract class Reader {
 			routerPort = configuration.getInt(CFG_KEY_ROUTER_PORT, Defaults.ROUTER_PORT);
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_PORT);
+			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_PORT);
 		}
 
 		final int connectionTimeoutInMillis;
@@ -69,7 +69,7 @@ public abstract class Reader {
 			connectionTimeoutInMillis = configuration.getInt(CFG_KEY_CONNECTION_TIMEOUT_MS, Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_CONNECTION_TIMEOUT_MS);
+			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_CONNECTION_TIMEOUT_MS);
 		}
 
 		final int socketTimeoutInMillis;
@@ -77,12 +77,12 @@ public abstract class Reader {
 			socketTimeoutInMillis = configuration.getInt(CFG_KEY_SOCKET_TIMEOUT_MS, Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_SOCKET_TIMEOUT_MS);
+			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_SOCKET_TIMEOUT_MS);
 		}
 
 		/* Connessione... */
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		logger.log(Resources.get("msg.connecting", routerAddress, routerPort), Destination.CONSOLE);
+		logger.log(Messages.get("msg.connecting", routerAddress, routerPort), Destination.CONSOLE);
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
@@ -121,7 +121,7 @@ public abstract class Reader {
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	public void logout() throws IOException {
-		logger.log(Resources.get("msg.logging.out"), Destination.CONSOLE);
+		logger.log(Messages.get("msg.logging.out"), Destination.CONSOLE);
 		writeToTelnet("exit");
 	}
 
@@ -133,7 +133,7 @@ public abstract class Reader {
 	 * occorre sovrascrivere questo metodo</b>.
 	 */
 	public void disconnect() {
-		logger.log(Resources.get("msg.disconnecting"), Destination.CONSOLE);
+		logger.log(Messages.get("msg.disconnecting"), Destination.CONSOLE);
 		try {
 			telnet.disconnect();
 		}

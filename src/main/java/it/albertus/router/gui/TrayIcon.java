@@ -6,7 +6,7 @@ import it.albertus.router.engine.Status;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.RestoreShellListener;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.NewLine;
@@ -102,7 +102,7 @@ public class TrayIcon {
 					trayItem.setToolTipText(toolTipText);
 
 					toolTip = new ToolTip(gui.getShell(), SWT.BALLOON | SWT.ICON_WARNING);
-					toolTip.setText(Resources.get("lbl.tray.tooltip.thresholds.reached"));
+					toolTip.setText(Messages.get("lbl.tray.tooltip.thresholds.reached"));
 					toolTip.setVisible(false);
 					toolTip.setAutoHide(true);
 					toolTip.addListener(SWT.Selection, new RestoreShellListener(gui));
@@ -110,14 +110,14 @@ public class TrayIcon {
 
 					trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
 					showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
-					showMenuItem.setText(Resources.get("lbl.tray.show"));
+					showMenuItem.setText(Messages.get("lbl.tray.show"));
 					showMenuItem.addListener(SWT.Selection, new RestoreShellListener(gui));
 					trayMenu.setDefaultItem(showMenuItem);
 
 					new MenuItem(trayMenu, SWT.SEPARATOR);
 
 					exitMenuItem = new MenuItem(trayMenu, SWT.PUSH);
-					exitMenuItem.setText(Resources.get("lbl.tray.close"));
+					exitMenuItem.setText(Messages.get("lbl.tray.close"));
 					exitMenuItem.addSelectionListener(new CloseListener(gui));
 					trayItem.addMenuDetectListener(new MenuDetectListener() {
 						@Override
@@ -209,7 +209,7 @@ public class TrayIcon {
 	}
 
 	private String getBaseToolTipText(final Status status) {
-		final StringBuilder sb = new StringBuilder(Resources.get("lbl.tray.tooltip"));
+		final StringBuilder sb = new StringBuilder(Messages.get("lbl.tray.tooltip"));
 		if (status != null) {
 			sb.append(" (").append(status.getDescription()).append(')');
 		}

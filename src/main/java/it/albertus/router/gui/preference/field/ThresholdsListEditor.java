@@ -3,7 +3,7 @@ package it.albertus.router.gui.preference.field;
 import it.albertus.jface.preference.field.LocalizedListEditor;
 import it.albertus.router.engine.RouterLoggerConfiguration.Thresholds;
 import it.albertus.router.gui.Images;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -108,15 +108,15 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 		@Override
 		protected void configureShell(final Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setText(Resources.get("lbl.preferences.thresholds.expressions.title"));
+			newShell.setText(Messages.get("lbl.preferences.thresholds.expressions.title"));
 			newShell.setImages(Images.MAIN_ICONS);
 		}
 
 		@Override
 		public void create() {
 			super.create();
-			setTitle(Resources.get("lbl.preferences.thresholds.expressions.title"));
-			setMessage(Resources.get("lbl.preferences.thresholds.expressions.message"), IMessageProvider.INFORMATION);
+			setTitle(Messages.get("lbl.preferences.thresholds.expressions.title"));
+			setMessage(Messages.get("lbl.preferences.thresholds.expressions.message"), IMessageProvider.INFORMATION);
 		}
 
 		@Override
@@ -127,7 +127,7 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 			GridLayoutFactory.swtDefaults().numColumns(2).equalWidth(false).applyTo(container);
 
 			final Label labelName = new Label(container, SWT.NONE);
-			labelName.setText(Resources.get("lbl.preferences.thresholds.expressions.identifier"));
+			labelName.setText(Messages.get("lbl.preferences.thresholds.expressions.identifier"));
 			GridDataFactory.swtDefaults().applyTo(labelName);
 
 			textIdentifier = new Text(container, SWT.BORDER);
@@ -136,7 +136,7 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 			textIdentifier.addVerifyListener(new IdentifierVerifyListener());
 
 			final Label labelExpression = new Label(container, SWT.NONE);
-			labelExpression.setText(Resources.get("lbl.preferences.thresholds.expressions.expression"));
+			labelExpression.setText(Messages.get("lbl.preferences.thresholds.expressions.expression"));
 			GridDataFactory.swtDefaults().applyTo(labelExpression);
 
 			textExpression = new Text(container, SWT.BORDER);
@@ -155,11 +155,11 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 			super.createButtonsForButtonBar(parent);
 
 			okButton = getButton(IDialogConstants.OK_ID);
-			okButton.setText(Resources.get("lbl.button.ok"));
+			okButton.setText(Messages.get("lbl.button.ok"));
 			okButton.setEnabled(false);
 
 			cancelButton = getButton(IDialogConstants.CANCEL_ID);
-			cancelButton.setText(Resources.get("lbl.button.cancel"));
+			cancelButton.setText(Messages.get("lbl.button.cancel"));
 		}
 
 		@Override

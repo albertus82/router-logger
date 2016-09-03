@@ -6,7 +6,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.MessageBox;
 
 import it.albertus.router.gui.RouterLoggerGui;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 public class RestartSelectionListener extends SelectionAdapter {
 
@@ -19,8 +19,8 @@ public class RestartSelectionListener extends SelectionAdapter {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-		messageBox.setMessage(Resources.get("msg.confirm.restart.message"));
-		messageBox.setText(Resources.get("msg.confirm.restart.text"));
+		messageBox.setMessage(Messages.get("msg.confirm.restart.message"));
+		messageBox.setText(Messages.get("msg.confirm.restart.text"));
 		if (messageBox.open() == SWT.YES) {
 			gui.restart();
 		}

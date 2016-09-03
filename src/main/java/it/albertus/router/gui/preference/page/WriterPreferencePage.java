@@ -2,7 +2,7 @@ package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 import it.albertus.router.writer.DummyWriter;
@@ -41,7 +41,7 @@ public class WriterPreferencePage extends RestartHeaderPreferencePage {
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(comboData.resourceKey);
+					return Messages.get(comboData.resourceKey);
 				}
 			};
 			options.put(name, value);

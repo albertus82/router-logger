@@ -1,7 +1,7 @@
 package it.albertus.router.gui;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
@@ -17,8 +17,8 @@ public class CloseMessageBox {
 
 	private CloseMessageBox(Shell shell) {
 		messageBox = new MessageBox(shell, SWT.YES | SWT.NO | SWT.ICON_QUESTION);
-		messageBox.setText(Resources.get("msg.confirm.close.text"));
-		messageBox.setMessage(Resources.get("msg.confirm.close.message"));
+		messageBox.setText(Messages.get("msg.confirm.close.text"));
+		messageBox.setMessage(Messages.get("msg.confirm.close.message"));
 	}
 
 	public static MessageBox newInstance(Shell shell) {

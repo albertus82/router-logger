@@ -3,7 +3,7 @@ package it.albertus.router.engine;
 import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.mqtt.RouterLoggerMqttClient;
 import it.albertus.router.reader.Reader;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.server.WebServer;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -100,7 +100,7 @@ public abstract class RouterLoggerEngine {
 			reader = (Reader) Class.forName(readerClassName).newInstance();
 		}
 		catch (final Throwable throwable) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
+			throw new ConfigurationException(Messages.get("err.invalid.cfg", configurationKey) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
 		}
 		return reader;
 	}
@@ -114,7 +114,7 @@ public abstract class RouterLoggerEngine {
 			writer = (Writer) Class.forName(writerClassName).newInstance();
 		}
 		catch (final Throwable throwable) {
-			throw new ConfigurationException(Resources.get("err.invalid.cfg", configurationKey) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
+			throw new ConfigurationException(Messages.get("err.invalid.cfg", configurationKey) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
 		}
 		return writer;
 	}
@@ -181,7 +181,7 @@ public abstract class RouterLoggerEngine {
 	}
 
 	protected void printGoodbye() {
-		out.println(Resources.get("msg.bye"), true);
+		out.println(Messages.get("msg.bye"), true);
 	}
 
 	protected void outerLoop() {
@@ -194,11 +194,11 @@ public abstract class RouterLoggerEngine {
 			if (index > 0) {
 				setStatus(Status.RECONNECTING);
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
-				final StringBuilder message = new StringBuilder(Resources.get("msg.wait.reconnection"));
+				final StringBuilder message = new StringBuilder(Messages.get("msg.wait.reconnection"));
 				if (retries > 0) {
-					message.append(' ').append(Resources.get("msg.wait.reconnection.retry", index, retries));
+					message.append(' ').append(Messages.get("msg.wait.reconnection.retry", index, retries));
 				}
-				message.append(' ').append(Resources.get("msg.wait.reconnection.time", retryIntervalInMillis));
+				message.append(' ').append(Messages.get("msg.wait.reconnection.time", retryIntervalInMillis));
 				logger.log(message.toString(), Destination.CONSOLE);
 				try {
 					interruptible = true;
@@ -249,7 +249,7 @@ public abstract class RouterLoggerEngine {
 				if (loggedIn && !exit) {
 					setStatus(Status.OK);
 					if (configuration.getBoolean("reader.log.connected", Defaults.LOG_CONNECTED)) {
-						logger.log(Resources.get("msg.reader.connected", reader.getDeviceModel()), Destination.FILE, Destination.EMAIL);
+						logger.log(Messages.get("msg.reader.connected", reader.getDeviceModel()), Destination.FILE, Destination.EMAIL);
 					}
 					index = 0;
 					try {
@@ -257,7 +257,7 @@ public abstract class RouterLoggerEngine {
 						exit = true; // Se non si sono verificati errori.
 					}
 					catch (InterruptedException ie) {
-						logger.log(Resources.get("msg.loop.interrupted"), Destination.CONSOLE);
+						logger.log(Messages.get("msg.loop.interrupted"), Destination.CONSOLE);
 					}
 					catch (IOException ioe) {
 						if (!exit) {
@@ -320,22 +320,22 @@ public abstract class RouterLoggerEngine {
 	/** Prints a welcome message. */
 	protected void printWelcome() {
 		final Version version = Version.getInstance();
-		out.println(Resources.get("msg.welcome", Resources.get("msg.application.name"), Resources.get("msg.version", version.getNumber(), version.getDate()), Resources.get("msg.website")));
+		out.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
 		out.println();
-		out.println(Resources.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
+		out.println(Messages.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
 
 		if (!configuration.getThresholds().isEmpty()) {
-			out.println(Resources.get("msg.thresholds", configuration.getThresholds()));
+			out.println(Messages.get("msg.thresholds", configuration.getThresholds()));
 		}
 		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
-			out.println(Resources.get("msg.settings", configuration));
+			out.println(Messages.get("msg.settings", configuration));
 		}
 	}
 
 	/** Prints the device model name, if available. */
 	protected void printDeviceModel() {
 		if (reader != null && reader.getDeviceModel() != null && !reader.getDeviceModel().trim().isEmpty()) {
-			out.println(Resources.get("msg.device.model", reader.getDeviceModel().trim()));
+			out.println(Messages.get("msg.device.model", reader.getDeviceModel().trim()));
 		}
 		out.println();
 	}
@@ -351,7 +351,7 @@ public abstract class RouterLoggerEngine {
 			if (!connected && !exit) {
 				connected = reader.connect();
 				if (!connected) { // Retry...
-					throw new RuntimeException(Resources.get("msg.reconnection.error"));
+					throw new RuntimeException(Messages.get("msg.reconnection.error"));
 				}
 			}
 			if (!loggedIn && !exit) {
@@ -443,8 +443,8 @@ public abstract class RouterLoggerEngine {
 
 				if (adjustedWaitTimeInMillis > 0L) {
 					if (disconnectionRequested) {
-						final String formattedDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date(System.currentTimeMillis() + adjustedWaitTimeInMillis));
-						logger.log(Resources.get("msg.reconnection.info", formattedDate), Destination.CONSOLE);
+						final String formattedDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(new Date(System.currentTimeMillis() + adjustedWaitTimeInMillis));
+						logger.log(Messages.get("msg.reconnection.info", formattedDate), Destination.CONSOLE);
 					}
 					interruptible = true;
 					Thread.sleep(adjustedWaitTimeInMillis);
@@ -514,7 +514,7 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 		else {
-			logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+			logger.log(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
 		}
 	}
 

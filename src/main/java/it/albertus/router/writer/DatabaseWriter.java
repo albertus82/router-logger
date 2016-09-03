@@ -1,7 +1,7 @@
 package it.albertus.router.writer;
 
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.ConfigurationException;
 
 import java.sql.Connection;
@@ -36,22 +36,22 @@ public class DatabaseWriter extends Writer {
 
 	public DatabaseWriter() {
 		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME)) {
-			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_DRIVER_CLASS_NAME);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
 		if (!configuration.contains(CFG_KEY_DB_URL)) {
-			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_URL);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_URL);
 		}
 		if (!configuration.contains(CFG_KEY_DB_USERNAME)) {
-			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_USERNAME);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_USERNAME);
 		}
 		if (!configuration.contains(CFG_KEY_DB_PASSWORD)) {
-			throw new ConfigurationException(Resources.get("err.database.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_PASSWORD);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_PASSWORD);
 		}
 		try {
 			Class.forName(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME));
 		}
 		catch (ClassNotFoundException e) {
-			throw new ConfigurationException(Resources.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e, CFG_KEY_DB_DRIVER_CLASS_NAME);
+			throw new ConfigurationException(Messages.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e, CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
 	}
 
@@ -74,13 +74,13 @@ public class DatabaseWriter extends Writer {
 			// Verifica esistenza tabella ed eventuale creazione...
 			final String tableName = getTableName();
 			if (!tableExists(tableName)) {
-				out.println(Resources.get("msg.creating.database.table", tableName), true);
+				out.println(Messages.get("msg.creating.database.table", tableName), true);
 				createTable(tableName, info);
 			}
 
 			// Inserimento dati...
 			if (showMessage) {
-				out.println(Resources.get("msg.logging.into.database", tableName), true);
+				out.println(Messages.get("msg.logging.into.database", tableName), true);
 				showMessage = false;
 			}
 
@@ -205,7 +205,7 @@ public class DatabaseWriter extends Writer {
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
-					out.println(Resources.get("msg.closing.database.connection"), true);
+					out.println(Messages.get("msg.closing.database.connection"), true);
 					connection.close();
 					connection = null;
 				}

@@ -10,7 +10,7 @@ import it.albertus.router.gui.listener.CopyDataTableSelectionListener;
 import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.util.NewLine;
 
@@ -103,13 +103,13 @@ public class DataTable {
 
 		// Copy...
 		copyMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
+		copyMenuItem.setText(Messages.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
 		copyMenuItem.addSelectionListener(new CopyDataTableSelectionListener(gui));
 		copyMenuItem.setAccelerator(SWT.MOD1 | SwtUtils.KEY_COPY); // Finto!
 
 		// Delete...
 		deleteMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		deleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + SwtUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
+		deleteMenuItem.setText(Messages.get("lbl.menu.item.delete") + SwtUtils.getShortcutLabel(Messages.get("lbl.menu.item.delete.key")));
 		deleteMenuItem.addSelectionListener(new DeleteDataTableSelectionListener(gui));
 		deleteMenuItem.setAccelerator(SwtUtils.KEY_DELETE); // Finto!
 
@@ -117,7 +117,7 @@ public class DataTable {
 
 		// Select all...
 		selectAllMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_SELECT_ALL));
+		selectAllMenuItem.setText(Messages.get("lbl.menu.item.select.all") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_SELECT_ALL));
 		selectAllMenuItem.addSelectionListener(new SelectAllDataTableSelectionListener(gui));
 		selectAllMenuItem.setAccelerator(SWT.MOD1 | SwtUtils.KEY_SELECT_ALL); // Finto!
 
@@ -125,7 +125,7 @@ public class DataTable {
 
 		// Clear...
 		clearMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		clearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+		clearMenuItem.setText(Messages.get("lbl.menu.item.clear"));
 		clearMenuItem.addSelectionListener(new ClearDataTableSelectionListener(gui));
 
 		table.addMenuDetectListener(new DataTableContextMenuDetectListener(gui));
@@ -145,8 +145,8 @@ public class DataTable {
 				data.replace(data.length() - 1, data.length(), NewLine.SYSTEM_LINE_SEPARATOR);
 				if (data.length() > configuration.getInt(RouterLoggerGui.CFG_KEY_GUI_CLIPBOARD_MAX_CHARS, RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS)) {
 					final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_WARNING);
-					messageBox.setText(Resources.get("lbl.window.title"));
-					messageBox.setMessage(Resources.get("err.clipboard.cannot.copy"));
+					messageBox.setText(Messages.get("lbl.window.title"));
+					messageBox.setMessage(Messages.get("err.clipboard.cannot.copy"));
 					messageBox.open();
 					return;
 				}
@@ -180,8 +180,8 @@ public class DataTable {
 				clipboard.dispose();
 				if (limited) {
 					final MessageBox messageBox = new MessageBox(table.getShell(), SWT.ICON_INFORMATION);
-					messageBox.setText(Resources.get("lbl.window.title"));
-					messageBox.setMessage(Resources.get("err.clipboard.limited.copy", data.length()));
+					messageBox.setText(Messages.get("lbl.window.title"));
+					messageBox.setMessage(Messages.get("err.clipboard.limited.copy", data.length()));
 					messageBox.open();
 				}
 			}
@@ -258,18 +258,18 @@ public class DataTable {
 
 						// Iterazione...
 						TableColumn column = new TableColumn(table, SWT.NONE);
-						column.setText(Resources.get("lbl.column.iteration.text"));
-						column.setToolTipText(Resources.get("lbl.column.iteration.tooltip"));
+						column.setText(Messages.get("lbl.column.iteration.text"));
+						column.setToolTipText(Messages.get("lbl.column.iteration.tooltip"));
 
 						// Timestamp...
 						column = new TableColumn(table, SWT.NONE);
-						column.setText(Resources.get("lbl.column.timestamp.text"));
-						column.setToolTipText(Resources.get("lbl.column.timestamp.tooltip"));
+						column.setText(Messages.get("lbl.column.timestamp.text"));
+						column.setToolTipText(Messages.get("lbl.column.timestamp.tooltip"));
 
 						// Tempo di risposta...
 						column = new TableColumn(table, SWT.NONE);
-						column.setText(Resources.get("lbl.column.response.time.text"));
-						column.setToolTipText(Resources.get("lbl.column.response.time.tooltip"));
+						column.setText(Messages.get("lbl.column.response.time.text"));
+						column.setToolTipText(Messages.get("lbl.column.response.time.tooltip"));
 
 						// Tutte le altre colonne...
 						for (String key : info.keySet()) {
@@ -376,7 +376,7 @@ public class DataTable {
 			thresholdReachedForegroudColorData = StringConverter.asRGB(colorKey);
 		}
 		catch (final Exception e) {
-			Logger.getInstance().log(Resources.get("err.invalid.color", colorKey));
+			Logger.getInstance().log(Messages.get("err.invalid.color", colorKey));
 			colorKey = defaultColorKey;
 			thresholdReachedForegroudColorData = StringConverter.asRGB(colorKey);
 		}
@@ -415,10 +415,10 @@ public class DataTable {
 	}
 
 	public void updateTexts() {
-		copyMenuItem.setText(Resources.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
-		deleteMenuItem.setText(Resources.get("lbl.menu.item.delete") + SwtUtils.getShortcutLabel(Resources.get("lbl.menu.item.delete.key")));
-		selectAllMenuItem.setText(Resources.get("lbl.menu.item.select.all") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_SELECT_ALL));
-		clearMenuItem.setText(Resources.get("lbl.menu.item.clear"));
+		copyMenuItem.setText(Messages.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
+		deleteMenuItem.setText(Messages.get("lbl.menu.item.delete") + SwtUtils.getShortcutLabel(Messages.get("lbl.menu.item.delete.key")));
+		selectAllMenuItem.setText(Messages.get("lbl.menu.item.select.all") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_SELECT_ALL));
+		clearMenuItem.setText(Messages.get("lbl.menu.item.clear"));
 	}
 
 	public TableViewer getTableViewer() {

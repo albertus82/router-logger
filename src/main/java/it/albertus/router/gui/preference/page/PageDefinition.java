@@ -9,7 +9,7 @@ import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.TpLink8970Reader;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.Localized;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -23,25 +23,25 @@ public enum PageDefinition implements IPageDefinition {
 	READER_TPLINK_8970(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get(TpLink8970Reader.DEVICE_MODEL_KEY);
+			return Messages.get(TpLink8970Reader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
 	READER_ASUS_N12E(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get(AsusDslN12EReader.DEVICE_MODEL_KEY);
+			return Messages.get(AsusDslN12EReader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
 	READER_ASUS_N14U(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get(AsusDslN14UReader.DEVICE_MODEL_KEY);
+			return Messages.get(AsusDslN14UReader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
 	READER_DLINK_2750(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
 		public String getString() {
-			return Resources.get(DLinkDsl2750Reader.DEVICE_MODEL_KEY);
+			return Messages.get(DLinkDsl2750Reader.DEVICE_MODEL_KEY);
 		}
 	}).parent(READER).build()),
 	WRITER(new PageDefinitionDetailsBuilder().pageClass(WriterPreferencePage.class).build()),
@@ -75,7 +75,7 @@ public enum PageDefinition implements IPageDefinition {
 			pageDefinitionDetails.setLabel(new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(LABEL_KEY_PREFIX + pageDefinitionDetails.getNodeId());
+					return Messages.get(LABEL_KEY_PREFIX + pageDefinitionDetails.getNodeId());
 				}
 			});
 		}

@@ -3,7 +3,7 @@ package it.albertus.router.gui.preference.field;
 import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.reader.Reader;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 import java.lang.reflect.Modifier;
 
@@ -13,7 +13,7 @@ public class ReaderComboFieldEditor extends ValidatedComboFieldEditor {
 
 	public ReaderComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
-		setErrorMessage(Resources.get("err.preferences.combo.class.reader.invalid"));
+		setErrorMessage(Messages.get("err.preferences.combo.class.reader.invalid"));
 	}
 
 	@Override
@@ -24,12 +24,12 @@ public class ReaderComboFieldEditor extends ValidatedComboFieldEditor {
 				return true;
 			}
 			else {
-				setErrorMessage(Resources.get("err.preferences.combo.class.reader.invalid"));
+				setErrorMessage(Messages.get("err.preferences.combo.class.reader.invalid"));
 				return false;
 			}
 		}
 		catch (final Throwable throwable) {
-			setErrorMessage(Resources.get("err.preferences.combo.class.reader.missing"));
+			setErrorMessage(Messages.get("err.preferences.combo.class.reader.missing"));
 			return false;
 		}
 	}

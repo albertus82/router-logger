@@ -1,6 +1,6 @@
 package it.albertus.router.engine;
 
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 public enum Status {
 	STARTING,
@@ -25,7 +25,7 @@ public enum Status {
 	}
 
 	public String getDescription() {
-		return Resources.get(resourceKey);
+		return Messages.get(resourceKey);
 	}
 
 }

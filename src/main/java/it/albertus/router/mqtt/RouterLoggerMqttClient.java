@@ -9,7 +9,7 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Status;
 import it.albertus.router.engine.ThresholdsReached;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.util.Payload;
@@ -110,7 +110,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			final MqttConnectOptions options = new MqttConnectOptions();
 			final String[] serverURIs = configuration.getString(CFG_KEY_MQTT_SERVER_URI, "").split(UriListEditor.URI_SPLIT_REGEX);
 			if (serverURIs == null || serverURIs.length == 0 || serverURIs[0].trim().isEmpty()) {
-				throw new ConfigurationException(Resources.get("err.mqtt.cfg.error.uri"), CFG_KEY_MQTT_SERVER_URI);
+				throw new ConfigurationException(Messages.get("err.mqtt.cfg.error.uri"), CFG_KEY_MQTT_SERVER_URI);
 			}
 			options.setServerURIs(serverURIs);
 			final String username = configuration.getString(CFG_KEY_MQTT_USERNAME);
@@ -165,7 +165,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		final Logger logger = Logger.getInstance();
 		try {
 			if (doDisconnect()) {
-				logger.log(Resources.get("msg.mqtt.disconnected"), Destination.CONSOLE);
+				logger.log(Messages.get("msg.mqtt.disconnected"), Destination.CONSOLE);
 			}
 		}
 		catch (final Exception e) {

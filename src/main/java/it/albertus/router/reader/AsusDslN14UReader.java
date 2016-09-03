@@ -1,6 +1,6 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -93,7 +93,7 @@ public class AsusDslN14UReader extends Reader {
 
 	@Override
 	public String getDeviceModel() {
-		return Resources.get(DEVICE_MODEL_KEY);
+		return Messages.get(DEVICE_MODEL_KEY);
 	}
 
 }

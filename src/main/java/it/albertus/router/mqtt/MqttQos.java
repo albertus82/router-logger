@@ -1,6 +1,6 @@
 package it.albertus.router.mqtt;
 
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 public enum MqttQos {
 
@@ -23,7 +23,7 @@ public enum MqttQos {
 	}
 
 	public String getDescription() {
-		return Resources.get(resourceKey);
+		return Messages.get(resourceKey);
 	}
 
 }

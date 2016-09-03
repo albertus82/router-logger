@@ -1,7 +1,7 @@
 package it.albertus.router.gui.listener;
 
 import it.albertus.router.gui.RouterLoggerGui;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,8 +20,8 @@ public class DisconnectSelectionListener extends SelectionAdapter {
 	public void widgetSelected(SelectionEvent e) {
 		if (gui.canDisconnect()) {
 			final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-			messageBox.setMessage(Resources.get("msg.confirm.disconnect.message"));
-			messageBox.setText(Resources.get("msg.confirm.disconnect.text"));
+			messageBox.setMessage(Messages.get("msg.confirm.disconnect.message"));
+			messageBox.setText(Messages.get("msg.confirm.disconnect.text"));
 			if (messageBox.open() == SWT.YES && gui.canDisconnect()) {
 				gui.disconnect();
 			}

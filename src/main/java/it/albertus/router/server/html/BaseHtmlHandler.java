@@ -1,7 +1,7 @@
 package it.albertus.router.server.html;
 
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
 import it.albertus.router.util.Logger;
@@ -63,8 +63,8 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		if (!configuration.getBoolean("server.enabled", BaseHttpServer.Defaults.ENABLED) || !isEnabled()) {
 			addCommonHeaders(exchange);
 
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
-			html.append("<h3>").append(Resources.get("msg.server.forbidden")).append("</h3>").append(NewLine.CRLF);
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+			html.append("<h3>").append(Messages.get("msg.server.forbidden")).append("</h3>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 
 			final byte[] response = html.toString().getBytes(getCharset());
@@ -82,8 +82,8 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		if (!isFound()) {
 			addCommonHeaders(exchange);
 
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
-			html.append("<h3>").append(Resources.get("msg.server.not.found")).append("</h3>").append(NewLine.CRLF);
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+			html.append("<h3>").append(Messages.get("msg.server.not.found")).append("</h3>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 
 			final byte[] response = html.toString().getBytes(getCharset());
@@ -114,8 +114,8 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		if (!match) {
 			addCommonHeaders(exchange);
 
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
-			html.append("<h3>").append(Resources.get("msg.server.bad.method")).append("</h3>").append(NewLine.CRLF);
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+			html.append("<h3>").append(Messages.get("msg.server.bad.method")).append("</h3>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 
 			final byte[] response = html.toString().getBytes(getCharset());
@@ -139,8 +139,8 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 				Logger.getInstance().log(exception);
 				addCommonHeaders(exchange);
 
-				final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.error")));
-				html.append("<h3>").append(Resources.get("err.server.handler")).append("</h3>").append(NewLine.CRLF);
+				final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+				html.append("<h3>").append(Messages.get("err.server.handler")).append("</h3>").append(NewLine.CRLF);
 				html.append(buildHtmlFooter());
 
 				final byte[] response = html.toString().getBytes(getCharset());
@@ -174,7 +174,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
 			if (!request.equals(lastRequest)) {
 				lastRequest = request;
-				Logger.getInstance().log(Resources.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
+				Logger.getInstance().log(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
 			}
 		}
 	}
@@ -232,10 +232,10 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	 */
 	protected String buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF.toString());
-		html.append("<html lang=\"").append(Resources.getLanguage().getLocale().getLanguage()).append("\">");
+		html.append("<html lang=\"").append(Messages.getLanguage().getLocale().getLanguage()).append("\">");
 		html.append(buildHtmlHead(title));
 		html.append("<body>").append(NewLine.CRLF.toString());
-		html.append("<h1>").append(Resources.get("msg.application.name")).append("</h1>").append(NewLine.CRLF.toString());
+		html.append("<h1>").append(Messages.get("msg.application.name")).append("</h1>").append(NewLine.CRLF.toString());
 		return html.toString();
 	}
 
@@ -266,7 +266,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	 * @return the string containing the HTML code.
 	 */
 	protected String buildHtmlHeadTitle(final String title) {
-		final StringBuilder html = new StringBuilder("<title>").append(Resources.get("msg.application.name"));
+		final StringBuilder html = new StringBuilder("<title>").append(Messages.get("msg.application.name"));
 		if (title != null && !title.trim().isEmpty()) {
 			html.append(" - ").append(title.trim());
 		}
@@ -294,7 +294,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	protected String buildHtmlHomeButton() {
 		if (configuration.getBoolean(RootHtmlHandler.CFG_KEY_ENABLED, RootHtmlHandler.Defaults.ENABLED)) {
-			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(RootHtmlHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Resources.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
+			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(RootHtmlHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
 		}
 		else {
 			return DEFAULT_STYLE;

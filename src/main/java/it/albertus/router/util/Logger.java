@@ -2,7 +2,7 @@ package it.albertus.router.util;
 
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
@@ -144,7 +144,7 @@ public class Logger {
 		if (StringUtils.isNotBlank(logDestinationDir)) {
 			File logDestDir = new File(logDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException(Resources.get("err.invalid.path", logDestDir));
+				throw new RuntimeException(Messages.get("err.invalid.path", logDestDir));
 			}
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
@@ -172,7 +172,7 @@ public class Logger {
 				else {
 					subjectKey = "msg.log.email.subject.event";
 				}
-				final String subject = Resources.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(new Date()));
+				final String subject = Messages.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(new Date()));
 				EmailSender.getInstance().reserve(subject, log);
 				lastEmailLog = log;
 			}

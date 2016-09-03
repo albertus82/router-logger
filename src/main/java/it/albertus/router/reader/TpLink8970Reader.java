@@ -1,6 +1,6 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger.Destination;
 
 import java.io.BufferedReader;
@@ -75,13 +75,13 @@ public class TpLink8970Reader extends Reader {
 
 	@Override
 	public void logout() throws IOException {
-		logger.log(Resources.get("msg.logging.out"), Destination.CONSOLE);
+		logger.log(Messages.get("msg.logging.out"), Destination.CONSOLE);
 		writeToTelnet("logout");
 	}
 
 	@Override
 	public String getDeviceModel() {
-		return Resources.get(DEVICE_MODEL_KEY);
+		return Messages.get(DEVICE_MODEL_KEY);
 	}
 
 }

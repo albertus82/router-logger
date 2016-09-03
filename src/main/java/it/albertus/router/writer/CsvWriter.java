@@ -2,7 +2,7 @@ package it.albertus.router.writer;
 
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.NewLine;
@@ -55,13 +55,13 @@ public class CsvWriter extends Writer {
 						if (zipper.test(zipFile)) {
 							String formattedDate = zipFile.getName();
 							try {
-								formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Resources.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
+								formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Messages.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
 							}
 							catch (final Exception e) {
 								formattedDate = "";
 							}
-							final String subject = Resources.get("msg.writer.csv.email.subject", formattedDate);
-							final String message = Resources.get("msg.writer.csv.email.message", zipFile.getName());
+							final String subject = Messages.get("msg.writer.csv.email.subject", formattedDate);
+							final String message = Messages.get("msg.writer.csv.email.message", zipFile.getName());
 							EmailSender.getInstance().send(subject, message, zipFile);
 							csvFile.delete();
 						}
@@ -114,14 +114,14 @@ public class CsvWriter extends Writer {
 				// Create new file...
 				closeOutputFile();
 				csvFileWriter = new BufferedWriter(new FileWriter(file));
-				logger.log(Resources.get("msg.logging.to.file", path), Destination.CONSOLE);
+				logger.log(Messages.get("msg.logging.to.file", path), Destination.CONSOLE);
 				csvFileWriter.append(buildCsvHeader(info));
 			}
 
 			if (csvFileWriter == null) {
 				// Open existing file...
 				csvFileWriter = new BufferedWriter(new FileWriter(file, true));
-				logger.log(Resources.get("msg.logging.to.file", path), Destination.CONSOLE);
+				logger.log(Messages.get("msg.logging.to.file", path), Destination.CONSOLE);
 			}
 			csvFileWriter.append(buildCsvRow(info));
 			csvFileWriter.flush();
@@ -143,7 +143,7 @@ public class CsvWriter extends Writer {
 		if (StringUtils.isNotBlank(csvDestinationDir)) {
 			final File logDestDir = new File(csvDestinationDir.trim());
 			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException(Resources.get("err.invalid.path", logDestDir));
+				throw new RuntimeException(Messages.get("err.invalid.path", logDestDir));
 			}
 			if (!logDestDir.exists()) {
 				logDestDir.mkdirs();
@@ -160,8 +160,8 @@ public class CsvWriter extends Writer {
 		final String fieldSeparator = getFieldSeparator();
 		final String fieldSeparatorReplacement = getFieldSeparatorReplacement();
 
-		final StringBuilder header = new StringBuilder(Resources.get("lbl.column.timestamp.text")).append(fieldSeparator);
-		header.append(Resources.get("lbl.column.response.time.text")).append(fieldSeparator); // Response time
+		final StringBuilder header = new StringBuilder(Messages.get("lbl.column.timestamp.text")).append(fieldSeparator);
+		header.append(Messages.get("lbl.column.response.time.text")).append(fieldSeparator); // Response time
 		for (String field : info.getData().keySet()) {
 			header.append(field.replace(fieldSeparator, fieldSeparatorReplacement)).append(fieldSeparator);
 		}
@@ -201,7 +201,7 @@ public class CsvWriter extends Writer {
 				return newLine.toString();
 			}
 			else {
-				throw new ConfigurationException(Resources.get("err.invalid.cfg", CFG_KEY_CSV_NEWLINE_CHARACTERS) + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_CSV_NEWLINE_CHARACTERS);
+				throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_CSV_NEWLINE_CHARACTERS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_CSV_NEWLINE_CHARACTERS);
 			}
 		}
 	}
@@ -209,7 +209,7 @@ public class CsvWriter extends Writer {
 	protected void closeOutputFile() {
 		if (csvFileWriter != null) {
 			try {
-				logger.log(Resources.get("msg.closing.output.file"), Destination.CONSOLE);
+				logger.log(Messages.get("msg.closing.output.file"), Destination.CONSOLE);
 				csvFileWriter.close();
 				csvFileWriter = null;
 			}

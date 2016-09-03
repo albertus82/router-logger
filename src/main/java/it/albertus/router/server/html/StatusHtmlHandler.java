@@ -3,7 +3,7 @@ package it.albertus.router.server.html;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 import java.io.IOException;
@@ -52,15 +52,15 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		}
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.status")));
-		html.append("<h3>").append(Resources.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().getStatus().getDescription()).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.status")));
+		html.append("<h3>").append(Messages.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().getStatus().getDescription()).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
 			final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
 			html.append("<ul>").append(NewLine.CRLF);
-			html.append("<li><strong>").append(Resources.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.get().format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
-			html.append("<li><strong>").append(Resources.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
+			html.append("<li><strong>").append(Messages.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.get().format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
+			html.append("<li><strong>").append(Messages.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
 			for (final String key : currentData.getData().keySet()) {
 				html.append("<li>");
 

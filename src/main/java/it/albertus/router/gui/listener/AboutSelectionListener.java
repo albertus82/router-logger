@@ -1,7 +1,7 @@
 package it.albertus.router.gui.listener;
 
 import it.albertus.router.gui.AboutDialog;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.Version;
 
 import org.eclipse.jface.window.IShellProvider;
@@ -19,10 +19,10 @@ public class AboutSelectionListener extends SelectionAdapter {
 	@Override
 	public void widgetSelected(SelectionEvent event) {
 		final AboutDialog aboutDialog = new AboutDialog(gui.getShell());
-		aboutDialog.setText(Resources.get("lbl.about.title"));
-		aboutDialog.setMessage(Resources.get("msg.application.name") + ' ' + Resources.get("msg.version", Version.getInstance().getNumber(), Version.getInstance().getDate()));
-		aboutDialog.setApplicationUrl(Resources.get("msg.website"));
-		aboutDialog.setIconUrl(Resources.get("msg.info.icon.site"));
+		aboutDialog.setText(Messages.get("lbl.about.title"));
+		aboutDialog.setMessage(Messages.get("msg.application.name") + ' ' + Messages.get("msg.version", Version.getInstance().getNumber(), Version.getInstance().getDate()));
+		aboutDialog.setApplicationUrl(Messages.get("msg.website"));
+		aboutDialog.setIconUrl(Messages.get("msg.info.icon.site"));
 		aboutDialog.open();
 	}
 

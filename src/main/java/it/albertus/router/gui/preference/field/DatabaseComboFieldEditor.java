@@ -2,7 +2,7 @@ package it.albertus.router.gui.preference.field;
 
 import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.listener.TrimVerifyListener;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 import java.sql.Driver;
 
@@ -13,7 +13,7 @@ public class DatabaseComboFieldEditor extends ValidatedComboFieldEditor {
 	public DatabaseComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
 		getComboBoxControl().addVerifyListener(new TrimVerifyListener());
-		setErrorMessage(Resources.get("err.preferences.combo.class.database.invalid"));
+		setErrorMessage(Messages.get("err.preferences.combo.class.database.invalid"));
 	}
 
 	@Override
@@ -25,12 +25,12 @@ public class DatabaseComboFieldEditor extends ValidatedComboFieldEditor {
 					return true;
 				}
 				else {
-					setErrorMessage(Resources.get("err.preferences.combo.class.database.invalid"));
+					setErrorMessage(Messages.get("err.preferences.combo.class.database.invalid"));
 					return false;
 				}
 			}
 			catch (final Throwable throwable) {
-				setErrorMessage(Resources.get("err.preferences.combo.class.database.missing"));
+				setErrorMessage(Messages.get("err.preferences.combo.class.database.missing"));
 				return false;
 			}
 		}

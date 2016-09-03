@@ -1,7 +1,7 @@
 package it.albertus.router.server.html;
 
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 import java.io.IOException;
@@ -30,12 +30,12 @@ public class ConnectHandler extends BaseHtmlHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.connect")));
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.connect")));
 		final boolean accepted = engine.canConnect();
 		if (accepted) {
 			engine.connect();
 		}
-		html.append("<h3>").append(accepted ? Resources.get("msg.server.accepted") : Resources.get("msg.server.not.acceptable")).append("</h3>").append(NewLine.CRLF.toString());
+		html.append("<h3>").append(accepted ? Messages.get("msg.server.accepted") : Messages.get("msg.server.not.acceptable")).append("</h3>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());

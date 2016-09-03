@@ -1,6 +1,6 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ThreadUtils;
 
@@ -24,12 +24,12 @@ public class DummyReader extends Reader {
 
 	@Override
 	public boolean connect() {
-		logger.log(Resources.get("msg.dummy.connect"), Destination.CONSOLE);
+		logger.log(Messages.get("msg.dummy.connect"), Destination.CONSOLE);
 		if (CONNECTION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
 		}
 		if (Math.random() > (100.0 - CONNECTION_ERROR_PERCENTAGE) / 100.0) {
-			logger.log(new ConnectException(Resources.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE)));
+			logger.log(new ConnectException(Messages.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE)));
 			return false;
 		}
 		return true;
@@ -43,9 +43,9 @@ public class DummyReader extends Reader {
 			ThreadUtils.sleep(AUTHENTICATION_TIME_IN_MILLIS);
 		}
 		if (Math.random() > (100.0 - AUTHENTICATION_ERROR_PERCENTAGE) / 100.0) {
-			throw new RuntimeException(Resources.get("msg.dummy.authentication.error", AUTHENTICATION_ERROR_PERCENTAGE));
+			throw new RuntimeException(Messages.get("msg.dummy.authentication.error", AUTHENTICATION_ERROR_PERCENTAGE));
 		}
-		final String message = getClass().getSimpleName() + " - " + Resources.get("msg.test.purposes.only");
+		final String message = getClass().getSimpleName() + " - " + Messages.get("msg.test.purposes.only");
 		final StringBuilder separator = new StringBuilder();
 		for (int c = 0; c < message.length(); c++) {
 			separator.append('-');
@@ -64,25 +64,25 @@ public class DummyReader extends Reader {
 			for (byte j = 1; j <= CHARACTERS; j++) {
 				field.append((char) (97 + Math.random() * 25));
 			}
-			map.put(Resources.get("lbl.column.number", i), field.toString());
+			map.put(Messages.get("lbl.column.number", i), field.toString());
 		}
 		if (LAG_IN_MILLIS != 0) {
 			ThreadUtils.sleep(LAG_IN_MILLIS);
 		}
 		if (Math.random() > (100.0 - READ_ERROR_PERCENTAGE) / 100.0) {
-			throw new IOException(Resources.get("msg.dummy.readinfo.error", READ_ERROR_PERCENTAGE));
+			throw new IOException(Messages.get("msg.dummy.readinfo.error", READ_ERROR_PERCENTAGE));
 		}
 		return map;
 	}
 
 	@Override
 	public void logout() {
-		logger.log(Resources.get("msg.dummy.logout"), Destination.CONSOLE);
+		logger.log(Messages.get("msg.dummy.logout"), Destination.CONSOLE);
 	}
 
 	@Override
 	public void disconnect() {
-		logger.log(Resources.get("msg.dummy.disconnect"), Destination.CONSOLE);
+		logger.log(Messages.get("msg.dummy.disconnect"), Destination.CONSOLE);
 	}
 
 }

@@ -9,7 +9,7 @@ import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
@@ -133,14 +133,14 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			catch (final Exception e) {
 				propertyName = ce.getKey();
 			}
-			message = Resources.get("err.invalid.cfg", propertyName) + ' ' + Resources.get("lbl.preferences.edit");
+			message = Messages.get("err.invalid.cfg", propertyName) + ' ' + Messages.get("lbl.preferences.edit");
 		}
 		else {
 			style = SWT.ICON_ERROR;
 			message = ExceptionUtils.getUIMessage(throwable);
 		}
 		final MessageBox messageBox = new MessageBox(shell, style);
-		messageBox.setText(Resources.get("lbl.window.title"));
+		messageBox.setText(Messages.get("lbl.window.title"));
 		messageBox.setMessage(message);
 		return messageBox.open();
 	}
@@ -148,7 +148,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	private RouterLoggerGui(final Display display) {
 		shell = new Shell(display);
 		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
-		shell.setText(Resources.get("lbl.window.title"));
+		shell.setText(Messages.get("lbl.window.title"));
 		shell.setImages(Images.MAIN_ICONS);
 		shell.setLayout(new GridLayout());
 
@@ -210,7 +210,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				}
 			}
 			if (print) {
-				logger.log(Resources.get("msg.thresholds.reached", message), Destination.CONSOLE);
+				logger.log(Messages.get("msg.thresholds.reached", message), Destination.CONSOLE);
 				if (trayIcon != null) {
 					trayIcon.showBalloonToolTip(thresholdsReached);
 				}
@@ -281,7 +281,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				pollingThread.start();
 			}
 			else {
-				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+				logger.log(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
 			}
 		}
 	}

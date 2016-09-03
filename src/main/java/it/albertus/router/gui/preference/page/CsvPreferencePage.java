@@ -2,7 +2,7 @@ package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.jface.preference.page.BasePreferencePage;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.Localized;
 
 public class CsvPreferencePage extends BasePreferencePage {
@@ -31,7 +31,7 @@ public class CsvPreferencePage extends BasePreferencePage {
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(separator.resourceKey);
+					return Messages.get(separator.resourceKey);
 				}
 			};
 			options.put(name, value);

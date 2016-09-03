@@ -1,7 +1,7 @@
 package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
@@ -16,7 +16,7 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	protected WebServerAuthenticator() {
-		super(Resources.get("msg.application.name"));
+		super(Messages.get("msg.application.name"));
 	}
 
 	@Override
@@ -28,13 +28,13 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 			final String expectedUsername = configuration.getString(CFG_KEY_SERVER_USERNAME);
 			if (expectedUsername == null || expectedUsername.isEmpty()) {
-				Logger.getInstance().log(Resources.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
+				Logger.getInstance().log(Messages.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
 				return false;
 			}
 
 			final char[] expectedPassword = configuration.getCharArray(CFG_KEY_SERVER_PASSWORD);
 			if (expectedPassword == null || expectedPassword.length == 0) {
-				Logger.getInstance().log(Resources.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
+				Logger.getInstance().log(Messages.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
 				return false;
 			}
 
@@ -42,7 +42,7 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 				return true;
 			}
 			else {
-				Logger.getInstance().log(Resources.get("err.server.authentication", specifiedUsername, specifiedPassword));
+				Logger.getInstance().log(Messages.get("err.server.authentication", specifiedUsername, specifiedPassword));
 				return false;
 			}
 		}

@@ -1,7 +1,7 @@
 package it.albertus.router.server.html;
 
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 import java.io.IOException;
@@ -30,8 +30,8 @@ public class CloseHandler extends BaseHtmlHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(Resources.get("lbl.server.close")));
-		html.append("<h3>").append(Resources.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.close")));
+		html.append("<h3>").append(Messages.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);

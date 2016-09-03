@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public final class Resources {
+public final class Messages {
 
 	public enum Language {
 		ENGLISH(Locale.ENGLISH),
@@ -23,7 +23,7 @@ public final class Resources {
 		}
 	}
 
-	private static final String BASE_NAME = Resources.class.getName().toLowerCase();
+	private static final String BASE_NAME = Messages.class.getName().toLowerCase();
 
 	private static ResourceBundle resources = ResourceBundle.getBundle(BASE_NAME, ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES));
 
@@ -60,6 +60,6 @@ public final class Resources {
 	}
 
 	/** Instantiation not permitted. */
-	private Resources() {}
+	private Messages() {}
 
 }

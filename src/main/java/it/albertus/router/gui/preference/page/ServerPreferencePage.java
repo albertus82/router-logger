@@ -2,7 +2,7 @@ package it.albertus.router.gui.preference.page;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.Localized;
 
 public class ServerPreferencePage extends RestartHeaderPreferencePage {
@@ -15,7 +15,7 @@ public class ServerPreferencePage extends RestartHeaderPreferencePage {
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get("lbl.preferences.server.log.request." + value);
+					return Messages.get("lbl.preferences.server.log.request." + value);
 				}
 			};
 			options.put(name, value);

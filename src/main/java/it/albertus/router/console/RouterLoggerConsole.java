@@ -3,7 +3,7 @@ package it.albertus.router.console;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Version;
@@ -26,16 +26,16 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		// Check arguments...
 		if (args[0].trim().equalsIgnoreCase(ARG_HELP)) {
 			final Version version = Version.getInstance();
-			System.out.println(Resources.get("msg.welcome", Resources.get("msg.application.name"), Resources.get("msg.version", version.getNumber(), version.getDate()), Resources.get("msg.website")));
+			System.out.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
 			System.out.println();
-			System.out.println(Resources.get("msg.help.usage", ARG_CONSOLE, ARG_HELP));
+			System.out.println(Messages.get("msg.help.usage", ARG_CONSOLE, ARG_HELP));
 			System.out.println();
-			System.out.println("  " + Resources.get("msg.help.option.console", ARG_CONSOLE));
-			System.out.println("  " + Resources.get("msg.help.option.help", ARG_HELP));
+			System.out.println("  " + Messages.get("msg.help.option.console", ARG_CONSOLE));
+			System.out.println("  " + Messages.get("msg.help.option.help", ARG_HELP));
 		}
 		else if (args.length > 1) {
-			System.err.println(Resources.get("err.too.many.parameters", args[1]));
-			System.out.println(Resources.get("err.try.help", ARG_HELP));
+			System.err.println(Messages.get("err.too.many.parameters", args[1]));
+			System.out.println(Messages.get("err.try.help", ARG_HELP));
 		}
 		else if (args[0].trim().equalsIgnoreCase(ARG_CONSOLE)) {
 			uiThread = Thread.currentThread();
@@ -63,8 +63,8 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			routerLogger.printGoodbye();
 		}
 		else {
-			System.err.println(Resources.get("err.unrecognized.option", args[0]));
-			System.out.println(Resources.get("err.try.help", ARG_HELP));
+			System.err.println(Messages.get("err.unrecognized.option", args[0]));
+			System.out.println(Messages.get("err.try.help", ARG_HELP));
 		}
 	}
 
@@ -165,7 +165,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				pollingThread.start();
 			}
 			else {
-				logger.log(Resources.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+				logger.log(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
 			}
 		}
 	}

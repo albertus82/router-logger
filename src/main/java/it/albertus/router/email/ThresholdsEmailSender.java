@@ -3,7 +3,7 @@ package it.albertus.router.email;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
@@ -87,14 +87,14 @@ public class ThresholdsEmailSender {
 					// Build email subject...
 					final String subject;
 					if (sent.size() == 1) {
-						subject = Resources.get("msg.threshold.email.subject.single", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(sent.getFirst().getDate()));
+						subject = Messages.get("msg.threshold.email.subject.single", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(sent.getFirst().getDate()));
 					}
 					else {
-						subject = Resources.get("msg.threshold.email.subject.multiple", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format(sent.getFirst().getDate()), DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Resources.getLanguage().getLocale()).format((lastEventTimestamp != null && lastEventTimestamp.after(sent.getLast().getDate())) ? lastEventTimestamp : sent.getLast().getDate()));
+						subject = Messages.get("msg.threshold.email.subject.multiple", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(sent.getFirst().getDate()), DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format((lastEventTimestamp != null && lastEventTimestamp.after(sent.getLast().getDate())) ? lastEventTimestamp : sent.getLast().getDate()));
 					}
 
 					if (extraEventsCount != 0) {
-						message.append(Resources.get("msg.threshold.email.message.limit", configuration.getShort(CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS, Defaults.MAX_ITEMS), extraEventsCount));
+						message.append(Messages.get("msg.threshold.email.message.limit", configuration.getShort(CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS, Defaults.MAX_ITEMS), extraEventsCount));
 						extraEventsCount = 0;
 					}
 

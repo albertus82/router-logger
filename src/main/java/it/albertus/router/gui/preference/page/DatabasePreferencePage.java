@@ -3,7 +3,7 @@ package it.albertus.router.gui.preference.page;
 import it.albertus.jface.TextFormatter;
 import it.albertus.jface.preference.StaticLabelsAndValues;
 import it.albertus.jface.preference.page.BasePreferencePage;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -15,7 +15,7 @@ public class DatabasePreferencePage extends BasePreferencePage {
 	protected Control createHeader() {
 		final Label header = new Label(getFieldEditorParent(), SWT.WRAP);
 		TextFormatter.setBoldFontStyle(header);
-		header.setText(Resources.get("lbl.preferences.database.header"));
+		header.setText(Messages.get("lbl.preferences.database.header"));
 		return header;
 	}
 

@@ -2,7 +2,7 @@ package it.albertus.router.email;
 
 import it.albertus.jface.preference.field.EmailAddressesListEditor;
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
@@ -87,7 +87,7 @@ public class EmailSender {
 						}
 					}
 					else {
-						out.println(Resources.get("msg.email.limit", maxSendingsPerCycle), true);
+						out.println(Messages.get("msg.email.limit", maxSendingsPerCycle), true);
 						break;
 					}
 				}
@@ -131,7 +131,7 @@ public class EmailSender {
 				}
 			}
 			else {
-				Logger.getInstance().log(Resources.get("err.email.max.queue.size", maxQueueSize, subject), Destination.CONSOLE, Destination.FILE);
+				Logger.getInstance().log(Messages.get("err.email.max.queue.size", maxQueueSize, subject), Destination.CONSOLE, Destination.FILE);
 			}
 		}
 	}
@@ -167,20 +167,20 @@ public class EmailSender {
 		initializeEmail(email);
 		createContents(email, rle);
 		final String mimeMessageId = email.send();
-		Logger.getInstance().log(Resources.get("msg.email.sent", rle.getSubject()), Destination.CONSOLE);
+		Logger.getInstance().log(Messages.get("msg.email.sent", rle.getSubject()), Destination.CONSOLE);
 		return mimeMessageId;
 	}
 
 	private void checkConfiguration() {
 		// Configuration check
 		if (configuration.getString(CFG_KEY_EMAIL_HOST, "").isEmpty()) {
-			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
+			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
 		}
 		if (configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS, "").isEmpty()) {
-			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
+			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
 		}
 		if (configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, "").isEmpty() && configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, "").isEmpty() && configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, "").isEmpty()) {
-			throw new ConfigurationException(Resources.get("err.email.cfg.error") + ' ' + Resources.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_TO_ADDRESSES);
+			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_TO_ADDRESSES);
 		}
 	}
 

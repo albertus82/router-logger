@@ -1,7 +1,7 @@
 package it.albertus.router.server;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
@@ -172,15 +172,15 @@ public abstract class BaseHttpServer {
 				}
 			}
 			catch (final BindException be) {
-				Logger.getInstance().log(new BindException(Resources.get("err.server.start.port", port)), Destination.CONSOLE, Destination.FILE);
+				Logger.getInstance().log(new BindException(Messages.get("err.server.start.port", port)), Destination.CONSOLE, Destination.FILE);
 				Logger.getInstance().log(be, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final FileNotFoundException fnfe) {
-				Logger.getInstance().log(new FileNotFoundException(Resources.get("err.server.start.keystore.file")), Destination.CONSOLE, Destination.FILE);
+				Logger.getInstance().log(new FileNotFoundException(Messages.get("err.server.start.keystore.file")), Destination.CONSOLE, Destination.FILE);
 				Logger.getInstance().log(fnfe, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(new Exception(Resources.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE, Destination.FILE);
+				Logger.getInstance().log(new Exception(Messages.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE, Destination.FILE);
 				Logger.getInstance().log(e, Destination.FILE, Destination.EMAIL);
 			}
 		}

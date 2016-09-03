@@ -7,7 +7,7 @@ import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.Reader;
 import it.albertus.router.reader.TpLink8970Reader;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.Localized;
 
 public class ReaderPreferencePage extends RestartHeaderPreferencePage {
@@ -43,7 +43,7 @@ public class ReaderPreferencePage extends RestartHeaderPreferencePage {
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {
-					return Resources.get(comboData.resourceKey);
+					return Messages.get(comboData.resourceKey);
 				}
 			};
 			options.put(name, value);

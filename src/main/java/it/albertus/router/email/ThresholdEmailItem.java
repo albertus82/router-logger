@@ -2,7 +2,7 @@ package it.albertus.router.email;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.Threshold;
-import it.albertus.router.resources.Resources;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 import java.io.Serializable;
@@ -44,7 +44,7 @@ public class ThresholdEmailItem implements Serializable {
 
 	@Override
 	public String toString() {
-		return new StringBuilder(dateFormat.format(date)).append(" - ").append(Resources.get("msg.thresholds.reached", thresholds)).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString()).append(routerData).toString();
+		return new StringBuilder(dateFormat.format(date)).append(" - ").append(Messages.get("msg.thresholds.reached", thresholds)).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString()).append(routerData).toString();
 	}
 
 }

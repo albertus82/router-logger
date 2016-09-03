@@ -7,8 +7,8 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.Images;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.page.PageDefinition;
-import it.albertus.router.resources.Resources;
-import it.albertus.router.resources.Resources.Language;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.resources.Messages.Language;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
@@ -28,12 +28,12 @@ public class RouterLoggerPreferences extends Preferences {
 
 	@Override
 	public int openDialog(final Shell parentShell, final IPageDefinition selectedPage) {
-		final Language language = Resources.getLanguage();
+		final Language language = Messages.getLanguage();
 
 		final int returnCode = super.openDialog(parentShell, selectedPage);
 
 		// Check if must update texts...
-		if (gui != null && !language.equals(Resources.getLanguage())) {
+		if (gui != null && !language.equals(Messages.getLanguage())) {
 			gui.getMenuBar().updateTexts();
 			gui.getDataTable().updateTexts();
 		}
