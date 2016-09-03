@@ -45,8 +45,10 @@ public class DataTable {
 
 	private static final String CFG_KEY_GUI_TABLE_COLUMNS_PADDING_RIGHT = "gui.table.columns.padding.right";
 	private static final String CFG_KEY_GUI_TABLE_COLUMNS_PACK = "gui.table.columns.pack";
-	private static final String CFG_KEY_GUI_IMPORTANT_KEYS_COLOR = "gui.important.keys.color";
-	private static final String CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR = "gui.thresholds.reached.color";
+	private static final String CFG_KEY_GUI_IMPORTANT_KEYS_COLOR_BACKGROUND = "gui.important.keys.color.background";
+	private static final String CFG_KEY_GUI_IMPORTANT_KEYS_COLOR_FOREGROUND = "gui.important.keys.color.foreground";
+	private static final String CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR_BACKGROUND = "gui.thresholds.reached.color.background";
+	private static final String CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR_FOREGROUND = "gui.thresholds.reached.color.foreground";
 
 	private static final DateFormat dateFormatTable = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
@@ -54,8 +56,10 @@ public class DataTable {
 		int MAX_ITEMS = 2000;
 		boolean COLUMNS_PACK = false;
 		byte COLUMNS_PADDING_RIGHT = 0;
-		String IMPORTANT_KEY_BACKGROUND_COLOR = "255,255,0";
-		String THRESHOLDS_REACHED_FOREGROUD_COLOR = "255,0,0";
+		String IMPORTANT_KEYS_COLOR_FOREGROUND = "0,0,0";
+		String IMPORTANT_KEYS_COLOR_BACKGROUND = "255,255,0";
+		String THRESHOLDS_REACHED_COLOR_FOREGROUND = "255,0,0";
+		String THRESHOLDS_REACHED_COLOR_BACKGROUND = "255,255,255";
 	}
 
 	enum TableDataKey {
@@ -286,7 +290,8 @@ public class DataTable {
 					item.setText(i++, timestamp);
 					item.setText(i++, Integer.toString(data.getResponseTime()));
 
-					final Color importantKeyBackgroundColor = getImportantKeyBackgroundColor();
+					final Color importantKeyBackgroundColor = getImportantKeysBackgroundColor();
+					final Color importantKeyForegroundColor = getImportantKeysForegroundColor();
 					for (final String key : info.keySet()) {
 						// Grassetto...
 						if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
@@ -300,13 +305,16 @@ public class DataTable {
 
 							// Evidenzia cella...
 							item.setBackground(i, importantKeyBackgroundColor);
+							item.setForeground(i, importantKeyForegroundColor);
 						}
 
 						// Colore per i valori oltre soglia...
 						final Color thresholdsReachedForegroundColor = getThresholdsReachedForegroundColor();
+						final Color thresholdsReachedBackgroundColor = getThresholdsReachedBackgroundColor();
 						for (final Threshold threshold : thresholdsReached.keySet()) {
 							if (key.equals(threshold.getKey())) {
 								item.setForeground(i, thresholdsReachedForegroundColor);
+								item.setBackground(i, thresholdsReachedBackgroundColor);
 								break;
 							}
 						}
@@ -362,11 +370,19 @@ public class DataTable {
 	}
 
 	public Color getThresholdsReachedForegroundColor() {
-		return getColor(CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR, Defaults.THRESHOLDS_REACHED_FOREGROUD_COLOR);
+		return getColor(CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR_FOREGROUND, Defaults.THRESHOLDS_REACHED_COLOR_FOREGROUND);
 	}
 
-	public Color getImportantKeyBackgroundColor() {
-		return getColor(CFG_KEY_GUI_IMPORTANT_KEYS_COLOR, Defaults.IMPORTANT_KEY_BACKGROUND_COLOR);
+	public Color getThresholdsReachedBackgroundColor() {
+		return getColor(CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR_BACKGROUND, Defaults.THRESHOLDS_REACHED_COLOR_BACKGROUND);
+	}
+
+	public Color getImportantKeysForegroundColor() {
+		return getColor(CFG_KEY_GUI_IMPORTANT_KEYS_COLOR_FOREGROUND, Defaults.IMPORTANT_KEYS_COLOR_FOREGROUND);
+	}
+
+	public Color getImportantKeysBackgroundColor() {
+		return getColor(CFG_KEY_GUI_IMPORTANT_KEYS_COLOR_BACKGROUND, Defaults.IMPORTANT_KEYS_COLOR_BACKGROUND);
 	}
 
 	private Color getColor(final String configurationKey, final String defaultColorKey) {

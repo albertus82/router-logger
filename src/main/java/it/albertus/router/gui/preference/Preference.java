@@ -1,6 +1,7 @@
 package it.albertus.router.gui.preference;
 
 import static it.albertus.router.gui.preference.page.PageDefinition.APPEARANCE;
+import static it.albertus.router.gui.preference.page.PageDefinition.APPEARANCE_COLORS;
 import static it.albertus.router.gui.preference.page.PageDefinition.CONSOLE;
 import static it.albertus.router.gui.preference.page.PageDefinition.CSV;
 import static it.albertus.router.gui.preference.page.PageDefinition.DATABASE;
@@ -154,8 +155,6 @@ public enum Preference implements IPreference {
 	GUI_TABLE_ITEMS_MAX(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(DataTable.Defaults.MAX_ITEMS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).textLimit(4).build()),
 	GUI_IMPORTANT_KEYS(new PreferenceDetailsBuilder(APPEARANCE).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).textHeight(3).build()),
 	GUI_IMPORTANT_KEYS_SEPARATOR(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
-	GUI_IMPORTANT_KEYS_COLOR(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(DataTable.Defaults.IMPORTANT_KEY_BACKGROUND_COLOR).build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
-	GUI_THRESHOLDS_REACHED_COLOR(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(DataTable.Defaults.THRESHOLDS_REACHED_FOREGROUD_COLOR).build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
 	GUI_TABLE_COLUMNS_PACK(new PreferenceDetailsBuilder(APPEARANCE).restartRequired().defaultValue(DataTable.Defaults.COLUMNS_PACK).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_TABLE_COLUMNS_PADDING_RIGHT(new PreferenceDetailsBuilder(APPEARANCE).restartRequired().defaultValue(DataTable.Defaults.COLUMNS_PADDING_RIGHT).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(10).build()),
 	GUI_CONSOLE_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).textLimit(6).build()),
@@ -164,6 +163,11 @@ public enum Preference implements IPreference {
 	GUI_TRAY_TOOLTIP(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(TrayIcon.Defaults.GUI_TRAY_TOOLTIP).parent(GUI_MINIMIZE_TRAY).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_START_MINIMIZED(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerGui.Defaults.GUI_START_MINIMIZED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_CONFIRM_CLOSE(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+
+	GUI_IMPORTANT_KEYS_COLOR_FOREGROUND(new PreferenceDetailsBuilder(APPEARANCE_COLORS).defaultValue(DataTable.Defaults.IMPORTANT_KEYS_COLOR_FOREGROUND).build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
+	GUI_IMPORTANT_KEYS_COLOR_BACKGROUND(new PreferenceDetailsBuilder(APPEARANCE_COLORS).defaultValue(DataTable.Defaults.IMPORTANT_KEYS_COLOR_BACKGROUND).build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
+	GUI_THRESHOLDS_REACHED_COLOR_FOREGROUND(new PreferenceDetailsBuilder(APPEARANCE_COLORS).defaultValue(DataTable.Defaults.THRESHOLDS_REACHED_COLOR_FOREGROUND).separate().build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
+	GUI_THRESHOLDS_REACHED_COLOR_BACKGROUND(new PreferenceDetailsBuilder(APPEARANCE_COLORS).defaultValue(DataTable.Defaults.THRESHOLDS_REACHED_COLOR_BACKGROUND).build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
 
 	CONSOLE_ANIMATION(new PreferenceDetailsBuilder(CONSOLE).defaultValue(RouterLoggerConsole.Defaults.CONSOLE_ANIMATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	CONSOLE_SHOW_KEYS(new PreferenceDetailsBuilder(CONSOLE).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).build()),
