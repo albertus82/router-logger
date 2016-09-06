@@ -18,8 +18,8 @@ public enum PageDefinition implements IPageDefinition {
 
 	GENERAL(new PageDefinitionDetailsBuilder().pageClass(GeneralPreferencePage.class).build()),
 	READER(new PageDefinitionDetailsBuilder().pageClass(ReaderPreferencePage.class).build()),
-	APPEARANCE(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).build()),
-	APPEARANCE_COLORS(new PageDefinitionDetailsBuilder().parent(APPEARANCE).build()),
+	APPEARANCE(new PageDefinitionDetailsBuilder().build()),
+	APPEARANCE_TABLE(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).parent(APPEARANCE).build()),
 	CONSOLE(new PageDefinitionDetailsBuilder().parent(APPEARANCE).build()),
 	READER_TPLINK_8970(new PageDefinitionDetailsBuilder().label(new Localized() {
 		@Override
