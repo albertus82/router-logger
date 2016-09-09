@@ -7,6 +7,7 @@ import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.StringUtils;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -84,6 +85,20 @@ public class RouterLoggerConfiguration extends Configuration {
 		else {
 			thresholds = new ExpressionThresholds(); /* Nuovo stile */
 		}
+	}
+
+	@Override
+	public String getFileName() {
+		File config;
+		final String fileName = super.getFileName();
+		try {
+			final String parent = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent();
+			config = new File((parent != null ? parent : "") + File.separator + fileName);
+		}
+		catch (final Exception e) {
+			config = new File(fileName);
+		}
+		return config.getPath();
 	}
 
 	@Override
