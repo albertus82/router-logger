@@ -83,7 +83,7 @@ In questo caso, prima del primo avvio, occorre modificare manualmente il file di
 
 ## Configurazione avanzata
 
-Se si utilizza l'interfaccia grafica, &egrave; possibile accedere alla configurazione dal men&ugrave; **Strumenti > Configurazione...**. Utilizzando l'interfaccia a riga di comando, invece, occorre modificare manualmente il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) con un editor di testo come Blocco note.
+Se si utilizza l'interfaccia grafica, &egrave; possibile accedere alla configurazione dal men&ugrave; **Strumenti > Configurazione**. Utilizzando l'interfaccia a riga di comando, invece, occorre modificare manualmente il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) con un editor di testo come Blocco note.
 
 Il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) fornito contiene gi&agrave; tutte le impostazioni dell'applicazione, e quasi tutte sono disabilitate per impostazione predefinita (chiave preceduta dal carattere `#`). Il principio &egrave; il cosiddetto *Convention Over Configuration* (noto anche come *Configuration by Exception*), secondo il quale non occorre preoccuparsi di configurare nulla esplicitamente, fatta eccezione per pochi parametri per i quali non pu&ograve; esistere un valore predefinito; nel nostro caso si tratta esclusivamente delle credenziali di accesso del router e degli eventuali parametri di connessione al database.
 
