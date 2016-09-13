@@ -134,7 +134,7 @@ public enum Preference implements IPreference {
 	ROUTER_USERNAME(new PreferenceDetailsBuilder(READER).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 	ROUTER_PASSWORD(new PreferenceDetailsBuilder(READER).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
 	ROUTER_ADDRESS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.ROUTER_ADDRESS).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
-	ROUTER_PORT(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.ROUTER_PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).integerValidRange(1, 65535).build()),
+	ROUTER_PORT(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.ROUTER_PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
 	SOCKET_TIMEOUT_MS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	CONNECTION_TIMEOUT_MS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	TELNET_NEWLINE_CHARACTERS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.TELNET_NEWLINE_CHARACTERS).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
@@ -153,7 +153,7 @@ public enum Preference implements IPreference {
 	DLINK_2750_COMMAND_INFO_ADSL_SNR(new PreferenceDetailsBuilder(READER_DLINK_2750).defaultValue(DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 
 	GUI_CONSOLE_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).textLimit(6).build()),
-	GUI_CLIPBOARD_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).integerValidRange(0, 128 * 1024).build()),
+	GUI_CLIPBOARD_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(0, 128 * 1024).build()),
 	GUI_MINIMIZE_TRAY(new PreferenceDetailsBuilder(APPEARANCE).separate().defaultValue(TrayIcon.Defaults.GUI_MINIMIZE_TRAY).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_TRAY_TOOLTIP(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(TrayIcon.Defaults.GUI_TRAY_TOOLTIP).parent(GUI_MINIMIZE_TRAY).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_START_MINIMIZED(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerGui.Defaults.GUI_START_MINIMIZED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -200,7 +200,7 @@ public enum Preference implements IPreference {
 	THRESHOLDS_SPLIT(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	THRESHOLDS_EMAIL(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerEngine.Defaults.THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
-	THRESHOLDS_EMAIL_MAX_ITEMS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.MAX_ITEMS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).integerValidRange(1, 1000).build()),
+	THRESHOLDS_EMAIL_MAX_ITEMS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.MAX_ITEMS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 1000).build()),
 	THRESHOLDS_EXCLUDED(new PreferenceDetailsBuilder(THRESHOLDS).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).build()),
 	THRESHOLDS_EXCLUDED_SEPARATOR(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
 
@@ -211,8 +211,8 @@ public enum Preference implements IPreference {
 	EMAIL_FROM_ADDRESS(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 	EMAIL_TO_ADDRESSES(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(Short.MAX_VALUE).icons(Images.MAIN_ICONS).build()),
 
-	EMAIL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).integerValidRange(1, 65535).build()),
-	EMAIL_SSL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SSL_PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).integerValidRange(1, 65535).build()),
+	EMAIL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
+	EMAIL_SSL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SSL_PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
 	EMAIL_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	EMAIL_SOCKET_TIMEOUT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SOCKET_TIMEOUT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	EMAIL_RETRY_INTERVAL_SECS(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.RETRY_INTERVAL_SECS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
@@ -232,7 +232,7 @@ public enum Preference implements IPreference {
 	EMAIL_BCC_ADDRESSES(new PreferenceDetailsBuilder(EMAIL_CC_BCC).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(0).icons(Images.MAIN_ICONS).build()),
 
 	SERVER_ENABLED(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHttpServer.Defaults.ENABLED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_PORT(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHttpServer.Defaults.PORT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).integerValidRange(1, 65535).build()),
+	SERVER_PORT(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHttpServer.Defaults.PORT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
 	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(BaseHttpServer.Defaults.AUTHENTICATION).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_USERNAME(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
