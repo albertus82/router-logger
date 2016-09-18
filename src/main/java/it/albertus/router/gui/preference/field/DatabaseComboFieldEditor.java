@@ -1,7 +1,7 @@
 package it.albertus.router.gui.preference.field;
 
+import it.albertus.jface.listener.TrimVerifyListener;
 import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
-import it.albertus.jface.preference.field.listener.TrimVerifyListener;
 import it.albertus.router.resources.Messages;
 
 import java.sql.Driver;
