@@ -91,17 +91,15 @@ import it.albertus.router.writer.DatabaseWriter;
 import it.albertus.util.Localized;
 
 import java.util.EnumSet;
-import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
 public enum Preference implements IPreference {
 
-	LANGUAGE(new PreferenceDetailsBuilder(GENERAL).defaultValue(Locale.getDefault().getLanguage()).build(), new FieldEditorDetailsBuilder(ComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
+	LANGUAGE(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerConfiguration.Defaults.LANGUAGE).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
 	LOGGER_ITERATIONS(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.ITERATIONS).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {

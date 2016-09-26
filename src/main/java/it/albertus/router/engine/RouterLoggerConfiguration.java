@@ -10,6 +10,7 @@ import it.albertus.util.StringUtils;
 import java.io.File;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -18,6 +19,7 @@ import java.util.TreeSet;
 public class RouterLoggerConfiguration extends Configuration {
 
 	public interface Defaults {
+		String LANGUAGE = Locale.getDefault().getLanguage();
 		boolean THRESHOLDS_SPLIT = false;
 		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
@@ -32,6 +34,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		return Singleton.instance;
 	}
 
+	public static final String CFG_KEY_LANGUAGE = "language";
 	public static final String FILE_NAME = "routerlogger.cfg";
 
 	private Thresholds thresholds;
@@ -59,7 +62,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	private void init() {
 		/* Impostazione lingua */
 		if (this.contains("language")) {
-			final String language = this.getString("language");
+			final String language = getString(CFG_KEY_LANGUAGE, Defaults.LANGUAGE);
 			Messages.setLanguage(language);
 			JFaceMessages.setLanguage(language);
 		}
