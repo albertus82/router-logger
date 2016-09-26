@@ -100,23 +100,23 @@ import org.eclipse.swt.widgets.Composite;
 public enum Preference implements IPreference {
 
 	LANGUAGE(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerConfiguration.Defaults.LANGUAGE).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
-	LOGGER_ITERATIONS(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.ITERATIONS).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).numberMinimum(0).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	LOGGER_ITERATIONS(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.ITERATIONS).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.iterations.infinite");
 		}
 	}, 0)).build()),
 	LOGGER_CLOSE_WHEN_FINISHED(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.CLOSE_WHEN_FINISHED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	LOGGER_INTERVAL_NORMAL_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	LOGGER_INTERVAL_FAST_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	LOGGER_HYSTERESIS_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	LOGGER_RETRY_COUNT(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRIES).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).numberMinimum(0).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	LOGGER_INTERVAL_NORMAL_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	LOGGER_INTERVAL_FAST_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.INTERVAL_FAST_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	LOGGER_HYSTERESIS_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.HYSTERESIS_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	LOGGER_RETRY_COUNT(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRIES).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.logger.retry.count.infinite");
 		}
 	}, 0)).build()),
-	LOGGER_RETRY_INTERVAL_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
+	LOGGER_RETRY_INTERVAL_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	LOGGER_ERROR_LOG_DESTINATION_PATH(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(Logger.Defaults.DIRECTORY).build(), new FieldEditorDetailsBuilder(DefaultDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
@@ -133,13 +133,13 @@ public enum Preference implements IPreference {
 	ROUTER_PASSWORD(new PreferenceDetailsBuilder(READER).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
 	ROUTER_ADDRESS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.ROUTER_ADDRESS).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
 	ROUTER_PORT(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.ROUTER_PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
-	SOCKET_TIMEOUT_MS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	CONNECTION_TIMEOUT_MS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
+	SOCKET_TIMEOUT_MS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.SOCKET_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	CONNECTION_TIMEOUT_MS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.CONNECTION_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	TELNET_NEWLINE_CHARACTERS(new PreferenceDetailsBuilder(READER).defaultValue(Reader.Defaults.TELNET_NEWLINE_CHARACTERS).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(BasePreferencePage.getNewLineComboOptions()).build()),
 	READER_LOG_CONNECTED(new PreferenceDetailsBuilder(READER).defaultValue(RouterLoggerEngine.Defaults.LOG_CONNECTED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	READER_WAIT_DISCONNECTED(new PreferenceDetailsBuilder(READER).defaultValue(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD(new PreferenceDetailsBuilder(READER).defaultValue(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD).parent(READER_WAIT_DISCONNECTED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD_MS(new PreferenceDetailsBuilder(READER).defaultValue(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS).parent(READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
+	READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD_MS(new PreferenceDetailsBuilder(READER).defaultValue(RouterLoggerEngine.Defaults.WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS).parent(READER_WAIT_DISCONNECTED_INTERVAL_THRESHOLD).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 
 	TPLINK_8970_COMMAND_INFO_ADSL(new PreferenceDetailsBuilder(READER_TPLINK_8970).defaultValue(TpLink8970Reader.Defaults.COMMAND_INFO_ADSL).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 	TPLINK_8970_COMMAND_INFO_WAN(new PreferenceDetailsBuilder(READER_TPLINK_8970).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
@@ -150,14 +150,14 @@ public enum Preference implements IPreference {
 	DLINK_2750_COMMAND_INFO_ADSL_STATUS(new PreferenceDetailsBuilder(READER_DLINK_2750).defaultValue(DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_STATUS).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 	DLINK_2750_COMMAND_INFO_ADSL_SNR(new PreferenceDetailsBuilder(READER_DLINK_2750).defaultValue(DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 
-	GUI_CONSOLE_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).textLimit(6).build()),
+	GUI_CONSOLE_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(TextConsole.Defaults.GUI_CONSOLE_MAX_CHARS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).textLimit(6).build()),
 	GUI_CLIPBOARD_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(0, 128 * 1024).build()),
 	GUI_MINIMIZE_TRAY(new PreferenceDetailsBuilder(APPEARANCE).separate().defaultValue(TrayIcon.Defaults.GUI_MINIMIZE_TRAY).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_TRAY_TOOLTIP(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(TrayIcon.Defaults.GUI_TRAY_TOOLTIP).parent(GUI_MINIMIZE_TRAY).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_START_MINIMIZED(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerGui.Defaults.GUI_START_MINIMIZED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_CONFIRM_CLOSE(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(CloseMessageBox.Defaults.GUI_CONFIRM_CLOSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
-	GUI_TABLE_ITEMS_MAX(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(DataTable.Defaults.MAX_ITEMS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).textLimit(4).build()),
+	GUI_TABLE_ITEMS_MAX(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(DataTable.Defaults.MAX_ITEMS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).textLimit(4).build()),
 	GUI_IMPORTANT_KEYS(new PreferenceDetailsBuilder(APPEARANCE_TABLE).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).textHeight(4).build()),
 	GUI_IMPORTANT_KEYS_SEPARATOR(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
 	GUI_IMPORTANT_KEYS_COLOR_BACKGROUND(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(DataTable.Defaults.IMPORTANT_KEYS_COLOR_BACKGROUND).build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
@@ -187,7 +187,7 @@ public enum Preference implements IPreference {
 	DATABASE_USERNAME(new PreferenceDetailsBuilder(DATABASE).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).build()),
 	DATABASE_PASSWORD(new PreferenceDetailsBuilder(DATABASE).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
 	DATABASE_TABLE_NAME(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.TABLE_NAME).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
-	DATABASE_CONNECTION_VALIDATION_TIMEOUT_MS(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).textLimit(5).build()),
+	DATABASE_CONNECTION_VALIDATION_TIMEOUT_MS(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).textLimit(5).build()),
 	DATABASE_TIMESTAMP_COLUMN_TYPE(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.TIMESTAMP_COLUMN_TYPE).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
 	DATABASE_RESPONSE_COLUMN_TYPE(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
 	DATABASE_INFO_COLUMN_TYPE(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.INFO_COLUMN_TYPE).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
@@ -197,7 +197,7 @@ public enum Preference implements IPreference {
 	THRESHOLDS_EXPRESSIONS(new PreferenceDetailsBuilder(THRESHOLDS).build(), new FieldEditorDetailsBuilder(ThresholdsListEditor.class).build()),
 	THRESHOLDS_SPLIT(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	THRESHOLDS_EMAIL(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerEngine.Defaults.THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
+	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	THRESHOLDS_EMAIL_MAX_ITEMS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.MAX_ITEMS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 1000).build()),
 	THRESHOLDS_EXCLUDED(new PreferenceDetailsBuilder(THRESHOLDS).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).build()),
 	THRESHOLDS_EXCLUDED_SEPARATOR(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
@@ -211,10 +211,10 @@ public enum Preference implements IPreference {
 
 	EMAIL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
 	EMAIL_SSL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SSL_PORT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
-	EMAIL_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	EMAIL_SOCKET_TIMEOUT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SOCKET_TIMEOUT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	EMAIL_RETRY_INTERVAL_SECS(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.RETRY_INTERVAL_SECS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	EMAIL_MAX_SENDINGS_PER_CYCLE(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.MAX_SENDINGS_PER_CYCLE).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).numberMinimum(0).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	EMAIL_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SOCKET_CONNECTION_TIMEOUT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	EMAIL_SOCKET_TIMEOUT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SOCKET_TIMEOUT).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	EMAIL_RETRY_INTERVAL_SECS(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.RETRY_INTERVAL_SECS).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	EMAIL_MAX_SENDINGS_PER_CYCLE(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.MAX_SENDINGS_PER_CYCLE).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.email.max.sendings.per.cycle.unlimited");
@@ -241,7 +241,7 @@ public enum Preference implements IPreference {
 	SERVER_HANDLER_ROOT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_STATUS_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_STATUS_REFRESH(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.REFRESH).parent(SERVER_HANDLER_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_HANDLER_STATUS_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).numberMinimum(0).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	SERVER_HANDLER_STATUS_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.server.handler.refresh.auto");
@@ -253,7 +253,7 @@ public enum Preference implements IPreference {
 	SERVER_HANDLER_CLOSE_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(CloseHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_JSON_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(BaseJsonHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_JSON_REFRESH(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.REFRESH).parent(SERVER_HANDLER_JSON_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_HANDLER_JSON_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_JSON_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).numberMinimum(0).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	SERVER_HANDLER_JSON_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_JSON_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.server.handler.refresh.auto");
@@ -279,7 +279,7 @@ public enum Preference implements IPreference {
 	MQTT_DATA_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_DATA_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_TOPIC).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
 	MQTT_DATA_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_QOS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
-	MQTT_DATA_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_THROTTLING_IN_MILLIS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).numberMinimum(0).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	MQTT_DATA_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_THROTTLING_IN_MILLIS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.mqtt.data.throttling.disabled");
@@ -295,7 +295,7 @@ public enum Preference implements IPreference {
 	MQTT_THRESHOLDS_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).separate().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_THRESHOLDS_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_TOPIC).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultStringFieldEditor.class).emptyStringAllowed(false).build()),
 	MQTT_THRESHOLDS_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_QOS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
-	MQTT_THRESHOLDS_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).numberMinimum(0).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	MQTT_THRESHOLDS_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.mqtt.thresholds.throttling.disabled");
@@ -305,9 +305,9 @@ public enum Preference implements IPreference {
 
 	MQTT_CLEAN_SESSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_AUTOMATIC_RECONNECT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.AUTOMATIC_RECONNECT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	MQTT_KEEP_ALIVE_INTERVAL(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
-	MQTT_MAX_INFLIGHT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).numberMinimum(0).build()),
+	MQTT_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	MQTT_KEEP_ALIVE_INTERVAL(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
+	MQTT_MAX_INFLIGHT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultIntegerFieldEditor.class).build()),
 	MQTT_VERSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MQTT_VERSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
 	MQTT_PERSISTENCE_FILE_ENABLED(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_PERSISTENCE_FILE_CUSTOM(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_CUSTOM).parent(MQTT_PERSISTENCE_FILE_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
