@@ -48,7 +48,7 @@ public class AboutDialog extends Dialog {
 
 		final Label icon = new Label(shell, SWT.NONE);
 		icon.setImage(Images.MAIN_ICONS[3]);
-		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 0, 3);
+		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 3);
 		icon.setLayoutData(gridData);
 
 		final Label info = new Label(shell, SWT.NONE);
@@ -71,7 +71,7 @@ public class AboutDialog extends Dialog {
 
 		final Button okButton = new Button(shell, SWT.PUSH);
 		okButton.setText(Messages.get("lbl.button.ok"));
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 0);
+		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1);
 		gridData.minimumWidth = 64;
 		okButton.setLayoutData(gridData);
 		okButton.setFocus();
