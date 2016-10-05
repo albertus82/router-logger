@@ -1,5 +1,20 @@
 package it.albertus.router.gui;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.eclipse.jface.window.IShellProvider;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
 import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.jface.TextConsole;
 import it.albertus.router.engine.RouterData;
@@ -15,21 +30,7 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Configured;
 import it.albertus.util.ExceptionUtils;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.eclipse.jface.window.IShellProvider;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import it.albertus.util.Version;
 
 public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvider {
 
@@ -51,6 +52,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	/** Entry point for GUI version */
 	public static void start() {
+		Display.setAppName(Messages.get("msg.application.name"));
+		Display.setAppVersion(Version.getInstance().getNumber());
 		final Display display = Display.getDefault();
 
 		// Creazione finestra applicazione...
@@ -190,7 +193,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			logger.log(ce);
 		}
 
-		/* Aggiornamento icona e tooltip nella barra di notifica (se necessario) */
+		// Aggiornamento icona e tooltip nella barra di notifica (se necessario)
 		if (trayIcon != null) {
 			trayIcon.updateTrayItem(getCurrentStatus().getStatus(), info);
 		}
