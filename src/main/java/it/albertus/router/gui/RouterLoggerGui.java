@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import it.albertus.jface.SwtThreadExecutor;
+import it.albertus.jface.SwtUtils;
 import it.albertus.jface.TextConsole;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
@@ -67,7 +68,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			shell.open();
 
 			// Fix invisible (transparent) shell bug with some Linux distibutions
-			if (routerLogger.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+			if (SwtUtils.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 				shell.setMinimized(true);
 			}
 
@@ -158,7 +159,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		shell = new Shell(display);
 
 		// Fix invisible (transparent) shell bug with some Linux distibutions
-		if (!isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+		if (!SwtUtils.isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 			shell.setMinimized(true);
 		}
 
@@ -184,10 +185,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		});
 
 		shell.addListener(SWT.Close, new CloseListener(this));
-	}
-
-	protected boolean isGtk() {
-		return SWT.getPlatform().toLowerCase().contains("gtk");
 	}
 
 	@Override
