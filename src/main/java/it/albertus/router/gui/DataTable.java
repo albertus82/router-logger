@@ -1,19 +1,5 @@
 package it.albertus.router.gui;
 
-import it.albertus.jface.SwtThreadExecutor;
-import it.albertus.jface.SwtUtils;
-import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.engine.Threshold;
-import it.albertus.router.gui.listener.ClearDataTableSelectionListener;
-import it.albertus.router.gui.listener.CopyDataTableSelectionListener;
-import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
-import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
-import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
-import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.util.NewLine;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -37,6 +23,20 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+import it.albertus.jface.SwtThreadExecutor;
+import it.albertus.jface.SwtUtils;
+import it.albertus.router.engine.RouterData;
+import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.Threshold;
+import it.albertus.router.gui.listener.ClearDataTableSelectionListener;
+import it.albertus.router.gui.listener.CopyDataTableSelectionListener;
+import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
+import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
+import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
+import it.albertus.util.NewLine;
 
 public class DataTable {
 
@@ -354,6 +354,9 @@ public class DataTable {
 						}
 						while (table.getItemCount() > maxItems);
 						table.setRedraw(true);
+					}
+					if (SwtUtils.isGtk()) {
+						table.setTopIndex(table.getTopIndex() - 1);
 					}
 				}
 			}.start();
