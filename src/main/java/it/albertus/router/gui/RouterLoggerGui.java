@@ -65,6 +65,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		final Shell shell = routerLogger.getShell();
 		try {
 			shell.open();
+
+			// Fix invisible (transparent) shell bug with some Linux distibutions
+			if (routerLogger.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+				shell.setMinimized(true);
+			}
+
 			routerLogger.addShutdownHook();
 			routerLogger.beforeConnect();
 			routerLogger.connect();
@@ -150,7 +156,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	private RouterLoggerGui(final Display display) {
 		shell = new Shell(display);
-		shell.setMinimized(configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED));
+
+		// Fix invisible (transparent) shell bug with some Linux distibutions
+		if (!isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+			shell.setMinimized(true);
+		}
+
 		shell.setText(Messages.get("lbl.window.title"));
 		shell.setImages(Images.MAIN_ICONS);
 		shell.setLayout(new GridLayout());
@@ -173,6 +184,10 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		});
 
 		shell.addListener(SWT.Close, new CloseListener(this));
+	}
+
+	protected boolean isGtk() {
+		return SWT.getPlatform().toLowerCase().contains("gtk");
 	}
 
 	@Override
