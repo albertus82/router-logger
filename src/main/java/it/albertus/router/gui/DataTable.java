@@ -8,6 +8,7 @@ import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.StringConverter;
+import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -355,7 +356,7 @@ public class DataTable {
 						while (table.getItemCount() > maxItems);
 						table.setRedraw(true);
 					}
-					if (SwtUtils.isGtk()) {
+					if (Util.isGtk()) {
 						table.setTopIndex(table.getTopIndex() - 1);
 					}
 				}
