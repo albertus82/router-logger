@@ -1,22 +1,16 @@
 package it.albertus.router.gui.preference.page;
 
-import it.albertus.jface.TextFormatter;
+import org.eclipse.swt.widgets.Control;
+
 import it.albertus.jface.preference.StaticLabelsAndValues;
 import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.router.resources.Messages;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 
 public class DatabasePreferencePage extends BasePreferencePage {
 
 	@Override
 	protected Control createHeader() {
-		final Label header = new Label(getFieldEditorParent(), SWT.WRAP);
-		TextFormatter.setBoldFontStyle(header);
-		header.setText(Messages.get("lbl.preferences.database.header"));
-		return header;
+		return createNoteComposite(null, getFieldEditorParent(), Messages.get("lbl.preferences.database.header"), "");
 	}
 
 	protected enum DatabaseDriverComboData {
