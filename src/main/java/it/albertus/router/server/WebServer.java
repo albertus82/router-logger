@@ -1,5 +1,8 @@
 package it.albertus.router.server;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.html.CloseHandler;
 import it.albertus.router.server.html.ConnectHandler;
@@ -11,10 +14,15 @@ import it.albertus.router.server.json.DataJsonHandler;
 import it.albertus.router.server.json.StatusJsonHandler;
 import it.albertus.router.server.json.ThresholdsJsonHandler;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class WebServer extends BaseHttpServer {
+
+	static {
+//		System.setProperty("sun.net.httpserver.clockTick", "1");
+//		System.setProperty("sun.net.httpserver.timerMillis", "1");
+		System.setProperty("sun.net.httpserver.maxReqTime", "1");
+//		System.setProperty("sun.net.httpserver.maxRspTime", "1");
+//		System.getProperty("sun.net.httpserver.debug", Boolean.TRUE.toString());
+	}
 
 	private static class Singleton {
 		private static final WebServer instance = new WebServer();
