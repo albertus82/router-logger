@@ -19,8 +19,8 @@ public class WebServer extends BaseHttpServer {
 	static {
 //		System.setProperty("sun.net.httpserver.clockTick", "1");
 //		System.setProperty("sun.net.httpserver.timerMillis", "1");
-		System.setProperty("sun.net.httpserver.maxReqTime", "1");
-//		System.setProperty("sun.net.httpserver.maxRspTime", "1");
+		System.setProperty("sun.net.httpserver.maxReqTime", "3");
+		System.setProperty("sun.net.httpserver.maxRspTime", "3");
 //		System.getProperty("sun.net.httpserver.debug", Boolean.TRUE.toString());
 	}
 
