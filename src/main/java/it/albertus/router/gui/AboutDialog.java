@@ -1,8 +1,5 @@
 package it.albertus.router.gui;
 
-import it.albertus.jface.listener.LinkSelectionListener;
-import it.albertus.router.resources.Messages;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,6 +11,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+
+import it.albertus.jface.listener.LinkSelectionListener;
+import it.albertus.router.resources.Messages;
 
 public class AboutDialog extends Dialog {
 
@@ -47,7 +47,7 @@ public class AboutDialog extends Dialog {
 		shell.setLayout(new GridLayout(2, false));
 
 		final Label icon = new Label(shell, SWT.NONE);
-		icon.setImage(Images.MAIN_ICONS[3]);
+		icon.setImage(Images.MAIN_ICONS[6]);
 		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 3);
 		icon.setLayoutData(gridData);
 
