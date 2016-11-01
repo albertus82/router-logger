@@ -1,21 +1,23 @@
 package it.albertus.router.gui.listener;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
+
 import it.albertus.jface.preference.Preferences;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.MessageBox;
-
-public class PreferencesSelectionListener extends SelectionAdapter {
+public class PreferencesListener extends SelectionAdapter implements Listener {
 
 	private final RouterLoggerGui gui;
 
-	public PreferencesSelectionListener(final RouterLoggerGui gui) {
+	public PreferencesListener(final RouterLoggerGui gui) {
 		this.gui = gui;
 	}
 
@@ -36,6 +38,11 @@ public class PreferencesSelectionListener extends SelectionAdapter {
 				gui.restart();
 			}
 		}
+	}
+
+	@Override
+	public void handleEvent(final Event event) {
+		widgetSelected(null);
 	}
 
 }
