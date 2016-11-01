@@ -370,7 +370,7 @@
 
 		<!-- Windows -->
 		<launch4j bindir="${launch4j.bindir}">
-			<config jarpath="${artifactId}.jar" headertype="gui" dontwrapjar="true" outfile="${build.distDirectory}/win32-win32-x86/${artifactId}/${artifactId}.exe" errtitle="Launch4j" chdir="." icon="${icons.directory}/main.ico">
+			<config jarpath="${artifactId}.jar" headertype="gui" dontwrapjar="true" stayalive="true" outfile="${build.distDirectory}/win32-win32-x86/${artifactId}/${artifactId}.exe" errtitle="Launch4j" chdir="." icon="${icons.directory}/main.ico">
 				<singleInstance mutexname="${build.jar.archive.manifest.mainClass}" windowtitle="${name}" />
 				<jre minversion="${build.compiler.target}.0" runtimebits="32" bundledjre64bit="false" bundledjreasfallback="false" jdkpreference="preferJre" initialheapsize="${vm.initialHeapSize}" maxheapsize="${vm.maxHeapSize}" />
 				<classPath mainclass="${build.jar.archive.manifest.mainClass}" cp="lib/*" />
@@ -380,7 +380,7 @@
 		<zip destfile="${build.releaseDirectory}/${artifactId}-${version.number}-win32-win32-x86-bin.zip" basedir="${build.distDirectory}/win32-win32-x86" level="9" />
 
 		<launch4j bindir="${launch4j.bindir}">
-			<config jarpath="${artifactId}.jar" headertype="gui" dontwrapjar="true" outfile="${build.distDirectory}/win32-win32-x86_64/${artifactId}/${artifactId}.exe" errtitle="Launch4j" chdir="." icon="${icons.directory}/main.ico">
+			<config jarpath="${artifactId}.jar" headertype="gui" dontwrapjar="true" stayalive="true" outfile="${build.distDirectory}/win32-win32-x86_64/${artifactId}/${artifactId}.exe" errtitle="Launch4j" chdir="." icon="${icons.directory}/main.ico">
 				<singleInstance mutexname="${build.jar.archive.manifest.mainClass}" windowtitle="${name}" />
 				<jre minversion="${build.compiler.target}.0" runtimebits="64" bundledjre64bit="false" bundledjreasfallback="false" jdkpreference="preferJre" initialheapsize="${vm.initialHeapSize}" maxheapsize="${vm.maxHeapSize}" />
 				<classPath mainclass="${build.jar.archive.manifest.mainClass}" cp="lib/*" />
