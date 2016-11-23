@@ -22,6 +22,14 @@ import static it.albertus.router.gui.preference.page.PageDefinition.SERVER_HANDL
 import static it.albertus.router.gui.preference.page.PageDefinition.SERVER_HTTPS;
 import static it.albertus.router.gui.preference.page.PageDefinition.THRESHOLDS;
 import static it.albertus.router.gui.preference.page.PageDefinition.WRITER;
+
+import java.util.EnumSet;
+import java.util.Set;
+
+import org.eclipse.jface.preference.ColorFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.swt.widgets.Composite;
+
 import it.albertus.jface.TextConsole;
 import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorDetails.FieldEditorDetailsBuilder;
@@ -88,14 +96,8 @@ import it.albertus.router.server.json.BaseJsonHandler;
 import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
+import it.albertus.util.Configuration;
 import it.albertus.util.Localized;
-
-import java.util.EnumSet;
-import java.util.Set;
-
-import org.eclipse.jface.preference.ColorFieldEditor;
-import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.swt.widgets.Composite;
 
 public enum Preference implements IPreference {
 
@@ -311,7 +313,7 @@ public enum Preference implements IPreference {
 	MQTT_VERSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MQTT_VERSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
 	MQTT_PERSISTENCE_FILE_ENABLED(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_PERSISTENCE_FILE_CUSTOM(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_CUSTOM).parent(MQTT_PERSISTENCE_FILE_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_PERSISTENCE_FILE_PATH(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(System.getProperty("user.dir")).parent(MQTT_PERSISTENCE_FILE_CUSTOM).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
+	MQTT_PERSISTENCE_FILE_PATH(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(Configuration.getOsSpecificUserAppDataDir() + Messages.get("msg.application.name")).parent(MQTT_PERSISTENCE_FILE_CUSTOM).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("msg.preferences.directory.dialog.message.mqtt");

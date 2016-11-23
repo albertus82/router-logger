@@ -54,8 +54,8 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	private RouterLoggerConfiguration() {
-		/* Caricamento della configurazione... */
-		super(FILE_NAME);
+		// Caricamento della configurazione...
+		super(Messages.get("msg.application.name") + File.separator + FILE_NAME, true);
 		init();
 	}
 
@@ -88,20 +88,6 @@ public class RouterLoggerConfiguration extends Configuration {
 		else {
 			thresholds = new ExpressionThresholds(); /* Nuovo stile */
 		}
-	}
-
-	@Override
-	public String getFileName() {
-		File config;
-		final String fileName = super.getFileName();
-		try {
-			final String parent = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent();
-			config = new File((parent != null ? parent : "") + File.separator + fileName);
-		}
-		catch (final Exception e) {
-			config = new File(fileName);
-		}
-		return config.getPath();
 	}
 
 	@Override
