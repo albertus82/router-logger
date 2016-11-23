@@ -1,14 +1,5 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.email.EmailSender;
-import it.albertus.router.engine.RouterData;
-import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.ConfigurationException;
-import it.albertus.util.NewLine;
-import it.albertus.util.StringUtils;
-import it.albertus.util.Zipper;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,6 +8,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.ZipException;
+
+import javax.swing.filechooser.FileSystemView;
+
+import it.albertus.router.email.EmailSender;
+import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.util.ConfigurationException;
+import it.albertus.util.NewLine;
+import it.albertus.util.StringUtils;
+import it.albertus.util.Zipper;
 
 public class CsvWriter extends Writer {
 
@@ -226,38 +228,11 @@ public class CsvWriter extends Writer {
 	}
 
 	protected static File getDefaultFile() {
-		File csvFile;
-		try {
-			final String parent = new File(CsvWriter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent();
-			csvFile = new File((parent != null ? parent : "") + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
-		}
-		catch (final Exception e1) {
-			try {
-				// In caso di problemi, scrive nella directory del profilo dell'utente
-				csvFile = new File(System.getProperty("user.home").toString() + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
-			}
-			catch (final Exception e2) {
-				// Nella peggiore delle ipotesi, scrive nella directory corrente
-				csvFile = new File(dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
-			}
-		}
-		return csvFile;
+		return new File(getDefaultDirectory() + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
 	}
 
 	protected static String getDefaultDirectory() {
-		String directory;
-		try {
-			directory = getDefaultFile().getParentFile().getCanonicalPath();
-		}
-		catch (Exception e1) {
-			try {
-				directory = getDefaultFile().getParentFile().getAbsolutePath();
-			}
-			catch (Exception e2) {
-				directory = getDefaultFile().getParentFile().getPath();
-			}
-		}
-		return directory;
+		return FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + Messages.get("msg.application.name");
 	}
 
 }

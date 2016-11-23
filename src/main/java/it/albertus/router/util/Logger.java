@@ -1,14 +1,5 @@
 package it.albertus.router.util;
 
-import it.albertus.router.email.EmailSender;
-import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Messages;
-import it.albertus.util.Configuration;
-import it.albertus.util.Console;
-import it.albertus.util.ExceptionUtils;
-import it.albertus.util.StringUtils;
-import it.albertus.util.SystemConsole;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -19,6 +10,17 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.swing.filechooser.FileSystemView;
+
+import it.albertus.router.email.EmailSender;
+import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Messages;
+import it.albertus.util.Configuration;
+import it.albertus.util.Console;
+import it.albertus.util.ExceptionUtils;
+import it.albertus.util.StringUtils;
+import it.albertus.util.SystemConsole;
 
 public class Logger {
 
@@ -191,38 +193,11 @@ public class Logger {
 	}
 
 	private static File getDefaultFile() {
-		File logFile;
-		try {
-			final String parent = new File(Logger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getSchemeSpecificPart()).getParent();
-			logFile = new File((parent != null ? parent : "") + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
-		}
-		catch (final Exception e1) {
-			try {
-				// On error, try to write in the user profile directory
-				logFile = new File(System.getProperty("user.home").toString() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
-			}
-			catch (final Exception e2) {
-				// In the worst case: write in the current directory
-				logFile = new File(dateFormatFileName.format(new Date()) + FILE_EXTENSION);
-			}
-		}
-		return logFile;
+		return new File(getDefaultDirectory() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 	}
 
 	private static String getDefaultDirectory() {
-		String directory;
-		try {
-			directory = getDefaultFile().getParentFile().getCanonicalPath();
-		}
-		catch (Exception e1) {
-			try {
-				directory = getDefaultFile().getParentFile().getAbsolutePath();
-			}
-			catch (Exception e2) {
-				directory = getDefaultFile().getParentFile().getPath();
-			}
-		}
-		return directory;
+		return FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + Messages.get("msg.application.name");
 	}
 
 }
