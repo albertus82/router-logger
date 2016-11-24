@@ -17,7 +17,6 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.NewLine;
-import it.albertus.util.StringUtils;
 import it.albertus.util.Zipper;
 
 public class CsvWriter extends Writer {
@@ -142,18 +141,15 @@ public class CsvWriter extends Writer {
 	protected File getDestinationFile() {
 		final String csvDestinationDir = configuration.getString("csv.destination.path");
 		final File file;
-		if (StringUtils.isNotBlank(csvDestinationDir)) {
-			final File logDestDir = new File(csvDestinationDir.trim());
-			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException(Messages.get("err.invalid.path", logDestDir));
-			}
-			if (!logDestDir.exists()) {
-				logDestDir.mkdirs();
-			}
+		if (csvDestinationDir != null && !csvDestinationDir.trim().isEmpty()) {
 			file = new File(csvDestinationDir.trim() + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
 		}
 		else {
 			file = getDefaultFile();
+		}
+		final File parentFile = file.getParentFile();
+		if (parentFile != null && !parentFile.exists()) {
+			parentFile.mkdirs(); // Create directories if not exists
 		}
 		return file;
 	}

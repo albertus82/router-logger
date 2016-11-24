@@ -142,19 +142,16 @@ public class Logger {
 
 	private void logToFile(final String text) throws IOException {
 		final String logDestinationDir = configuration != null ? configuration.getString("logger.error.log.destination.path") : null;
-		File logFile;
-		if (StringUtils.isNotBlank(logDestinationDir)) {
-			File logDestDir = new File(logDestinationDir.trim());
-			if (logDestDir.exists() && !logDestDir.isDirectory()) {
-				throw new RuntimeException(Messages.get("err.invalid.path", logDestDir));
-			}
-			if (!logDestDir.exists()) {
-				logDestDir.mkdirs();
-			}
+		final File logFile;
+		if (logDestinationDir != null && !logDestinationDir.trim().isEmpty()) {
 			logFile = new File(logDestinationDir.trim() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
 		}
 		else {
 			logFile = getDefaultFile();
+		}
+		final File parentFile = logFile.getParentFile();
+		if (parentFile != null && !parentFile.exists()) {
+			parentFile.mkdirs(); // Create directories if not exists
 		}
 		final BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
 		final String base = new Date().toString() + " - ";
