@@ -409,7 +409,7 @@
 			[Icons]
 			Name: "{group}\${name}"; Filename: "{app}\${artifactId}.exe"
 			Name: "{group}\{cm:UninstallProgram,${name}}"; Filename: "{uninstallexe}"
-			Name: "{commondesktop}\${name}"; Filename: "{app}\${artifactId}.exe"; Tasks: desktopicon
+			Name: "{userdesktop}\${name}"; Filename: "{app}\${artifactId}.exe"; Tasks: desktopicon
 			Name: "{commonstartup}\${name}"; Filename: "{app}\${artifactId}.exe"; Tasks: startupicon
 
 			[Files]
@@ -470,7 +470,7 @@
 			[Icons]
 			Name: "{group}\${name}"; Filename: "{app}\${artifactId}.exe"
 			Name: "{group}\{cm:UninstallProgram,${name}}"; Filename: "{uninstallexe}"
-			Name: "{commondesktop}\${name}"; Filename: "{app}\${artifactId}.exe"; Tasks: desktopicon
+			Name: "{userdesktop}\${name}"; Filename: "{app}\${artifactId}.exe"; Tasks: desktopicon
 			Name: "{commonstartup}\${name}"; Filename: "{app}\${artifactId}.exe"; Tasks: startupicon
 
 			[Files]
