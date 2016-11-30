@@ -9,12 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.ZipException;
 
-import javax.swing.filechooser.FileSystemView;
-
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.NewLine;
 import it.albertus.util.Zipper;
@@ -228,7 +227,7 @@ public class CsvWriter extends Writer {
 	}
 
 	protected static String getDefaultDirectory() {
-		return FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + Messages.get("msg.application.name");
+		return Configuration.getOsSpecificDocumentsDir() + File.separator + Messages.get("msg.application.name");
 	}
 
 }

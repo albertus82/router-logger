@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.filechooser.FileSystemView;
-
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
@@ -194,7 +192,7 @@ public class Logger {
 	}
 
 	private static String getDefaultDirectory() {
-		return FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + Messages.get("msg.application.name");
+		return Configuration.getOsSpecificDocumentsDir() + File.separator + Messages.get("msg.application.name");
 	}
 
 }
