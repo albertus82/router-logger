@@ -1,5 +1,6 @@
 /bin/
 /target/
+/sonar-project.properties
 /*.csv
 /*.log
 /*.cfg
