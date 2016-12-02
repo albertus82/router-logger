@@ -44,6 +44,10 @@ public abstract class BaseHttpServer {
 		public static final String SSL_PROTOCOL = "TLS";
 		public static final String SSL_KMF_ALGORITHM = KeyManagerFactory.getDefaultAlgorithm();
 		public static final String SSL_TMF_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
+
+		private Defaults() {
+			throw new IllegalAccessError();
+		}
 	}
 
 	protected static final int STOP_DELAY = 0;
