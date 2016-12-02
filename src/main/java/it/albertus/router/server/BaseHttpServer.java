@@ -1,17 +1,9 @@
 package it.albertus.router.server;
 
-import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.Configuration;
-import it.albertus.util.DaemonThreadFactory;
-import it.albertus.util.ExceptionUtils;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
@@ -32,18 +24,26 @@ import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 
+import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.util.Configuration;
+import it.albertus.util.DaemonThreadFactory;
+import it.albertus.util.ExceptionUtils;
+
 public abstract class BaseHttpServer {
 
-	public interface Defaults {
-		int PORT = 8080;
-		boolean ENABLED = false;
-		boolean AUTHENTICATION = true;
-		byte THREADS = 1;
-		boolean SSL_ENABLED = false;
-		String SSL_KEYSTORE_TYPE = "JKS";
-		String SSL_PROTOCOL = "TLS";
-		String SSL_KMF_ALGORITHM = KeyManagerFactory.getDefaultAlgorithm();
-		String SSL_TMF_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
+	public static final class Defaults {
+		public static final int PORT = 8080;
+		public static final boolean ENABLED = false;
+		public static final boolean AUTHENTICATION = true;
+		public static final byte THREADS = 1;
+		public static final boolean SSL_ENABLED = false;
+		public static final String SSL_KEYSTORE_TYPE = "JKS";
+		public static final String SSL_PROTOCOL = "TLS";
+		public static final String SSL_KMF_ALGORITHM = KeyManagerFactory.getDefaultAlgorithm();
+		public static final String SSL_TMF_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
 	}
 
 	protected static final int STOP_DELAY = 0;
@@ -121,9 +121,27 @@ public abstract class BaseHttpServer {
 						final char[] storepass = configuration.getCharArray("server.ssl.storepass");
 						final KeyStore keyStore = KeyStore.getInstance(configuration.getString("server.ssl.keystore.type", Defaults.SSL_KEYSTORE_TYPE));
 						// keytool -genkey -alias "myalias" -keyalg "RSA" -keypass "mykeypass" -keystore "mykeystore.jks" -storepass "mystorepass" -validity 360
-						final InputStream bis = new BufferedInputStream(new FileInputStream(configuration.getString("server.ssl.keystore.file", "")));
-						keyStore.load(bis, storepass);
-						bis.close();
+						FileInputStream fis = null;
+						BufferedInputStream bis = null;
+						try {
+							fis = new FileInputStream(configuration.getString("server.ssl.keystore.file", ""));
+							bis = new BufferedInputStream(fis);
+							keyStore.load(bis, storepass);
+						}
+						finally {
+							if (bis != null) {
+								try {
+									bis.close();
+								}
+								catch (final IOException ioe) {/* Ignore */}
+							}
+							if (fis != null) {
+								try {
+									fis.close();
+								}
+								catch (final IOException ioe) {/* Ignore */}
+							}
+						}
 
 						final char[] keypass = configuration.getCharArray("server.ssl.keypass");
 						final KeyManagerFactory kmf = KeyManagerFactory.getInstance(configuration.getString("server.ssl.kmf.algorithm", Defaults.SSL_KMF_ALGORITHM));
