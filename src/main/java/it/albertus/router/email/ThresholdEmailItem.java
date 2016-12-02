@@ -18,9 +18,9 @@ public class ThresholdEmailItem implements Serializable {
 
 	protected static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
-	protected final Date date;
-	protected final Map<String, String> thresholds = new TreeMap<String, String>();
-	protected final RouterData routerData;
+	private final Date date;
+	private final Map<String, String> thresholds = new TreeMap<String, String>();
+	private final RouterData routerData;
 
 	public ThresholdEmailItem(final Map<Threshold, String> thresholdsReached, final RouterData routerData) {
 		this.routerData = routerData;
