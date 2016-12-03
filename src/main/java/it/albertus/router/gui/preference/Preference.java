@@ -30,7 +30,7 @@ import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.swt.widgets.Composite;
 
-import it.albertus.jface.TextConsole;
+import it.albertus.jface.console.TextConsole;
 import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorDetails.FieldEditorDetailsBuilder;
 import it.albertus.jface.preference.FieldEditorFactory;

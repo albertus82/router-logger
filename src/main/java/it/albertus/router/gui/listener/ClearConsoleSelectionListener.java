@@ -15,7 +15,7 @@ public class ClearConsoleSelectionListener extends ClearSelectionListener {
 	public void widgetSelected(final SelectionEvent se) {
 		if (gui.canClearConsole()) {
 			if (confirm(Messages.get("msg.confirm.clear.console.text"), Messages.get("msg.confirm.clear.console.message"))) {
-				gui.getTextConsole().clear();
+				gui.getConsole().clear();
 			}
 		}
 	}

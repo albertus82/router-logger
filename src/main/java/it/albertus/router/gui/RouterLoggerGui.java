@@ -9,15 +9,15 @@ import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 import it.albertus.jface.SwtThreadExecutor;
-import it.albertus.jface.TextConsole;
+import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Status;
@@ -49,7 +49,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	private final TrayIcon trayIcon;
 	private final MenuBar menuBar;
 	private final SashForm sashForm;
-	private final TextConsole textConsole;
+	private final StyledTextConsole console;
 
 	/** Entry point for GUI version */
 	public static void start() {
@@ -177,7 +177,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
-		textConsole = new TextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), new Configured<Integer>() {
+
+		console = new StyledTextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), true);
+		console.setMaxChars(new Configured<Integer>() {
 			@Override
 			public Integer getValue() {
 				return configuration.getInt("gui.console.max.chars");
@@ -234,17 +236,17 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	public boolean canCopyConsole() {
-		final Text text = textConsole.getText();
+		final StyledText text = console.getScrollable();
 		return text != null && text.getSelectionCount() > 0 && (text.isFocusControl() || !dataTable.canCopy());
 	}
 
 	public boolean canSelectAllConsole() {
-		final Text text = textConsole.getText();
+		final StyledText text = console.getScrollable();
 		return text != null && !text.getText().isEmpty() && (text.isFocusControl() || !dataTable.canSelectAll());
 	}
 
 	public boolean canClearConsole() {
-		final Text text = textConsole.getText();
+		final StyledText text = console.getScrollable();
 		return text != null && !text.getText().isEmpty();
 	}
 
@@ -316,7 +318,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					new SwtThreadExecutor(shell) {
 						@Override
 						public void run() {
-							textConsole.clear();
+							console.clear();
 							dataTable.reset();
 							beforeConnect();
 							connect();
@@ -387,8 +389,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		return dataTable;
 	}
 
-	public TextConsole getTextConsole() {
-		return textConsole;
+	public StyledTextConsole getConsole() {
+		return console;
 	}
 
 	public TrayIcon getTrayIcon() {
