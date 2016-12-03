@@ -319,6 +319,12 @@ public abstract class RouterLoggerEngine {
 
 	/** Prints a welcome message. */
 	protected void printWelcome() {
+		out.println("  ____             _            _");
+		out.println(" |  _ \\ ___  _   _| |_ ___ _ __| |    ___   __ _  __ _  ___ _ __");
+		out.println(" | |_) / _ \\| | | | __/ _ \\ '__| |   / _ \\ / _` |/ _` |/ _ \\ '__|");
+		out.println(" |  _ < (_) | |_| | ||  __/ |  | |__| (_) | (_| | (_| |  __/ |");
+		out.println(" |_| \\_\\___/ \\__,_|\\__\\___|_|  |_____\\___/ \\__, |\\__, |\\___|_|");
+		out.println("                                           |___/ |___/");
 		final Version version = Version.getInstance();
 		out.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
 		out.println();
