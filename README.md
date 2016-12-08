@@ -18,7 +18,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 ## Installazione e avvio
 
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz** adatta alla propria piattaforma, possibilmente la pi&ugrave; recente;
-	* per **[Raspberry Pi](http://www.raspberrypi.org)** o altre piattaforme non direttamente supportate, scaricare la release **`other`**;
+	* per **[Raspberry Pi](http://www.raspberrypi.org)** scaricare la release **`gtk-linux-armhf`**;
 2. scompattare l'archivio in una cartella a piacimento in cui si abbiano diritti di scrittura;
 3. avviare il programma eseguendo lo script di avvio che, a seconda del sistema operativo, sar&agrave;:
 	* Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
@@ -26,14 +26,6 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 	* OS X: [**`routerlogger.command`**](src/main/scripts/routerlogger.command)
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
-
->Volendo utilizzare l'interfaccia grafica con **Raspberry Pi** o altre piattaforme **Linux/ARM**, occorre effettuare anche i seguenti passaggi:
->	1. installare i seguenti pacchetti (`sudo apt-get install`):
->		* **`libswt-cairo-gtk-4-jni`**
->		* **`libswt-gtk-4-java`**
->	2. copiare il file **`/usr/lib/java/swt-gtk-<versione>.jar`** nella directory `lib` dell'applicazione.
-
->In caso contrario &egrave; comunque sempre possibile utilizzare l'interfaccia a riga di comando.
 
 Al primo avvio sar&agrave; necessario accedere alla configurazione, scheda **Router**, per specificare il modello di router (**Dispositivo/Classe Reader**) e pochi altri parametri di connessione:
 
