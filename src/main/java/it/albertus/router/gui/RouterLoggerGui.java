@@ -242,12 +242,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	public boolean canSelectAllConsole() {
 		final StyledText text = console.getScrollable();
-		return text != null && !text.getText().isEmpty() && (text.isFocusControl() || !dataTable.canSelectAll());
+		return text != null && text.getCharCount() > 0 && (text.isFocusControl() || !dataTable.canSelectAll());
 	}
 
 	public boolean canClearConsole() {
 		final StyledText text = console.getScrollable();
-		return text != null && !text.getText().isEmpty();
+		return text != null && text.getCharCount() > 0;
 	}
 
 	/** Avvia il ciclo. */

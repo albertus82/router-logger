@@ -1,10 +1,5 @@
 package it.albertus.router.gui.preference.field;
 
-import it.albertus.jface.preference.field.LocalizedListEditor;
-import it.albertus.router.engine.RouterLoggerConfiguration.Thresholds;
-import it.albertus.router.gui.Images;
-import it.albertus.router.resources.Messages;
-
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -16,8 +11,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Button;
@@ -27,10 +22,25 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class ThresholdsListEditor extends LocalizedListEditor {
+import it.albertus.jface.preference.field.EnhancedListEditor;
+import it.albertus.router.engine.RouterLoggerConfiguration.Thresholds;
+import it.albertus.router.gui.Images;
+import it.albertus.router.resources.Messages;
+import it.albertus.util.StringUtils;
+
+public class ThresholdsListEditor extends EnhancedListEditor {
+
+	private static final char DELIMITER = '=';
 
 	public ThresholdsListEditor(final String name, final String labelText, final Composite parent) {
 		super(name, labelText, parent, Integer.valueOf(Short.MAX_VALUE));
+	}
+
+	@Override
+	protected void createButtons(final Composite box) {
+		createAddButton(box);
+		createEditButton(box);
+		createRemoveButton(box);
 	}
 
 	@Override
@@ -45,7 +55,7 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 			final Set<String> thresholds = new TreeSet<String>();
 			for (final String preferenceName : getPreferenceStore().preferenceNames()) {
 				if (preferenceName.startsWith(Thresholds.CFG_PREFIX + '.')) {
-					thresholds.add(preferenceName.substring(preferenceName.indexOf('.') + 1) + '=' + getPreferenceStore().getString(preferenceName));
+					thresholds.add(preferenceName.substring(preferenceName.indexOf('.') + 1) + DELIMITER + getPreferenceStore().getString(preferenceName));
 				}
 			}
 			for (final String threshold : thresholds) {
@@ -73,8 +83,8 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 		// Store...
 		if (getList() != null) {
 			for (final String item : getList().getItems()) {
-				final String name = Thresholds.CFG_PREFIX + '.' + item.substring(0, item.indexOf('='));
-				final String value = item.substring(item.indexOf('=') + 1);
+				final String name = Thresholds.CFG_PREFIX + '.' + item.substring(0, item.indexOf(DELIMITER));
+				final String value = item.substring(item.indexOf(DELIMITER) + 1);
 				getPreferenceStore().setValue(name, value);
 			}
 		}
@@ -83,9 +93,21 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 	@Override
 	protected String getNewInputObject() {
 		final ThresholdDialog thresholdDialog = new ThresholdDialog(getShell());
-		thresholdDialog.create();
+		thresholdDialog.create(Messages.get("lbl.preferences.thresholds.expressions.add.title"));
 		if (thresholdDialog.open() == Window.OK) {
-			return thresholdDialog.getIdentifier() + '=' + thresholdDialog.getExpression();
+			return thresholdDialog.getIdentifier() + DELIMITER + thresholdDialog.getExpression();
+		}
+		return null;
+	}
+
+	@Override
+	protected String getModifiedInputObject(final String value) {
+		final ThresholdDialog thresholdDialog = new ThresholdDialog(getShell());
+		thresholdDialog.create(Messages.get("lbl.preferences.thresholds.expressions.edit.title"));
+		thresholdDialog.textIdentifier.setText(StringUtils.substringBefore(value, Character.toString(DELIMITER)));
+		thresholdDialog.textExpression.setText(StringUtils.substringAfter(value, Character.toString(DELIMITER)));
+		if (thresholdDialog.open() == Window.OK) {
+			return thresholdDialog.getIdentifier() + DELIMITER + thresholdDialog.getExpression();
 		}
 		return null;
 	}
@@ -108,14 +130,13 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 		@Override
 		protected void configureShell(final Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setText(Messages.get("lbl.preferences.thresholds.expressions.title"));
 			newShell.setImages(Images.MAIN_ICONS);
 		}
 
-		@Override
-		public void create() {
+		public void create(final String title) {
 			super.create();
-			setTitle(Messages.get("lbl.preferences.thresholds.expressions.title"));
+			getShell().setText(title);
+			setTitle(title);
 			setMessage(Messages.get("lbl.preferences.thresholds.expressions.message"), IMessageProvider.INFORMATION);
 		}
 
@@ -143,9 +164,9 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 			GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(textExpression);
 			textExpression.setTextLimit(TEXT_LIMIT);
 
-			final TextKeyListener textKeyListener = new TextKeyListener();
-			textIdentifier.addKeyListener(textKeyListener);
-			textExpression.addKeyListener(textKeyListener);
+			final TextModifyListener textModifyListener = new TextModifyListener();
+			textIdentifier.addModifyListener(textModifyListener);
+			textExpression.addModifyListener(textModifyListener);
 
 			return area;
 		}
@@ -182,9 +203,9 @@ public class ThresholdsListEditor extends LocalizedListEditor {
 			return expression;
 		}
 
-		private class TextKeyListener extends KeyAdapter {
+		private class TextModifyListener implements ModifyListener {
 			@Override
-			public void keyReleased(final KeyEvent ke) {
+			public void modifyText(final ModifyEvent me) {
 				if (textIdentifier.getText().isEmpty() || textExpression.getText().trim().isEmpty()) {
 					if (okButton.isEnabled()) {
 						okButton.setEnabled(false);
