@@ -25,12 +25,19 @@ public class Logger {
 	private static final String FILE_EXTENSION = ".log";
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE, Destination.EMAIL };
 
-	private static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
-	private static final DateFormat timestampFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private static ThreadLocal<DateFormat> dateFormatFileName = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("yyyyMMdd");
+		}
+	};
 
-	private static synchronized String formatTimestamp(final Date timestamp) {
-		return timestampFormat.format(timestamp);
-	}
+	private static ThreadLocal<DateFormat> timestampFormat = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		}
+	};
 
 	private static class Singleton {
 		private static final Logger instance = new Logger();
@@ -134,15 +141,15 @@ public class Logger {
 	}
 
 	private void logToConsole(final String text) {
-		final String base = formatTimestamp(new Date()) + ' ';
+		final String base = timestampFormat.get().format(new Date()) + ' ';
 		out.println(base + StringUtils.trimToEmpty(text), true);
 	}
 
-	private void logToFile(final String text) throws IOException {
+	private synchronized void logToFile(final String text) throws IOException {
 		final String logDestinationDir = configuration != null ? configuration.getString("logger.error.log.destination.path") : null;
 		final File logFile;
 		if (logDestinationDir != null && !logDestinationDir.trim().isEmpty()) {
-			logFile = new File(logDestinationDir.trim() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
+			logFile = new File(logDestinationDir.trim() + File.separator + dateFormatFileName.get().format(new Date()) + FILE_EXTENSION);
 		}
 		else {
 			logFile = getDefaultFile();
@@ -188,7 +195,7 @@ public class Logger {
 	}
 
 	private static File getDefaultFile() {
-		return new File(getDefaultDirectory() + File.separator + dateFormatFileName.format(new Date()) + FILE_EXTENSION);
+		return new File(getDefaultDirectory() + File.separator + dateFormatFileName.get().format(new Date()) + FILE_EXTENSION);
 	}
 
 	private static String getDefaultDirectory() {
