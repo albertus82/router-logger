@@ -1,8 +1,5 @@
 package it.albertus.router.server;
 
-import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.engine.RouterLoggerEngine;
-
 import java.nio.charset.Charset;
 import java.util.zip.CRC32;
 
@@ -10,6 +7,9 @@ import org.apache.http.protocol.HttpDateGenerator;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerEngine;
 
 public abstract class BaseHttpHandler implements HttpHandler {
 
@@ -51,6 +51,16 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	 */
 	protected void addDateHeader(final HttpExchange exchange) {
 		exchange.getResponseHeaders().add("Date", httpDateGenerator.getCurrentDate());
+	}
+
+	/**
+	 * Adds {@code Content-Encoding: gzip} header to the provided
+	 * {@link HttpExchange} object.
+	 * 
+	 * @param exchange the {@link HttpExchange} to be modified.
+	 */
+	protected void addGzipHeader(final HttpExchange exchange) {
+		exchange.getResponseHeaders().add("Content-Encoding", "gzip");
 	}
 
 	protected String generateEtag(final byte[] payload) {

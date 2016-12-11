@@ -1,13 +1,14 @@
 package it.albertus.router.server.html;
 
-import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.resources.Messages;
-import it.albertus.util.NewLine;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.server.HttpMethod;
+import it.albertus.util.NewLine;
 
 public class ConnectHandler extends BaseHtmlHandler {
 
@@ -16,7 +17,7 @@ public class ConnectHandler extends BaseHtmlHandler {
 	}
 
 	public static final String PATH = "/connect";
-	public static final String[] METHODS = { "POST" };
+	public static final String[] METHODS = { HttpMethod.POST };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
 

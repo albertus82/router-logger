@@ -3,6 +3,7 @@ package it.albertus.router.util;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,25 +18,34 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
 import it.albertus.util.ExceptionUtils;
+import it.albertus.util.IOUtils;
 import it.albertus.util.StringUtils;
 import it.albertus.util.SystemConsole;
 
 public class Logger {
 
-	private static final String FILE_EXTENSION = ".log";
+	public static final String FILE_EXTENSION = ".log";
+
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE, Destination.EMAIL };
 
-	private static ThreadLocal<DateFormat> dateFormatFileName = new ThreadLocal<DateFormat>() {
+	private static final ThreadLocal<DateFormat> dateFormatFileName = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
 			return new SimpleDateFormat("yyyyMMdd");
 		}
 	};
 
-	private static ThreadLocal<DateFormat> timestampFormat = new ThreadLocal<DateFormat>() {
+	private static final ThreadLocal<DateFormat> timestampFormat = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
 			return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		}
+	};
+
+	private static final FilenameFilter filenameFilter = new FilenameFilter() {
+		@Override
+		public boolean accept(final File dir, final String name) {
+			return name != null && name.trim().toLowerCase().endsWith(FILE_EXTENSION);
 		}
 	};
 
@@ -146,6 +156,50 @@ public class Logger {
 	}
 
 	private synchronized void logToFile(final String text) throws IOException {
+		final File logFile = getCurrentFile();
+		final File parentFile = logFile.getParentFile();
+		if (parentFile != null && !parentFile.exists()) {
+			parentFile.mkdirs(); // Create directories if not exists
+		}
+		BufferedWriter logFileWriter = null;
+		try {
+			logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
+			final String base = new Date().toString() + " - ";
+			logFileWriter.write(base);
+			logFileWriter.write(StringUtils.trimToEmpty(text));
+			logFileWriter.newLine();
+		}
+		finally {
+			IOUtils.closeQuietly(logFileWriter);
+		}
+	}
+
+	public File[] listFiles() {
+		return getCurrentFile().getParentFile().listFiles(filenameFilter);
+	}
+
+	public boolean deleteFile(final File file) {
+		if (getCurrentFile().equals(file)) {
+			synchronized (this) {
+				return file.delete();
+			}
+		}
+		else {
+			return file.delete();
+		}
+	}
+
+	public int deleteAllFiles() {
+		int count = 0;
+		for (final File file : listFiles()) {
+			if (!file.isDirectory()) {
+				count += deleteFile(file) ? 1 : 0;
+			}
+		}
+		return count;
+	}
+
+	public File getCurrentFile() {
 		final String logDestinationDir = configuration != null ? configuration.getString("logger.error.log.destination.path") : null;
 		final File logFile;
 		if (logDestinationDir != null && !logDestinationDir.trim().isEmpty()) {
@@ -154,16 +208,7 @@ public class Logger {
 		else {
 			logFile = getDefaultFile();
 		}
-		final File parentFile = logFile.getParentFile();
-		if (parentFile != null && !parentFile.exists()) {
-			parentFile.mkdirs(); // Create directories if not exists
-		}
-		final BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
-		final String base = new Date().toString() + " - ";
-		logFileWriter.write(base);
-		logFileWriter.write(StringUtils.trimToEmpty(text));
-		logFileWriter.newLine();
-		logFileWriter.close();
+		return logFile;
 	}
 
 	private void logToEmail(final String log, final Throwable throwable) {

@@ -34,19 +34,21 @@ import it.albertus.util.ExceptionUtils;
 
 public abstract class BaseHttpServer {
 
-	public static final class Defaults {
+	public static class Defaults {
 		public static final int PORT = 8080;
 		public static final boolean ENABLED = false;
 		public static final boolean AUTHENTICATION = true;
-		public static final byte THREADS = 1;
+		public static final byte THREADS = 2;
 		public static final boolean SSL_ENABLED = false;
 		public static final String SSL_KEYSTORE_TYPE = "JKS";
 		public static final String SSL_PROTOCOL = "TLS";
 		public static final String SSL_KMF_ALGORITHM = KeyManagerFactory.getDefaultAlgorithm();
 		public static final String SSL_TMF_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
+		public static final short MAX_REQ_TIME = 10; // seconds
+		public static final short MAX_RSP_TIME = 600; // seconds
 
 		private Defaults() {
-			throw new IllegalAccessError();
+			throw new IllegalAccessError("Constants class");
 		}
 	}
 
@@ -174,6 +176,8 @@ public abstract class BaseHttpServer {
 							}
 						};
 
+						System.setProperty("sun.net.httpserver.maxReqTime", Short.toString(configuration.getShort("server.maxreqtime", Defaults.MAX_REQ_TIME)));
+						System.setProperty("sun.net.httpserver.maxRspTime", Short.toString(configuration.getShort("server.maxrsptime", Defaults.MAX_RSP_TIME)));
 						final HttpsServer httpsServer = HttpsServer.create(address, 0);
 						httpsServer.setHttpsConfigurator(httpsConfigurator);
 						httpServer = httpsServer;

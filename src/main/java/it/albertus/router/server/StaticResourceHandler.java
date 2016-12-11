@@ -1,7 +1,5 @@
 package it.albertus.router.server;
 
-import it.albertus.router.server.html.BaseHtmlHandler;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +12,11 @@ import javax.activation.MimetypesFileTypeMap;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.router.server.html.BaseHtmlHandler;
+
 public class StaticResourceHandler extends BaseHtmlHandler {
 
-	public static final String[] METHODS = { "GET" };
+	public static final String[] METHODS = { HttpMethod.GET };
 
 	protected static final int BUFFER_SIZE = 8192;
 	protected static final String DEFAULT_CACHE_CONTROL = "no-transform,public,max-age=300,s-maxage=900";

@@ -1,13 +1,5 @@
 package it.albertus.router.server.html;
 
-import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.resources.Messages;
-import it.albertus.router.server.BaseHttpHandler;
-import it.albertus.router.server.BaseHttpServer;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.NewLine;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -15,6 +7,16 @@ import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.server.BaseHttpHandler;
+import it.albertus.router.server.BaseHttpServer;
+import it.albertus.router.server.HttpMethod;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.util.IOUtils;
+import it.albertus.util.NewLine;
 
 public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
@@ -128,6 +130,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	@Override
 	public void handle(final HttpExchange exchange) throws IOException {
+		log(exchange);
 		if (isEnabled(exchange) && isFound(exchange) && isMethodAllowed(exchange)) {
 			try {
 				service(exchange);
@@ -151,7 +154,6 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 				exchange.close();
 			}
 		}
-		log(exchange);
 	}
 
 	protected void log(final HttpExchange exchange) {
@@ -179,21 +181,28 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		}
 	}
 
-	protected byte[] compressResponse(final byte[] uncompressed, final HttpExchange exchange) {
+	protected boolean canCompressResponse(final HttpExchange exchange) {
 		if (configuration.getBoolean("server.compress.response", Defaults.COMPRESS_RESPONSE)) {
 			final List<String> headers = exchange.getRequestHeaders().get("Accept-Encoding");
 			if (headers != null) {
 				for (final String header : headers) {
 					if (header != null && header.trim().toLowerCase().contains("gzip")) {
-						try {
-							return doCompressResponse(uncompressed, exchange);
-						}
-						catch (final IOException ioe) {
-							Logger.getInstance().log(ioe);
-							return uncompressed;
-						}
+						return true;
 					}
 				}
+			}
+		}
+		return false;
+	}
+
+	protected byte[] compressResponse(final byte[] uncompressed, final HttpExchange exchange) {
+		if (canCompressResponse(exchange)) {
+			try {
+				return doCompressResponse(uncompressed, exchange);
+			}
+			catch (final IOException ioe) {
+				Logger.getInstance().log(ioe);
+				return uncompressed;
 			}
 		}
 		return uncompressed;
@@ -207,16 +216,10 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			gzos.write(uncompressed);
 		}
 		finally {
-			try {
-				gzos.close();
-			}
-			catch (final Exception e) {}
-			try {
-				baos.close();
-			}
-			catch (final Exception e) {}
+			IOUtils.closeQuietly(gzos);
+			IOUtils.closeQuietly(baos);
 		}
-		exchange.getResponseHeaders().add("Content-Encoding", "gzip");
+		addGzipHeader(exchange);
 		return baos.toByteArray();
 	}
 
@@ -297,8 +300,12 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(RootHtmlHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
 		}
 		else {
-			return DEFAULT_STYLE;
+			return "";
 		}
+	}
+
+	protected String buildHtmlRefreshButton() {
+		return new StringBuilder("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.GET).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.refresh")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
 	}
 
 	/**

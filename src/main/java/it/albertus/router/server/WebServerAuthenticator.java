@@ -1,17 +1,19 @@
 package it.albertus.router.server;
 
+import com.sun.net.httpserver.BasicAuthenticator;
+
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
-
-import com.sun.net.httpserver.BasicAuthenticator;
+import it.albertus.util.ThreadUtils;
 
 public class WebServerAuthenticator extends BasicAuthenticator {
 
 	private static final String CFG_KEY_SERVER_USERNAME = "server.username";
 	private static final String CFG_KEY_SERVER_PASSWORD = "server.password";
+	private static final int FAIL_DELAY_IN_MILLIS = 3000;
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
@@ -23,19 +25,19 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 	public boolean checkCredentials(final String specifiedUsername, final String specifiedPassword) {
 		try {
 			if (specifiedUsername == null || specifiedUsername.isEmpty() || specifiedPassword == null || specifiedPassword.isEmpty()) {
-				return false;
+				return fail();
 			}
 
 			final String expectedUsername = configuration.getString(CFG_KEY_SERVER_USERNAME);
 			if (expectedUsername == null || expectedUsername.isEmpty()) {
 				Logger.getInstance().log(Messages.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
-				return false;
+				return fail();
 			}
 
 			final char[] expectedPassword = configuration.getCharArray(CFG_KEY_SERVER_PASSWORD);
 			if (expectedPassword == null || expectedPassword.length == 0) {
 				Logger.getInstance().log(Messages.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
-				return false;
+				return fail();
 			}
 
 			if (specifiedUsername.equals(expectedUsername) && checkPassword(specifiedPassword, expectedPassword)) {
@@ -43,15 +45,15 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 			}
 			else {
 				Logger.getInstance().log(Messages.get("err.server.authentication", specifiedUsername, specifiedPassword));
-				return false;
+				return fail();
 			}
 		}
 		catch (final Exception exception) {
 			Logger.getInstance().log(exception);
-			return false;
+			return fail();
 		}
 		catch (final Throwable throwable) {
-			return false;
+			return fail();
 		}
 	}
 
@@ -67,6 +69,11 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 			}
 		}
 		return equal;
+	}
+
+	private boolean fail() {
+		ThreadUtils.sleep(FAIL_DELAY_IN_MILLIS);
+		return false;
 	}
 
 }

@@ -1,11 +1,5 @@
 package it.albertus.router.server.html;
 
-import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.engine.Threshold;
-import it.albertus.router.resources.Messages;
-import it.albertus.util.NewLine;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
@@ -13,6 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import it.albertus.router.engine.RouterData;
+import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.engine.Threshold;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.server.HttpMethod;
+import it.albertus.util.NewLine;
 
 public class StatusHtmlHandler extends BaseHtmlHandler {
 
@@ -23,7 +24,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 	}
 
 	public static final String PATH = "/status";
-	public static final String[] METHODS = { "GET" };
+	public static final String[] METHODS = { HttpMethod.GET };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
 
@@ -55,6 +56,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.status")));
 		html.append("<h3>").append(Messages.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().getStatus().getDescription()).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
+		html.append(buildHtmlRefreshButton());
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
 			final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
@@ -116,7 +118,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 
 	@Override
 	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>";
+		return "<style type=\"text/css\">form {display: inline;} ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>";
 	}
 
 	@Override
