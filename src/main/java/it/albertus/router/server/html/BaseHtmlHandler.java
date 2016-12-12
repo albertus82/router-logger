@@ -256,6 +256,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		final StringBuilder html = new StringBuilder("<head>");
 		html.append(buildHtmlHeadTitle(title));
 		html.append(buildHtmlHeadStyle());
+		html.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"); // responsive
 		html.append("</head>");
 		return html.toString();
 	}
