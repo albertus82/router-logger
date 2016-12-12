@@ -123,6 +123,10 @@ public abstract class BaseHttpServer {
 			final InetSocketAddress address = new InetSocketAddress(port);
 			try {
 				synchronized (lock) {
+					// Avoid server starvation
+					System.setProperty("sun.net.httpserver.maxReqTime", Short.toString(configuration.getShort("server.maxreqtime", Defaults.MAX_REQ_TIME)));
+					System.setProperty("sun.net.httpserver.maxRspTime", Short.toString(configuration.getShort("server.maxrsptime", Defaults.MAX_RSP_TIME)));
+
 					if (configuration.getBoolean("server.ssl.enabled", Defaults.SSL_ENABLED)) {
 						final char[] storepass = configuration.getCharArray("server.ssl.storepass");
 						final KeyStore keyStore = KeyStore.getInstance(configuration.getString("server.ssl.keystore.type", Defaults.SSL_KEYSTORE_TYPE));
@@ -176,8 +180,6 @@ public abstract class BaseHttpServer {
 							}
 						};
 
-						System.setProperty("sun.net.httpserver.maxReqTime", Short.toString(configuration.getShort("server.maxreqtime", Defaults.MAX_REQ_TIME)));
-						System.setProperty("sun.net.httpserver.maxRspTime", Short.toString(configuration.getShort("server.maxrsptime", Defaults.MAX_RSP_TIME)));
 						final HttpsServer httpsServer = HttpsServer.create(address, 0);
 						httpsServer.setHttpsConfigurator(httpsConfigurator);
 						httpServer = httpsServer;
