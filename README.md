@@ -17,15 +17,11 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 ## Installazione e avvio
 
-1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) una release `bin` in formato **zip** o **tar.gz** adatta alla propria piattaforma, possibilmente la pi&ugrave; recente;
+1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) la release adatta alla propria piattaforma, possibilmente la pi&ugrave; recente;
 	* per **[Raspberry Pi](http://www.raspberrypi.org)** scaricare la release **`gtk-linux-armhf`**;
-2. scompattare l'archivio in una cartella a piacimento in cui si abbiano diritti di scrittura;
-3. avviare il programma eseguendo lo script di avvio che, a seconda del sistema operativo, sar&agrave;:
-	* Windows: [**`routerlogger.bat`**](src/main/scripts/routerlogger.bat)
-	* Linux: [**`routerlogger.sh`**](src/main/scripts/routerlogger.sh)
-	* OS X: [**`routerlogger.command`**](src/main/scripts/routerlogger.command)
+2. installare (o scompattare, a seconda dei casi) il programma in una cartella a piacimento:
 
-Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva. Se la variabile di ambiente `JAVA_HOME` viene rilevata, essa sar&agrave; utilizzata come riferimento per avviare la Java Virtual Machine, in caso contrario sar&agrave; richiamato direttamente l'eseguibile `java` (o `javaw`).
+Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
 Al primo avvio sar&agrave; necessario accedere alla configurazione, scheda **Router**, per specificare il modello di router (**Dispositivo/Classe Reader**) e pochi altri parametri di connessione:
 
@@ -258,7 +254,7 @@ Aggiungendo la riga seguente al file [`routerlogger.cfg`](src/main/config/router
 threshold.snr.down.key=downstreamNoiseMargin
 threshold.snr.down.type=lt
 threshold.snr.down.value=100
->```
+```
 
 #### Esclusioni
 
