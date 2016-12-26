@@ -134,7 +134,7 @@ public abstract class BaseHttpServer {
 						FileInputStream fis = null;
 						BufferedInputStream bis = null;
 						try {
-							fis = new FileInputStream(configuration.getString("server.ssl.keystore.file", ""));
+							fis = new FileInputStream(configuration.getString("server.ssl.keystore.file", true));
 							bis = new BufferedInputStream(fis);
 							keyStore.load(bis, storepass);
 						}

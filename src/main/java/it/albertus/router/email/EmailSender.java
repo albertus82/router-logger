@@ -173,13 +173,13 @@ public class EmailSender {
 
 	private void checkConfiguration() {
 		// Configuration check
-		if (configuration.getString(CFG_KEY_EMAIL_HOST, "").isEmpty()) {
+		if (configuration.getString(CFG_KEY_EMAIL_HOST, true).isEmpty()) {
 			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
 		}
-		if (configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS, "").isEmpty()) {
+		if (configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS, true).isEmpty()) {
 			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
 		}
-		if (configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, "").isEmpty() && configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, "").isEmpty() && configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, "").isEmpty()) {
+		if (configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, true).isEmpty() && configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, true).isEmpty() && configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, true).isEmpty()) {
 			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_TO_ADDRESSES);
 		}
 	}
@@ -206,12 +206,12 @@ public class EmailSender {
 		email.setHostName(configuration.getString(CFG_KEY_EMAIL_HOST));
 
 		// Authentication
-		if (!configuration.getString(CFG_KEY_EMAIL_USERNAME, "").isEmpty() && !configuration.getString(CFG_KEY_EMAIL_PASSWORD, "").isEmpty()) {
+		if (!configuration.getString(CFG_KEY_EMAIL_USERNAME, true).isEmpty() && !configuration.getString(CFG_KEY_EMAIL_PASSWORD, true).isEmpty()) {
 			email.setAuthenticator(new DefaultAuthenticator(configuration.getString(CFG_KEY_EMAIL_USERNAME), configuration.getString(CFG_KEY_EMAIL_PASSWORD)));
 		}
 
 		// Sender
-		if (configuration.getString(CFG_KEY_EMAIL_FROM_NAME, "").isEmpty()) {
+		if (configuration.getString(CFG_KEY_EMAIL_FROM_NAME, true).isEmpty()) {
 			email.setFrom(configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS));
 		}
 		else {
@@ -219,13 +219,13 @@ public class EmailSender {
 		}
 
 		// Recipients
-		if (!configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, "").isEmpty()) {
+		if (!configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, true).isEmpty()) {
 			email.addTo(configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES).split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
-		if (!configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, "").isEmpty()) {
+		if (!configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, true).isEmpty()) {
 			email.addCc(configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES).split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
-		if (!configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, "").isEmpty()) {
+		if (!configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, true).isEmpty()) {
 			email.addBcc(configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES).split(EMAIL_ADDRESSES_SPLIT_REGEX));
 		}
 	}

@@ -68,13 +68,13 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		/* Caricamento chiavi da evidenziare */
 		guiImportantKeys.clear();
-		for (final String importantKey : this.getString("gui.important.keys", "").split(this.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
+		for (final String importantKey : this.getString("gui.important.keys", true).split(this.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
 			if (StringUtils.isNotBlank(importantKey)) {
 				this.guiImportantKeys.add(importantKey.trim());
 			}
 		}
 		consoleKeysToShow.clear();
-		for (final String keyToShow : this.getString("console.show.keys", "").split(this.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
+		for (final String keyToShow : this.getString("console.show.keys", true).split(this.getString("console.show.keys.separator", Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).trim())) {
 			if (StringUtils.isNotBlank(keyToShow)) {
 				this.consoleKeysToShow.add(keyToShow.trim());
 			}
@@ -116,7 +116,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		protected abstract void load();
 
 		protected boolean isThresholdExcluded(final String thresholdName) {
-			for (final String name : getString("thresholds.excluded", "").split(getString("thresholds.excluded.separator", Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).trim())) {
+			for (final String name : getString("thresholds.excluded", true).split(getString("thresholds.excluded.separator", Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).trim())) {
 				if (StringUtils.isNotBlank(name)) {
 					if (name.trim().equals(thresholdName)) {
 						return true;
