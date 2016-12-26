@@ -19,7 +19,7 @@ Il funzionamento &egrave; basato sull'interfaccia **Telnet** esposta dalla maggi
 
 1. [scaricare](http://github.com/Albertus82/RouterLogger/releases) la release adatta alla propria piattaforma, possibilmente la pi&ugrave; recente;
 	* per **[Raspberry Pi](http://www.raspberrypi.org)** scaricare la release **`gtk-linux-armhf`**;
-2. installare (o scompattare, a seconda dei casi) il programma in una cartella a piacimento:
+2. installare (o scompattare, a seconda dei casi) il programma in una cartella a piacimento.
 
 Per avviare l'applicazione &egrave; richiesto [Java Runtime Environment](http://www.java.com) (JRE) versione 6 (1.6) o successiva.
 
@@ -36,7 +36,7 @@ Una volta configurato, il programma si connetter&agrave; al router e inizier&agr
 
 L'applicazione crea un file per ogni giornata, e a ogni iterazione corrisponde una riga nel file. Per attivare questo tipo di salvataggio non occorre configurare nulla: questa &egrave; la modalit&agrave; predefinita.
 
-Di norma i file generati vengono salvati all'interno della cartella del programma; per specificare una cartella diversa occorre accedere alla configurazione (men&ugrave; **Strumenti**) e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
+Di norma i file generati vengono salvati in una sottocartella `RouterLogger` all'interno della cartella `Documenti`; per specificare una cartella diversa occorre accedere alla configurazione (men&ugrave; **Strumenti**) e modificare la relativa opzione presente nella scheda **Salvataggio > CSV**.
 
 #### Salvataggio su database relazionale
 
