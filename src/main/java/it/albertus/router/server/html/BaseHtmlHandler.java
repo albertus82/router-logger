@@ -20,14 +20,20 @@ import it.albertus.util.NewLine;
 
 public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
-	public interface Defaults {
-		byte LOG_REQUEST = 1;
-		boolean COMPRESS_RESPONSE = false;
+	public static class Defaults {
+		public static final byte LOG_REQUEST = 1;
+		public static final boolean COMPRESS_RESPONSE = false;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	public static final String DEFAULT_STYLE = "";
 
 	protected static String lastRequest = null;
+
+	private static final String MSG_KEY_LBL_ERROR = "lbl.error";
 
 	private boolean found = true;
 
@@ -65,7 +71,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		if (!configuration.getBoolean("server.enabled", BaseHttpServer.Defaults.ENABLED) || !isEnabled()) {
 			addCommonHeaders(exchange);
 
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
 			html.append("<h3>").append(Messages.get("msg.server.forbidden")).append("</h3>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 
@@ -84,7 +90,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		if (!isFound()) {
 			addCommonHeaders(exchange);
 
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
 			html.append("<h3>").append(Messages.get("msg.server.not.found")).append("</h3>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 
@@ -116,7 +122,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		if (!match) {
 			addCommonHeaders(exchange);
 
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
 			html.append("<h3>").append(Messages.get("msg.server.bad.method")).append("</h3>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 
@@ -142,7 +148,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 				Logger.getInstance().log(exception);
 				addCommonHeaders(exchange);
 
-				final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.error")));
+				final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
 				html.append("<h3>").append(Messages.get("err.server.handler")).append("</h3>").append(NewLine.CRLF);
 				html.append(buildHtmlFooter());
 
@@ -172,12 +178,10 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			return;
 		}
 
-		if (destinations != null) {
-			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
-			if (!request.equals(lastRequest)) {
-				lastRequest = request;
-				Logger.getInstance().log(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
-			}
+		final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
+		if (!request.equals(lastRequest)) {
+			lastRequest = request;
+			Logger.getInstance().log(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
 		}
 	}
 
@@ -216,8 +220,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			gzos.write(uncompressed);
 		}
 		finally {
-			IOUtils.closeQuietly(gzos);
-			IOUtils.closeQuietly(baos);
+			IOUtils.closeQuietly(gzos, baos);
 		}
 		addGzipHeader(exchange);
 		return baos.toByteArray();

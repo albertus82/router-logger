@@ -1,10 +1,12 @@
 package it.albertus.router.engine;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -17,28 +19,46 @@ import it.albertus.util.StringUtils;
 
 public class RouterLoggerConfiguration extends Configuration {
 
-	public interface Defaults {
-		String LANGUAGE = Locale.getDefault().getLanguage();
-		boolean THRESHOLDS_SPLIT = false;
-		String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
-		String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
-		String THRESHOLDS_EXCLUDED_SEPARATOR = ",";
+	public static class Defaults {
+		public static final String LANGUAGE = Locale.getDefault().getLanguage();
+		public static final boolean THRESHOLDS_SPLIT = false;
+		public static final String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
+		public static final String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
+		public static final String THRESHOLDS_EXCLUDED_SEPARATOR = ",";
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private static class Singleton {
 		private static final RouterLoggerConfiguration instance = new RouterLoggerConfiguration();
+
+		private Singleton() {
+			throw new IllegalAccessError();
+		}
+	}
+
+	public static final String CFG_KEY_LANGUAGE = "language";
+
+	public static final String FILE_NAME = "routerlogger.cfg";
+
+	private static final String MSG_KEY_ERR_THRESHOLD_MISCFG_NAME = "err.threshold.miscfg.name";
+	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
+
+	private Thresholds thresholds;
+	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
+	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
+
+	private RouterLoggerConfiguration() {
+		// Caricamento della configurazione...
+		super(Messages.get("msg.application.name") + File.separator + FILE_NAME, true);
+		init();
 	}
 
 	public static RouterLoggerConfiguration getInstance() {
 		return Singleton.instance;
 	}
-
-	public static final String CFG_KEY_LANGUAGE = "language";
-	public static final String FILE_NAME = "routerlogger.cfg";
-
-	private Thresholds thresholds;
-	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
-	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
 
 	public Set<String> getGuiImportantKeys() {
 		return guiImportantKeys;
@@ -50,12 +70,6 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	public Set<String> getConsoleKeysToShow() {
 		return consoleKeysToShow;
-	}
-
-	private RouterLoggerConfiguration() {
-		// Caricamento della configurazione...
-		super(Messages.get("msg.application.name") + File.separator + FILE_NAME, true);
-		init();
 	}
 
 	private void init() {
@@ -99,7 +113,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		public static final String CFG_PREFIX = "threshold";
 
-		protected final Set<Threshold> thresholds = new TreeSet<Threshold>();
+		protected final Collection<Threshold> thresholdsCollection = new TreeSet<Threshold>();
 
 		private Thresholds() {
 			try {
@@ -109,7 +123,7 @@ public class RouterLoggerConfiguration extends Configuration {
 				throw ite;
 			}
 			catch (RuntimeException re) {
-				throw new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + Messages.get("err.review.cfg", RouterLoggerConfiguration.this.getFileName()), re);
+				throw new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, RouterLoggerConfiguration.this.getFileName()), re);
 			}
 		}
 
@@ -117,22 +131,20 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		protected boolean isThresholdExcluded(final String thresholdName) {
 			for (final String name : getString("thresholds.excluded", true).split(getString("thresholds.excluded.separator", Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).trim())) {
-				if (StringUtils.isNotBlank(name)) {
-					if (name.trim().equals(thresholdName)) {
-						return true;
-					}
+				if (StringUtils.isNotBlank(name) && name.trim().equals(thresholdName)) {
+					return true;
 				}
 			}
 			return false;
 		}
 
 		public boolean isEmpty() {
-			return thresholds.isEmpty();
+			return thresholdsCollection.isEmpty();
 		}
 
 		@Override
 		public String toString() {
-			return thresholds.toString();
+			return thresholdsCollection.toString();
 		}
 
 		public Map<Threshold, String> getReached(final RouterData data) {
@@ -140,12 +152,14 @@ public class RouterLoggerConfiguration extends Configuration {
 			final Map<Threshold, String> reached = new TreeMap<Threshold, String>();
 
 			// Gestione delle soglie...
-			if (!thresholds.isEmpty() && info != null && !info.isEmpty()) {
-				for (final String key : info.keySet()) {
+			if (!thresholdsCollection.isEmpty() && info != null && !info.isEmpty()) {
+				for (final Entry<String, String> entry : info.entrySet()) {
+					final String key = entry.getKey();
+					final String value = entry.getValue();
 					if (key != null && key.trim().length() != 0) {
-						for (final Threshold threshold : thresholds) {
-							if (key.trim().equals(threshold.getKey()) && threshold.isReached(info.get(key))) {
-								reached.put(threshold, info.get(key));
+						for (final Threshold threshold : thresholdsCollection) {
+							if (key.trim().equals(threshold.getKey()) && threshold.isReached(value)) {
+								reached.put(threshold, value);
 							}
 						}
 					}
@@ -171,7 +185,7 @@ public class RouterLoggerConfiguration extends Configuration {
 				String key = (String) objectKey;
 				if (key != null && key.startsWith(CFG_PREFIX + '.')) {
 					if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(CFG_SUFFIX_KEY) && !key.endsWith(CFG_SUFFIX_TYPE) && !key.endsWith(CFG_SUFFIX_VALUE))) {
-						new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + Messages.get("err.review.cfg", configuration.getFileName())).printStackTrace();
+						new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName())).printStackTrace();
 						continue;
 					}
 					final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
@@ -182,10 +196,10 @@ public class RouterLoggerConfiguration extends Configuration {
 					final Type thresholdType = Type.getEnum(configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_TYPE));
 					final String thresholdValue = configuration.getString(CFG_PREFIX + '.' + thresholdName + '.' + CFG_SUFFIX_VALUE);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null || thresholdType == null) {
-						System.err.println(Messages.get("err.threshold.miscfg.name", thresholdName) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()));
+						System.err.println(Messages.get(MSG_KEY_ERR_THRESHOLD_MISCFG_NAME, thresholdName) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()));
 						continue;
 					}
-					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
+					thresholdsCollection.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
 					thresholdsAdded.add(thresholdName);
 				}
 			}
@@ -215,16 +229,16 @@ public class RouterLoggerConfiguration extends Configuration {
 						}
 					}
 					if (thresholdType == null) {
-						System.err.println(Messages.get("err.threshold.miscfg.name", thresholdName) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()));
+						System.err.println(Messages.get(MSG_KEY_ERR_THRESHOLD_MISCFG_NAME, thresholdName) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()));
 						continue;
 					}
 					final String thresholdKey = expression.substring(0, expression.indexOf(operator) - 1);
 					final String thresholdValue = expression.substring(expression.indexOf(operator) + operator.length() + 1);
 					if (thresholdKey == null || "".equals(thresholdKey.trim()) || thresholdValue == null) {
-						System.err.println(Messages.get("err.threshold.miscfg.name", thresholdName) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()));
+						System.err.println(Messages.get(MSG_KEY_ERR_THRESHOLD_MISCFG_NAME, thresholdName) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()));
 						continue;
 					}
-					thresholds.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
+					thresholdsCollection.add(new Threshold(thresholdName, thresholdKey.trim(), thresholdType, thresholdValue, isThresholdExcluded(thresholdName)));
 				}
 			}
 		}

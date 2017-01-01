@@ -1,6 +1,7 @@
 package it.albertus.router.gui;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
@@ -29,9 +30,13 @@ import it.albertus.util.NewLine;
 
 public class TrayIcon {
 
-	public interface Defaults {
-		boolean GUI_MINIMIZE_TRAY = true;
-		boolean GUI_TRAY_TOOLTIP = true;
+	public static class Defaults {
+		public static final boolean GUI_MINIMIZE_TRAY = true;
+		public static final  boolean GUI_TRAY_TOOLTIP = true;
+		
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
@@ -51,10 +56,6 @@ public class TrayIcon {
 
 	private volatile boolean showToolTip;
 
-	public void setShowToolTip(boolean showToolTip) {
-		this.showToolTip = showToolTip;
-	}
-
 	protected TrayIcon(final RouterLoggerGui gui) {
 		this.gui = gui;
 		gui.getShell().addShellListener(new ShellAdapter() {
@@ -65,6 +66,10 @@ public class TrayIcon {
 				}
 			}
 		});
+	}
+
+	public void setShowToolTip(boolean showToolTip) {
+		this.showToolTip = showToolTip;
 	}
 
 	private Image getTrayIcon(final Status status) {
@@ -185,7 +190,7 @@ public class TrayIcon {
 						}
 					});
 				}
-				catch (SWTException se) {}
+				catch (final SWTException se) {/* Ignore */}
 			}
 		}
 	}
@@ -193,8 +198,8 @@ public class TrayIcon {
 	public void showBalloonToolTip(final Map<Threshold, String> thresholdsReached) {
 		if (configuration.getBoolean("gui.tray.tooltip", Defaults.GUI_TRAY_TOOLTIP) && showToolTip && thresholdsReached != null && !thresholdsReached.isEmpty() && toolTip != null && trayItem != null && gui != null && gui.getShell() != null && !gui.getShell().isDisposed() && !trayItem.isDisposed() && !toolTip.isDisposed()) {
 			final StringBuilder message = new StringBuilder();
-			for (final Threshold threshold : thresholdsReached.keySet()) {
-				message.append(threshold.getKey()).append('=').append(thresholdsReached.get(threshold)).append(NewLine.SYSTEM_LINE_SEPARATOR);
+			for (final Entry<Threshold, String> entry : thresholdsReached.entrySet()) {
+				message.append(entry.getKey().getKey()).append('=').append(entry.getValue()).append(NewLine.SYSTEM_LINE_SEPARATOR);
 			}
 
 			try {
@@ -209,7 +214,7 @@ public class TrayIcon {
 					}
 				});
 			}
-			catch (SWTException se) {}
+			catch (final SWTException se) {/* Ignore */}
 		}
 	}
 

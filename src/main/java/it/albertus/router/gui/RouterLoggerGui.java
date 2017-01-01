@@ -2,6 +2,7 @@ package it.albertus.router.gui;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.eclipse.jface.util.Util;
@@ -15,6 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import it.albertus.jface.JFaceMessages;
 import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.router.engine.RouterData;
@@ -38,9 +40,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	private static final float SASH_MAGNIFICATION_FACTOR = 1.5f;
 
-	public interface Defaults extends RouterLoggerEngine.Defaults {
-		boolean GUI_START_MINIMIZED = false;
-		int GUI_CLIPBOARD_MAX_CHARS = 100000;
+	public static class Defaults extends RouterLoggerEngine.Defaults {
+		public static final boolean GUI_START_MINIMIZED = false;
+		public static final int GUI_CLIPBOARD_MAX_CHARS = 100000;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private final Shell shell;
@@ -49,6 +55,40 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	private final MenuBar menuBar;
 	private final SashForm sashForm;
 	private final StyledTextConsole console;
+
+	private RouterLoggerGui(final Display display) {
+		shell = new Shell(display);
+
+		// Fix invisible (transparent) shell bug with some Linux distibutions
+		if (!Util.isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+			shell.setMinimized(true);
+		}
+
+		shell.setText(Messages.get("lbl.window.title"));
+		shell.setImages(Images.MAIN_ICONS);
+		shell.setLayout(new GridLayout());
+
+		trayIcon = new TrayIcon(this);
+
+		menuBar = new MenuBar(this);
+
+		sashForm = new SashForm(shell, SWT.VERTICAL);
+		sashForm.setSashWidth((int) (sashForm.getSashWidth() * SASH_MAGNIFICATION_FACTOR));
+		sashForm.setLayout(new GridLayout());
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
+
+		console = new StyledTextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), true);
+		console.setMaxChars(new Configured<Integer>() {
+			@Override
+			public Integer getValue() {
+				return configuration.getInt("gui.console.max.chars");
+			}
+		});
+
+		shell.addListener(SWT.Close, new CloseListener(this));
+	}
 
 	/** Entry point for GUI version */
 	public static void start() {
@@ -142,7 +182,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			catch (final Exception e) {
 				propertyName = ce.getKey();
 			}
-			message = Messages.get("err.invalid.cfg", propertyName) + ' ' + Messages.get("lbl.preferences.edit");
+			message = JFaceMessages.get("err.configuration.invalid", propertyName) + ' ' + Messages.get("lbl.preferences.edit");
 		}
 		else {
 			style = SWT.ICON_ERROR;
@@ -152,40 +192,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		messageBox.setText(Messages.get("lbl.window.title"));
 		messageBox.setMessage(message);
 		return messageBox.open();
-	}
-
-	private RouterLoggerGui(final Display display) {
-		shell = new Shell(display);
-
-		// Fix invisible (transparent) shell bug with some Linux distibutions
-		if (!Util.isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
-			shell.setMinimized(true);
-		}
-
-		shell.setText(Messages.get("lbl.window.title"));
-		shell.setImages(Images.MAIN_ICONS);
-		shell.setLayout(new GridLayout());
-
-		trayIcon = new TrayIcon(this);
-
-		menuBar = new MenuBar(this);
-
-		sashForm = new SashForm(shell, SWT.VERTICAL);
-		sashForm.setSashWidth((int) (sashForm.getSashWidth() * SASH_MAGNIFICATION_FACTOR));
-		sashForm.setLayout(new GridLayout());
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
-
-		console = new StyledTextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), true);
-		console.setMaxChars(new Configured<Integer>() {
-			@Override
-			public Integer getValue() {
-				return configuration.getInt("gui.console.max.chars");
-			}
-		});
-
-		shell.addListener(SWT.Close, new CloseListener(this));
 	}
 
 	@Override
@@ -219,8 +225,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		if (thresholdsReached != null && !thresholdsReached.isEmpty()) {
 			final Map<String, String> message = new TreeMap<String, String>();
 			boolean print = false;
-			for (final Threshold threshold : thresholdsReached.keySet()) {
-				message.put(threshold.getKey(), thresholdsReached.get(threshold));
+			for (final Entry<Threshold, String> entry : thresholdsReached.entrySet()) {
+				final Threshold threshold = entry.getKey();
+				message.put(threshold.getKey(), entry.getValue());
 				if (!threshold.isExcluded()) {
 					print = true;
 				}

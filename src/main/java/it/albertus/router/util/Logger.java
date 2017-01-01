@@ -24,6 +24,25 @@ import it.albertus.util.SystemConsole;
 
 public class Logger {
 
+	public static class Defaults {
+		public static final boolean DEBUG = false;
+		public static final String DIRECTORY = getDefaultDirectory();
+		public static final boolean EMAIL = false;
+		public static final boolean EMAIL_IGNORE_DUPLICATES = true;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
+	}
+
+	private static class Singleton {
+		private static final Logger instance = new Logger();
+
+		private Singleton() {
+			throw new IllegalAccessError();
+		}
+	}
+
 	public static final String FILE_EXTENSION = ".log";
 
 	private static final Destination[] DEFAULT_DESTINATIONS = { Destination.CONSOLE, Destination.FILE, Destination.EMAIL };
@@ -49,24 +68,24 @@ public class Logger {
 		}
 	};
 
-	private static class Singleton {
-		private static final Logger instance = new Logger();
+	private final Configuration configuration;
+	private String lastEmailLog;
+	private Console out = SystemConsole.getInstance();
+
+	private Logger() {
+		Configuration cfg;
+		try {
+			cfg = RouterLoggerConfiguration.getInstance();
+		}
+		catch (final Throwable t) {
+			t.printStackTrace();
+			cfg = null;
+		}
+		this.configuration = cfg;
 	}
 
 	public static Logger getInstance() {
 		return Singleton.instance;
-	}
-
-	private Logger() {
-		Configuration configuration;
-		try {
-			configuration = RouterLoggerConfiguration.getInstance();
-		}
-		catch (final Throwable t) {
-			t.printStackTrace();
-			configuration = null;
-		}
-		this.configuration = configuration;
 	}
 
 	public enum Destination {
@@ -74,17 +93,6 @@ public class Logger {
 		FILE,
 		EMAIL;
 	}
-
-	public interface Defaults {
-		boolean DEBUG = false;
-		String DIRECTORY = getDefaultDirectory();
-		boolean EMAIL = false;
-		boolean EMAIL_IGNORE_DUPLICATES = true;
-	}
-
-	private final Configuration configuration;
-	private String lastEmailLog;
-	private Console out = SystemConsole.getInstance();
 
 	public boolean isDebugEnabled() {
 		return configuration != null ? configuration.getBoolean("console.debug", Defaults.DEBUG) : true;
@@ -161,16 +169,18 @@ public class Logger {
 		if (parentFile != null && !parentFile.exists()) {
 			parentFile.mkdirs(); // Create directories if not exists
 		}
-		BufferedWriter logFileWriter = null;
+		FileWriter fw = null;
+		BufferedWriter bw = null;
 		try {
-			logFileWriter = new BufferedWriter(new FileWriter(logFile, true));
+			fw = new FileWriter(logFile, true);
+			bw = new BufferedWriter(fw);
 			final String base = new Date().toString() + " - ";
-			logFileWriter.write(base);
-			logFileWriter.write(StringUtils.trimToEmpty(text));
-			logFileWriter.newLine();
+			bw.write(base);
+			bw.write(StringUtils.trimToEmpty(text));
+			bw.newLine();
 		}
 		finally {
-			IOUtils.closeQuietly(logFileWriter);
+			IOUtils.closeQuietly(bw, fw);
 		}
 	}
 

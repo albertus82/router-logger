@@ -47,7 +47,7 @@ public class StatusDto implements Serializable, Jsonable {
 			json.append("null");
 		}
 		else {
-			json.append("{");
+			json.append('{');
 			if (timestamp != null) {
 				json.append("\"timestamp\":\"").append(ISO8601Utils.format(timestamp, true, defaultTimeZone)).append("\",");
 			}

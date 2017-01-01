@@ -13,8 +13,12 @@ import it.albertus.util.Version;
 
 public class RootHtmlHandler extends BaseHtmlHandler {
 
-	public interface Defaults {
-		boolean ENABLED = true;
+	public static class Defaults {
+		public static final boolean ENABLED = true;
+		
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	public static final String PATH = "/";

@@ -19,15 +19,19 @@ public class WebServer extends BaseHttpServer {
 
 	private static class Singleton {
 		private static final WebServer instance = new WebServer();
+
+		private Singleton() {
+			throw new IllegalAccessError();
+		}
 	}
+
+	private RouterLoggerEngine engine;
+
+	private WebServer() {}
 
 	public static WebServer getInstance() {
 		return Singleton.instance;
 	}
-
-	private WebServer() {}
-
-	private RouterLoggerEngine engine;
 
 	public void init(final RouterLoggerEngine engine) {
 		this.engine = engine;

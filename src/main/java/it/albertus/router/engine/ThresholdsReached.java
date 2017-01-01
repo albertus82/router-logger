@@ -1,12 +1,9 @@
 package it.albertus.router.engine;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-public class ThresholdsReached implements Serializable {
-
-	private static final long serialVersionUID = -1925093897986070599L;
+public class ThresholdsReached {
 
 	private final Date timestamp;
 	private final Map<Threshold, String> reached;

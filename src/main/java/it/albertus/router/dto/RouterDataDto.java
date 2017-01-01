@@ -1,14 +1,14 @@
 package it.albertus.router.dto;
 
-import it.albertus.router.engine.RouterData;
-import it.albertus.util.Jsonable;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
+
+import it.albertus.router.engine.RouterData;
+import it.albertus.util.Jsonable;
 
 public class RouterDataDto implements Serializable, Jsonable {
 
@@ -44,19 +44,25 @@ public class RouterDataDto implements Serializable, Jsonable {
 		}
 		else {
 			json.append("{\"timestamp\":\"").append(ISO8601Utils.format(timestamp, true, defaultTimeZone)).append("\",\"responseTime\":").append(responseTime);
-			if (data != null && !data.isEmpty()) {
-				json.append(",\"data\":{");
-				int index = 0;
-				for (final Entry<String, String> entry : data.entrySet()) {
-					json.append('"').append(entry.getKey()).append("\":\"").append(entry.getValue()).append("\"");
-					if (++index < data.size()) {
-						json.append(',');
-					}
-				}
-				json.append("}");
+			if (!data.isEmpty()) {
+				json.append(',').append(jsonifyMap("data", data));
 			}
-			json.append("}");
+			json.append('}');
 		}
+		return json.toString();
+	}
+
+	private String jsonifyMap(final String name, final Map<String, String> map) {
+		final StringBuilder json = new StringBuilder();
+		json.append('"').append(name).append("\":{");
+		int index = 0;
+		for (final Entry<String, String> entry : map.entrySet()) {
+			json.append('"').append(entry.getKey()).append("\":\"").append(entry.getValue()).append('"');
+			if (++index < map.size()) {
+				json.append(',');
+			}
+		}
+		json.append('}');
 		return json.toString();
 	}
 

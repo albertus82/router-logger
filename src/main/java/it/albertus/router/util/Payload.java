@@ -6,6 +6,10 @@ public class Payload {
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
+	private Payload() {
+		throw new IllegalAccessError("Utility class");
+	}
+
 	public static byte[] createPayload(final String string) {
 		byte[] payload;
 		if (string != null) {

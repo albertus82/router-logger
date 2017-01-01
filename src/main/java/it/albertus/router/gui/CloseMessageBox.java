@@ -1,16 +1,20 @@
 package it.albertus.router.gui;
 
-import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Messages;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Messages;
+
 public class CloseMessageBox {
 
-	public interface Defaults {
-		boolean GUI_CONFIRM_CLOSE = false;
+	public static class Defaults {
+		public static final boolean GUI_CONFIRM_CLOSE = false;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private final MessageBox messageBox;

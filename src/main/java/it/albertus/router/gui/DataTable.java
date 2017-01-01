@@ -3,6 +3,7 @@ package it.albertus.router.gui;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
@@ -49,14 +50,20 @@ public class DataTable {
 	private static final String CFG_KEY_GUI_IMPORTANT_KEYS_COLOR_BACKGROUND = "gui.important.keys.color.background";
 	private static final String CFG_KEY_GUI_THRESHOLDS_REACHED_COLOR_FOREGROUND = "gui.thresholds.reached.color.foreground";
 
+	private static final String FONT_KEY_TABLE_BOLD = "tableBold";
+
 	private static final DateFormat dateFormatTable = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 
-	public interface Defaults {
-		int MAX_ITEMS = 2000;
-		boolean COLUMNS_PACK = false;
-		byte COLUMNS_PADDING_RIGHT = 0;
-		String IMPORTANT_KEYS_COLOR_BACKGROUND = "255,255,0";
-		String THRESHOLDS_REACHED_COLOR_FOREGROUND = "255,0,0";
+	public static class Defaults {
+		public static final int MAX_ITEMS = 2000;
+		public static final boolean COLUMNS_PACK = false;
+		public static final byte COLUMNS_PADDING_RIGHT = 0;
+		public static final String IMPORTANT_KEYS_COLOR_BACKGROUND = "255,255,0";
+		public static final String THRESHOLDS_REACHED_COLOR_FOREGROUND = "255,0,0";
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	enum TableDataKey {
@@ -288,16 +295,17 @@ public class DataTable {
 					item.setText(i++, Integer.toString(data.getResponseTime()));
 
 					final Color importantKeyBackgroundColor = getImportantKeysBackgroundColor();
-					for (final String key : info.keySet()) {
+					for (final Entry<String, String> entry : info.entrySet()) {
+						final String key = entry.getKey();
 						// Grassetto...
 						if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
 							FontRegistry fontRegistry = JFaceResources.getFontRegistry();
-							if (!fontRegistry.hasValueFor("tableBold")) {
+							if (!fontRegistry.hasValueFor(FONT_KEY_TABLE_BOLD)) {
 								final Font tableFont = item.getFont();
 								final FontData oldFontData = tableFont.getFontData()[0];
-								fontRegistry.put("tableBold", new FontData[] { new FontData(oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD) });
+								fontRegistry.put(FONT_KEY_TABLE_BOLD, new FontData[] { new FontData(oldFontData.getName(), oldFontData.getHeight(), SWT.BOLD) });
 							}
-							item.setFont(i, fontRegistry.get("tableBold"));
+							item.setFont(i, fontRegistry.get(FONT_KEY_TABLE_BOLD));
 
 							// Evidenzia cella...
 							item.setBackground(i, importantKeyBackgroundColor);
@@ -312,7 +320,7 @@ public class DataTable {
 							}
 						}
 
-						item.setText(i++, info.get(key));
+						item.setText(i++, entry.getValue());
 					}
 
 					// Dimensionamento delle colonne (una tantum)...
@@ -375,21 +383,20 @@ public class DataTable {
 
 	private Color getColor(final String configurationKey, final String defaultColorKey) {
 		String colorKey = configuration.getString(configurationKey, defaultColorKey);
-		RGB thresholdReachedForegroudColorData;
+		RGB rgbColorData;
 		try {
-			thresholdReachedForegroudColorData = StringConverter.asRGB(colorKey);
+			rgbColorData = StringConverter.asRGB(colorKey);
 		}
 		catch (final Exception e) {
 			Logger.getInstance().log(Messages.get("err.invalid.color", colorKey));
 			colorKey = defaultColorKey;
-			thresholdReachedForegroudColorData = StringConverter.asRGB(colorKey);
+			rgbColorData = StringConverter.asRGB(colorKey);
 		}
 		final ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
 		if (!colorRegistry.hasValueFor(colorKey)) {
-			colorRegistry.put(colorKey, thresholdReachedForegroudColorData);
+			colorRegistry.put(colorKey, rgbColorData);
 		}
-		final Color thresholdReachedForegroudColor = colorRegistry.get(colorKey);
-		return thresholdReachedForegroudColor;
+		return colorRegistry.get(colorKey);
 	}
 
 	/** Consente la determinazione automatica della larghezza del campo. */
@@ -403,11 +410,11 @@ public class DataTable {
 
 	private static void addRightMargin(final TableItem item, final int index, final byte margin) {
 		if (margin > 0) {
-			String text = item.getText(index);
+			final StringBuilder text = new StringBuilder(item.getText(index));
 			for (byte i = 0; i < margin; i++) {
-				text += " ";
+				text.append(' ');
 			}
-			item.setText(index, text);
+			item.setText(index, text.toString());
 		}
 	}
 

@@ -26,15 +26,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	private static final Charset charset = initCharset();
 
-	private static Charset initCharset() {
-		try {
-			return Charset.forName(PREFERRED_CHARSET);
-		}
-		catch (final Exception e) {
-			return Charset.defaultCharset();
-		}
-	}
-
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	protected final RouterLoggerEngine engine;
@@ -45,6 +36,15 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected BaseHttpHandler() {
 		this.engine = null;
+	}
+
+	private static Charset initCharset() {
+		try {
+			return Charset.forName(PREFERRED_CHARSET);
+		}
+		catch (final RuntimeException re) {
+			return Charset.defaultCharset();
+		}
 	}
 
 	public abstract String getPath();

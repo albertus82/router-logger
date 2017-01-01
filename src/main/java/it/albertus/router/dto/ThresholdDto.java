@@ -1,9 +1,9 @@
 package it.albertus.router.dto;
 
+import java.io.Serializable;
+
 import it.albertus.router.engine.Threshold;
 import it.albertus.util.Jsonable;
-
-import java.io.Serializable;
 
 public class ThresholdDto implements Serializable, Jsonable {
 
@@ -82,7 +82,7 @@ public class ThresholdDto implements Serializable, Jsonable {
 	@Override
 	public String toJson() {
 		final StringBuilder json = new StringBuilder();
-		json.append("{\"name\":\"").append(name).append("\",\"key\":\"").append(key).append("\",\"type\":\"").append(type).append("\",\"value\":\"").append(value).append("\"");
+		json.append("{\"name\":\"").append(name).append("\",\"key\":\"").append(key).append("\",\"type\":\"").append(type).append("\",\"value\":\"").append(value).append('"');
 		json.append(",\"excluded\":").append(excluded);
 		json.append(",\"detected\":\"").append(detected).append("\"}");
 		return json.toString();

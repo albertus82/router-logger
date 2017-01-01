@@ -1,5 +1,13 @@
 package it.albertus.router.engine;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+
+import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.mqtt.RouterLoggerMqttClient;
 import it.albertus.router.reader.Reader;
@@ -15,35 +23,34 @@ import it.albertus.util.StringUtils;
 import it.albertus.util.SystemConsole;
 import it.albertus.util.Version;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-
 public abstract class RouterLoggerEngine {
 
-	public interface Defaults {
-		int ITERATIONS = 0;
-		boolean CLOSE_WHEN_FINISHED = false;
-		long INTERVAL_FAST_IN_MILLIS = 1000L;
-		long INTERVAL_NORMAL_IN_MILLIS = 5000L;
-		long HYSTERESIS_IN_MILLIS = 10000L;
-		int RETRIES = 3;
-		long RETRY_INTERVAL_IN_MILLIS = 30000L;
-		boolean CONSOLE_SHOW_CONFIGURATION = false;
-		boolean THRESHOLDS_EMAIL = false;
-		boolean LOG_CONNECTED = false;
-		boolean WAIT_DISCONNECTED = false;
-		boolean WAIT_DISCONNECTED_INTERVAL_THRESHOLD = true;
-		long WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS = INTERVAL_FAST_IN_MILLIS;
-		Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
+	public static class Defaults {
+		public static final int ITERATIONS = 0;
+		public static final boolean CLOSE_WHEN_FINISHED = false;
+		public static final long INTERVAL_FAST_IN_MILLIS = 1000L;
+		public static final long INTERVAL_NORMAL_IN_MILLIS = 5000L;
+		public static final long HYSTERESIS_IN_MILLIS = 10000L;
+		public static final int RETRIES = 3;
+		public static final long RETRY_INTERVAL_IN_MILLIS = 30000L;
+		public static final boolean CONSOLE_SHOW_CONFIGURATION = false;
+		public static final boolean THRESHOLDS_EMAIL = false;
+		public static final boolean LOG_CONNECTED = false;
+		public static final boolean WAIT_DISCONNECTED = false;
+		public static final boolean WAIT_DISCONNECTED_INTERVAL_THRESHOLD = true;
+		public static final long WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS = INTERVAL_FAST_IN_MILLIS;
+		public static final Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
+
+		protected Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	protected static final int FIRST_ITERATION = 1;
 
 	private static final String CFG_KEY_LOGGER_INTERVAL_NORMAL_MS = "logger.interval.normal.ms";
+
+	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
@@ -68,6 +75,11 @@ public abstract class RouterLoggerEngine {
 	private volatile int iteration = FIRST_ITERATION;
 	private boolean connected = false;
 	private boolean loggedIn = false;
+
+	public RouterLoggerEngine() {
+		// Inizializzazione dell'HttpServer...
+		httpServer.init(this);
+	}
 
 	public RouterLoggerStatus getCurrentStatus() {
 		return currentStatus;
@@ -95,48 +107,50 @@ public abstract class RouterLoggerEngine {
 		final String configurationKey = "reader.class.name";
 		final String readerClassName = getReaderClassName(configuration.getString(configurationKey));
 
-		final Reader reader;
+		final Reader rdr;
 		try {
-			reader = (Reader) Class.forName(readerClassName).newInstance();
+			rdr = (Reader) Class.forName(readerClassName).newInstance();
 		}
 		catch (final Throwable throwable) {
-			throw new ConfigurationException(Messages.get("err.invalid.cfg", configurationKey) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), throwable, configurationKey);
 		}
-		return reader;
+		return rdr;
 	}
 
 	protected Writer createWriter() {
 		final String configurationKey = "writer.class.name";
 		final String writerClassName = getWriterClassName(configuration.getString(configurationKey, RouterLoggerEngine.Defaults.WRITER_CLASS.getName()));
 
-		final Writer writer;
+		final Writer wrt;
 		try {
-			writer = (Writer) Class.forName(writerClassName).newInstance();
+			wrt = (Writer) Class.forName(writerClassName).newInstance();
 		}
 		catch (final Throwable throwable) {
-			throw new ConfigurationException(Messages.get("err.invalid.cfg", configurationKey) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), throwable, configurationKey);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), throwable, configurationKey);
 		}
-		return writer;
+		return wrt;
 	}
 
-	public static String getReaderClassName(String readerClassName) {
+	public static String getReaderClassName(final String configuredClassName) {
+		String readerClassName;
 		try {
-			readerClassName = StringUtils.trimToEmpty(readerClassName);
+			readerClassName = StringUtils.trimToEmpty(configuredClassName);
 			Class.forName(readerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
 		catch (final Throwable throwable) {
-			readerClassName = Reader.class.getPackage().getName() + '.' + readerClassName;
+			readerClassName = Reader.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return readerClassName;
 	}
 
-	public static String getWriterClassName(String writerClassName) {
+	public static String getWriterClassName(final String configuredClassName) {
+		String writerClassName;
 		try {
-			writerClassName = StringUtils.trimToEmpty(writerClassName);
+			writerClassName = StringUtils.trimToEmpty(configuredClassName);
 			Class.forName(writerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
 		catch (final Throwable throwable) {
-			writerClassName = Writer.class.getPackage().getName() + '.' + writerClassName;
+			writerClassName = Writer.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return writerClassName;
 	}
@@ -471,16 +485,11 @@ public abstract class RouterLoggerEngine {
 		try {
 			reader.release();
 		}
-		catch (Exception e) {}
+		catch (RuntimeException re) {/* Ignore */}
 		try {
 			writer.release();
 		}
-		catch (Exception e) {}
-	}
-
-	public RouterLoggerEngine() {
-		// Inizializzazione dell'HttpServer...
-		httpServer.init(this);
+		catch (RuntimeException re) {/* Ignore */}
 	}
 
 	protected void initReaderAndWriter() {
@@ -533,7 +542,7 @@ public abstract class RouterLoggerEngine {
 			try {
 				pollingThread.join();
 			}
-			catch (final InterruptedException ie) {}
+			catch (final InterruptedException ie) {/* Ignore */}
 			catch (final Exception e) {
 				logger.log(e);
 			}

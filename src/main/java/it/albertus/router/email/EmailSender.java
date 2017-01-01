@@ -1,17 +1,8 @@
 package it.albertus.router.email;
 
-import it.albertus.jface.preference.field.EmailAddressesListEditor;
-import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.Configuration;
-import it.albertus.util.ConfigurationException;
-import it.albertus.util.Console;
-import it.albertus.util.SystemConsole;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -24,10 +15,22 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
 
+import it.albertus.jface.JFaceMessages;
+import it.albertus.jface.preference.field.EmailAddressesListEditor;
+import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.util.Configuration;
+import it.albertus.util.ConfigurationException;
+import it.albertus.util.Console;
+import it.albertus.util.SystemConsole;
+
 /** Singleton. */
 public class EmailSender {
 
 	private static final String EMAIL_ADDRESSES_SPLIT_REGEX = EmailAddressesListEditor.EMAIL_ADDRESSES_SPLIT_REGEX;
+
 	private static final String CFG_KEY_EMAIL_HOST = "email.host";
 	private static final String CFG_KEY_EMAIL_USERNAME = "email.username";
 	private static final String CFG_KEY_EMAIL_PASSWORD = "email.password";
@@ -38,29 +41,34 @@ public class EmailSender {
 	private static final String CFG_KEY_EMAIL_BCC_ADDRESSES = "email.bcc.addresses";
 	private static final String CFG_KEY_EMAIL_MAX_QUEUE_SIZE = "email.max.queue.size";
 
-	public interface Defaults {
-		int PORT = 25;
-		int SSL_PORT = 465;
-		boolean SSL_CONNECT = false;
-		boolean SSL_IDENTITY = false;
-		boolean STARTTLS_ENABLED = false;
-		boolean STARTTLS_REQUIRED = false;
-		int SOCKET_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
-		int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
-		int RETRY_INTERVAL_SECS = 60;
-		int MAX_SENDINGS_PER_CYCLE = 3;
-		byte MAX_QUEUE_SIZE = 10;
+	private static final String MSG_KEY_ERR_EMAIL_CFG_ERROR = "err.email.cfg.error";
+	private static final String MSG_KEY_ERR_REVIEW_CFG = "err.configuration.review";
+
+	public static class Defaults {
+		public static final int PORT = 25;
+		public static final int SSL_PORT = 465;
+		public static final boolean SSL_CONNECT = false;
+		public static final boolean SSL_IDENTITY = false;
+		public static final boolean STARTTLS_ENABLED = false;
+		public static final boolean STARTTLS_REQUIRED = false;
+		public static final int SOCKET_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
+		public static final int SOCKET_CONNECTION_TIMEOUT = EmailConstants.SOCKET_TIMEOUT_MS;
+		public static final int RETRY_INTERVAL_SECS = 60;
+		public static final int MAX_SENDINGS_PER_CYCLE = 3;
+		public static final byte MAX_QUEUE_SIZE = 10;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private static class Singleton {
 		private static final EmailSender instance = new EmailSender();
-	}
 
-	public static EmailSender getInstance() {
-		return Singleton.instance;
+		private Singleton() {
+			throw new IllegalAccessError();
+		}
 	}
-
-	private EmailSender() {}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
@@ -68,6 +76,12 @@ public class EmailSender {
 	private Console out = SystemConsole.getInstance();
 
 	private final Object lock = new Object();
+
+	private EmailSender() {}
+
+	public static EmailSender getInstance() {
+		return Singleton.instance;
+	}
 
 	private class EmailRunnable implements Runnable {
 
@@ -78,17 +92,11 @@ public class EmailSender {
 				final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(Math.min(queue.size(), maxSendingsPerCycle));
 				for (final RouterLoggerEmail email : queue) {
 					if (maxSendingsPerCycle <= 0 || sent.size() < maxSendingsPerCycle) {
-						try {
-							send(email);
-							sent.add(email);
-						}
-						catch (final Exception exception) {
-							Logger.getInstance().log(exception, Destination.CONSOLE);
-						}
+						processQueuedMessage(sent, email);
 					}
 					else {
 						out.println(Messages.get("msg.email.limit", maxSendingsPerCycle), true);
-						break;
+						break; // for
 					}
 				}
 				queue.removeAll(sent);
@@ -97,16 +105,26 @@ public class EmailSender {
 				synchronized (lock) {
 					if (queue.isEmpty()) {
 						daemon = null;
-						break;
+						break; // while
 					}
 				}
 
 				try {
-					Thread.sleep(1000 * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
+					Thread.sleep(1000L * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
 				}
 				catch (final InterruptedException ie) {
-					break;
+					break; // while
 				}
+			}
+		}
+
+		private void processQueuedMessage(final Collection<RouterLoggerEmail> sent, final RouterLoggerEmail email) {
+			try {
+				send(email);
+				sent.add(email);
+			}
+			catch (final Exception exception) {
+				Logger.getInstance().log(exception, Destination.CONSOLE);
 			}
 		}
 	}
@@ -174,13 +192,13 @@ public class EmailSender {
 	private void checkConfiguration() {
 		// Configuration check
 		if (configuration.getString(CFG_KEY_EMAIL_HOST, true).isEmpty()) {
-			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_HOST);
+			throw new ConfigurationException(Messages.get(MSG_KEY_ERR_EMAIL_CFG_ERROR) + ' ' + JFaceMessages.get(MSG_KEY_ERR_REVIEW_CFG, configuration.getFileName()), CFG_KEY_EMAIL_HOST);
 		}
 		if (configuration.getString(CFG_KEY_EMAIL_FROM_ADDRESS, true).isEmpty()) {
-			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
+			throw new ConfigurationException(Messages.get(MSG_KEY_ERR_EMAIL_CFG_ERROR) + ' ' + JFaceMessages.get(MSG_KEY_ERR_REVIEW_CFG, configuration.getFileName()), CFG_KEY_EMAIL_FROM_ADDRESS);
 		}
 		if (configuration.getString(CFG_KEY_EMAIL_TO_ADDRESSES, true).isEmpty() && configuration.getString(CFG_KEY_EMAIL_CC_ADDRESSES, true).isEmpty() && configuration.getString(CFG_KEY_EMAIL_BCC_ADDRESSES, true).isEmpty()) {
-			throw new ConfigurationException(Messages.get("err.email.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_EMAIL_TO_ADDRESSES);
+			throw new ConfigurationException(Messages.get(MSG_KEY_ERR_EMAIL_CFG_ERROR) + ' ' + JFaceMessages.get(MSG_KEY_ERR_REVIEW_CFG, configuration.getFileName()), CFG_KEY_EMAIL_TO_ADDRESSES);
 		}
 	}
 

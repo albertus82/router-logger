@@ -5,8 +5,12 @@ import it.albertus.router.gui.RouterLoggerGui;
 
 public class RouterLogger {
 
+	private RouterLogger() {
+		throw new IllegalAccessError();
+	}
+
 	/** Unique entry point */
-	public static final void main(final String args[]) {
+	public static final void main(final String[] args) {
 		if (args.length != 0) {
 			RouterLoggerConsole.start(args);
 		}

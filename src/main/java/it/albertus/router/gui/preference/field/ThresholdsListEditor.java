@@ -229,12 +229,18 @@ public class ThresholdsListEditor extends EnhancedListEditor {
 		}
 	}
 
+	/**
+	 * @deprecated This <tt>ListEditor</tt> manages its properties internally.
+	 */
 	@Override
 	@Deprecated
 	protected String[] parseString(final String stringList) {
 		return new String[] {};
 	}
 
+	/**
+	 * @deprecated This <tt>ListEditor</tt> manages its properties internally.
+	 */
 	@Override
 	@Deprecated
 	protected String createList(final String[] items) {

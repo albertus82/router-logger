@@ -17,10 +17,14 @@ import it.albertus.util.NewLine;
 
 public class StatusHtmlHandler extends BaseHtmlHandler {
 
-	public interface Defaults {
-		boolean ENABLED = true;
-		boolean REFRESH = false;
-		int REFRESH_SECS = (int) (RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS / 1000);
+	public static class Defaults {
+		public static final boolean ENABLED = true;
+		public static final boolean REFRESH = false;
+		public static final int REFRESH_SECS = (int) (RouterLoggerEngine.Defaults.INTERVAL_NORMAL_IN_MILLIS / 1000);
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	public static final String PATH = "/status";
@@ -47,7 +51,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		if (configuration.getBoolean("server.handler.status.refresh", Defaults.REFRESH)) {
 			int refresh = configuration.getInt("server.handler.status.refresh.secs", Defaults.REFRESH_SECS);
 			if (refresh <= 0) { // Auto
-				refresh = Math.max(1, Long.valueOf(engine.getWaitTimeInMillis() / 1000).intValue() - 1);
+				refresh = Math.max(1, (int) (engine.getWaitTimeInMillis() / 1000) - 1);
 			}
 			exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
 		}
@@ -59,42 +63,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		html.append(buildHtmlRefreshButton());
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
-			final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
-			html.append("<ul>").append(NewLine.CRLF);
-			html.append("<li><strong>").append(Messages.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.get().format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
-			html.append("<li><strong>").append(Messages.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
-			for (final String key : currentData.getData().keySet()) {
-				html.append("<li>");
-
-				final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
-				if (highlight) {
-					html.append("<mark>");
-				}
-
-				boolean warning = false;
-				for (final Threshold threshold : thresholdsReached) {
-					if (key.equals(threshold.getKey())) {
-						warning = true;
-						break;
-					}
-				}
-				if (warning) {
-					html.append("<span class=\"warning\">");
-				}
-
-				html.append("<strong>").append(key).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getData().get(key));
-
-				if (warning) {
-					html.append("</span>");
-				}
-
-				if (highlight) {
-					html.append("</mark>");
-				}
-
-				html.append("</li>").append(NewLine.CRLF);
-			}
-			html.append("</ul>").append(NewLine.CRLF);
+			html.append(buildList(currentData));
 		}
 		html.append(buildHtmlFooter());
 
@@ -114,6 +83,47 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 			exchange.getResponseBody().write(response);
 		}
+	}
+
+	private String buildList(final RouterData currentData) {
+		final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
+		final StringBuilder html = new StringBuilder();
+		html.append("<ul>").append(NewLine.CRLF);
+		html.append("<li><strong>").append(Messages.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.get().format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
+		html.append("<li><strong>").append(Messages.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
+		for (final String key : currentData.getData().keySet()) {
+			html.append("<li>");
+
+			final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
+			if (highlight) {
+				html.append("<mark>");
+			}
+
+			boolean warning = false;
+			for (final Threshold threshold : thresholdsReached) {
+				if (key != null && key.equals(threshold.getKey())) {
+					warning = true;
+					break;
+				}
+			}
+			if (warning) {
+				html.append("<span class=\"warning\">");
+			}
+
+			html.append("<strong>").append(key).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getData().get(key));
+
+			if (warning) {
+				html.append("</span>");
+			}
+
+			if (highlight) {
+				html.append("</mark>");
+			}
+
+			html.append("</li>").append(NewLine.CRLF);
+		}
+		html.append("</ul>").append(NewLine.CRLF);
+		return html.toString();
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -125,8 +126,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			notFound(exchange);
 		}
 		finally {
-			IOUtils.closeQuietly(output);
-			IOUtils.closeQuietly(input);
+			IOUtils.closeQuietly(output, input);
 			exchange.close();
 		}
 	}
@@ -150,42 +150,16 @@ public class LogsHandler extends BaseHtmlHandler {
 
 		final File[] files = logger.listFiles();
 
-		html.append("<h3>").append(files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length)).append("</h3>").append(NewLine.CRLF);
+		html.append("<h3>").append(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length)).append("</h3>").append(NewLine.CRLF);
 
 		if (files != null && files.length > 0) {
-			Arrays.sort(files);
-			html.append("<table><thead><tr>");
-			html.append("<th>").append(Messages.get("lbl.server.logs.list.name")).append("</th>");
-			html.append("<th>").append(Messages.get("lbl.server.logs.list.date")).append("</th>");
-			html.append("<th>").append(Messages.get("lbl.server.logs.list.size")).append("</th>");
-			html.append("<th>").append(Messages.get("lbl.server.logs.list.action")).append("</th>");
-			html.append("</tr></thead><tbody>").append(NewLine.CRLF);
-			final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
-			final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
-			for (final File file : files) {
-				final String encodedFileName = URLEncoder.encode(file.getName(), getCharset().name());
-				html.append("<tr>");
-				html.append("<td>");
-				html.append("<a href=\"").append(PATH).append('/').append(encodedFileName).append("\">");
-				html.append(file.getName());
-				html.append("</a>");
-				html.append("</td>");
-				html.append("<td class=\"right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
-				html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(Math.max(1, file.length() / 1024)))).append("</td>");
-				html.append("<td class=\"center\">");
-				html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
-				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\" />");
-				html.append("</form>");
-				html.append("</td>");
-				html.append("</tr>").append(NewLine.CRLF);
-			}
-			html.append("</tbody></table>").append(NewLine.CRLF);
+			html.append(buildHtmlTable(files));
 		}
 
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
-		if (files.length > 0) {
-			html.append(buildHtmlDeleteAllButton(files));
+		if (files != null && files.length > 0) {
+			html.append(buildHtmlDeleteAllButton());
 		}
 		html.append(buildHtmlFooter());
 
@@ -210,7 +184,39 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 	}
 
-	private String buildHtmlDeleteAllButton(final File[] files) {
+	private String buildHtmlTable(final File[] files) throws UnsupportedEncodingException {
+		Arrays.sort(files);
+		final StringBuilder html = new StringBuilder();
+		html.append("<table><thead><tr>");
+		html.append("<th>").append(Messages.get("lbl.server.logs.list.name")).append("</th>");
+		html.append("<th>").append(Messages.get("lbl.server.logs.list.date")).append("</th>");
+		html.append("<th>").append(Messages.get("lbl.server.logs.list.size")).append("</th>");
+		html.append("<th>").append(Messages.get("lbl.server.logs.list.action")).append("</th>");
+		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
+		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
+		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
+		for (final File file : files) {
+			final String encodedFileName = URLEncoder.encode(file.getName(), getCharset().name());
+			html.append("<tr>");
+			html.append("<td>");
+			html.append("<a href=\"").append(PATH).append('/').append(encodedFileName).append("\">");
+			html.append(file.getName());
+			html.append("</a>");
+			html.append("</td>");
+			html.append("<td class=\"right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
+			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(Math.max(1, file.length() / 1024)))).append("</td>");
+			html.append("<td class=\"center\">");
+			html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
+			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\" />");
+			html.append("</form>");
+			html.append("</td>");
+			html.append("</tr>").append(NewLine.CRLF);
+		}
+		html.append("</tbody></table>").append(NewLine.CRLF);
+		return html.toString();
+	}
+
+	private String buildHtmlDeleteAllButton() {
 		return new StringBuilder("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\" /></form>").append(NewLine.CRLF.toString()).toString();
 	}
 

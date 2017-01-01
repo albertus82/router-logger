@@ -1,12 +1,12 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger.Destination;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
+
+import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger.Destination;
 
 /**
  * <b>TP-Link TD-W8970 V1</b>. Comandi Telnet disponibili (case sensitive):
@@ -18,8 +18,12 @@ import java.util.LinkedHashMap;
  */
 public class TpLink8970Reader extends Reader {
 
-	public interface Defaults {
-		String COMMAND_INFO_ADSL = "adsl show info";
+	public static class Defaults {
+		public static final String COMMAND_INFO_ADSL = "adsl show info";
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	public static final String DEVICE_MODEL_KEY = "lbl.device.model.tplink.8970";

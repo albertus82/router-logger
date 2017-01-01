@@ -7,16 +7,19 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.zip.ZipException;
 
+import org.apache.commons.mail.EmailException;
+
+import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
-import it.albertus.util.Zipper;
+import it.albertus.util.ZipUtils;
 
 public class CsvWriter extends Writer {
 
@@ -25,56 +28,78 @@ public class CsvWriter extends Writer {
 	protected static final String CFG_KEY_CSV_NEWLINE_CHARACTERS = "csv.newline.characters";
 
 	protected static final String LINE_SEPARATOR = NewLine.SYSTEM_LINE_SEPARATOR;
+
 	protected static final String CSV_FILENAME_REGEX = "[0-9]{8}\\.(csv|CSV)";
 	protected static final String CSV_FILE_EXTENSION = ".csv";
 
 	protected static final DateFormat dateFormatColumn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 	protected static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
 
-	public interface Defaults {
-		NewLine NEWLINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
-		String DIRECTORY = getDefaultDirectory();
-		String FIELD_SEPARATOR = ";";
-		String FIELD_SEPARATOR_REPLACEMENT = ",";
-		boolean EMAIL = false;
+	public static class Defaults {
+		public static final NewLine NEWLINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
+		public static final String DIRECTORY = getDefaultDirectory();
+		public static final String FIELD_SEPARATOR = ";";
+		public static final String FIELD_SEPARATOR_REPLACEMENT = ",";
+		public static final boolean EMAIL = false;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
-	protected BufferedWriter csvFileWriter = null;
+	protected BufferedWriter csvBufferedWriter = null;
 	protected File csvFile = null;
+
+	private FileWriter csvFileWriter;
 
 	protected class CsvEmailRunnable implements Runnable {
 		@Override
 		public void run() {
 			final File currentDestinationFile = getDestinationFile();
-			for (final File csvFile : currentDestinationFile.getParentFile().listFiles()) {
-				if (!csvFile.equals(currentDestinationFile) && csvFile.getName().matches(CSV_FILENAME_REGEX)) {
+			for (final File file : currentDestinationFile.getParentFile().listFiles()) {
+				if (!file.equals(currentDestinationFile) && file.getName().matches(CSV_FILENAME_REGEX)) {
 					try {
-						final File zipFile = new File(csvFile.getPath().replace(CSV_FILE_EXTENSION, Zipper.ZIP_FILE_EXTENSION));
-						final Zipper zipper = Zipper.getInstance();
-						zipper.zip(zipFile, csvFile);
-						if (zipper.test(zipFile)) {
-							String formattedDate = zipFile.getName();
-							try {
-								formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Messages.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(formattedDate.substring(0, formattedDate.indexOf('.'))));
-							}
-							catch (final Exception e) {
-								formattedDate = "";
-							}
-							final String subject = Messages.get("msg.writer.csv.email.subject", formattedDate);
-							final String message = Messages.get("msg.writer.csv.email.message", zipFile.getName());
-							EmailSender.getInstance().send(subject, message, zipFile);
-							csvFile.delete();
-						}
-						else {
-							zipFile.delete();
-							throw new ZipException("ZIP file verification failed for " + csvFile.getPath() + '.');
-						}
+						sendEmail(file);
 					}
 					catch (final Exception exception) {
-						logger.log(exception, Destination.CONSOLE);
+						logger.log(exception, Destination.CONSOLE, Destination.FILE);
 					}
 				}
 			}
+		}
+
+		private void sendEmail(final File uncompressedAttachment) throws IOException, EmailException {
+			final File compressedAttachment = new File(uncompressedAttachment.getPath().replace(CSV_FILE_EXTENSION, ZipUtils.ZIP_FILE_EXTENSION));
+			ZipUtils.zip(compressedAttachment, uncompressedAttachment);
+			try {
+				ZipUtils.test(compressedAttachment);
+				final String formattedDate = getFormattedDate(compressedAttachment);
+				final String subject = Messages.get("msg.writer.csv.email.subject", formattedDate);
+				final String message = Messages.get("msg.writer.csv.email.message", compressedAttachment.getName());
+				EmailSender.getInstance().send(subject, message, compressedAttachment);
+				if (!uncompressedAttachment.delete()) {
+					uncompressedAttachment.deleteOnExit();
+				}
+			}
+			catch (final IOException ioe) {
+				if (!compressedAttachment.delete()) {
+					compressedAttachment.deleteOnExit();
+				}
+				throw new IOException("ZIP file verification failed for " + uncompressedAttachment.getPath() + '.', ioe);
+			}
+		}
+
+		private synchronized String getFormattedDate(final File zipFile) {
+			String formattedDate;
+			try {
+				final String zipFileName = zipFile.getName();
+				formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Messages.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(zipFileName.substring(0, zipFileName.indexOf('.'))));
+			}
+			catch (final Exception e) {
+				logger.log(e, Destination.CONSOLE, Destination.FILE);
+				formattedDate = "";
+			}
+			return formattedDate;
 		}
 	}
 
@@ -88,18 +113,7 @@ public class CsvWriter extends Writer {
 			// Selezione del percorso e nome del file di destinazione...
 			final File file = getDestinationFile();
 
-			String path;
-			try {
-				path = file.getCanonicalPath();
-			}
-			catch (final Exception e1) {
-				try {
-					path = file.getAbsolutePath();
-				}
-				catch (final Exception e2) {
-					path = file.getPath();
-				}
-			}
+			String path = getFilePath(file);
 
 			if (!file.equals(this.csvFile)) {
 				final boolean first = this.csvFile == null;
@@ -113,18 +127,20 @@ public class CsvWriter extends Writer {
 			if (!file.exists()) {
 				// Create new file...
 				closeOutputFile();
-				csvFileWriter = new BufferedWriter(new FileWriter(file));
+				csvFileWriter = new FileWriter(file);
+				csvBufferedWriter = new BufferedWriter(csvFileWriter);
 				logger.log(Messages.get("msg.logging.to.file", path), Destination.CONSOLE);
-				csvFileWriter.append(buildCsvHeader(info));
+				csvBufferedWriter.append(buildCsvHeader(info));
 			}
 
-			if (csvFileWriter == null) {
+			if (csvBufferedWriter == null) {
 				// Open existing file...
-				csvFileWriter = new BufferedWriter(new FileWriter(file, true));
+				csvFileWriter = new FileWriter(file, true);
+				csvBufferedWriter = new BufferedWriter(csvFileWriter);
 				logger.log(Messages.get("msg.logging.to.file", path), Destination.CONSOLE);
 			}
-			csvFileWriter.append(buildCsvRow(info));
-			csvFileWriter.flush();
+			csvBufferedWriter.append(buildCsvRow(info));
+			csvBufferedWriter.flush();
 		}
 		catch (final Exception exception) {
 			logger.log(exception);
@@ -133,15 +149,15 @@ public class CsvWriter extends Writer {
 	}
 
 	@Override
-	public void release() {
+	public synchronized void release() {
 		closeOutputFile();
 	}
 
 	protected File getDestinationFile() {
-		final String csvDestinationDir = configuration.getString("csv.destination.path");
+		final String csvDestinationDir = configuration.getString("csv.destination.path", true).trim();
 		final File file;
-		if (csvDestinationDir != null && !csvDestinationDir.trim().isEmpty()) {
-			file = new File(csvDestinationDir.trim() + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
+		if (!csvDestinationDir.isEmpty()) {
+			file = new File(csvDestinationDir + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
 		}
 		else {
 			file = getDefaultFile();
@@ -198,21 +214,17 @@ public class CsvWriter extends Writer {
 				return newLine.toString();
 			}
 			else {
-				throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_CSV_NEWLINE_CHARACTERS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_CSV_NEWLINE_CHARACTERS);
+				throw new ConfigurationException(JFaceMessages.get("err.configuration.invalid", CFG_KEY_CSV_NEWLINE_CHARACTERS) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_CSV_NEWLINE_CHARACTERS);
 			}
 		}
 	}
 
 	protected void closeOutputFile() {
-		if (csvFileWriter != null) {
-			try {
-				logger.log(Messages.get("msg.closing.output.file"), Destination.CONSOLE);
-				csvFileWriter.close();
-				csvFileWriter = null;
-			}
-			catch (final IOException ioe) {
-				logger.log(ioe);
-			}
+		if (csvBufferedWriter != null || csvFileWriter != null) {
+			logger.log(Messages.get("msg.closing.output.file"), Destination.CONSOLE);
+			IOUtils.closeQuietly(csvBufferedWriter, csvFileWriter);
+			csvBufferedWriter = null;
+			csvFileWriter = null;
 		}
 	}
 
@@ -220,6 +232,22 @@ public class CsvWriter extends Writer {
 		if (configuration.getBoolean("csv.email", Defaults.EMAIL)) {
 			new Thread(new CsvEmailRunnable(), "csvEmailThread").start();
 		}
+	}
+
+	protected static String getFilePath(final File file) {
+		String path;
+		try {
+			path = file.getCanonicalPath();
+		}
+		catch (final Exception e1) {
+			try {
+				path = file.getAbsolutePath();
+			}
+			catch (final Exception e2) {
+				path = file.getPath();
+			}
+		}
+		return path;
 	}
 
 	protected static File getDefaultFile() {

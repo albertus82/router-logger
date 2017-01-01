@@ -1,29 +1,31 @@
 package it.albertus.router.server.json;
 
-import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.server.BaseHttpHandler;
-import it.albertus.router.server.BaseHttpServer;
-import it.albertus.router.util.Logger;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.server.BaseHttpHandler;
+import it.albertus.router.server.BaseHttpServer;
+import it.albertus.router.util.Logger;
+
 public abstract class BaseJsonHandler extends BaseHttpHandler {
 
-	public interface Defaults {
-		boolean ENABLED = true;
-		boolean REFRESH = true;
-		int REFRESH_SECS = 0;
+	public static class Defaults {
+		public static final boolean ENABLED = true;
+		public static final boolean REFRESH = true;
+		public static final int REFRESH_SECS = 0;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	protected static final String CFG_KEY_SERVER_HANDLER_JSON_ENABLED = "server.handler.json.enabled";
 
-	protected final RouterLoggerEngine engine;
-
 	public BaseJsonHandler(final RouterLoggerEngine engine) {
-		this.engine = engine;
+		super(engine);
 	}
 
 	protected abstract void service(HttpExchange exchange) throws IOException;
@@ -79,7 +81,7 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 		if (configuration.getBoolean("server.handler.json.refresh", Defaults.REFRESH)) {
 			int refresh = configuration.getInt("server.handler.json.refresh.secs", Defaults.REFRESH_SECS);
 			if (refresh <= 0) { // Auto
-				refresh = Math.max(1, Long.valueOf(engine.getWaitTimeInMillis() / 1000).intValue() - 1);
+				refresh = Math.max(1, (int) (engine.getWaitTimeInMillis() / 1000) - 1);
 			}
 			exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
 		}

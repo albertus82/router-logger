@@ -1,9 +1,9 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.resources.Messages;
-
 import java.io.IOException;
 import java.util.LinkedHashMap;
+
+import it.albertus.router.resources.Messages;
 
 /**
  * <b>D-Link DSL-2750B</b>. Comandi Telnet disponibili (case sensitive):
@@ -14,9 +14,13 @@ import java.util.LinkedHashMap;
  */
 public class DLinkDsl2750Reader extends Reader {
 
-	public interface Defaults {
-		String COMMAND_INFO_ADSL_STATUS = "adsl status";
-		String COMMAND_INFO_ADSL_SNR = "adsl snr";
+	public static class Defaults {
+		public static final String COMMAND_INFO_ADSL_STATUS = "adsl status";
+		public static final String COMMAND_INFO_ADSL_SNR = "adsl snr";
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	public static final String DEVICE_MODEL_KEY = "lbl.device.model.dlink.2750b";

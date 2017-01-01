@@ -12,8 +12,12 @@ import it.albertus.util.NewLine;
 
 public class DisconnectHandler extends BaseHtmlHandler {
 
-	public interface Defaults {
-		boolean ENABLED = false;
+	public static class Defaults {
+		public static final boolean ENABLED = false;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	public static final String PATH = "/disconnect";

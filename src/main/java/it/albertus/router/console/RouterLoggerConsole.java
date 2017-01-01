@@ -1,5 +1,7 @@
 package it.albertus.router.console;
 
+import java.util.Map;
+
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
@@ -8,12 +10,14 @@ import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Version;
 
-import java.util.Map;
-
 public class RouterLoggerConsole extends RouterLoggerEngine {
 
-	public interface Defaults extends RouterLoggerEngine.Defaults {
-		boolean CONSOLE_ANIMATION = true;
+	public static class Defaults extends RouterLoggerEngine.Defaults {
+		public static final boolean CONSOLE_ANIMATION = true;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private static final String ARG_HELP = "--help";
@@ -21,8 +25,12 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 
 	private static final char[] ANIMATION = { '-', '\\', '|', '/' };
 
+	private static Thread uiThread;
+
+	private int lastLogLength = 0;
+
 	/** Entry point for console version */
-	public static void start(final String args[]) {
+	public static void start(final String[] args) {
 		// Check arguments...
 		if (args[0].trim().equalsIgnoreCase(ARG_HELP)) {
 			final Version version = Version.getInstance();
@@ -47,7 +55,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				routerLogger.connect();
 				Thread.sleep(Long.MAX_VALUE);
 			}
-			catch (final InterruptedException ie) { /* Exit */}
+			catch (final InterruptedException ie) {/* Exit */}
 			catch (final Exception exception) {
 				Logger.getInstance().log(exception);
 			}
@@ -67,9 +75,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			System.out.println(Messages.get("err.try.help", ARG_HELP));
 		}
 	}
-
-	private int lastLogLength = 0;
-	private static Thread uiThread;
 
 	@Override
 	protected void showInfo(final RouterData info, final Map<Threshold, String> thresholdsReached) {

@@ -15,11 +15,11 @@ public class CsvPreferencePage extends BasePreferencePage {
 		PIPE("lbl.preferences.separator.pipe", "|");
 
 		private final String resourceKey;
-		private final String separator;
+		private final String value;
 
 		private Separator(final String resourceKey, final String separator) {
 			this.resourceKey = resourceKey;
-			this.separator = separator;
+			this.value = separator;
 		}
 	}
 
@@ -27,7 +27,7 @@ public class CsvPreferencePage extends BasePreferencePage {
 		final Separator[] values = Separator.values();
 		final LocalizedLabelsAndValues options = new LocalizedLabelsAndValues(values.length);
 		for (final Separator separator : values) {
-			final String value = separator.separator;
+			final String value = separator.value;
 			final Localized name = new Localized() {
 				@Override
 				public String getString() {

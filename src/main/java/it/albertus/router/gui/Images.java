@@ -32,13 +32,17 @@ public class Images {
 	public static final Image TRAY_ICON_INACTIVE_CLOCK = new DecorationOverlayIcon(TRAY_ICON_INACTIVE, ImageDescriptor.createFromImage(Images.TRAY_ICON_OVERLAY_CLOCK), IDecoration.BOTTOM_RIGHT).createImage();
 	public static final Image TRAY_ICON_INACTIVE_ERROR = new DecorationOverlayIcon(TRAY_ICON_INACTIVE, ImageDescriptor.createFromImage(Images.TRAY_ICON_OVERLAY_ERROR), IDecoration.BOTTOM_RIGHT).createImage();
 
+	private Images() {
+		throw new IllegalAccessError();
+	}
+
 	private static Image[] loadIcons(final String fileName) {
 		final InputStream is = Images.class.getResourceAsStream(fileName);
 		final ImageData[] images = new ImageLoader().load(is);
 		try {
 			is.close();
 		}
-		catch (final IOException ioe) {}
+		catch (final IOException ioe) {/* Ignore */}
 		final Image[] icons = new Image[images.length];
 		int i = 0;
 		for (final ImageData id : images) {

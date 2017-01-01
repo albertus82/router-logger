@@ -1,5 +1,12 @@
 package it.albertus.router.email;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
@@ -9,31 +16,26 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 public class ThresholdsEmailSender {
 
-	public interface Defaults {
-		int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 3600;
-		short MAX_ITEMS = 50;
+	public static class Defaults {
+		public static final int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 3600;
+		public static final short MAX_ITEMS = 50;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private static class Singleton {
 		private static final ThresholdsEmailSender instance = new ThresholdsEmailSender();
-	}
 
-	public static ThresholdsEmailSender getInstance() {
-		return Singleton.instance;
+		private Singleton() {
+			throw new IllegalAccessError();
+		}
 	}
 
 	private static final String CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS = "thresholds.email.max.items";
-
-	private ThresholdsEmailSender() {}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 	private final Queue<ThresholdEmailItem> queue = new ConcurrentLinkedQueue<ThresholdEmailItem>();
@@ -42,6 +44,12 @@ public class ThresholdsEmailSender {
 	private volatile Thread daemon;
 
 	private final Object lock = new Object();
+
+	private ThresholdsEmailSender() {}
+
+	public static ThresholdsEmailSender getInstance() {
+		return Singleton.instance;
+	}
 
 	public void send(final Map<Threshold, String> thresholdsReached, final RouterData routerData) {
 		if (thresholdsReached != null && !thresholdsReached.isEmpty() && routerData != null) {
@@ -75,33 +83,7 @@ public class ThresholdsEmailSender {
 				}
 
 				try {
-					final LinkedList<ThresholdEmailItem> sent = new LinkedList<ThresholdEmailItem>();
-
-					// Build email message...
-					final StringBuilder message = new StringBuilder();
-					for (final ThresholdEmailItem item : queue) {
-						message.append(item.toString()).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString());
-						sent.add(item);
-					}
-
-					// Build email subject...
-					final String subject;
-					if (sent.size() == 1) {
-						subject = Messages.get("msg.threshold.email.subject.single", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(sent.getFirst().getDate()));
-					}
-					else {
-						subject = Messages.get("msg.threshold.email.subject.multiple", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(sent.getFirst().getDate()), DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format((lastEventTimestamp != null && lastEventTimestamp.after(sent.getLast().getDate())) ? lastEventTimestamp : sent.getLast().getDate()));
-					}
-
-					if (extraEventsCount != 0) {
-						message.append(Messages.get("msg.threshold.email.message.limit", configuration.getShort(CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS, Defaults.MAX_ITEMS), extraEventsCount));
-						extraEventsCount = 0;
-					}
-
-					// Send email...
-					EmailSender.getInstance().reserve(subject, message.toString().trim());
-
-					queue.removeAll(sent);
+					sendMessages();
 				}
 				catch (final Exception exception) {
 					Logger.getInstance().log(exception, Destination.CONSOLE);
@@ -110,13 +92,43 @@ public class ThresholdsEmailSender {
 				final int sleepTime = configuration.getInt("thresholds.email.send.interval.secs", Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS);
 				if (sleepTime > 0) {
 					try {
-						Thread.sleep(1000 * sleepTime);
+						Thread.sleep(1000L * sleepTime);
 					}
 					catch (final InterruptedException ie) {
 						break;
 					}
 				}
 			}
+		}
+
+		private void sendMessages() {
+			final LinkedList<ThresholdEmailItem> sent = new LinkedList<ThresholdEmailItem>();
+
+			// Build email message...
+			final StringBuilder message = new StringBuilder();
+			for (final ThresholdEmailItem item : queue) {
+				message.append(item.toString()).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString());
+				sent.add(item);
+			}
+
+			// Build email subject...
+			final String subject;
+			if (sent.size() == 1) {
+				subject = Messages.get("msg.threshold.email.subject.single", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(sent.getFirst().getDate()));
+			}
+			else {
+				subject = Messages.get("msg.threshold.email.subject.multiple", DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(sent.getFirst().getDate()), DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format((lastEventTimestamp != null && lastEventTimestamp.after(sent.getLast().getDate())) ? lastEventTimestamp : sent.getLast().getDate()));
+			}
+
+			if (extraEventsCount != 0) {
+				message.append(Messages.get("msg.threshold.email.message.limit", configuration.getShort(CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS, Defaults.MAX_ITEMS), extraEventsCount));
+				extraEventsCount = 0;
+			}
+
+			// Send email...
+			EmailSender.getInstance().reserve(subject, message.toString().trim());
+
+			queue.removeAll(sent);
 		}
 	}
 

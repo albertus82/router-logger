@@ -1,5 +1,13 @@
 package it.albertus.router.reader;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.LinkedHashMap;
+
+import org.apache.commons.net.telnet.TelnetClient;
+
+import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
@@ -9,27 +17,28 @@ import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 import it.albertus.util.SystemConsole;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.LinkedHashMap;
-
-import org.apache.commons.net.telnet.TelnetClient;
-
 public abstract class Reader {
 
-	public interface Defaults {
-		String ROUTER_ADDRESS = "192.168.1.1";
-		int ROUTER_PORT = 23;
-		int SOCKET_TIMEOUT_IN_MILLIS = 30000;
-		int CONNECTION_TIMEOUT_IN_MILLIS = 20000;
-		String TELNET_NEWLINE_CHARACTERS = NewLine.CRLF.name();
+	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
+
+	public static class Defaults {
+		public static final String ROUTER_ADDRESS = "192.168.1.1";
+		public static final int ROUTER_PORT = 23;
+		public static final int SOCKET_TIMEOUT_IN_MILLIS = 30000;
+		public static final int CONNECTION_TIMEOUT_IN_MILLIS = 20000;
+		public static final String TELNET_NEWLINE_CHARACTERS = NewLine.CRLF.name();
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	protected static final String CFG_KEY_SOCKET_TIMEOUT_MS = "socket.timeout.ms";
 	protected static final String CFG_KEY_CONNECTION_TIMEOUT_MS = "connection.timeout.ms";
 	protected static final String CFG_KEY_ROUTER_PORT = "router.port";
 	protected static final String CFG_KEY_ROUTER_ADDRESS = "router.address";
+
+	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 	protected final Logger logger = Logger.getInstance();
@@ -53,7 +62,7 @@ public abstract class Reader {
 			routerAddress = configuration.getString(CFG_KEY_ROUTER_ADDRESS, Defaults.ROUTER_ADDRESS).trim();
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_ROUTER_ADDRESS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_ADDRESS);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, CFG_KEY_ROUTER_ADDRESS) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), exception, CFG_KEY_ROUTER_ADDRESS);
 		}
 
 		final int routerPort;
@@ -61,7 +70,7 @@ public abstract class Reader {
 			routerPort = configuration.getInt(CFG_KEY_ROUTER_PORT, Defaults.ROUTER_PORT);
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_ROUTER_PORT) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_ROUTER_PORT);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, CFG_KEY_ROUTER_PORT) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), exception, CFG_KEY_ROUTER_PORT);
 		}
 
 		final int connectionTimeoutInMillis;
@@ -69,7 +78,7 @@ public abstract class Reader {
 			connectionTimeoutInMillis = configuration.getInt(CFG_KEY_CONNECTION_TIMEOUT_MS, Defaults.CONNECTION_TIMEOUT_IN_MILLIS);
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_CONNECTION_TIMEOUT_MS);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, CFG_KEY_CONNECTION_TIMEOUT_MS) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), exception, CFG_KEY_CONNECTION_TIMEOUT_MS);
 		}
 
 		final int socketTimeoutInMillis;
@@ -77,7 +86,7 @@ public abstract class Reader {
 			socketTimeoutInMillis = configuration.getInt(CFG_KEY_SOCKET_TIMEOUT_MS, Defaults.SOCKET_TIMEOUT_IN_MILLIS);
 		}
 		catch (final Exception exception) {
-			throw new ConfigurationException(Messages.get("err.invalid.cfg", CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), exception, CFG_KEY_SOCKET_TIMEOUT_MS);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, CFG_KEY_SOCKET_TIMEOUT_MS) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), exception, CFG_KEY_SOCKET_TIMEOUT_MS);
 		}
 
 		/* Connessione... */
@@ -137,7 +146,6 @@ public abstract class Reader {
 		try {
 			telnet.disconnect();
 		}
-		catch (final NullPointerException npe) {/* Ignore */}
 		catch (final IOException ioe) {
 			logger.log(ioe);
 		}
@@ -205,22 +213,22 @@ public abstract class Reader {
 	 * @throws NullPointerException se il comando fornito &egrave; null.
 	 */
 	protected String writeToTelnet(final String command) throws IOException {
-		final OutputStream out = telnet.getOutputStream();
+		final OutputStream os = telnet.getOutputStream();
 		final StringBuilder echo = new StringBuilder();
 		for (final char character : command.toCharArray()) {
 			if (character == '\n' || character == '\r') {
 				break;
 			}
-			out.write(character);
+			os.write(character);
 			echo.append(character);
 		}
-		out.flush();
+		os.flush();
 		// Thread.sleep(50);
 		for (final char character : NewLine.getEnum(configuration.getString("telnet.newline.characters", Defaults.TELNET_NEWLINE_CHARACTERS)).toCharArray()) {
-			out.write(character);
+			os.write(character);
 			echo.append(character);
 		}
-		out.flush();
+		os.flush();
 		return echo.toString();
 	}
 
@@ -236,21 +244,21 @@ public abstract class Reader {
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	protected void writeToTelnet(final char[] password) throws IOException {
-		final OutputStream out = telnet.getOutputStream();
+		final OutputStream os = telnet.getOutputStream();
 		if (password != null) {
 			for (final char character : password) {
 				if (character == '\n' || character == '\r') {
 					break;
 				}
-				out.write(character);
+				os.write(character);
 			}
-			out.flush();
+			os.flush();
 		}
 		// Thread.sleep(50);
 		for (final char character : NewLine.getEnum(configuration.getString("telnet.newline.characters", Defaults.TELNET_NEWLINE_CHARACTERS)).toCharArray()) {
-			out.write(character);
+			os.write(character);
 		}
-		out.flush();
+		os.flush();
 	}
 
 	public void release() {}

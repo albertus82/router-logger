@@ -1,11 +1,11 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.resources.Messages;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
+
+import it.albertus.router.resources.Messages;
 
 /**
  * <b>ASUS DSL-N14U</b>. Comandi Telnet disponibili (case sensitive):
@@ -20,8 +20,12 @@ import java.util.LinkedHashMap;
  */
 public class AsusDslN14UReader extends Reader {
 
-	public interface Defaults {
-		String COMMAND_INFO_ADSL = "tcapi show Info_Adsl";
+	public static class Defaults {
+		public static final String COMMAND_INFO_ADSL = "tcapi show Info_Adsl";
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	public static final String DEVICE_MODEL_KEY = "lbl.device.model.asus.n14u";

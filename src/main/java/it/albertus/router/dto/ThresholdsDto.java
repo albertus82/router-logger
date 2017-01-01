@@ -1,9 +1,5 @@
 package it.albertus.router.dto;
 
-import it.albertus.router.engine.Threshold;
-import it.albertus.router.engine.ThresholdsReached;
-import it.albertus.util.Jsonable;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -11,6 +7,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
+
+import it.albertus.router.engine.Threshold;
+import it.albertus.router.engine.ThresholdsReached;
+import it.albertus.util.Jsonable;
 
 public class ThresholdsDto implements Serializable, Jsonable {
 
@@ -45,9 +45,9 @@ public class ThresholdsDto implements Serializable, Jsonable {
 			json.append("null");
 		}
 		else {
-			json.append("{\"timestamp\":\"").append(timestamp != null ? ISO8601Utils.format(timestamp, true, defaultTimeZone) : "null").append("\"");
+			json.append("{\"timestamp\":\"").append(timestamp != null ? ISO8601Utils.format(timestamp, true, defaultTimeZone) : "null").append('"');
 			json.append(",\"reached\":");
-			json.append("[");
+			json.append('[');
 			int index = 0;
 			for (final ThresholdDto threshold : reached) {
 				json.append(threshold.toJson());

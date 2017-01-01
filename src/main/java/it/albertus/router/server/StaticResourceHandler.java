@@ -13,6 +13,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.router.server.html.BaseHtmlHandler;
+import it.albertus.util.IOUtils;
 
 public class StaticResourceHandler extends BaseHtmlHandler {
 
@@ -39,16 +40,17 @@ public class StaticResourceHandler extends BaseHtmlHandler {
 	protected void service(final HttpExchange exchange) throws IOException {
 		addHeaders(exchange);
 
-		final InputStream inputStream = getClass().getResourceAsStream(resourceName);
-		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		InputStream inputStream = null;
+		ByteArrayOutputStream outputStream = null;
 
-		final byte[] buffer = new byte[BUFFER_SIZE];
-		int len;
-		while ((len = inputStream.read(buffer)) != -1) {
-			outputStream.write(buffer, 0, len);
+		try {
+			inputStream = getClass().getResourceAsStream(resourceName);
+			outputStream = new ByteArrayOutputStream();
+			IOUtils.copy(inputStream, outputStream, BUFFER_SIZE);
 		}
-		outputStream.close();
-		inputStream.close();
+		finally {
+			IOUtils.closeQuietly(outputStream, inputStream);
+		}
 
 		final byte[] response = compressResponse(outputStream.toByteArray(), exchange);
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);

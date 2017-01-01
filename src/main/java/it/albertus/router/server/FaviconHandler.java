@@ -8,36 +8,33 @@ import java.net.HttpURLConnection;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.util.IOUtils;
+
 public class FaviconHandler extends StaticResourceHandler {
 
 	private static final String RESOURCE_NAME = "favicon.ico";
 	private static final byte[] favicon = loadFavicon(); // Cached
 
+	public FaviconHandler() {
+		super("/favicon.ico", RESOURCE_NAME, createHeaders());
+		setFound(favicon != null);
+	}
+
 	private static final byte[] loadFavicon() {
 		byte[] bytes = null;
-		final InputStream inputStream = FaviconHandler.class.getResourceAsStream(RESOURCE_NAME);
-		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-		final byte[] buffer = new byte[BUFFER_SIZE];
-		int len;
+		InputStream inputStream = null;
+		ByteArrayOutputStream outputStream = null;
 		try {
-			while ((len = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, len);
-			}
-			bytes = outputStream.toByteArray();
+			inputStream = FaviconHandler.class.getResourceAsStream(RESOURCE_NAME);
+			outputStream = new ByteArrayOutputStream();
+			IOUtils.copy(inputStream, outputStream, BUFFER_SIZE);
 		}
-		catch (final Exception e) {
-			e.printStackTrace();
+		catch (final IOException ioe) {
+			ioe.printStackTrace();
 		}
 		finally {
-			try {
-				outputStream.close();
-			}
-			catch (final Exception e) {/* Ignore */}
-			try {
-				inputStream.close();
-			}
-			catch (final Exception e) {/* Ignore */}
+			IOUtils.closeQuietly(outputStream, inputStream);
 		}
 		return bytes;
 	}
@@ -47,11 +44,6 @@ public class FaviconHandler extends StaticResourceHandler {
 		faviconHeaders.add("Content-Type", "image/x-icon");
 		faviconHeaders.add("Cache-Control", "no-transform,public,max-age=86400,s-maxage=259200");
 		return faviconHeaders;
-	}
-
-	public FaviconHandler() {
-		super("/favicon.ico", RESOURCE_NAME, createHeaders());
-		setFound(favicon != null);
 	}
 
 	@Override

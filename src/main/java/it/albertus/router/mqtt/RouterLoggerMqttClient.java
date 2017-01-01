@@ -1,5 +1,11 @@
 package it.albertus.router.mqtt;
 
+import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
+
 import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.dto.StatusDto;
@@ -15,12 +21,6 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.util.Payload;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
-
-import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 /** @Singleton */
 public class RouterLoggerMqttClient extends BaseMqttClient {
@@ -58,43 +58,39 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private static final String CFG_KEY_MQTT_STATUS_QOS = "mqtt.status.qos";
 	private static final String CFG_KEY_MQTT_STATUS_RETAINED = "mqtt.status.retained";
 
-	public interface Defaults {
-		boolean ENABLED = false;
-		String CLIENT_ID = "RouterLogger";
-		int KEEP_ALIVE_INTERVAL = MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT;
-		int CONNECTION_TIMEOUT = MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT;
-		int MAX_INFLIGHT = MqttConnectOptions.MAX_INFLIGHT_DEFAULT;
-		boolean CLEAN_SESSION = MqttConnectOptions.CLEAN_SESSION_DEFAULT;
-		boolean AUTOMATIC_RECONNECT = true;
-		boolean CONNECT_RETRY = true;
-		byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
-		boolean PERSISTENCE_FILE_ENABLED = false;
-		boolean PERSISTENCE_FILE_CUSTOM = false;
+	public static class Defaults {
+		public static final boolean ENABLED = false;
+		public static final String CLIENT_ID = "RouterLogger";
+		public static final int KEEP_ALIVE_INTERVAL = MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT;
+		public static final int CONNECTION_TIMEOUT = MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT;
+		public static final int MAX_INFLIGHT = MqttConnectOptions.MAX_INFLIGHT_DEFAULT;
+		public static final boolean CLEAN_SESSION = MqttConnectOptions.CLEAN_SESSION_DEFAULT;
+		public static final boolean AUTOMATIC_RECONNECT = true;
+		public static final boolean CONNECT_RETRY = true;
+		public static final byte MQTT_VERSION = MqttConnectOptions.MQTT_VERSION_DEFAULT;
+		public static final boolean PERSISTENCE_FILE_ENABLED = false;
+		public static final boolean PERSISTENCE_FILE_CUSTOM = false;
 
-		boolean DATA_ENABLED = true;
-		String DATA_TOPIC = "router/logger/data";
-		byte DATA_QOS = MqttQos.AT_MOST_ONCE.getValue();
-		boolean DATA_RETAINED = true;
-		long DATA_THROTTLING_IN_MILLIS = 0;
+		public static final boolean DATA_ENABLED = true;
+		public static final String DATA_TOPIC = "router/logger/data";
+		public static final byte DATA_QOS = MqttQos.AT_MOST_ONCE.getValue();
+		public static final boolean DATA_RETAINED = true;
+		public static final long DATA_THROTTLING_IN_MILLIS = 0;
 
-		boolean THRESHOLDS_ENABLED = true;
-		String THRESHOLDS_TOPIC = "router/logger/thresholds";
-		byte THRESHOLDS_QOS = MqttQos.AT_MOST_ONCE.getValue();
-		boolean THRESHOLDS_RETAINED = true;
-		long THRESHOLDS_THROTTLING_IN_MILLIS = 0;
+		public static final boolean THRESHOLDS_ENABLED = true;
+		public static final String THRESHOLDS_TOPIC = "router/logger/thresholds";
+		public static final byte THRESHOLDS_QOS = MqttQos.AT_MOST_ONCE.getValue();
+		public static final boolean THRESHOLDS_RETAINED = true;
+		public static final long THRESHOLDS_THROTTLING_IN_MILLIS = 0;
 
-		boolean STATUS_ENABLED = true;
-		String STATUS_TOPIC = "router/logger/status";
-		byte STATUS_QOS = MqttQos.EXACTLY_ONCE.getValue();
-		boolean STATUS_RETAINED = true;
-	}
+		public static final boolean STATUS_ENABLED = true;
+		public static final String STATUS_TOPIC = "router/logger/status";
+		public static final byte STATUS_QOS = MqttQos.EXACTLY_ONCE.getValue();
+		public static final boolean STATUS_RETAINED = true;
 
-	private static class Singleton {
-		private static final RouterLoggerMqttClient instance = new RouterLoggerMqttClient();
-	}
-
-	public static RouterLoggerMqttClient getInstance() {
-		return Singleton.instance;
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
@@ -103,6 +99,18 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private long lastThresholdsMessageTime;
 
 	private RouterLoggerMqttClient() {}
+
+	private static class Singleton {
+		private static final RouterLoggerMqttClient instance = new RouterLoggerMqttClient();
+
+		private Singleton() {
+			throw new IllegalAccessError();
+		}
+	}
+
+	public static RouterLoggerMqttClient getInstance() {
+		return Singleton.instance;
+	}
 
 	@Override
 	protected void connect() {

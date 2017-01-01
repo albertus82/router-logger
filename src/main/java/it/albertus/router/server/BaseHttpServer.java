@@ -3,7 +3,6 @@ package it.albertus.router.server;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
@@ -31,6 +30,7 @@ import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.Configuration;
 import it.albertus.util.DaemonThreadFactory;
 import it.albertus.util.ExceptionUtils;
+import it.albertus.util.IOUtils;
 
 public abstract class BaseHttpServer {
 
@@ -139,18 +139,7 @@ public abstract class BaseHttpServer {
 							keyStore.load(bis, storepass);
 						}
 						finally {
-							if (bis != null) {
-								try {
-									bis.close();
-								}
-								catch (final IOException ioe) {/* Ignore */}
-							}
-							if (fis != null) {
-								try {
-									fis.close();
-								}
-								catch (final IOException ioe) {/* Ignore */}
-							}
+							IOUtils.closeQuietly(bis, fis);
 						}
 
 						final char[] keypass = configuration.getCharArray("server.ssl.keypass");

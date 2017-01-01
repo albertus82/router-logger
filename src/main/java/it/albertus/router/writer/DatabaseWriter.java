@@ -1,9 +1,5 @@
 package it.albertus.router.writer;
 
-import it.albertus.router.engine.RouterData;
-import it.albertus.router.resources.Messages;
-import it.albertus.util.ConfigurationException;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,6 +7,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+
+import it.albertus.jface.JFaceMessages;
+import it.albertus.router.engine.RouterData;
+import it.albertus.router.resources.Messages;
+import it.albertus.util.ConfigurationException;
 
 public class DatabaseWriter extends Writer {
 
@@ -36,16 +37,16 @@ public class DatabaseWriter extends Writer {
 
 	public DatabaseWriter() {
 		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_DRIVER_CLASS_NAME);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
 		if (!configuration.contains(CFG_KEY_DB_URL)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_URL);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_URL);
 		}
 		if (!configuration.contains(CFG_KEY_DB_USERNAME)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_USERNAME);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_USERNAME);
 		}
 		if (!configuration.contains(CFG_KEY_DB_PASSWORD)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + Messages.get("err.review.cfg", configuration.getFileName()), CFG_KEY_DB_PASSWORD);
+			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_PASSWORD);
 		}
 		try {
 			Class.forName(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME));

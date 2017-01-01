@@ -48,7 +48,7 @@ public class RouterLoggerPreferences extends Preferences {
 					Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
 					setRestartRequired(true); // Restart dialog will be shown.
 				}
-				catch (final Throwable t) {}
+				catch (final Throwable t) {/* Ignore */}
 			}
 		}
 		return returnCode;
