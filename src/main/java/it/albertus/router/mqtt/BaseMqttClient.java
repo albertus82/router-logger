@@ -1,14 +1,14 @@
 package it.albertus.router.mqtt;
 
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
 
 public abstract class BaseMqttClient {
 

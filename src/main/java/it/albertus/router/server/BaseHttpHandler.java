@@ -1,11 +1,14 @@
 package it.albertus.router.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.zip.CRC32;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.http.protocol.HttpDateGenerator;
 
@@ -14,6 +17,8 @@ import com.sun.net.httpserver.HttpHandler;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.util.Logger;
+import it.albertus.util.CRC32OutputStream;
 import it.albertus.util.IOUtils;
 
 public abstract class BaseHttpHandler implements HttpHandler {
@@ -70,6 +75,44 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		exchange.getResponseHeaders().add("Content-Encoding", "gzip");
 	}
 
+	protected boolean canCompressResponse(final HttpExchange exchange) {
+		final List<String> headers = exchange.getRequestHeaders().get("Accept-Encoding");
+		if (headers != null) {
+			for (final String header : headers) {
+				if (header != null && header.trim().toLowerCase().contains("gzip")) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	protected byte[] compressResponse(final byte[] uncompressed, final HttpExchange exchange) {
+		if (canCompressResponse(exchange)) {
+			try {
+				return doCompressResponse(uncompressed, exchange);
+			}
+			catch (final IOException ioe) {
+				Logger.getInstance().log(ioe);
+			}
+		}
+		return uncompressed;
+	}
+
+	protected byte[] doCompressResponse(final byte[] uncompressed, final HttpExchange exchange) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream(uncompressed.length / 4);
+		GZIPOutputStream gzos = null;
+		try {
+			gzos = new GZIPOutputStream(baos);
+			gzos.write(uncompressed);
+		}
+		finally {
+			IOUtils.closeQuietly(gzos, baos);
+		}
+		addGzipHeader(exchange);
+		return baos.toByteArray();
+	}
+
 	protected String generateEtag(final byte[] payload) {
 		final CRC32 crc = new CRC32();
 		crc.update(payload);
@@ -77,20 +120,16 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	}
 
 	protected String generateEtag(final File file) throws IOException {
+		final CRC32OutputStream os = new CRC32OutputStream();
 		InputStream is = null;
 		try {
 			is = new FileInputStream(file);
-			final byte[] buffer = new byte[BUFFER_SIZE];
-			int n = 0;
-			final CRC32 crc = new CRC32();
-			while ((n = is.read(buffer)) != -1) {
-				crc.update(buffer, 0, n);
-			}
-			return Long.toHexString(crc.getValue());
+			IOUtils.copy(is, os, BUFFER_SIZE);
 		}
 		finally {
-			IOUtils.closeQuietly(is);
+			IOUtils.closeQuietly(os, is);
 		}
+		return os.toString();
 	}
 
 	protected Charset getCharset() {

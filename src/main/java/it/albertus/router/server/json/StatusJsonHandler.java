@@ -1,13 +1,13 @@
 package it.albertus.router.server.json;
 
-import it.albertus.router.dto.StatusDto;
-import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.util.Payload;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import it.albertus.router.dto.StatusDto;
+import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.util.Payload;
 
 public class StatusJsonHandler extends BaseJsonHandler {
 
@@ -19,7 +19,7 @@ public class StatusJsonHandler extends BaseJsonHandler {
 
 	@Override
 	public void service(final HttpExchange exchange) throws IOException {
-		final byte[] payload = Payload.createPayload(new StatusDto(engine.getCurrentStatus()).toJson());
+		byte[] payload = Payload.createPayload(new StatusDto(engine.getCurrentStatus()).toJson());
 
 		addRefreshHeader(exchange);
 
@@ -37,6 +37,7 @@ public class StatusJsonHandler extends BaseJsonHandler {
 			if (currentEtag != null) {
 				exchange.getResponseHeaders().add("ETag", currentEtag);
 			}
+			payload = compressResponse(payload, exchange);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, payload.length);
 			exchange.getResponseBody().write(payload);
 		}

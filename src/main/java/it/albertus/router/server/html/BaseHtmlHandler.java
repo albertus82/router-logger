@@ -1,10 +1,7 @@
 package it.albertus.router.server.html;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.List;
-import java.util.zip.GZIPOutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -15,7 +12,6 @@ import it.albertus.router.server.BaseHttpServer;
 import it.albertus.router.server.HttpMethod;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
 
 public abstract class BaseHtmlHandler extends BaseHttpHandler {
@@ -185,47 +181,6 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		}
 	}
 
-	protected boolean canCompressResponse(final HttpExchange exchange) {
-		if (configuration.getBoolean("server.compress.response", Defaults.COMPRESS_RESPONSE)) {
-			final List<String> headers = exchange.getRequestHeaders().get("Accept-Encoding");
-			if (headers != null) {
-				for (final String header : headers) {
-					if (header != null && header.trim().toLowerCase().contains("gzip")) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	protected byte[] compressResponse(final byte[] uncompressed, final HttpExchange exchange) {
-		if (canCompressResponse(exchange)) {
-			try {
-				return doCompressResponse(uncompressed, exchange);
-			}
-			catch (final IOException ioe) {
-				Logger.getInstance().log(ioe);
-				return uncompressed;
-			}
-		}
-		return uncompressed;
-	}
-
-	protected byte[] doCompressResponse(final byte[] uncompressed, final HttpExchange exchange) throws IOException {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream(uncompressed.length / 4);
-		GZIPOutputStream gzos = null;
-		try {
-			gzos = new GZIPOutputStream(baos);
-			gzos.write(uncompressed);
-		}
-		finally {
-			IOUtils.closeQuietly(gzos, baos);
-		}
-		addGzipHeader(exchange);
-		return baos.toByteArray();
-	}
-
 	/**
 	 * Creates HTML5 doctype, {@code <html>} opening tag, full {@code <head>}
 	 * with {@code <title>}, {@code <style>} and {@code <body>} opening tag.
@@ -322,6 +277,11 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	protected void addCommonHeaders(final HttpExchange exchange) {
 		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + getCharset().name());
 		addDateHeader(exchange);
+	}
+
+	@Override
+	protected boolean canCompressResponse(final HttpExchange exchange) {
+		return configuration.getBoolean("server.compress.response", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
 	}
 
 }
