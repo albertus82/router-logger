@@ -119,7 +119,7 @@ public class LogsHandler extends BaseHtmlHandler {
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, file.length());
 				output = exchange.getResponseBody();
 			}
-			IOUtils.copy(input, output, new byte[BUFFER_SIZE]);
+			IOUtils.copy(input, output, BUFFER_SIZE);
 		}
 		catch (final FileNotFoundException fnfe) {
 			logger.log(fnfe, Destination.CONSOLE);
@@ -164,8 +164,11 @@ public class LogsHandler extends BaseHtmlHandler {
 		html.append(buildHtmlFooter());
 
 		final byte[] payload = html.toString().getBytes(getCharset());
+
 		final String currentEtag = generateEtag(payload);
-		final byte[] response = compressResponse(payload, exchange);
+		if (currentEtag != null) {
+			exchange.getResponseHeaders().add("ETag", currentEtag);
+		}
 
 		// If-None-Match...
 		final String ifNoneMatch = exchange.getRequestHeaders().getFirst("If-None-Match");
@@ -176,9 +179,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 		else {
 			addCommonHeaders(exchange);
-			if (currentEtag != null) {
-				exchange.getResponseHeaders().add("ETag", currentEtag);
-			}
+			final byte[] response = compressResponse(payload, exchange);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
 			exchange.getResponseBody().write(response);
 		}

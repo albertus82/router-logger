@@ -19,11 +19,14 @@ public class DataJsonHandler extends BaseJsonHandler {
 
 	@Override
 	public void service(final HttpExchange exchange) throws IOException {
-		byte[] payload = Payload.createPayload(new RouterDataDto(engine.getCurrentData()).toJson());
+		final byte[] payload = Payload.createPayload(new RouterDataDto(engine.getCurrentData()).toJson());
 
 		addRefreshHeader(exchange);
 
 		final String currentEtag = generateEtag(payload);
+		if (currentEtag != null) {
+			exchange.getResponseHeaders().add("ETag", currentEtag);
+		}
 
 		// If-None-Match...
 		final String ifNoneMatch = exchange.getRequestHeaders().getFirst("If-None-Match");
@@ -34,12 +37,9 @@ public class DataJsonHandler extends BaseJsonHandler {
 		}
 		else {
 			addCommonHeaders(exchange);
-			if (currentEtag != null) {
-				exchange.getResponseHeaders().add("ETag", currentEtag);
-			}
-			payload = compressResponse(payload, exchange);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, payload.length);
-			exchange.getResponseBody().write(payload);
+			final byte[] response = compressResponse(payload, exchange);
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
+			exchange.getResponseBody().write(response);
 		}
 	}
 
