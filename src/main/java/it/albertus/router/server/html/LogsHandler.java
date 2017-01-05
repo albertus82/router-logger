@@ -166,9 +166,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		final byte[] payload = html.toString().getBytes(getCharset());
 
 		final String currentEtag = generateEtag(payload);
-		if (currentEtag != null) {
-			exchange.getResponseHeaders().add("ETag", currentEtag);
-		}
+		addEtagHeader(exchange, currentEtag);
 
 		// If-None-Match...
 		final String ifNoneMatch = exchange.getRequestHeaders().getFirst("If-None-Match");

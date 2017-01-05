@@ -81,6 +81,12 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		exchange.getResponseHeaders().add("Content-Encoding", "gzip");
 	}
 
+	protected void addEtagHeader(final HttpExchange exchange, final String eTag) {
+		if (eTag != null) {
+			exchange.getResponseHeaders().add("ETag", eTag);
+		}
+	}
+
 	protected boolean canCompressResponse(final HttpExchange exchange) {
 		final List<String> headers = exchange.getRequestHeaders().get("Accept-Encoding");
 		if (headers != null) {

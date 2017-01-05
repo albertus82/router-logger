@@ -24,9 +24,7 @@ public class DataJsonHandler extends BaseJsonHandler {
 		addRefreshHeader(exchange);
 
 		final String currentEtag = generateEtag(payload);
-		if (currentEtag != null) {
-			exchange.getResponseHeaders().add("ETag", currentEtag);
-		}
+		addEtagHeader(exchange, currentEtag);
 
 		// If-None-Match...
 		final String ifNoneMatch = exchange.getRequestHeaders().getFirst("If-None-Match");
