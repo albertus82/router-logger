@@ -6,9 +6,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.GZIPOutputStream;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.http.protocol.HttpDateGenerator;
 
@@ -19,6 +23,7 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Logger;
 import it.albertus.util.CRC32OutputStream;
+import it.albertus.util.DigestOutputStream;
 import it.albertus.util.IOUtils;
 
 public abstract class BaseHttpHandler implements HttpHandler {
@@ -48,6 +53,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			return Charset.forName(PREFERRED_CHARSET);
 		}
 		catch (final RuntimeException re) {
+			Logger.getInstance().log(re);
 			return Charset.defaultCharset();
 		}
 	}
@@ -130,6 +136,51 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			IOUtils.closeQuietly(os, is);
 		}
 		return os.toString();
+	}
+
+	/*
+	 * The MD5 digest is computed based on the content of the entity-body,
+	 * including any content-coding that has been applied, but not including any
+	 * transfer-encoding applied to the message-body. If the message is received
+	 * with a transfer-encoding, that encoding MUST be removed prior to checking
+	 * the Content-MD5 value against the received entity.
+	 */
+	protected String generateContentMd5(final File file) throws NoSuchAlgorithmException, IOException {
+		FileInputStream fis = null;
+		DigestOutputStream dos = null;
+		try {
+			fis = new FileInputStream(file);
+			dos = new DigestOutputStream("MD5");
+			IOUtils.copy(fis, dos, BUFFER_SIZE);
+		}
+		finally {
+			IOUtils.closeQuietly(dos, fis);
+		}
+		return DatatypeConverter.printBase64Binary(dos.getValue());
+	}
+
+	protected String generateContentMd5(final byte[] responseBody) throws NoSuchAlgorithmException {
+		final MessageDigest digest = MessageDigest.getInstance("MD5");
+		digest.update(responseBody);
+		return DatatypeConverter.printBase64Binary(digest.digest());
+	}
+
+	protected void addContentMd5Header(final HttpExchange exchange, final File file) {
+		try {
+			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(file));
+		}
+		catch (final Exception e) {
+			Logger.getInstance().log(e);
+		}
+	}
+
+	protected void addContentMd5Header(final HttpExchange exchange, final byte[] responseBody) {
+		try {
+			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(responseBody));
+		}
+		catch (final Exception e) {
+			Logger.getInstance().log(e);
+		}
 	}
 
 	protected Charset getCharset() {
