@@ -161,10 +161,6 @@ public class DatabaseWriter extends Writer {
 		}
 	}
 
-	private void showSql(final String sql) {
-		logger.log(sql, Destination.CONSOLE, Destination.FILE);
-	}
-
 	protected void createTable(final String tableName, final Map<String, String> info) throws SQLException {
 		final String timestampColumnType = sanitizeType(configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE));
 		final String responseTimeColumnType = sanitizeType(configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE));
@@ -225,6 +221,10 @@ public class DatabaseWriter extends Writer {
 
 	protected boolean isShowSql() {
 		return configuration.getBoolean("database.showsql", Defaults.SHOWSQL);
+	}
+
+	protected void showSql(final String sql) {
+		logger.log(sql, Destination.CONSOLE, Destination.FILE);
 	}
 
 	protected static String sanitizeName(final String str) {
