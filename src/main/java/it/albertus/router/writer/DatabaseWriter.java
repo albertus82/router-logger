@@ -7,24 +7,32 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger.Destination;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.StringUtils;
+import it.albertus.util.sql.SqlUtils;
 
 public class DatabaseWriter extends Writer {
 
 	public static final String DESTINATION_KEY = "lbl.writer.destination.database";
 
-	public interface Defaults {
-		String TABLE_NAME = "router_log";
-		String COLUMN_NAME_PREFIX = "rl_";
-		String TIMESTAMP_COLUMN_TYPE = "TIMESTAMP";
-		String RESPONSE_TIME_COLUMN_TYPE = "INTEGER";
-		String INFO_COLUMN_TYPE = "VARCHAR(250)";
-		int COLUMN_NAME_MAX_LENGTH = 30;
-		int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
+	public static class Defaults {
+		public static final String TABLE_NAME = "router_log";
+		public static final String COLUMN_NAME_PREFIX = "rl_";
+		public static final String TIMESTAMP_COLUMN_TYPE = "TIMESTAMP";
+		public static final String RESPONSE_TIME_COLUMN_TYPE = "INTEGER";
+		public static final String INFO_COLUMN_TYPE = "VARCHAR(250)";
+		public static final int COLUMN_NAME_MAX_LENGTH = 30;
+		public static final int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
 	}
 
 	protected static final String CFG_KEY_DB_PASSWORD = "database.password";
@@ -32,27 +40,29 @@ public class DatabaseWriter extends Writer {
 	protected static final String CFG_KEY_DB_URL = "database.url";
 	protected static final String CFG_KEY_DB_DRIVER_CLASS_NAME = "database.driver.class.name";
 
+	protected static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
+	protected static final String MSG_KEY_ERR_DATABASE_CFG_ERROR = "err.database.cfg.error";
+
 	protected Connection connection = null;
-	protected boolean showMessage = true;
 
 	public DatabaseWriter() {
-		if (!configuration.contains(CFG_KEY_DB_DRIVER_CLASS_NAME)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_DRIVER_CLASS_NAME);
+		if (StringUtils.isBlank(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME))) {
+			throw new ConfigurationException(Messages.get(MSG_KEY_ERR_DATABASE_CFG_ERROR) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
-		if (!configuration.contains(CFG_KEY_DB_URL)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_URL);
+		if (StringUtils.isBlank(configuration.getString(CFG_KEY_DB_URL))) {
+			throw new ConfigurationException(Messages.get(MSG_KEY_ERR_DATABASE_CFG_ERROR) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), CFG_KEY_DB_URL);
 		}
 		if (!configuration.contains(CFG_KEY_DB_USERNAME)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_USERNAME);
+			throw new ConfigurationException(Messages.get(MSG_KEY_ERR_DATABASE_CFG_ERROR) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), CFG_KEY_DB_USERNAME);
 		}
 		if (!configuration.contains(CFG_KEY_DB_PASSWORD)) {
-			throw new ConfigurationException(Messages.get("err.database.cfg.error") + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), CFG_KEY_DB_PASSWORD);
+			throw new ConfigurationException(Messages.get(MSG_KEY_ERR_DATABASE_CFG_ERROR) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), CFG_KEY_DB_PASSWORD);
 		}
 		try {
 			Class.forName(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME));
 		}
-		catch (ClassNotFoundException e) {
-			throw new ConfigurationException(Messages.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e, CFG_KEY_DB_DRIVER_CLASS_NAME);
+		catch (final Throwable t) {
+			throw new ConfigurationException(Messages.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), t, CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
 	}
 
@@ -61,15 +71,15 @@ public class DatabaseWriter extends Writer {
 		final Map<String, String> info = data.getData();
 
 		try {
+			final boolean showMessage;
 			// Connessione al database...
-			try {
-				if (connection == null || !connection.isValid(configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS))) {
-					connection = DriverManager.getConnection(configuration.getString(CFG_KEY_DB_URL), configuration.getString(CFG_KEY_DB_USERNAME), configuration.getString(CFG_KEY_DB_PASSWORD));
-					connection.setAutoCommit(true);
-				}
+			if (connection == null || !connection.isValid(configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS))) {
+				connection = DriverManager.getConnection(configuration.getString(CFG_KEY_DB_URL), configuration.getString(CFG_KEY_DB_USERNAME), configuration.getString(CFG_KEY_DB_PASSWORD));
+				connection.setAutoCommit(true);
+				showMessage = true;
 			}
-			catch (SQLException se) {
-				throw new RuntimeException(se);
+			else {
+				showMessage = false;
 			}
 
 			// Verifica esistenza tabella ed eventuale creazione...
@@ -82,15 +92,14 @@ public class DatabaseWriter extends Writer {
 			// Inserimento dati...
 			if (showMessage) {
 				out.println(Messages.get("msg.logging.into.database", tableName), true);
-				showMessage = false;
 			}
 
-			Map<Integer, String> columns = new HashMap<Integer, String>();
+			final Map<Integer, String> columns = new HashMap<Integer, String>();
 
-			StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(getTimestampColumnName());
+			final StringBuilder dml = new StringBuilder("INSERT INTO ").append(tableName).append(" (").append(getTimestampColumnName());
 			dml.append(", ").append(getResponseTimeColumnName());
 			int index = 3;
-			for (String key : info.keySet()) {
+			for (final String key : info.keySet()) {
 				columns.put(index++, key);
 				dml.append(", ").append(getColumnName(key));
 			}
@@ -105,24 +114,18 @@ public class DatabaseWriter extends Writer {
 				insert = connection.prepareStatement(dml.toString());
 				insert.setTimestamp(1, new Timestamp(data.getTimestamp().getTime()));
 				insert.setInt(2, data.getResponseTime());
-				for (int parameterIndex : columns.keySet()) {
-					insert.setString(parameterIndex, info.get(columns.get(parameterIndex)));
+				for (final Entry<Integer, String> entry : columns.entrySet()) {
+					insert.setString(entry.getKey(), info.get(entry.getValue()));
 				}
 				insert.executeUpdate();
 			}
-			catch (SQLException se) {
-				logger.log(se);
-			}
 			finally {
-				try {
-					insert.close();
-				}
-				catch (Exception e) {}
+				SqlUtils.closeQuietly(insert);
 			}
 		}
-		catch (final ConfigurationException ce) {
-			logger.log(ce);
+		catch (final Exception e) { // In caso di errore, chiudere la connessione al database.
 			closeDatabaseConnection();
+			throw new DatabaseException(e);
 		}
 	}
 
@@ -138,23 +141,20 @@ public class DatabaseWriter extends Writer {
 		PreparedStatement statement = null;
 		try {
 			// Verifica esistenza tabella...
-			statement = connection.prepareStatement("SELECT 1 FROM " + tableName);
+			statement = connection.prepareStatement("SELECT 1 FROM " + tableName.replace("'", "''"));
 			statement.setFetchSize(1);
 			statement.executeQuery();
 			return true;
 		}
-		catch (SQLException e) {
+		catch (final SQLException se) {
 			return false;
 		}
 		finally {
-			try {
-				statement.close();
-			}
-			catch (Exception e) {}
+			SqlUtils.closeQuietly(statement);
 		}
 	}
 
-	protected void createTable(final String tableName, final Map<String, String> info) {
+	protected void createTable(final String tableName, final Map<String, String> info) throws SQLException {
 		final String timestampColumnType = configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE);
 		final String responseTimeColumnType = configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE);
 		final String infoColumnType = configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE);
@@ -172,14 +172,8 @@ public class DatabaseWriter extends Writer {
 			createTable = connection.prepareStatement(ddl.toString());
 			createTable.executeUpdate();
 		}
-		catch (SQLException se) {
-			throw new RuntimeException(se);
-		}
 		finally {
-			try {
-				createTable.close();
-			}
-			catch (Exception e) {}
+			SqlUtils.closeQuietly(createTable);
 		}
 	}
 
@@ -187,14 +181,14 @@ public class DatabaseWriter extends Writer {
 		return configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
 	}
 
-	protected String getColumnName(String name) {
-		name = configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name;
-		name = name.replaceAll("[^A-Za-z0-9_]+", "");
+	protected String getColumnName(final String name) {
+		String completeName = configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name;
+		completeName = completeName.replaceAll("[^A-Za-z0-9_]+", "");
 		final int maxLength = configuration.getInt("database.column.name.max.length", Defaults.COLUMN_NAME_MAX_LENGTH);
-		if (name.length() > maxLength) {
-			name = name.substring(0, maxLength);
+		if (completeName.length() > maxLength) {
+			completeName = completeName.substring(0, maxLength);
 		}
-		return name;
+		return completeName;
 	}
 
 	@Override
@@ -203,17 +197,15 @@ public class DatabaseWriter extends Writer {
 	}
 
 	protected void closeDatabaseConnection() {
-		if (connection != null) {
-			try {
-				if (!connection.isClosed()) {
-					out.println(Messages.get("msg.closing.database.connection"), true);
-					connection.close();
-					connection = null;
-				}
+		try {
+			if (connection != null && !connection.isClosed()) {
+				logger.log(Messages.get("msg.closing.database.connection"), Destination.CONSOLE);
+				connection.close();
+				connection = null;
 			}
-			catch (SQLException se) {
-				logger.log(se);
-			}
+		}
+		catch (final SQLException se) {
+			logger.log(se);
 		}
 	}
 
