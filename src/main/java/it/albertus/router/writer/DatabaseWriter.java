@@ -29,6 +29,7 @@ public class DatabaseWriter extends Writer {
 		public static final String INFO_COLUMN_TYPE = "VARCHAR(250)";
 		public static final int COLUMN_NAME_MAX_LENGTH = 30;
 		public static final int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
+		public static final boolean SHOWSQL = false;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -71,15 +72,12 @@ public class DatabaseWriter extends Writer {
 		final Map<String, String> info = data.getData();
 
 		try {
-			final boolean showMessage;
+			boolean showMessage = false;
 			// Connessione al database...
 			if (connection == null || !connection.isValid(configuration.getInt("database.connection.validation.timeout.ms", Defaults.CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS))) {
 				connection = DriverManager.getConnection(configuration.getString(CFG_KEY_DB_URL), configuration.getString(CFG_KEY_DB_USERNAME), configuration.getString(CFG_KEY_DB_PASSWORD));
 				connection.setAutoCommit(true);
 				showMessage = true;
-			}
-			else {
-				showMessage = false;
 			}
 
 			// Verifica esistenza tabella ed eventuale creazione...
@@ -87,6 +85,7 @@ public class DatabaseWriter extends Writer {
 			if (!tableExists(tableName)) {
 				out.println(Messages.get("msg.creating.database.table", tableName), true);
 				createTable(tableName, info);
+				showMessage = true;
 			}
 
 			// Inserimento dati...
@@ -109,9 +108,13 @@ public class DatabaseWriter extends Writer {
 			}
 			dml.append(')');
 
+			final String sql = dml.toString();
+			if (isShowSql()) {
+				showSql(sql);
+			}
 			PreparedStatement insert = null;
 			try {
-				insert = connection.prepareStatement(dml.toString());
+				insert = connection.prepareStatement(sql);
 				insert.setTimestamp(1, new Timestamp(data.getTimestamp().getTime()));
 				insert.setInt(2, data.getResponseTime());
 				for (final Entry<Integer, String> entry : columns.entrySet()) {
@@ -141,7 +144,11 @@ public class DatabaseWriter extends Writer {
 		PreparedStatement statement = null;
 		try {
 			// Verifica esistenza tabella...
-			statement = connection.prepareStatement("SELECT 1 FROM " + tableName.replace("'", "''"));
+			final String sql = "SELECT 1 FROM " + sanitizeName(tableName);
+			if (isShowSql()) {
+				showSql(sql);
+			}
+			statement = connection.prepareStatement(sql);
 			statement.setFetchSize(1);
 			statement.executeQuery();
 			return true;
@@ -154,10 +161,14 @@ public class DatabaseWriter extends Writer {
 		}
 	}
 
+	private void showSql(final String sql) {
+		logger.log(sql, Destination.CONSOLE, Destination.FILE);
+	}
+
 	protected void createTable(final String tableName, final Map<String, String> info) throws SQLException {
-		final String timestampColumnType = configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE);
-		final String responseTimeColumnType = configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE);
-		final String infoColumnType = configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE);
+		final String timestampColumnType = sanitizeType(configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE));
+		final String responseTimeColumnType = sanitizeType(configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE));
+		final String infoColumnType = sanitizeType(configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE));
 
 		// Creazione tabella...
 		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(getTimestampColumnName()).append(' ').append(timestampColumnType);
@@ -168,8 +179,12 @@ public class DatabaseWriter extends Writer {
 		ddl.append(", CONSTRAINT pk_routerlogger PRIMARY KEY (").append(getTimestampColumnName()).append("))");
 
 		PreparedStatement createTable = null;
+		final String sql = ddl.toString();
+		if (isShowSql()) {
+			showSql(sql);
+		}
 		try {
-			createTable = connection.prepareStatement(ddl.toString());
+			createTable = connection.prepareStatement(sql);
 			createTable.executeUpdate();
 		}
 		finally {
@@ -178,12 +193,11 @@ public class DatabaseWriter extends Writer {
 	}
 
 	protected String getTableName() {
-		return configuration.getString("database.table.name", Defaults.TABLE_NAME).replaceAll("[^A-Za-z0-9_]+", "");
+		return sanitizeName(configuration.getString("database.table.name", Defaults.TABLE_NAME));
 	}
 
 	protected String getColumnName(final String name) {
-		String completeName = configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name;
-		completeName = completeName.replaceAll("[^A-Za-z0-9_]+", "");
+		String completeName = sanitizeName(configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name);
 		final int maxLength = configuration.getInt("database.column.name.max.length", Defaults.COLUMN_NAME_MAX_LENGTH);
 		if (completeName.length() > maxLength) {
 			completeName = completeName.substring(0, maxLength);
@@ -207,6 +221,18 @@ public class DatabaseWriter extends Writer {
 		catch (final SQLException se) {
 			logger.log(se);
 		}
+	}
+
+	protected boolean isShowSql() {
+		return configuration.getBoolean("database.showsql", Defaults.SHOWSQL);
+	}
+
+	protected static String sanitizeName(final String str) {
+		return str.replaceAll("[^A-Za-z0-9_]+", "");
+	}
+
+	protected static String sanitizeType(final String str) {
+		return str.replaceAll("[^A-Za-z0-9_,() ]+", "");
 	}
 
 }
