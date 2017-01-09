@@ -80,7 +80,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		dataTable = new DataTable(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), this);
 
 		console = new StyledTextConsole(sashForm, new GridData(SWT.FILL, SWT.FILL, true, true), true);
-		console.setMaxChars(new Configured<Integer>() {
+		console.setLimit(new Configured<Integer>() {
 			@Override
 			public Integer getValue() {
 				return configuration.getInt("gui.console.max.chars");
