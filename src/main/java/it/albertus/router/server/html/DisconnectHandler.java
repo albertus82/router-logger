@@ -21,7 +21,8 @@ public class DisconnectHandler extends BaseHtmlHandler {
 	}
 
 	public static final String PATH = "/disconnect";
-	public static final String[] METHODS = { HttpMethod.POST };
+
+	protected static final String[] METHODS = { HttpMethod.POST };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
 

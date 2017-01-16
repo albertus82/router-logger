@@ -15,14 +15,15 @@ public class RootHtmlHandler extends BaseHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;
-		
+
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
 
 	public static final String PATH = "/";
-	public static final String[] METHODS = { HttpMethod.GET };
+
+	protected static final String[] METHODS = { HttpMethod.GET };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 

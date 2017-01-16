@@ -21,7 +21,8 @@ public class ConnectHandler extends BaseHtmlHandler {
 	}
 
 	public static final String PATH = "/connect";
-	public static final String[] METHODS = { HttpMethod.POST };
+
+	protected static final String[] METHODS = { HttpMethod.POST };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
 

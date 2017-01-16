@@ -38,7 +38,8 @@ public class LogsHandler extends BaseHtmlHandler {
 
 	public static final String PATH = "/logs";
 	public static final String CLEAR_PATH_INFO = "clear";
-	public static final String[] METHODS = { HttpMethod.GET, HttpMethod.DELETE, HttpMethod.POST };
+
+	protected static final String[] METHODS = { HttpMethod.GET, HttpMethod.DELETE, HttpMethod.POST };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 

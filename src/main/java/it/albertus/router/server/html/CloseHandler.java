@@ -21,7 +21,8 @@ public class CloseHandler extends BaseHtmlHandler {
 	}
 
 	public static final String PATH = "/close";
-	public static final String[] METHODS = { HttpMethod.POST };
+
+	protected static final String[] METHODS = { HttpMethod.POST };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.close.enabled";
 

@@ -21,7 +21,8 @@ public class RestartHandler extends BaseHtmlHandler {
 	}
 
 	public static final String PATH = "/restart";
-	public static final String[] METHODS = { HttpMethod.POST };
+
+	protected static final String[] METHODS = { HttpMethod.POST };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
 
