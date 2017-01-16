@@ -129,7 +129,7 @@ public enum Preference implements IPreference {
 		}
 	}).build()),
 	CONSOLE_SHOW_CONFIGURATION(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	CONSOLE_DEBUG(new PreferenceDetailsBuilder(GENERAL).defaultValue(Logger.Defaults.DEBUG).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	DEBUG(new PreferenceDetailsBuilder(GENERAL).defaultValue(Logger.Defaults.DEBUG).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	LOG_EMAIL(new PreferenceDetailsBuilder(GENERAL).defaultValue(Logger.Defaults.EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	LOG_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(GENERAL).defaultValue(Logger.Defaults.EMAIL_IGNORE_DUPLICATES).parent(LOG_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 

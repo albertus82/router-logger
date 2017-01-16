@@ -29,12 +29,15 @@ import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Configured;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.Version;
 
 public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvider {
+
+	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerGui.class);
 
 	public static final String CFG_KEY_GUI_CLIPBOARD_MAX_CHARS = "gui.clipboard.max.chars";
 
@@ -121,12 +124,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			}
 		}
 		catch (final Exception exception) {
-			Logger.getInstance().log(exception);
+			logger.log(exception);
 			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
 		}
 		catch (final Throwable throwable) {
 			display.dispose();
-			Logger.getInstance().log(throwable);
+			logger.log(throwable);
 		}
 		finally {
 			routerLogger.disconnect(true);
@@ -154,7 +157,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
 		try {
-			Logger.getInstance().log(throwable);
+			logger.log(throwable);
 		}
 		catch (final NoClassDefFoundError ncdfe) {
 			throwable.printStackTrace();
@@ -180,6 +183,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				propertyName = Preference.forName(ce.getKey()).getLabel();
 			}
 			catch (final Exception e) {
+				if (logger.isDebugEnabled()) {
+					logger.log(e, Destination.CONSOLE, Destination.FILE);
+				}
 				propertyName = ce.getKey();
 			}
 			message = JFaceMessages.get("err.configuration.invalid", propertyName) + ' ' + Messages.get("lbl.preferences.edit");
@@ -279,7 +285,11 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {/* Ignore */}
+							catch (final Exception e) {
+								if (logger.isDebugEnabled()) {
+									logger.log(e, Destination.CONSOLE, Destination.FILE);
+								}
+							}
 							release();
 						}
 						catch (final Throwable throwable) {
@@ -294,7 +304,11 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {/* Ignore */}
+							catch (final Exception e) {
+								if (logger.isDebugEnabled()) {
+									logger.log(e, Destination.CONSOLE, Destination.FILE);
+								}
+							}
 						}
 					}
 				};
@@ -321,7 +335,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					new SwtThreadExecutor(shell) {
 						@Override
 						public void run() {
-							console.clear();
+							if (!logger.isDebugEnabled()) {
+								console.clear();
+							}
 							dataTable.reset();
 							beforeConnect();
 							connect();
@@ -333,6 +349,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				}
 			}
 		}, "resetThread").start();
+
 	}
 
 	@Override

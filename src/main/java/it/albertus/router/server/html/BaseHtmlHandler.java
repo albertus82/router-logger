@@ -12,9 +12,12 @@ import it.albertus.router.server.BaseHttpServer;
 import it.albertus.router.server.HttpMethod;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.NewLine;
 
 public abstract class BaseHtmlHandler extends BaseHttpHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(BaseHtmlHandler.class);
 
 	public static class Defaults {
 		public static final byte LOG_REQUEST = 1;
@@ -141,7 +144,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 				// Ignore (often caused by the client that interrupts the stream).
 			}
 			catch (final Exception exception) {
-				Logger.getInstance().log(exception);
+				logger.log(exception);
 				addCommonHeaders(exchange);
 
 				final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
@@ -177,7 +180,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
 		if (!request.equals(lastRequest)) {
 			lastRequest = request;
-			Logger.getInstance().log(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
+			logger.log(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
 		}
 	}
 

@@ -9,8 +9,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 
 public abstract class BaseMqttClient {
+
+	private static final Logger logger = LoggerFactory.getLogger(BaseMqttClient.class);
 
 	private volatile MqttClient client;
 
@@ -32,7 +35,6 @@ public abstract class BaseMqttClient {
 				client.connect(options);
 			}
 			catch (final Exception e) {
-				final Logger logger = Logger.getInstance();
 				logger.log(e.getCause(), Destination.CONSOLE);
 				logger.log(e, Destination.FILE, Destination.EMAIL);
 				if (retry) {
@@ -55,7 +57,7 @@ public abstract class BaseMqttClient {
 			doDisconnect();
 		}
 		catch (final Exception e) {
-			Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
+			logger.log(e, Destination.CONSOLE, Destination.FILE);
 		}
 	}
 
@@ -68,7 +70,12 @@ public abstract class BaseMqttClient {
 			try {
 				starter.join();
 			}
-			catch (final InterruptedException ie) {/* Ignore */}
+			catch (final InterruptedException ie) {
+				if (logger.isDebugEnabled()) {
+					logger.log(ie, Destination.CONSOLE, Destination.FILE);
+				}
+				Thread.currentThread().interrupt();
+			}
 		}
 	}
 
@@ -97,7 +104,7 @@ public abstract class BaseMqttClient {
 					client.disconnect();
 				}
 				catch (final Exception e) {
-					Logger.getInstance().log(e, Destination.CONSOLE, Destination.FILE);
+					logger.log(e, Destination.CONSOLE, Destination.FILE);
 					client.disconnectForcibly();
 				}
 			}

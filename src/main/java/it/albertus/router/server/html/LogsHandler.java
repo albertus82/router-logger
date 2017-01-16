@@ -22,11 +22,14 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpMethod;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 
 public class LogsHandler extends BaseHtmlHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(LogsHandler.class);
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;
@@ -44,8 +47,6 @@ public class LogsHandler extends BaseHtmlHandler {
 	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 
 	private static final int BUFFER_SIZE = 4 * 1024;
-
-	protected final Logger logger = Logger.getInstance();
 
 	public LogsHandler(final RouterLoggerEngine engine) {
 		super(engine);

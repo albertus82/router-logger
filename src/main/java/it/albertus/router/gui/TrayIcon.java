@@ -26,14 +26,17 @@ import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.NewLine;
 
 public class TrayIcon {
 
+	private static final Logger logger = LoggerFactory.getLogger(TrayIcon.class);
+
 	public static class Defaults {
 		public static final boolean GUI_MINIMIZE_TRAY = true;
-		public static final  boolean GUI_TRAY_TOOLTIP = true;
-		
+		public static final boolean GUI_TRAY_TOOLTIP = true;
+
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
 		}
@@ -94,7 +97,6 @@ public class TrayIcon {
 	}
 
 	private void iconify() {
-		final Logger logger = Logger.getInstance();
 		if (tray == null || trayItem == null || trayItem.isDisposed()) {
 			/* Inizializzazione */
 			try {
@@ -190,7 +192,11 @@ public class TrayIcon {
 						}
 					});
 				}
-				catch (final SWTException se) {/* Ignore */}
+				catch (final SWTException se) {
+					if (logger.isDebugEnabled()) {
+						logger.log(se, Destination.CONSOLE, Destination.FILE);
+					}
+				}
 			}
 		}
 	}
@@ -214,7 +220,11 @@ public class TrayIcon {
 					}
 				});
 			}
-			catch (final SWTException se) {/* Ignore */}
+			catch (final SWTException se) {
+				if (logger.isDebugEnabled()) {
+					logger.log(se, Destination.CONSOLE, Destination.FILE);
+				}
+			}
 		}
 	}
 

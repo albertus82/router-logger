@@ -14,7 +14,9 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.IOUtils;
@@ -22,6 +24,8 @@ import it.albertus.util.NewLine;
 import it.albertus.util.ZipUtils;
 
 public class CsvWriter extends Writer {
+
+	private static final Logger logger = LoggerFactory.getLogger(CsvWriter.class);
 
 	public static final String DESTINATION_KEY = "lbl.writer.destination.csv";
 

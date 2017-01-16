@@ -18,12 +18,15 @@ import it.albertus.router.engine.ThresholdsReached;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.router.util.Payload;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 
 /** @Singleton */
 public class RouterLoggerMqttClient extends BaseMqttClient {
+
+	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerMqttClient.class);
 
 	private static final String CFG_KEY_MQTT_CLEAN_SESSION = "mqtt.clean.session";
 	private static final String CFG_KEY_MQTT_MAX_INFLIGHT = "mqtt.max.inflight";
@@ -159,18 +162,17 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			}
 
 			doConnect(clientId, options, persistence, configuration.getBoolean(CFG_KEY_MQTT_CONNECT_RETRY, Defaults.CONNECT_RETRY));
-			if (Logger.getInstance().isDebugEnabled()) {
+			if (logger.isDebugEnabled()) {
 				System.out.println(options.toString().trim() + "======");
 			}
 		}
 		catch (final Exception e) {
-			Logger.getInstance().log(e);
+			logger.log(e);
 		}
 	}
 
 	@Override
 	public void disconnect() {
-		final Logger logger = Logger.getInstance();
 		try {
 			if (doDisconnect()) {
 				logger.log(Messages.get("msg.mqtt.disconnected"), Destination.CONSOLE);
@@ -191,7 +193,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(e);
+				logger.log(e);
 			}
 			lastDataMessageTime = System.currentTimeMillis();
 		}
@@ -207,7 +209,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(e);
+				logger.log(e);
 			}
 		}
 	}
@@ -222,7 +224,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(e);
+				logger.log(e);
 			}
 			lastThresholdsMessageTime = System.currentTimeMillis();
 		}

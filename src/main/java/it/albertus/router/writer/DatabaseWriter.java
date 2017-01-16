@@ -12,12 +12,16 @@ import java.util.Map.Entry;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.StringUtils;
 import it.albertus.util.sql.SqlUtils;
 
 public class DatabaseWriter extends Writer {
+
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseWriter.class);
 
 	public static final String DESTINATION_KEY = "lbl.writer.destination.database";
 
@@ -154,6 +158,9 @@ public class DatabaseWriter extends Writer {
 			return true;
 		}
 		catch (final SQLException se) {
+			if (logger.isDebugEnabled()) {
+				logger.log(se, Destination.CONSOLE, Destination.FILE);
+			}
 			return false;
 		}
 		finally {

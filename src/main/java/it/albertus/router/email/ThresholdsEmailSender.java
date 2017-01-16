@@ -13,10 +13,13 @@ import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 
 public class ThresholdsEmailSender {
+
+	private static final Logger logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
 
 	public static class Defaults {
 		public static final int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 3600;
@@ -86,7 +89,7 @@ public class ThresholdsEmailSender {
 					sendMessages();
 				}
 				catch (final Exception exception) {
-					Logger.getInstance().log(exception, Destination.CONSOLE);
+					logger.log(exception, Destination.CONSOLE);
 				}
 
 				final int sleepTime = configuration.getInt("thresholds.email.send.interval.secs", Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS);
@@ -95,6 +98,10 @@ public class ThresholdsEmailSender {
 						Thread.sleep(1000L * sleepTime);
 					}
 					catch (final InterruptedException ie) {
+						if (logger.isDebugEnabled()) {
+							logger.log(ie, Destination.CONSOLE, Destination.FILE);
+						}
+						Thread.currentThread().interrupt();
 						break;
 					}
 				}

@@ -21,6 +21,7 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
@@ -28,6 +29,8 @@ import it.albertus.util.SystemConsole;
 
 /** Singleton. */
 public class EmailSender {
+
+	private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
 	private static final String EMAIL_ADDRESSES_SPLIT_REGEX = EmailAddressesListEditor.EMAIL_ADDRESSES_SPLIT_REGEX;
 
@@ -113,6 +116,10 @@ public class EmailSender {
 					Thread.sleep(1000L * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
 				}
 				catch (final InterruptedException ie) {
+					if (logger.isDebugEnabled()) {
+						logger.log(ie, Destination.CONSOLE, Destination.FILE);
+					}
+					Thread.currentThread().interrupt();
 					break; // while
 				}
 			}
@@ -124,7 +131,7 @@ public class EmailSender {
 				sent.add(email);
 			}
 			catch (final Exception exception) {
-				Logger.getInstance().log(exception, Destination.CONSOLE);
+				logger.log(exception, Destination.CONSOLE);
 			}
 		}
 	}
@@ -149,7 +156,7 @@ public class EmailSender {
 				}
 			}
 			else {
-				Logger.getInstance().log(Messages.get("err.email.max.queue.size", maxQueueSize, subject), Destination.CONSOLE, Destination.FILE);
+				logger.log(Messages.get("err.email.max.queue.size", maxQueueSize, subject), Destination.CONSOLE, Destination.FILE);
 			}
 		}
 	}
@@ -185,7 +192,7 @@ public class EmailSender {
 		initializeEmail(email);
 		createContents(email, rle);
 		final String mimeMessageId = email.send();
-		Logger.getInstance().log(Messages.get("msg.email.sent", rle.getSubject()), Destination.CONSOLE);
+		logger.log(Messages.get("msg.email.sent", rle.getSubject()), Destination.CONSOLE);
 		return mimeMessageId;
 	}
 

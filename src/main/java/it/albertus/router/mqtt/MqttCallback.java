@@ -1,10 +1,17 @@
 package it.albertus.router.mqtt;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 
-public class MqttCallback extends MqttCallbackAdapter {
+public class MqttCallback implements MqttCallbackExtended {
+
+	private static final Logger logger = LoggerFactory.getLogger(MqttCallback.class);
 
 	private final String clientId;
 
@@ -14,12 +21,26 @@ public class MqttCallback extends MqttCallbackAdapter {
 
 	@Override
 	public void connectionLost(final Throwable cause) {
-		Logger.getInstance().log(cause);
+		logger.log(cause);
 	}
 
 	@Override
 	public void connectComplete(boolean reconnect, final String serverURI) {
-		Logger.getInstance().log(Messages.get("msg.mqtt.connected", serverURI, clientId), Destination.CONSOLE);
+		logger.log(Messages.get("msg.mqtt.connected", serverURI, clientId), logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
+	}
+
+	@Override
+	public void messageArrived(final String topic, final MqttMessage message) {
+		if (logger.isDebugEnabled()) {
+			logger.log(Messages.get("msg.mqtt.message.arrived", topic, message), Destination.CONSOLE, Destination.FILE);
+		}
+	}
+
+	@Override
+	public void deliveryComplete(final IMqttDeliveryToken token) {
+		if (logger.isDebugEnabled()) {
+			logger.log(Messages.get("msg.mqtt.message.delivered", token), Destination.CONSOLE, Destination.FILE);
+		}
 	}
 
 }

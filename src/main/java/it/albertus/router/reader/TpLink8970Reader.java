@@ -6,7 +6,9 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 
 /**
  * <b>TP-Link TD-W8970 V1</b>. Comandi Telnet disponibili (case sensitive):
@@ -17,6 +19,8 @@ import it.albertus.router.util.Logger.Destination;
  * </ul>
  */
 public class TpLink8970Reader extends Reader {
+
+	private static final Logger logger = LoggerFactory.getLogger(TpLink8970Reader.class);
 
 	public static class Defaults {
 		public static final String COMMAND_INFO_ADSL = "adsl show info";

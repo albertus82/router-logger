@@ -38,9 +38,13 @@ import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.NewLine;
 
 public class DataTable {
+
+	private static final Logger logger = LoggerFactory.getLogger(DataTable.class);
 
 	private static final char SAMPLE_CHAR = '9';
 	private static final char FIELD_SEPARATOR = '\t';
@@ -387,8 +391,11 @@ public class DataTable {
 		try {
 			rgbColorData = StringConverter.asRGB(colorKey);
 		}
-		catch (final Exception e) {
-			Logger.getInstance().log(Messages.get("err.invalid.color", colorKey));
+		catch (final RuntimeException re) {
+			if (logger.isDebugEnabled()) {
+				logger.log(re, Destination.CONSOLE, Destination.FILE);
+			}
+			logger.log(Messages.get("err.invalid.color", colorKey));
 			colorKey = defaultColorKey;
 			rgbColorData = StringConverter.asRGB(colorKey);
 		}

@@ -8,9 +8,12 @@ import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Version;
 
 public class RouterLoggerConsole extends RouterLoggerEngine {
+
+	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerConsole.class);
 
 	public static class Defaults extends RouterLoggerEngine.Defaults {
 		public static final boolean CONSOLE_ANIMATION = true;
@@ -55,9 +58,14 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				routerLogger.connect();
 				Thread.sleep(Long.MAX_VALUE);
 			}
-			catch (final InterruptedException ie) {/* Exit */}
+			catch (final InterruptedException ie) {
+				if (logger.isDebugEnabled()) {
+					logger.log(ie, Destination.CONSOLE, Destination.FILE);
+				}
+				Thread.currentThread().interrupt();
+			}
 			catch (final Exception exception) {
-				Logger.getInstance().log(exception);
+				logger.log(exception);
 			}
 			catch (final Throwable throwable) {
 				throwable.printStackTrace();
@@ -154,7 +162,11 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {/* Ignore */}
+							catch (final Exception e) {
+								if (logger.isDebugEnabled()) {
+									logger.log(e, Destination.CONSOLE, Destination.FILE);
+								}
+							}
 							release();
 						}
 						catch (final Throwable throwable) {
@@ -163,7 +175,11 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {/* Ignore */}
+							catch (final Exception e) {
+								if (logger.isDebugEnabled()) {
+									logger.log(e, Destination.CONSOLE, Destination.FILE);
+								}
+							}
 						}
 					}
 				};

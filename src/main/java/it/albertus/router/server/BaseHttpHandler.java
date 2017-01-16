@@ -22,11 +22,14 @@ import com.sun.net.httpserver.HttpHandler;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.CRC32OutputStream;
 import it.albertus.util.DigestOutputStream;
 import it.albertus.util.IOUtils;
 
 public abstract class BaseHttpHandler implements HttpHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(BaseHttpHandler.class);
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
@@ -53,7 +56,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			return Charset.forName(PREFERRED_CHARSET);
 		}
 		catch (final RuntimeException re) {
-			Logger.getInstance().log(re);
+			logger.log(re);
 			return Charset.defaultCharset();
 		}
 	}
@@ -105,7 +108,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 				return doCompressResponse(uncompressed, exchange);
 			}
 			catch (final IOException ioe) {
-				Logger.getInstance().log(ioe);
+				logger.log(ioe);
 			}
 		}
 		return uncompressed;
@@ -176,7 +179,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(file));
 		}
 		catch (final Exception e) {
-			Logger.getInstance().log(e);
+			logger.log(e);
 		}
 	}
 
@@ -185,7 +188,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(responseBody));
 		}
 		catch (final Exception e) {
-			Logger.getInstance().log(e);
+			logger.log(e);
 		}
 	}
 

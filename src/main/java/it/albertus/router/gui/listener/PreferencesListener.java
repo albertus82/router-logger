@@ -12,8 +12,11 @@ import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.LoggerFactory;
 
 public class PreferencesListener extends SelectionAdapter implements Listener {
+
+	private static final Logger logger = LoggerFactory.getLogger(PreferencesListener.class);
 
 	private final RouterLoggerGui gui;
 
@@ -28,7 +31,7 @@ public class PreferencesListener extends SelectionAdapter implements Listener {
 			preferences.openDialog(gui.getShell());
 		}
 		catch (final Exception e) {
-			Logger.getInstance().log(e);
+			logger.log(e);
 		}
 		if (preferences.isRestartRequired()) {
 			final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);

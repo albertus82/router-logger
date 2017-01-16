@@ -68,23 +68,22 @@ public class Logger {
 		}
 	};
 
-	private final Configuration configuration;
 	private String lastEmailLog;
 	private Console out = SystemConsole.getInstance();
 
-	private Logger() {
-		Configuration cfg;
+	private Logger() {}
+
+	private Configuration getConfiguration() {
 		try {
-			cfg = RouterLoggerConfiguration.getInstance();
+			return RouterLoggerConfiguration.getInstance();
 		}
-		catch (final Throwable t) {
-			t.printStackTrace();
-			cfg = null;
+		catch (final RuntimeException re) {
+			log(re);
+			return null;
 		}
-		this.configuration = cfg;
 	}
 
-	public static Logger getInstance() {
+	static Logger getInstance() {
 		return Singleton.instance;
 	}
 
@@ -95,7 +94,8 @@ public class Logger {
 	}
 
 	public boolean isDebugEnabled() {
-		return configuration != null ? configuration.getBoolean("console.debug", Defaults.DEBUG) : true;
+		final Configuration configuration = getConfiguration();
+		return configuration != null ? configuration.getBoolean("debug", Defaults.DEBUG) : true;
 	}
 
 	public void log(final String text, final Destination... destinations) {
@@ -210,6 +210,7 @@ public class Logger {
 	}
 
 	public File getCurrentFile() {
+		final Configuration configuration = getConfiguration();
 		final String logDestinationDir = configuration != null ? configuration.getString("logger.error.log.destination.path") : null;
 		final File logFile;
 		if (logDestinationDir != null && !logDestinationDir.trim().isEmpty()) {
@@ -222,6 +223,7 @@ public class Logger {
 	}
 
 	private void logToEmail(final String log, final Throwable throwable) {
+		final Configuration configuration = getConfiguration();
 		if (configuration != null && configuration.getBoolean("log.email", Defaults.EMAIL)) {
 			if (throwable == null || lastEmailLog == null || !configuration.getBoolean("log.email.ignore.duplicates", Defaults.EMAIL_IGNORE_DUPLICATES) || !lastEmailLog.equals(log)) {
 				final String subjectKey;

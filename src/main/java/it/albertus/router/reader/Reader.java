@@ -12,12 +12,15 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
 import it.albertus.util.NewLine;
 import it.albertus.util.SystemConsole;
 
 public abstract class Reader {
+
+	private static final Logger logger = LoggerFactory.getLogger(Reader.class);
 
 	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
 
@@ -41,7 +44,6 @@ public abstract class Reader {
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	protected final Logger logger = Logger.getInstance();
 	protected final Console out = SystemConsole.getInstance();
 	protected final TelnetClient telnet = new TelnetClient();
 

@@ -6,10 +6,13 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.ThreadUtils;
 
 public class WebServerAuthenticator extends BasicAuthenticator {
+
+	private static final Logger logger = LoggerFactory.getLogger(WebServerAuthenticator.class);
 
 	private static final String CFG_KEY_SERVER_USERNAME = "server.username";
 	private static final String CFG_KEY_SERVER_PASSWORD = "server.password";
@@ -30,13 +33,13 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 			final String expectedUsername = configuration.getString(CFG_KEY_SERVER_USERNAME);
 			if (expectedUsername == null || expectedUsername.isEmpty()) {
-				Logger.getInstance().log(Messages.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
+				logger.log(Messages.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
 				return fail();
 			}
 
 			final char[] expectedPassword = configuration.getCharArray(CFG_KEY_SERVER_PASSWORD);
 			if (expectedPassword == null || expectedPassword.length == 0) {
-				Logger.getInstance().log(Messages.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
+				logger.log(Messages.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
 				return fail();
 			}
 
@@ -44,15 +47,12 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 				return true;
 			}
 			else {
-				Logger.getInstance().log(Messages.get("err.server.authentication", specifiedUsername, specifiedPassword));
+				logger.log(Messages.get("err.server.authentication", specifiedUsername, specifiedPassword));
 				return fail();
 			}
 		}
 		catch (final Exception exception) {
-			Logger.getInstance().log(exception);
-			return fail();
-		}
-		catch (final Throwable throwable) {
+			logger.log(exception);
 			return fail();
 		}
 	}

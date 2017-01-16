@@ -9,8 +9,12 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
 import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 
 public abstract class BaseJsonHandler extends BaseHttpHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(BaseJsonHandler.class);
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;
@@ -38,10 +42,12 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 				service(exchange);
 			}
 			catch (final IOException ioe) {
-				// Ignore (often caused by the client that interrupts the stream).
+				if (logger.isDebugEnabled()) {
+					logger.log(ioe, Destination.CONSOLE, Destination.FILE); // Ignore (often caused by the client that interrupts the stream).
+				}
 			}
 			catch (final Exception exception) {
-				Logger.getInstance().log(exception);
+				logger.log(exception);
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
 			}
 			finally {

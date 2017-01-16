@@ -27,12 +27,15 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.DaemonThreadFactory;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.IOUtils;
 
 public abstract class BaseHttpServer {
+
+	private static final Logger logger = LoggerFactory.getLogger(BaseHttpServer.class);
 
 	public static class Defaults {
 		public static final int PORT = 8080;
@@ -78,12 +81,12 @@ public abstract class BaseHttpServer {
 							threadPool.shutdown();
 						}
 						catch (final Exception exception) {
-							Logger.getInstance().log(exception);
+							logger.log(exception);
 						}
 					}
 				}
 				catch (final Exception exception) {
-					Logger.getInstance().log(exception);
+					logger.log(exception);
 				}
 				started = false;
 			}
@@ -164,7 +167,7 @@ public abstract class BaseHttpServer {
 									params.setSSLParameters(defaultSSLParameters);
 								}
 								catch (final Exception e) {
-									Logger.getInstance().log(e);
+									logger.log(e);
 								}
 							}
 						};
@@ -189,16 +192,16 @@ public abstract class BaseHttpServer {
 				}
 			}
 			catch (final BindException be) {
-				Logger.getInstance().log(new BindException(Messages.get("err.server.start.port", port)), Destination.CONSOLE, Destination.FILE);
-				Logger.getInstance().log(be, Destination.FILE, Destination.EMAIL);
+				logger.log(new BindException(Messages.get("err.server.start.port", port)), Destination.CONSOLE, Destination.FILE);
+				logger.log(be, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final FileNotFoundException fnfe) {
-				Logger.getInstance().log(new FileNotFoundException(Messages.get("err.server.start.keystore.file")), Destination.CONSOLE, Destination.FILE);
-				Logger.getInstance().log(fnfe, Destination.FILE, Destination.EMAIL);
+				logger.log(new FileNotFoundException(Messages.get("err.server.start.keystore.file")), Destination.CONSOLE, Destination.FILE);
+				logger.log(fnfe, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final Exception e) {
-				Logger.getInstance().log(new Exception(Messages.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE, Destination.FILE);
-				Logger.getInstance().log(e, Destination.FILE, Destination.EMAIL);
+				logger.log(new Exception(Messages.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE, Destination.FILE);
+				logger.log(e, Destination.FILE, Destination.EMAIL);
 			}
 		}
 	}

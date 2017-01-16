@@ -1,15 +1,19 @@
 package it.albertus.router.reader;
 
-import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.util.ThreadUtils;
-
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 
+import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.ThreadUtils;
+
 public class DummyReader extends Reader {
+
+	private static final Logger logger = LoggerFactory.getLogger(DummyReader.class);
 
 	private static final byte CHARACTERS = 15;
 	private static final byte COLUMNS = 30;

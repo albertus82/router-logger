@@ -15,6 +15,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.server.WebServer;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.Writer;
 import it.albertus.util.ConfigurationException;
@@ -24,6 +25,8 @@ import it.albertus.util.SystemConsole;
 import it.albertus.util.Version;
 
 public abstract class RouterLoggerEngine {
+
+	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerEngine.class);
 
 	public static class Defaults {
 		public static final int ITERATIONS = 0;
@@ -53,7 +56,6 @@ public abstract class RouterLoggerEngine {
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
-	protected final Logger logger = Logger.getInstance();
 	protected final WebServer httpServer = WebServer.getInstance();
 	protected final RouterLoggerMqttClient mqttClient = RouterLoggerMqttClient.getInstance();
 	protected final Console out = SystemConsole.getInstance();
@@ -175,7 +177,11 @@ public abstract class RouterLoggerEngine {
 						reader.disconnect();
 						setStatus(Status.DISCONNECTED);
 					}
-					catch (final Exception e) {/* Ignore */}
+					catch (final Exception e) {
+						if (logger.isDebugEnabled()) {
+							logger.log(e, Destination.CONSOLE, Destination.FILE);
+						}
+					}
 				}
 				release();
 				stopNetworkServices();
@@ -190,7 +196,11 @@ public abstract class RouterLoggerEngine {
 			try {
 				Runtime.getRuntime().removeShutdownHook(shutdownHook);
 			}
-			catch (Exception e) {/* Ignore */}
+			catch (final Exception e) {
+				if (logger.isDebugEnabled()) {
+					logger.log(e, Destination.CONSOLE, Destination.FILE);
+				}
+			}
 		}
 	}
 
@@ -218,9 +228,13 @@ public abstract class RouterLoggerEngine {
 					interruptible = true;
 					Thread.sleep(retryIntervalInMillis);
 				}
-				catch (InterruptedException ie) {
+				catch (final InterruptedException ie) {
 					// Se si chiude il programma mentre e' in attesa di riconnessione...
+					if (logger.isDebugEnabled()) {
+						logger.log(ie, Destination.CONSOLE, Destination.FILE);
+					}
 					exit = true;
+					Thread.currentThread().interrupt();
 					continue;
 				}
 				finally {
@@ -270,15 +284,19 @@ public abstract class RouterLoggerEngine {
 						innerLoop();
 						exit = true; // Se non si sono verificati errori.
 					}
-					catch (InterruptedException ie) {
+					catch (final InterruptedException ie) {
+						if (logger.isDebugEnabled()) {
+							logger.log(ie, Destination.CONSOLE, Destination.FILE);
+						}
 						logger.log(Messages.get("msg.loop.interrupted"), Destination.CONSOLE);
+						Thread.currentThread().interrupt();
 					}
-					catch (IOException ioe) {
+					catch (final IOException ioe) {
 						if (!exit) {
 							logger.log(ioe);
 						}
 					}
-					catch (Exception e) {
+					catch (final Exception e) {
 						logger.log(e);
 					}
 					finally {
@@ -485,11 +503,19 @@ public abstract class RouterLoggerEngine {
 		try {
 			reader.release();
 		}
-		catch (RuntimeException re) {/* Ignore */}
+		catch (RuntimeException re) {
+			if (logger.isDebugEnabled()) {
+				logger.log(re, Destination.CONSOLE, Destination.FILE);
+			}
+		}
 		try {
 			writer.release();
 		}
-		catch (RuntimeException re) {/* Ignore */}
+		catch (RuntimeException re) {
+			if (logger.isDebugEnabled()) {
+				logger.log(re, Destination.CONSOLE, Destination.FILE);
+			}
+		}
 	}
 
 	protected void initReaderAndWriter() {
@@ -542,7 +568,12 @@ public abstract class RouterLoggerEngine {
 			try {
 				pollingThread.join();
 			}
-			catch (final InterruptedException ie) {/* Ignore */}
+			catch (final InterruptedException ie) {
+				if (logger.isDebugEnabled()) {
+					logger.log(ie, Destination.CONSOLE, Destination.FILE);
+				}
+				Thread.currentThread().interrupt();
+			}
 			catch (final Exception e) {
 				logger.log(e);
 			}
