@@ -317,7 +317,7 @@ public class DataTable {
 						// Colore per i valori oltre soglia...
 						final Color thresholdsReachedForegroundColor = getThresholdsReachedForegroundColor();
 						for (final Threshold threshold : thresholdsReached.keySet()) {
-							if (key.equals(threshold.getKey())) {
+							if (key != null && key.equals(threshold.getKey())) {
 								item.setForeground(i, thresholdsReachedForegroundColor);
 								break;
 							}
