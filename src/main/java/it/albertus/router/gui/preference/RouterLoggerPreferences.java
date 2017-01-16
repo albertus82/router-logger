@@ -12,7 +12,6 @@ import it.albertus.router.gui.preference.page.PageDefinition;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.resources.Messages.Language;
 import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.util.LoggerFactory;
 
 public class RouterLoggerPreferences extends Preferences {
@@ -54,14 +53,10 @@ public class RouterLoggerPreferences extends Preferences {
 					setRestartRequired(true); // Restart dialog will be shown.
 				}
 				catch (final Exception e) {
-					if (logger.isDebugEnabled()) {
-						logger.log(e, Destination.CONSOLE, Destination.FILE);
-					}
+					logger.debug(e);
 				}
 				catch (final LinkageError le) {
-					if (logger.isDebugEnabled()) {
-						logger.log(le, Destination.CONSOLE, Destination.FILE);
-					}
+					logger.debug(le);
 				}
 			}
 		}

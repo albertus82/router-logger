@@ -31,7 +31,7 @@ public class PreferencesListener extends SelectionAdapter implements Listener {
 			preferences.openDialog(gui.getShell());
 		}
 		catch (final Exception e) {
-			logger.log(e);
+			logger.error(e);
 		}
 		if (preferences.isRestartRequired()) {
 			final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);

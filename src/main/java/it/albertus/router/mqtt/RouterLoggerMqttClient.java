@@ -167,7 +167,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			}
 		}
 		catch (final Exception e) {
-			logger.log(e);
+			logger.error(e);
 		}
 	}
 
@@ -175,11 +175,11 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	public void disconnect() {
 		try {
 			if (doDisconnect()) {
-				logger.log(Messages.get("msg.mqtt.disconnected"), Destination.CONSOLE);
+				logger.info(Messages.get("msg.mqtt.disconnected"), Destination.CONSOLE);
 			}
 		}
 		catch (final Exception e) {
-			logger.log(e, Destination.CONSOLE, Destination.FILE);
+			logger.error(e, Destination.CONSOLE, Destination.FILE);
 		}
 	}
 
@@ -193,7 +193,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				logger.log(e);
+				logger.error(e);
 			}
 			lastDataMessageTime = System.currentTimeMillis();
 		}
@@ -209,7 +209,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				logger.log(e);
+				logger.error(e);
 			}
 		}
 	}
@@ -224,7 +224,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				logger.log(e);
+				logger.error(e);
 			}
 			lastThresholdsMessageTime = System.currentTimeMillis();
 		}

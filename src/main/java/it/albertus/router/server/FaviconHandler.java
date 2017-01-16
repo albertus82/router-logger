@@ -35,7 +35,7 @@ public class FaviconHandler extends StaticResourceHandler {
 			IOUtils.copy(inputStream, outputStream, BUFFER_SIZE);
 		}
 		catch (final IOException ioe) {
-			logger.log(ioe);
+			logger.error(ioe);
 		}
 		finally {
 			IOUtils.closeQuietly(outputStream, inputStream);

@@ -1,15 +1,19 @@
 package it.albertus.router.gui.preference.field;
 
-import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
-import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.resources.Messages;
-import it.albertus.router.writer.Writer;
-
 import java.lang.reflect.Modifier;
 
 import org.eclipse.swt.widgets.Composite;
 
+import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
+import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.LoggerFactory;
+import it.albertus.router.writer.Writer;
+
 public class WriterComboFieldEditor extends ValidatedComboFieldEditor {
+
+	private static final Logger logger = LoggerFactory.getLogger(WriterComboFieldEditor.class);
 
 	public WriterComboFieldEditor(final String name, final String labelText, final String[][] entryNamesAndValues, final Composite parent) {
 		super(name, labelText, entryNamesAndValues, parent);
@@ -28,7 +32,13 @@ public class WriterComboFieldEditor extends ValidatedComboFieldEditor {
 				return false;
 			}
 		}
-		catch (final Throwable throwable) {
+		catch (final Exception e) {
+			logger.debug(e);
+			setErrorMessage(Messages.get("err.preferences.combo.class.writer.missing"));
+			return false;
+		}
+		catch (final LinkageError le) {
+			logger.debug(le);
 			setErrorMessage(Messages.get("err.preferences.combo.class.writer.missing"));
 			return false;
 		}

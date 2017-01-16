@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 
 public class Payload {
 
+	private static final Logger logger = LoggerFactory.getLogger(Payload.class);
+
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
 	private Payload() {
@@ -17,6 +19,7 @@ public class Payload {
 				payload = string.getBytes(PREFERRED_CHARSET);
 			}
 			catch (final UnsupportedEncodingException uee) {
+				logger.error(uee);
 				payload = string.getBytes();
 			}
 		}

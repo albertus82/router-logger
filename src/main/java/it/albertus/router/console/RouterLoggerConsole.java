@@ -59,13 +59,11 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				Thread.sleep(Long.MAX_VALUE);
 			}
 			catch (final InterruptedException ie) {
-				if (logger.isDebugEnabled()) {
-					logger.log(ie, Destination.CONSOLE, Destination.FILE);
-				}
+				logger.debug(ie);
 				Thread.currentThread().interrupt();
 			}
 			catch (final Exception exception) {
-				logger.log(exception);
+				logger.error(exception);
 			}
 			finally {
 				routerLogger.disconnect(true);
@@ -143,7 +141,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				connect = canConnect();
 			}
 			catch (final Exception exception) {
-				logger.log(exception);
+				logger.error(exception);
 				return;
 			}
 			if (connect) {
@@ -155,14 +153,12 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 							outerLoop();
 						}
 						catch (final Exception exception) {
-							logger.log(exception);
+							logger.error(exception);
 							try {
 								getReader().disconnect();
 							}
 							catch (final Exception e) {
-								if (logger.isDebugEnabled()) {
-									logger.log(e, Destination.CONSOLE, Destination.FILE);
-								}
+								logger.debug(e);
 							}
 							release();
 						}
@@ -171,7 +167,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				pollingThread.start();
 			}
 			else {
-				logger.log(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
 			}
 		}
 	}

@@ -89,7 +89,7 @@ public class ThresholdsEmailSender {
 					sendMessages();
 				}
 				catch (final Exception exception) {
-					logger.log(exception, Destination.CONSOLE);
+					logger.error(exception, Destination.CONSOLE);
 				}
 
 				final int sleepTime = configuration.getInt("thresholds.email.send.interval.secs", Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS);
@@ -98,9 +98,7 @@ public class ThresholdsEmailSender {
 						Thread.sleep(1000L * sleepTime);
 					}
 					catch (final InterruptedException ie) {
-						if (logger.isDebugEnabled()) {
-							logger.log(ie, Destination.CONSOLE, Destination.FILE);
-						}
+						logger.debug(ie);
 						Thread.currentThread().interrupt();
 						break;
 					}

@@ -142,7 +142,7 @@ public class TrayIcon {
 				}
 			}
 			catch (final Exception e) {
-				logger.log(e, logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
+				logger.error(e, logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
 			}
 		}
 
@@ -153,7 +153,7 @@ public class TrayIcon {
 			gui.getShell().setMinimized(false);
 		}
 		else {
-			logger.log("Tray not available.", logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
+			logger.info("Tray not available.", logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
 		}
 	}
 
@@ -193,9 +193,7 @@ public class TrayIcon {
 					});
 				}
 				catch (final SWTException se) {
-					if (logger.isDebugEnabled()) {
-						logger.log(se, Destination.CONSOLE, Destination.FILE);
-					}
+					logger.debug(se);
 				}
 			}
 		}
@@ -221,9 +219,7 @@ public class TrayIcon {
 				});
 			}
 			catch (final SWTException se) {
-				if (logger.isDebugEnabled()) {
-					logger.log(se, Destination.CONSOLE, Destination.FILE);
-				}
+				logger.debug(se);
 			}
 		}
 	}

@@ -33,13 +33,13 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 			final String expectedUsername = configuration.getString(CFG_KEY_SERVER_USERNAME);
 			if (expectedUsername == null || expectedUsername.isEmpty()) {
-				logger.log(Messages.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
+				logger.info(Messages.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
 				return fail();
 			}
 
 			final char[] expectedPassword = configuration.getCharArray(CFG_KEY_SERVER_PASSWORD);
 			if (expectedPassword == null || expectedPassword.length == 0) {
-				logger.log(Messages.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
+				logger.info(Messages.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
 				return fail();
 			}
 
@@ -47,12 +47,12 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 				return true;
 			}
 			else {
-				logger.log(Messages.get("err.server.authentication", specifiedUsername, specifiedPassword));
+				logger.info(Messages.get("err.server.authentication", specifiedUsername, specifiedPassword));
 				return fail();
 			}
 		}
 		catch (final Exception exception) {
-			logger.log(exception);
+			logger.error(exception);
 			return fail();
 		}
 	}

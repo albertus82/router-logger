@@ -80,7 +80,7 @@ public class MenuBar {
 				cocoaMenuCreated = true;
 			}
 			catch (final CocoaEnhancerException cce) {
-				logger.log(cce);
+				logger.error(cce);
 			}
 		}
 

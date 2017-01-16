@@ -28,12 +28,12 @@ public class DummyReader extends Reader {
 
 	@Override
 	public boolean connect() {
-		logger.log(Messages.get("msg.dummy.connect"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.dummy.connect"), Destination.CONSOLE);
 		if (CONNECTION_TIME_IN_MILLIS > 0) {
 			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
 		}
 		if (Math.random() > (100.0 - CONNECTION_ERROR_PERCENTAGE) / 100.0) {
-			logger.log(new ConnectException(Messages.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE)));
+			logger.error(new ConnectException(Messages.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE)));
 			return false;
 		}
 		return true;
@@ -81,12 +81,12 @@ public class DummyReader extends Reader {
 
 	@Override
 	public void logout() {
-		logger.log(Messages.get("msg.dummy.logout"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.dummy.logout"), Destination.CONSOLE);
 	}
 
 	@Override
 	public void disconnect() {
-		logger.log(Messages.get("msg.dummy.disconnect"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.dummy.disconnect"), Destination.CONSOLE);
 	}
 
 }

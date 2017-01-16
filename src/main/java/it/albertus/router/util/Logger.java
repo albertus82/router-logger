@@ -78,7 +78,7 @@ public class Logger {
 			return RouterLoggerConfiguration.getInstance();
 		}
 		catch (final RuntimeException re) {
-			log(re);
+			error(re);
 			return null;
 		}
 	}
@@ -98,7 +98,19 @@ public class Logger {
 		return configuration != null ? configuration.getBoolean("debug", Defaults.DEBUG) : true;
 	}
 
-	public void log(final String text, final Destination... destinations) {
+	public void debug(final Throwable throwable) {
+		if (isDebugEnabled()) {
+			error(throwable, Destination.CONSOLE, Destination.FILE);
+		}
+	}
+
+	public void debug(final String message) {
+		if (isDebugEnabled()) {
+			info(message, Destination.CONSOLE, Destination.FILE);
+		}
+	}
+
+	public void info(final String text, final Destination... destinations) {
 		final Set<Destination> dest = getDestinations(destinations);
 
 		if (dest.contains(Destination.CONSOLE)) {
@@ -109,8 +121,8 @@ public class Logger {
 			try {
 				logToFile(text);
 			}
-			catch (Exception e) {
-				log(e, Destination.CONSOLE);
+			catch (final Exception e) {
+				error(e, Destination.CONSOLE);
 			}
 		}
 
@@ -118,13 +130,13 @@ public class Logger {
 			try {
 				logToEmail(text, null);
 			}
-			catch (Exception e) {
-				log(e, Destination.CONSOLE);
+			catch (final Exception e) {
+				error(e, Destination.CONSOLE);
 			}
 		}
 	}
 
-	public void log(final Throwable throwable, Destination... destinations) {
+	public void error(final Throwable throwable, Destination... destinations) {
 		final Set<Destination> dest = getDestinations(destinations);
 
 		final String shortLog = ExceptionUtils.getLogMessage(throwable);
@@ -143,8 +155,8 @@ public class Logger {
 			try {
 				logToFile(longLog);
 			}
-			catch (Exception e) {
-				log(e, Destination.CONSOLE);
+			catch (final Exception e) {
+				error(e, Destination.CONSOLE);
 			}
 		}
 
@@ -152,8 +164,8 @@ public class Logger {
 			try {
 				logToEmail(longLog, throwable);
 			}
-			catch (Exception e) {
-				log(e, Destination.CONSOLE);
+			catch (final Exception e) {
+				error(e, Destination.CONSOLE);
 			}
 		}
 	}

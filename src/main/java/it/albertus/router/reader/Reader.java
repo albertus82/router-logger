@@ -93,15 +93,15 @@ public abstract class Reader {
 
 		/* Connessione... */
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		logger.log(Messages.get("msg.connecting", routerAddress, routerPort), Destination.CONSOLE);
+		logger.info(Messages.get("msg.connecting", routerAddress, routerPort), Destination.CONSOLE);
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
 			connected = true;
 			telnet.setSoTimeout(socketTimeoutInMillis);
 		}
-		catch (Exception e) {
-			logger.log(e);
+		catch (final Exception e) {
+			logger.error(e);
 		}
 		return connected;
 	}
@@ -132,7 +132,7 @@ public abstract class Reader {
 	 * @throws IOException in caso di errore nella comunicazione con il server.
 	 */
 	public void logout() throws IOException {
-		logger.log(Messages.get("msg.logging.out"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.logging.out"), Destination.CONSOLE);
 		writeToTelnet("exit");
 	}
 
@@ -144,12 +144,12 @@ public abstract class Reader {
 	 * occorre sovrascrivere questo metodo</b>.
 	 */
 	public void disconnect() {
-		logger.log(Messages.get("msg.disconnecting"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.disconnecting"), Destination.CONSOLE);
 		try {
 			telnet.disconnect();
 		}
 		catch (final IOException ioe) {
-			logger.log(ioe);
+			logger.error(ioe);
 		}
 	}
 

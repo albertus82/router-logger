@@ -83,7 +83,7 @@ public class TpLink8970Reader extends Reader {
 
 	@Override
 	public void logout() throws IOException {
-		logger.log(Messages.get("msg.logging.out"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.logging.out"), Destination.CONSOLE);
 		writeToTelnet("logout");
 	}
 

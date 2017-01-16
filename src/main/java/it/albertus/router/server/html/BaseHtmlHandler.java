@@ -141,12 +141,10 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 				service(exchange);
 			}
 			catch (final IOException ioe) {
-				if (logger.isDebugEnabled()) {
-					logger.log(ioe, Destination.CONSOLE, Destination.FILE); // often caused by the client that interrupts the stream.
-				}
+				logger.debug(ioe); // often caused by the client that interrupts the stream.
 			}
 			catch (final Exception exception) {
-				logger.log(exception);
+				logger.error(exception);
 				addCommonHeaders(exchange);
 
 				final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
@@ -182,7 +180,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
 		if (!request.equals(lastRequest)) {
 			lastRequest = request;
-			logger.log(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
+			logger.info(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
 		}
 	}
 

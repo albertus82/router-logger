@@ -124,7 +124,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			IOUtils.copy(input, output, BUFFER_SIZE);
 		}
 		catch (final FileNotFoundException fnfe) {
-			logger.log(fnfe, Destination.CONSOLE);
+			logger.error(fnfe, Destination.CONSOLE);
 			notFound(exchange);
 		}
 		finally {

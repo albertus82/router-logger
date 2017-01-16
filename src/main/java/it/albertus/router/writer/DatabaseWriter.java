@@ -161,9 +161,7 @@ public class DatabaseWriter extends Writer {
 			return true;
 		}
 		catch (final SQLException se) {
-			if (logger.isDebugEnabled()) {
-				logger.log(se, Destination.CONSOLE, Destination.FILE);
-			}
+			logger.debug(se);
 			return false;
 		}
 		finally {
@@ -219,13 +217,13 @@ public class DatabaseWriter extends Writer {
 	protected void closeDatabaseConnection() {
 		try {
 			if (connection != null && !connection.isClosed()) {
-				logger.log(Messages.get("msg.closing.database.connection"), Destination.CONSOLE);
+				logger.info(Messages.get("msg.closing.database.connection"), Destination.CONSOLE);
 				connection.close();
 				connection = null;
 			}
 		}
 		catch (final SQLException se) {
-			logger.log(se);
+			logger.debug(se);
 		}
 	}
 
@@ -234,7 +232,7 @@ public class DatabaseWriter extends Writer {
 	}
 
 	protected void showSql(final String sql) {
-		logger.log(sql, Destination.CONSOLE, Destination.FILE);
+		logger.info(sql, Destination.CONSOLE, Destination.FILE);
 	}
 
 	protected static String sanitizeName(final String str) {

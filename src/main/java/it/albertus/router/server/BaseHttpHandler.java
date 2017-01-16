@@ -56,7 +56,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			return Charset.forName(PREFERRED_CHARSET);
 		}
 		catch (final RuntimeException re) {
-			logger.log(re);
+			logger.error(re);
 			return Charset.defaultCharset();
 		}
 	}
@@ -108,7 +108,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 				return doCompressResponse(uncompressed, exchange);
 			}
 			catch (final IOException ioe) {
-				logger.log(ioe);
+				logger.error(ioe);
 			}
 		}
 		return uncompressed;
@@ -179,7 +179,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(file));
 		}
 		catch (final Exception e) {
-			logger.log(e);
+			logger.error(e);
 		}
 	}
 
@@ -188,7 +188,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(responseBody));
 		}
 		catch (final Exception e) {
-			logger.log(e);
+			logger.error(e);
 		}
 	}
 

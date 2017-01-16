@@ -116,9 +116,7 @@ public class EmailSender {
 					Thread.sleep(1000L * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
 				}
 				catch (final InterruptedException ie) {
-					if (logger.isDebugEnabled()) {
-						logger.log(ie, Destination.CONSOLE, Destination.FILE);
-					}
+					logger.debug(ie);
 					Thread.currentThread().interrupt();
 					break; // while
 				}
@@ -131,7 +129,7 @@ public class EmailSender {
 				sent.add(email);
 			}
 			catch (final Exception exception) {
-				logger.log(exception, Destination.CONSOLE);
+				logger.error(exception, Destination.CONSOLE);
 			}
 		}
 	}
@@ -156,7 +154,7 @@ public class EmailSender {
 				}
 			}
 			else {
-				logger.log(Messages.get("err.email.max.queue.size", maxQueueSize, subject), Destination.CONSOLE, Destination.FILE);
+				logger.info(Messages.get("err.email.max.queue.size", maxQueueSize, subject), Destination.CONSOLE, Destination.FILE);
 			}
 		}
 	}
@@ -192,7 +190,7 @@ public class EmailSender {
 		initializeEmail(email);
 		createContents(email, rle);
 		final String mimeMessageId = email.send();
-		logger.log(Messages.get("msg.email.sent", rle.getSubject()), Destination.CONSOLE);
+		logger.info(Messages.get("msg.email.sent", rle.getSubject()), Destination.CONSOLE);
 		return mimeMessageId;
 	}
 

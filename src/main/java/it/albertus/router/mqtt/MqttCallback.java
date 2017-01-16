@@ -21,26 +21,22 @@ public class MqttCallback implements MqttCallbackExtended {
 
 	@Override
 	public void connectionLost(final Throwable cause) {
-		logger.log(cause);
+		logger.error(cause);
 	}
 
 	@Override
 	public void connectComplete(boolean reconnect, final String serverURI) {
-		logger.log(Messages.get("msg.mqtt.connected", serverURI, clientId), logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
+		logger.info(Messages.get("msg.mqtt.connected", serverURI, clientId), logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
 	}
 
 	@Override
 	public void messageArrived(final String topic, final MqttMessage message) {
-		if (logger.isDebugEnabled()) {
-			logger.log(Messages.get("msg.mqtt.message.arrived", topic, message), Destination.CONSOLE, Destination.FILE);
-		}
+		logger.debug(Messages.get("msg.mqtt.message.arrived", topic, message));
 	}
 
 	@Override
 	public void deliveryComplete(final IMqttDeliveryToken token) {
-		if (logger.isDebugEnabled()) {
-			logger.log(Messages.get("msg.mqtt.message.delivered", token), Destination.CONSOLE, Destination.FILE);
-		}
+		logger.debug(Messages.get("msg.mqtt.message.delivered", token));
 	}
 
 }

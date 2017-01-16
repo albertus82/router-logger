@@ -81,12 +81,12 @@ public abstract class BaseHttpServer {
 							threadPool.shutdown();
 						}
 						catch (final Exception exception) {
-							logger.log(exception);
+							logger.error(exception);
 						}
 					}
 				}
 				catch (final Exception exception) {
-					logger.log(exception);
+					logger.error(exception);
 				}
 				started = false;
 			}
@@ -167,7 +167,7 @@ public abstract class BaseHttpServer {
 									params.setSSLParameters(defaultSSLParameters);
 								}
 								catch (final Exception e) {
-									logger.log(e);
+									logger.error(e);
 								}
 							}
 						};
@@ -192,16 +192,16 @@ public abstract class BaseHttpServer {
 				}
 			}
 			catch (final BindException be) {
-				logger.log(new BindException(Messages.get("err.server.start.port", port)), Destination.CONSOLE, Destination.FILE);
-				logger.log(be, Destination.FILE, Destination.EMAIL);
+				logger.error(new BindException(Messages.get("err.server.start.port", port)), Destination.CONSOLE, Destination.FILE);
+				logger.error(be, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final FileNotFoundException fnfe) {
-				logger.log(new FileNotFoundException(Messages.get("err.server.start.keystore.file")), Destination.CONSOLE, Destination.FILE);
-				logger.log(fnfe, Destination.FILE, Destination.EMAIL);
+				logger.error(new FileNotFoundException(Messages.get("err.server.start.keystore.file")), Destination.CONSOLE, Destination.FILE);
+				logger.error(fnfe, Destination.FILE, Destination.EMAIL);
 			}
 			catch (final Exception e) {
-				logger.log(new Exception(Messages.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE, Destination.FILE);
-				logger.log(e, Destination.FILE, Destination.EMAIL);
+				logger.error(new Exception(Messages.get("err.server.start", ExceptionUtils.getUIMessage(e))), Destination.CONSOLE, Destination.FILE);
+				logger.error(e, Destination.FILE, Destination.EMAIL);
 			}
 		}
 	}

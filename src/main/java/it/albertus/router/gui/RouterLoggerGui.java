@@ -124,7 +124,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			}
 		}
 		catch (final Exception exception) {
-			logger.log(exception);
+			logger.error(exception);
 			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
 		}
 		finally {
@@ -152,7 +152,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
-		logger.log(throwable);
+		logger.error(throwable);
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
 		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName(((ConfigurationException) throwable).getKey()).getPageDefinition()) != Window.OK) {
@@ -174,9 +174,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				propertyName = Preference.forName(ce.getKey()).getLabel();
 			}
 			catch (final Exception e) {
-				if (logger.isDebugEnabled()) {
-					logger.log(e, Destination.CONSOLE, Destination.FILE);
-				}
+				logger.debug(e);
 				propertyName = ce.getKey();
 			}
 			message = JFaceMessages.get("err.configuration.invalid", propertyName) + ' ' + Messages.get("lbl.preferences.edit");
@@ -205,8 +203,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		try {
 			dataTable.addRow(getIteration(), info, thresholdsReached);
 		}
-		catch (ConfigurationException ce) {
-			logger.log(ce);
+		catch (final ConfigurationException ce) {
+			logger.error(ce);
 		}
 
 		// Aggiornamento icona e tooltip nella barra di notifica (se necessario)
@@ -230,7 +228,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				}
 			}
 			if (print) {
-				logger.log(Messages.get("msg.thresholds.reached", message), Destination.CONSOLE);
+				logger.info(Messages.get("msg.thresholds.reached", message), Destination.CONSOLE);
 				if (trayIcon != null) {
 					trayIcon.showBalloonToolTip(thresholdsReached);
 				}
@@ -260,7 +258,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				connect = canConnect();
 			}
 			catch (final Exception exception) {
-				logger.log(exception);
+				logger.error(exception);
 				return;
 			}
 			if (connect) {
@@ -272,14 +270,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							outerLoop();
 						}
 						catch (final Exception exception) {
-							logger.log(exception);
+							logger.error(exception);
 							try {
 								getReader().disconnect();
 							}
 							catch (final Exception e) {
-								if (logger.isDebugEnabled()) {
-									logger.log(e, Destination.CONSOLE, Destination.FILE);
-								}
+								logger.debug(e);
 							}
 							release();
 						}
@@ -288,7 +284,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				pollingThread.start();
 			}
 			else {
-				logger.log(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
 			}
 		}
 	}
@@ -318,7 +314,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					}.start();
 				}
 				catch (final Exception e) {
-					logger.log(e);
+					logger.error(e);
 				}
 			}
 		}, "resetThread").start();
@@ -339,7 +335,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, ce);
 				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName((ce).getKey()).getPageDefinition()) != Window.OK) {
-					logger.log(ce, Destination.CONSOLE);
+					logger.error(ce, Destination.CONSOLE);
 					return;
 				}
 			}
