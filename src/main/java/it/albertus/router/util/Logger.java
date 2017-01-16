@@ -110,16 +110,16 @@ public class Logger {
 		}
 	}
 
-	public void info(final String text, final Destination... destinations) {
+	public void info(final String message, final Destination... destinations) {
 		final Set<Destination> dest = getDestinations(destinations);
 
 		if (dest.contains(Destination.CONSOLE)) {
-			logToConsole(text);
+			logToConsole(message);
 		}
 
 		if (dest.contains(Destination.FILE)) {
 			try {
-				logToFile(text);
+				logToFile(message);
 			}
 			catch (final Exception e) {
 				error(e, Destination.CONSOLE);
@@ -128,7 +128,7 @@ public class Logger {
 
 		if (dest.contains(Destination.EMAIL)) {
 			try {
-				logToEmail(text, null);
+				logToEmail(message, null);
 			}
 			catch (final Exception e) {
 				error(e, Destination.CONSOLE);
@@ -136,7 +136,7 @@ public class Logger {
 		}
 	}
 
-	public void error(final Throwable throwable, Destination... destinations) {
+	public void error(final Throwable throwable, final Destination... destinations) {
 		final Set<Destination> dest = getDestinations(destinations);
 
 		final String shortLog = ExceptionUtils.getLogMessage(throwable);
