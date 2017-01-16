@@ -130,7 +130,7 @@ public class ThresholdsListEditor extends EnhancedListEditor {
 		@Override
 		protected void configureShell(final Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setImages(Images.MAIN_ICONS);
+			newShell.setImages(Images.getMainIcons());
 		}
 
 		public void create(final String title) {

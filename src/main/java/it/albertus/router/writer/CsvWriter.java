@@ -244,10 +244,16 @@ public class CsvWriter extends Writer {
 			path = file.getCanonicalPath();
 		}
 		catch (final Exception e1) {
+			if (logger.isDebugEnabled()) {
+				logger.log(e1, Destination.CONSOLE, Destination.FILE);
+			}
 			try {
 				path = file.getAbsolutePath();
 			}
 			catch (final Exception e2) {
+				if (logger.isDebugEnabled()) {
+					logger.log(e2, Destination.CONSOLE, Destination.FILE);
+				}
 				path = file.getPath();
 			}
 		}

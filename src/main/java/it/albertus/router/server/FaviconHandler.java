@@ -8,9 +8,13 @@ import java.net.HttpURLConnection;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.IOUtils;
 
 public class FaviconHandler extends StaticResourceHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(FaviconHandler.class);
 
 	private static final String RESOURCE_NAME = "favicon.ico";
 	private static final byte[] favicon = loadFavicon(); // Cached
@@ -31,7 +35,7 @@ public class FaviconHandler extends StaticResourceHandler {
 			IOUtils.copy(inputStream, outputStream, BUFFER_SIZE);
 		}
 		catch (final IOException ioe) {
-			ioe.printStackTrace();
+			logger.log(ioe);
 		}
 		finally {
 			IOUtils.closeQuietly(outputStream, inputStream);

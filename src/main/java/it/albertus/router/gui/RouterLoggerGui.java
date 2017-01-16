@@ -68,7 +68,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		}
 
 		shell.setText(Messages.get("lbl.window.title"));
-		shell.setImages(Images.MAIN_ICONS);
+		shell.setImages(Images.getMainIcons());
 		shell.setLayout(new GridLayout());
 
 		trayIcon = new TrayIcon(this);
@@ -127,10 +127,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			logger.log(exception);
 			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
 		}
-		catch (final Throwable throwable) {
-			display.dispose();
-			logger.log(throwable);
-		}
 		finally {
 			routerLogger.disconnect(true);
 			display.dispose();
@@ -156,12 +152,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
-		try {
-			logger.log(throwable);
-		}
-		catch (final NoClassDefFoundError ncdfe) {
-			throwable.printStackTrace();
-		}
+		logger.log(throwable);
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
 		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName(((ConfigurationException) throwable).getKey()).getPageDefinition()) != Window.OK) {
@@ -291,24 +282,6 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 								}
 							}
 							release();
-						}
-						catch (final Throwable throwable) {
-							new SwtThreadExecutor(RouterLoggerGui.this.shell) {
-								@Override
-								protected void run() {
-									getWidget().getDisplay().dispose();
-								}
-							}.start();
-							release();
-							logger.log(throwable);
-							try {
-								getReader().disconnect();
-							}
-							catch (final Exception e) {
-								if (logger.isDebugEnabled()) {
-									logger.log(e, Destination.CONSOLE, Destination.FILE);
-								}
-							}
 						}
 					}
 				};

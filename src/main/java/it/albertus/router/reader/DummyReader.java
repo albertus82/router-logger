@@ -47,7 +47,7 @@ public class DummyReader extends Reader {
 			ThreadUtils.sleep(AUTHENTICATION_TIME_IN_MILLIS);
 		}
 		if (Math.random() > (100.0 - AUTHENTICATION_ERROR_PERCENTAGE) / 100.0) {
-			throw new RuntimeException(Messages.get("msg.dummy.authentication.error", AUTHENTICATION_ERROR_PERCENTAGE));
+			throw new SecurityException(Messages.get("msg.dummy.authentication.error", AUTHENTICATION_ERROR_PERCENTAGE));
 		}
 		final String message = getClass().getSimpleName() + " - " + Messages.get("msg.test.purposes.only");
 		final StringBuilder separator = new StringBuilder();

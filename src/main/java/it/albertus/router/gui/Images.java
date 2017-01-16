@@ -15,7 +15,7 @@ import it.albertus.util.IOUtils;
 public class Images {
 
 	// Icona principale dell'applicazione (in vari formati)
-	public static final Image[] MAIN_ICONS = loadIcons("main.ico");
+	private static final Image[] MAIN_ICONS = loadIcons("main.ico");
 
 	// Icone base per l'area di notifica (16x16)
 	public static final Image TRAY_ICON_ACTIVE = Images.MAIN_ICONS[2];
@@ -47,6 +47,10 @@ public class Images {
 			icons[i++] = new Image(Display.getCurrent(), id);
 		}
 		return icons;
+	}
+
+	public static Image[] getMainIcons() {
+		return MAIN_ICONS;
 	}
 
 }

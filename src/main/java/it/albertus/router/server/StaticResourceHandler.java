@@ -17,7 +17,7 @@ import it.albertus.util.IOUtils;
 
 public class StaticResourceHandler extends BaseHtmlHandler {
 
-	public static final String[] METHODS = { HttpMethod.GET };
+	protected static final String[] METHODS = { HttpMethod.GET };
 
 	protected static final int BUFFER_SIZE = 8192;
 	protected static final String DEFAULT_CACHE_CONTROL = "no-transform,public,max-age=300,s-maxage=900";

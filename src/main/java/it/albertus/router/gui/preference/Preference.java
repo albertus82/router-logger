@@ -213,7 +213,7 @@ public enum Preference implements IPreference {
 	EMAIL_PASSWORD(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
 	EMAIL_FROM_NAME(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	EMAIL_FROM_ADDRESS(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
-	EMAIL_TO_ADDRESSES(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(Short.MAX_VALUE).icons(Images.MAIN_ICONS).build()),
+	EMAIL_TO_ADDRESSES(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(Short.MAX_VALUE).icons(Images.getMainIcons()).build()),
 
 	EMAIL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.PORT).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
 	EMAIL_SSL_PORT(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.SSL_PORT).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
@@ -232,8 +232,8 @@ public enum Preference implements IPreference {
 	EMAIL_STARTTLS_ENABLED(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.STARTTLS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	EMAIL_STARTTLS_REQUIRED(new PreferenceDetailsBuilder(EMAIL_ADVANCED).defaultValue(EmailSender.Defaults.STARTTLS_REQUIRED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
-	EMAIL_CC_ADDRESSES(new PreferenceDetailsBuilder(EMAIL_CC_BCC).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(0).icons(Images.MAIN_ICONS).build()),
-	EMAIL_BCC_ADDRESSES(new PreferenceDetailsBuilder(EMAIL_CC_BCC).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(0).icons(Images.MAIN_ICONS).build()),
+	EMAIL_CC_ADDRESSES(new PreferenceDetailsBuilder(EMAIL_CC_BCC).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(0).icons(Images.getMainIcons()).build()),
+	EMAIL_BCC_ADDRESSES(new PreferenceDetailsBuilder(EMAIL_CC_BCC).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(0).icons(Images.getMainIcons()).build()),
 
 	SERVER_ENABLED(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHttpServer.Defaults.ENABLED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_PORT(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHttpServer.Defaults.PORT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
@@ -290,7 +290,7 @@ public enum Preference implements IPreference {
 	SERVER_SSL_TMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_TMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
 
 	MQTT_ENABLED(new PreferenceDetailsBuilder(MQTT).defaultValue(RouterLoggerMqttClient.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_SERVER_URI(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(UriListEditor.class).horizontalSpan(2).icons(Images.MAIN_ICONS).build()),
+	MQTT_SERVER_URI(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(UriListEditor.class).horizontalSpan(2).icons(Images.getMainIcons()).build()),
 	MQTT_USERNAME(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	MQTT_PASSWORD(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
 	MQTT_CLIENT_ID(new PreferenceDetailsBuilder(MQTT).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLIENT_ID).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),

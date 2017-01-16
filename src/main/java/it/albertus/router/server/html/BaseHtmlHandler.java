@@ -141,7 +141,9 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 				service(exchange);
 			}
 			catch (final IOException ioe) {
-				// Ignore (often caused by the client that interrupts the stream).
+				if (logger.isDebugEnabled()) {
+					logger.log(ioe, Destination.CONSOLE, Destination.FILE); // often caused by the client that interrupts the stream.
+				}
 			}
 			catch (final Exception exception) {
 				logger.log(exception);

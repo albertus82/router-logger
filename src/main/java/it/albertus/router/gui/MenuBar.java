@@ -23,6 +23,8 @@ import it.albertus.router.gui.listener.PreferencesListener;
 import it.albertus.router.gui.listener.RestartSelectionListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.LoggerFactory;
 
 /**
  * Solo i <tt>MenuItem</tt> che fanno parte di una barra dei men&ugrave; con
@@ -32,6 +34,8 @@ import it.albertus.router.resources.Messages;
  * combinazioni di tasti saranno ignorate.
  */
 public class MenuBar {
+
+	private static final Logger logger = LoggerFactory.getLogger(MenuBar.class);
 
 	private final Menu bar;
 
@@ -76,7 +80,7 @@ public class MenuBar {
 				cocoaMenuCreated = true;
 			}
 			catch (final CocoaEnhancerException cce) {
-				cce.printStackTrace();
+				logger.log(cce);
 			}
 		}
 

@@ -1,6 +1,7 @@
 package it.albertus.router.engine;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -113,8 +114,11 @@ public abstract class RouterLoggerEngine {
 		try {
 			rdr = (Reader) Class.forName(readerClassName).newInstance();
 		}
-		catch (final Throwable throwable) {
-			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), throwable, configurationKey);
+		catch (final Exception e) {
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), e, configurationKey);
+		}
+		catch (final LinkageError le) {
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), le, configurationKey);
 		}
 		return rdr;
 	}
@@ -127,8 +131,11 @@ public abstract class RouterLoggerEngine {
 		try {
 			wrt = (Writer) Class.forName(writerClassName).newInstance();
 		}
-		catch (final Throwable throwable) {
-			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), throwable, configurationKey);
+		catch (final Exception e) {
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), e, configurationKey);
+		}
+		catch (final LinkageError le) {
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), le, configurationKey);
 		}
 		return wrt;
 	}
@@ -139,7 +146,16 @@ public abstract class RouterLoggerEngine {
 			readerClassName = StringUtils.trimToEmpty(configuredClassName);
 			Class.forName(readerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
-		catch (final Throwable throwable) {
+		catch (final Exception e) {
+			if (logger.isDebugEnabled()) {
+				logger.log(e, Destination.CONSOLE, Destination.FILE);
+			}
+			readerClassName = Reader.class.getPackage().getName() + '.' + configuredClassName;
+		}
+		catch (final LinkageError le) {
+			if (logger.isDebugEnabled()) {
+				logger.log(le, Destination.CONSOLE, Destination.FILE);
+			}
 			readerClassName = Reader.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return readerClassName;
@@ -151,7 +167,16 @@ public abstract class RouterLoggerEngine {
 			writerClassName = StringUtils.trimToEmpty(configuredClassName);
 			Class.forName(writerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
-		catch (final Throwable throwable) {
+		catch (final Exception e) {
+			if (logger.isDebugEnabled()) {
+				logger.log(e, Destination.CONSOLE, Destination.FILE);
+			}
+			writerClassName = Writer.class.getPackage().getName() + '.' + configuredClassName;
+		}
+		catch (final LinkageError le) {
+			if (logger.isDebugEnabled()) {
+				logger.log(le, Destination.CONSOLE, Destination.FILE);
+			}
 			writerClassName = Writer.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return writerClassName;
@@ -389,7 +414,7 @@ public abstract class RouterLoggerEngine {
 			if (!connected && !exit) {
 				connected = reader.connect();
 				if (!connected) { // Retry...
-					throw new RuntimeException(Messages.get("msg.reconnection.error"));
+					throw new ConnectException(Messages.get("msg.reconnection.error"));
 				}
 			}
 			if (!loggedIn && !exit) {

@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preference;
 
+import org.eclipse.swt.widgets.Shell;
+
 import it.albertus.jface.preference.Preferences;
 import it.albertus.jface.preference.page.IPageDefinition;
 import it.albertus.router.engine.RouterLoggerConfiguration;
@@ -9,15 +11,18 @@ import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.page.PageDefinition;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.resources.Messages.Language;
-
-import org.eclipse.swt.widgets.Shell;
+import it.albertus.router.util.Logger;
+import it.albertus.router.util.Logger.Destination;
+import it.albertus.router.util.LoggerFactory;
 
 public class RouterLoggerPreferences extends Preferences {
+
+	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerPreferences.class);
 
 	private final RouterLoggerGui gui;
 
 	public RouterLoggerPreferences(final RouterLoggerGui gui) {
-		super(PageDefinition.values(), Preference.values(), RouterLoggerConfiguration.getInstance(), Images.MAIN_ICONS);
+		super(PageDefinition.values(), Preference.values(), RouterLoggerConfiguration.getInstance(), Images.getMainIcons());
 		this.gui = gui;
 	}
 
@@ -48,7 +53,16 @@ public class RouterLoggerPreferences extends Preferences {
 					Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
 					setRestartRequired(true); // Restart dialog will be shown.
 				}
-				catch (final Throwable t) {/* Ignore */}
+				catch (final Exception e) {
+					if (logger.isDebugEnabled()) {
+						logger.log(e, Destination.CONSOLE, Destination.FILE);
+					}
+				}
+				catch (final LinkageError le) {
+					if (logger.isDebugEnabled()) {
+						logger.log(le, Destination.CONSOLE, Destination.FILE);
+					}
+				}
 			}
 		}
 		return returnCode;

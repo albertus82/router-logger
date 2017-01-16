@@ -66,8 +66,11 @@ public class DatabaseWriter extends Writer {
 		try {
 			Class.forName(configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME));
 		}
-		catch (final Throwable t) {
-			throw new ConfigurationException(Messages.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), t, CFG_KEY_DB_DRIVER_CLASS_NAME);
+		catch (final Exception e) {
+			throw new ConfigurationException(Messages.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), e, CFG_KEY_DB_DRIVER_CLASS_NAME);
+		}
+		catch (final LinkageError le) {
+			throw new ConfigurationException(Messages.get("err.database.jar", configuration.getString(CFG_KEY_DB_DRIVER_CLASS_NAME), configuration.getFileName()), le, CFG_KEY_DB_DRIVER_CLASS_NAME);
 		}
 	}
 

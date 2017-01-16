@@ -67,9 +67,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			catch (final Exception exception) {
 				logger.log(exception);
 			}
-			catch (final Throwable throwable) {
-				throwable.printStackTrace();
-			}
 			finally {
 				routerLogger.disconnect(true);
 				routerLogger.joinPollingThread();
@@ -168,18 +165,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 								}
 							}
 							release();
-						}
-						catch (final Throwable throwable) {
-							release();
-							logger.log(throwable);
-							try {
-								getReader().disconnect();
-							}
-							catch (final Exception e) {
-								if (logger.isDebugEnabled()) {
-									logger.log(e, Destination.CONSOLE, Destination.FILE);
-								}
-							}
 						}
 					}
 				};
