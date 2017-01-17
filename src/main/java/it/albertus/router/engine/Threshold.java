@@ -18,7 +18,7 @@ public class Threshold implements Comparable<Threshold> {
 		private final String description;
 		private final Set<String> abbreviations = new HashSet<String>();
 
-		private Type(String description, String[] abbreviations) {
+		private Type(final String description, final String[] abbreviations) {
 			this.description = description;
 			this.abbreviations.addAll(Arrays.asList(abbreviations));
 		}
@@ -36,11 +36,11 @@ public class Threshold implements Comparable<Threshold> {
 			return description;
 		}
 
-		public static Type getEnum(String abbreviation) {
+		public static Type getEnum(final String abbreviation) {
 			if (abbreviation != null) {
-				abbreviation = abbreviation.trim().toLowerCase();
-				for (Type type : Type.values()) {
-					if (type.name().equalsIgnoreCase(abbreviation) || type.abbreviations.contains(abbreviation)) {
+				final String trimmedAbbreviation = abbreviation.trim().toLowerCase();
+				for (final Type type : Type.values()) {
+					if (type.name().equalsIgnoreCase(trimmedAbbreviation) || type.abbreviations.contains(trimmedAbbreviation)) {
 						return type;
 					}
 				}
@@ -55,7 +55,7 @@ public class Threshold implements Comparable<Threshold> {
 	private final String value;
 	private final boolean excluded;
 
-	public Threshold(String name, String key, Type type, String value, boolean excluded) {
+	public Threshold(final String name, final String key, final Type type, final String value, final boolean excluded) {
 		this.name = name;
 		this.key = key;
 		this.type = type;
@@ -164,7 +164,7 @@ public class Threshold implements Comparable<Threshold> {
 	}
 
 	@Override
-	public int compareTo(Threshold other) {
+	public int compareTo(final Threshold other) {
 		return this.key.compareTo(other.key) + this.type.compareTo(other.type) + this.value.compareTo(other.value);
 	}
 
