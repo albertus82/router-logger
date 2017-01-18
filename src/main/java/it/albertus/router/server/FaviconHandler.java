@@ -25,8 +25,6 @@ public class FaviconHandler extends StaticResourceHandler {
 	}
 
 	private static final byte[] loadFavicon() {
-		byte[] bytes = null;
-
 		InputStream inputStream = null;
 		ByteArrayOutputStream outputStream = null;
 		try {
@@ -40,7 +38,7 @@ public class FaviconHandler extends StaticResourceHandler {
 		finally {
 			IOUtils.closeQuietly(outputStream, inputStream);
 		}
-		return bytes;
+		return outputStream.toByteArray();
 	}
 
 	private static final Headers createHeaders() {
