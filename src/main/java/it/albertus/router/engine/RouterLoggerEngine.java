@@ -298,7 +298,7 @@ public abstract class RouterLoggerEngine {
 					catch (final InterruptedException ie) {
 						logger.debug(ie);
 						logger.info(Messages.get("msg.loop.interrupted"), Destination.CONSOLE);
-						Thread.currentThread().interrupt();
+						// Thread.currentThread().interrupt(); // FIXME
 					}
 					catch (final IOException ioe) {
 						if (!exit) {
