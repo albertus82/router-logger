@@ -1,5 +1,6 @@
 package it.albertus.router.console;
 
+import java.io.IOException;
 import java.util.Map;
 
 import it.albertus.router.engine.RouterData;
@@ -180,7 +181,12 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			public void run() {
 				httpServer.stop();
 				joinPollingThread();
-				configuration.reload();
+				try {
+					configuration.reload();
+				}
+				catch (final IOException ioe) {
+					logger.error(ioe);
+				}
 				mqttClient.disconnect();
 				setIteration(FIRST_ITERATION);
 				out.println();

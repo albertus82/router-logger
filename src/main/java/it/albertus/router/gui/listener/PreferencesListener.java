@@ -1,5 +1,7 @@
 package it.albertus.router.gui.listener;
 
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,7 +32,7 @@ public class PreferencesListener extends SelectionAdapter implements Listener {
 		try {
 			preferences.openDialog(gui.getShell());
 		}
-		catch (final Exception e) {
+		catch (final IOException e) {
 			logger.error(e);
 		}
 		if (preferences.isRestartRequired()) {

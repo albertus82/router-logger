@@ -1,5 +1,8 @@
 package it.albertus.router.gui.preference;
 
+import java.io.IOException;
+
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
 import it.albertus.jface.preference.Preferences;
@@ -33,7 +36,14 @@ public class RouterLoggerPreferences extends Preferences {
 	public int openDialog(final Shell parentShell, final IPageDefinition selectedPage) {
 		final Language language = Messages.getLanguage();
 
-		final int returnCode = super.openDialog(parentShell, selectedPage);
+		int returnCode;
+		try {
+			returnCode = super.openDialog(parentShell, selectedPage);
+		}
+		catch (final IOException ioe) {
+			logger.error(ioe);
+			returnCode = Window.CANCEL;
+		}
 
 		// Check if must update texts...
 		if (gui != null && !language.equals(Messages.getLanguage())) {
