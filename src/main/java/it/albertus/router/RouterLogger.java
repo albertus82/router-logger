@@ -9,7 +9,7 @@ public class RouterLogger {
 		throw new IllegalAccessError();
 	}
 
-	/** Unique entry point */
+	/* Unique entry point */
 	public static final void main(final String[] args) {
 		if (args.length != 0) {
 			RouterLoggerConsole.start(args);
