@@ -7,10 +7,10 @@ import org.eclipse.swt.widgets.Shell;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 
-public class CloseMessageBox {
+public class CloseDialog {
 
 	public static class Defaults {
-		public static final boolean GUI_CONFIRM_CLOSE = false;
+		public static final boolean CONFIRM_CLOSE = false;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -19,18 +19,18 @@ public class CloseMessageBox {
 
 	private final MessageBox messageBox;
 
-	private CloseMessageBox(Shell shell) {
+	private CloseDialog(final Shell shell) {
 		messageBox = new MessageBox(shell, SWT.YES | SWT.NO | SWT.ICON_QUESTION);
 		messageBox.setText(Messages.get("msg.confirm.close.text"));
 		messageBox.setMessage(Messages.get("msg.confirm.close.message"));
 	}
 
-	public static MessageBox newInstance(Shell shell) {
-		return new CloseMessageBox(shell).messageBox;
+	public static int open(final Shell shell) {
+		return new CloseDialog(shell).messageBox.open();
 	}
 
-	public static boolean show() {
-		return RouterLoggerConfiguration.getInstance().getBoolean("gui.confirm.close", Defaults.GUI_CONFIRM_CLOSE);
+	public static boolean mustShow() {
+		return RouterLoggerConfiguration.getInstance().getBoolean("gui.confirm.close", Defaults.CONFIRM_CLOSE);
 	}
 
 }
