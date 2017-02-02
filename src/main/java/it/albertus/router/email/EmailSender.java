@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
@@ -86,11 +87,17 @@ public class EmailSender {
 		return Singleton.instance;
 	}
 
-	private class EmailRunnable implements Runnable {
+	private class EmailDaemon extends Thread {
+
+		private EmailDaemon() {
+			super(EmailDaemon.class.getSimpleName());
+			setDaemon(true);
+		}
 
 		@Override
 		public void run() {
-			while (true) {
+			logger.debug(Messages.get("msg.thread.started", getName()));
+			while (!isInterrupted()) {
 				final int maxSendingsPerCycle = configuration.getInt("email.max.sendings.per.cycle", Defaults.MAX_SENDINGS_PER_CYCLE);
 				final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(Math.min(queue.size(), maxSendingsPerCycle));
 				for (final RouterLoggerEmail email : queue) {
@@ -113,14 +120,14 @@ public class EmailSender {
 				}
 
 				try {
-					Thread.sleep(1000L * configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
+					TimeUnit.SECONDS.sleep(configuration.getInt("email.retry.interval.secs", Defaults.RETRY_INTERVAL_SECS));
 				}
 				catch (final InterruptedException ie) {
 					logger.debug(ie);
-					Thread.currentThread().interrupt();
-					break; // while
+					interrupt();
 				}
 			}
+			logger.debug(Messages.get("msg.thread.terminated", getName()));
 		}
 
 		private void processQueuedMessage(final Collection<RouterLoggerEmail> sent, final RouterLoggerEmail email) {
@@ -148,8 +155,7 @@ public class EmailSender {
 			if (queue.size() < maxQueueSize) {
 				queue.add(email);
 				if (this.daemon == null) {
-					daemon = new Thread(new EmailRunnable(), "emailDaemon");
-					daemon.setDaemon(true);
+					daemon = new EmailDaemon();
 					daemon.start();
 				}
 			}

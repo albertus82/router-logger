@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.concurrent.TimeUnit;
 
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.util.LoggerFactory;
-import it.albertus.util.ThreadUtils;
 
 public class DummyReader extends Reader {
 
@@ -30,7 +30,12 @@ public class DummyReader extends Reader {
 	public boolean connect() {
 		logger.info(Messages.get("msg.dummy.connect"), Destination.CONSOLE);
 		if (CONNECTION_TIME_IN_MILLIS > 0) {
-			ThreadUtils.sleep(CONNECTION_TIME_IN_MILLIS);
+			try {
+				TimeUnit.MILLISECONDS.sleep(CONNECTION_TIME_IN_MILLIS);
+			}
+			catch (final InterruptedException ie) {
+				Thread.currentThread().interrupt();
+			}
 		}
 		if (Math.random() > (100.0 - CONNECTION_ERROR_PERCENTAGE) / 100.0) {
 			logger.error(new ConnectException(Messages.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE)));
@@ -44,7 +49,12 @@ public class DummyReader extends Reader {
 		out.println("Username: " + username);
 		out.println("Password: " + (password != null ? String.valueOf(password) : Arrays.toString(password)));
 		if (AUTHENTICATION_TIME_IN_MILLIS > 0) {
-			ThreadUtils.sleep(AUTHENTICATION_TIME_IN_MILLIS);
+			try {
+				TimeUnit.MILLISECONDS.sleep(AUTHENTICATION_TIME_IN_MILLIS);
+			}
+			catch (final InterruptedException ie) {
+				Thread.currentThread().interrupt();
+			}
 		}
 		if (Math.random() > (100.0 - AUTHENTICATION_ERROR_PERCENTAGE) / 100.0) {
 			throw new SecurityException(Messages.get("msg.dummy.authentication.error", AUTHENTICATION_ERROR_PERCENTAGE));
@@ -71,7 +81,12 @@ public class DummyReader extends Reader {
 			map.put(Messages.get("lbl.column.number", i), field.toString());
 		}
 		if (LAG_IN_MILLIS != 0) {
-			ThreadUtils.sleep(LAG_IN_MILLIS);
+			try {
+				TimeUnit.MILLISECONDS.sleep(LAG_IN_MILLIS);
+			}
+			catch (final InterruptedException ie) {
+				Thread.currentThread().interrupt();
+			}
 		}
 		if (Math.random() > (100.0 - READ_ERROR_PERCENTAGE) / 100.0) {
 			throw new IOException(Messages.get("msg.dummy.readinfo.error", READ_ERROR_PERCENTAGE));

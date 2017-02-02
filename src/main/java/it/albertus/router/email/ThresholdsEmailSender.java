@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
@@ -60,8 +61,7 @@ public class ThresholdsEmailSender {
 				if (queue.size() < configuration.getShort(CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS, Defaults.MAX_ITEMS)) {
 					queue.add(new ThresholdEmailItem(thresholdsReached, routerData));
 					if (this.daemon == null) {
-						daemon = new Thread(new ThresholdsEmailRunnable(), "thresholdsEmailDaemon");
-						daemon.setDaemon(true);
+						daemon = new ThresholdsEmailDaemon();
 						daemon.start();
 					}
 				}
@@ -73,15 +73,21 @@ public class ThresholdsEmailSender {
 		}
 	}
 
-	private class ThresholdsEmailRunnable implements Runnable {
+	private class ThresholdsEmailDaemon extends Thread {
+
+		private ThresholdsEmailDaemon() {
+			super(ThresholdsEmailDaemon.class.getSimpleName());
+			setDaemon(true);
+		}
+
 		@Override
 		public void run() {
-			while (true) {
-				// Exit if there is nothing to do...
+			logger.debug(Messages.get("msg.thread.started", getName()));
+			while (!isInterrupted()) {
 				synchronized (lock) {
 					if (queue == null || queue.isEmpty()) {
 						daemon = null;
-						break;
+						break; // Exit if there is nothing to do...
 					}
 				}
 
@@ -95,15 +101,15 @@ public class ThresholdsEmailSender {
 				final int sleepTime = configuration.getInt("thresholds.email.send.interval.secs", Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS);
 				if (sleepTime > 0) {
 					try {
-						Thread.sleep(1000L * sleepTime);
+						TimeUnit.SECONDS.sleep(sleepTime);
 					}
 					catch (final InterruptedException ie) {
 						logger.debug(ie);
-						Thread.currentThread().interrupt();
-						break;
+						interrupt();
 					}
 				}
 			}
+			logger.debug(Messages.get("msg.thread.terminated", getName()));
 		}
 
 		private void sendMessages() {

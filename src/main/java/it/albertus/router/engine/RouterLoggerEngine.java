@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.ThresholdsEmailSender;
@@ -239,7 +240,7 @@ public abstract class RouterLoggerEngine {
 				logger.info(message.toString(), Destination.CONSOLE);
 				try {
 					interruptible = true;
-					Thread.sleep(retryIntervalInMillis);
+					TimeUnit.MILLISECONDS.sleep(retryIntervalInMillis);
 				}
 				catch (final InterruptedException ie) {
 					// Se si chiude il programma mentre e' in attesa di riconnessione...

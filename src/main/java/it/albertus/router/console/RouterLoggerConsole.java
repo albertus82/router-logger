@@ -176,7 +176,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	@Override
 	public void restart() {
 		disconnect(true);
-		new Thread(new Runnable() {
+		new Thread("ResetThread") {
 			@Override
 			public void run() {
 				httpServer.stop();
@@ -193,7 +193,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				beforeConnect();
 				connect();
 			}
-		}, "resetThread").start();
+		}.start();
 	}
 
 	@Override

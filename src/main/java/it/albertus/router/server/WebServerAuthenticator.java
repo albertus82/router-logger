@@ -1,5 +1,7 @@
 package it.albertus.router.server;
 
+import java.util.concurrent.TimeUnit;
+
 import com.sun.net.httpserver.BasicAuthenticator;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
@@ -8,7 +10,6 @@ import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
-import it.albertus.util.ThreadUtils;
 
 public class WebServerAuthenticator extends BasicAuthenticator {
 
@@ -16,6 +17,7 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 	private static final String CFG_KEY_SERVER_USERNAME = "server.username";
 	private static final String CFG_KEY_SERVER_PASSWORD = "server.password";
+
 	private static final int FAIL_DELAY_IN_MILLIS = 3000;
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
@@ -72,7 +74,13 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 	}
 
 	private boolean fail() {
-		ThreadUtils.sleep(FAIL_DELAY_IN_MILLIS);
+		try {
+			TimeUnit.MILLISECONDS.sleep(FAIL_DELAY_IN_MILLIS);
+		}
+		catch (final InterruptedException ie) {
+			logger.debug(ie);
+			Thread.currentThread().interrupt();
+		}
 		return false;
 	}
 
