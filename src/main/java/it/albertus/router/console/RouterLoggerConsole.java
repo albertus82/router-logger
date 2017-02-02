@@ -3,6 +3,7 @@ package it.albertus.router.console;
 import java.io.IOException;
 import java.util.Map;
 
+import it.albertus.router.RouterLogger.InitializationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
@@ -34,7 +35,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	private int lastLogLength = 0;
 
 	/** Entry point for console version */
-	public static void start(final String[] args) {
+	public static void start(final InitializationException ie, final String[] args) {
 		// Check arguments...
 		if (args[0].trim().equalsIgnoreCase(ARG_HELP)) {
 			final Version version = Version.getInstance();
@@ -59,8 +60,8 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				routerLogger.connect();
 				Thread.sleep(Long.MAX_VALUE);
 			}
-			catch (final InterruptedException ie) {
-				logger.debug(ie);
+			catch (final InterruptedException e) {
+				logger.debug(e);
 				Thread.currentThread().interrupt();
 			}
 			catch (final Exception exception) {

@@ -19,6 +19,7 @@ import org.apache.http.protocol.HttpDateGenerator;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Logger;
@@ -39,7 +40,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	private static final Charset charset = initCharset();
 
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 
 	protected final RouterLoggerEngine engine;
 

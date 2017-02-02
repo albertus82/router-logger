@@ -36,23 +36,6 @@ public class RouterLoggerConfiguration extends Configuration {
 		}
 	}
 
-	private static class Singleton {
-		private static final RouterLoggerConfiguration instance;
-
-		static {
-			try {
-				instance = new RouterLoggerConfiguration();
-			}
-			catch (final IOException ioe) {
-				throw new ExceptionInInitializerError(ioe);
-			}
-		}
-
-		private Singleton() {
-			throw new IllegalAccessError();
-		}
-	}
-
 	public static final String CFG_KEY_LANGUAGE = "language";
 
 	public static final String FILE_NAME = "routerlogger.cfg";
@@ -64,14 +47,10 @@ public class RouterLoggerConfiguration extends Configuration {
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
 
-	private RouterLoggerConfiguration() throws IOException {
+	public RouterLoggerConfiguration() throws IOException {
 		// Caricamento della configurazione...
 		super(Messages.get("msg.application.name") + File.separator + FILE_NAME, true);
 		init();
-	}
-
-	public static RouterLoggerConfiguration getInstance() {
-		return Singleton.instance;
 	}
 
 	public Set<String> getGuiImportantKeys() {

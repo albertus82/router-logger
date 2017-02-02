@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import it.albertus.jface.JFaceMessages;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.mqtt.RouterLoggerMqttClient;
 import it.albertus.router.reader.Reader;
@@ -57,7 +58,7 @@ public abstract class RouterLoggerEngine {
 
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 	protected final WebServer httpServer = WebServer.getInstance();
 	protected final RouterLoggerMqttClient mqttClient = RouterLoggerMqttClient.getInstance();
 	protected final Console out = SystemConsole.getInstance();

@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import org.apache.commons.net.telnet.TelnetClient;
 
 import it.albertus.jface.JFaceMessages;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
@@ -43,7 +44,7 @@ public abstract class Reader {
 
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 	protected final Console out = SystemConsole.getInstance();
 	protected final TelnetClient telnet = new TelnetClient();
 

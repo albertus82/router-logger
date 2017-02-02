@@ -8,8 +8,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
+import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
@@ -41,7 +41,7 @@ public class ThresholdsEmailSender {
 
 	private static final String CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS = "thresholds.email.max.items";
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLogger.getConfiguration();
 	private final Queue<ThresholdEmailItem> queue = new ConcurrentLinkedQueue<ThresholdEmailItem>();
 	private int extraEventsCount;
 	private Date lastEventTimestamp;

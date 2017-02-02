@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import it.albertus.router.RouterLogger;
 import it.albertus.router.email.EmailSender;
-import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 import it.albertus.util.Console;
@@ -73,16 +73,6 @@ public class Logger {
 
 	private Logger() {}
 
-	private Configuration getConfiguration() {
-		try {
-			return RouterLoggerConfiguration.getInstance();
-		}
-		catch (final RuntimeException re) {
-			error(re);
-			return null;
-		}
-	}
-
 	static Logger getInstance() {
 		return Singleton.instance;
 	}
@@ -94,7 +84,7 @@ public class Logger {
 	}
 
 	public boolean isDebugEnabled() {
-		final Configuration configuration = getConfiguration();
+		final Configuration configuration = RouterLogger.getConfiguration();
 		return configuration != null ? configuration.getBoolean("debug", Defaults.DEBUG) : true;
 	}
 
@@ -222,7 +212,7 @@ public class Logger {
 	}
 
 	public File getCurrentFile() {
-		final Configuration configuration = getConfiguration();
+		final Configuration configuration = RouterLogger.getConfiguration();
 		final String logDestinationDir = configuration != null ? configuration.getString("logger.error.log.destination.path") : null;
 		final File logFile;
 		if (logDestinationDir != null && !logDestinationDir.trim().isEmpty()) {
@@ -235,7 +225,7 @@ public class Logger {
 	}
 
 	private void logToEmail(final String log, final Throwable throwable) {
-		final Configuration configuration = getConfiguration();
+		final Configuration configuration = RouterLogger.getConfiguration();
 		if (configuration != null && configuration.getBoolean("log.email", Defaults.EMAIL)) {
 			if (throwable == null || lastEmailLog == null || !configuration.getBoolean("log.email.ignore.duplicates", Defaults.EMAIL_IGNORE_DUPLICATES) || !lastEmailLog.equals(log)) {
 				final String subjectKey;

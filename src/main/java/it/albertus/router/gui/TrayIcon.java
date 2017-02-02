@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
 import it.albertus.jface.listener.TrayRestoreListener;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Status;
@@ -42,7 +43,7 @@ public class TrayIcon {
 		}
 	}
 
-	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	private final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 	private final RouterLoggerGui gui;
 
 	private Tray tray;

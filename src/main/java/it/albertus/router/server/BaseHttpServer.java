@@ -23,7 +23,7 @@ import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -57,7 +57,7 @@ public abstract class BaseHttpServer {
 
 	protected static final int STOP_DELAY = 0;
 
-	protected final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	protected final Configuration configuration = RouterLogger.getConfiguration();
 	protected final Authenticator authenticator = new WebServerAuthenticator();
 	protected volatile HttpServer httpServer;
 	protected volatile boolean started = false;

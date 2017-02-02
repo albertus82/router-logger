@@ -18,7 +18,7 @@ import org.apache.commons.mail.SimpleEmail;
 
 import it.albertus.jface.JFaceMessages;
 import it.albertus.jface.preference.field.EmailAddressesListEditor;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -74,7 +74,7 @@ public class EmailSender {
 		}
 	}
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLogger.getConfiguration();
 	private final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
 	private volatile Thread daemon;
 	private Console out = SystemConsole.getInstance();

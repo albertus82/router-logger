@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.jface.SwtUtils;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
@@ -83,7 +84,7 @@ public class DataTable {
 		}
 	}
 
-	private final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	private final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 
 	private int iteration;
 

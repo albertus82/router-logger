@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.Util;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
@@ -16,9 +17,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import it.albertus.jface.EnhancedErrorDialog;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.jface.console.StyledTextConsole;
+import it.albertus.router.RouterLogger.InitializationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Status;
@@ -94,47 +97,53 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	/** Entry point for GUI version */
-	public static void start() {
+	public static void start(final InitializationException ie) {
 		Display.setAppName(Messages.get("msg.application.name"));
 		Display.setAppVersion(Version.getInstance().getNumber());
 		final Display display = Display.getDefault();
 
-		// Creazione finestra applicazione...
-		final RouterLoggerGui routerLogger = newInstance(display);
-		if (routerLogger == null) {
+		if (ie != null) { // Display error dialog and exit.
+			EnhancedErrorDialog.openError(null, Messages.get("lbl.window.title"), ie.getLocalizedMessage() != null ? ie.getLocalizedMessage() : ie.getMessage(), IStatus.ERROR, ie.getCause() != null ? ie.getCause() : ie, Images.getMainIcons());
 			display.dispose();
-			return;
 		}
-		final Shell shell = routerLogger.getShell();
-		try {
-			shell.open();
-
-			// Fix invisible (transparent) shell bug with some Linux distibutions
-			if (Util.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
-				shell.setMinimized(true);
+		else {
+			// Creazione finestra applicazione...
+			final RouterLoggerGui routerLogger = newInstance(display);
+			if (routerLogger == null) {
+				display.dispose();
+				return;
 			}
+			final Shell shell = routerLogger.getShell();
+			try {
+				shell.open();
 
-			routerLogger.addShutdownHook();
-			routerLogger.beforeConnect();
-			routerLogger.connect();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
+				// Fix invisible (transparent) shell bug with some Linux distibutions
+				if (Util.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+					shell.setMinimized(true);
+				}
+
+				routerLogger.addShutdownHook();
+				routerLogger.beforeConnect();
+				routerLogger.connect();
+				while (!shell.isDisposed()) {
+					if (!display.isDisposed() && !display.readAndDispatch()) {
+						display.sleep();
+					}
 				}
 			}
+			catch (final Exception exception) {
+				logger.error(exception);
+				openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
+			}
+			finally {
+				routerLogger.disconnect(true);
+				display.dispose();
+				routerLogger.joinPollingThread();
+				routerLogger.stopNetworkServices();
+				routerLogger.removeShutdownHook();
+			}
+			routerLogger.printGoodbye();
 		}
-		catch (final Exception exception) {
-			logger.error(exception);
-			openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
-		}
-		finally {
-			routerLogger.disconnect(true);
-			display.dispose();
-			routerLogger.joinPollingThread();
-			routerLogger.stopNetworkServices();
-			routerLogger.removeShutdownHook();
-		}
-		routerLogger.printGoodbye();
 	}
 
 	private static RouterLoggerGui newInstance(final Display display) {

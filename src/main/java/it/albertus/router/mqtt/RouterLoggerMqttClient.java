@@ -7,11 +7,11 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import it.albertus.jface.preference.field.UriListEditor;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.dto.StatusDto;
 import it.albertus.router.dto.ThresholdsDto;
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Status;
 import it.albertus.router.engine.ThresholdsReached;
@@ -96,7 +96,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 		}
 	}
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLogger.getConfiguration();
 
 	private long lastDataMessageTime;
 	private long lastThresholdsMessageTime;

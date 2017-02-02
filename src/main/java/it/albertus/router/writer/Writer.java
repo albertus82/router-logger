@@ -1,5 +1,6 @@
 package it.albertus.router.writer;
 
+import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.util.Console;
@@ -7,7 +8,7 @@ import it.albertus.util.SystemConsole;
 
 public abstract class Writer {
 
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 	protected final Console out = SystemConsole.getInstance();
 
 	/**

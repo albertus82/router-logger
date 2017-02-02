@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.sun.net.httpserver.BasicAuthenticator;
 
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.RouterLogger;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
@@ -20,7 +20,7 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 	private static final int FAIL_DELAY_IN_MILLIS = 3000;
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLogger.getConfiguration();
 
 	protected WebServerAuthenticator() {
 		super(Messages.get("msg.application.name"));
