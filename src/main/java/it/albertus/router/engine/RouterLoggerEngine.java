@@ -497,7 +497,7 @@ public abstract class RouterLoggerEngine {
 						logger.info(Messages.get("msg.reconnection.info", formattedDate), Destination.CONSOLE);
 					}
 					interruptible = true;
-					Thread.sleep(adjustedWaitTimeInMillis);
+					TimeUnit.MILLISECONDS.sleep(adjustedWaitTimeInMillis);
 					interruptible = false;
 				}
 			}
