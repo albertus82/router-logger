@@ -22,6 +22,8 @@ public class ThresholdsEmailSender {
 
 	private static final Logger logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
 
+	private static final Configuration configuration = RouterLogger.getConfiguration();
+
 	public static class Defaults {
 		public static final int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 3600;
 		public static final short MAX_ITEMS = 50;
@@ -41,7 +43,6 @@ public class ThresholdsEmailSender {
 
 	private static final String CFG_KEY_THRESHOLDS_EMAIL_MAX_ITEMS = "thresholds.email.max.items";
 
-	private final Configuration configuration = RouterLogger.getConfiguration();
 	private final Queue<ThresholdEmailItem> queue = new ConcurrentLinkedQueue<ThresholdEmailItem>();
 	private int extraEventsCount;
 	private Date lastEventTimestamp;

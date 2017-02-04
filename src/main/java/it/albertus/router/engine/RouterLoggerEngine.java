@@ -13,14 +13,14 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.router.RouterLogger;
 import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.mqtt.RouterLoggerMqttClient;
-import it.albertus.router.reader.Reader;
+import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.WebServer;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.Logger.Destination;
 import it.albertus.router.util.LoggerFactory;
 import it.albertus.router.writer.CsvWriter;
-import it.albertus.router.writer.Writer;
+import it.albertus.router.writer.IWriter;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
@@ -30,6 +30,8 @@ import it.albertus.util.Version;
 public abstract class RouterLoggerEngine {
 
 	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerEngine.class);
+
+	protected static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 
 	public static class Defaults {
 		public static final int ITERATIONS = 0;
@@ -45,7 +47,7 @@ public abstract class RouterLoggerEngine {
 		public static final boolean WAIT_DISCONNECTED = false;
 		public static final boolean WAIT_DISCONNECTED_INTERVAL_THRESHOLD = true;
 		public static final long WAIT_DISCONNECTED_INTERVAL_THRESHOLD_IN_MILLIS = INTERVAL_FAST_IN_MILLIS;
-		public static final Class<? extends Writer> WRITER_CLASS = CsvWriter.class;
+		public static final Class<? extends IWriter> WRITER_CLASS = CsvWriter.class;
 
 		protected Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -58,13 +60,12 @@ public abstract class RouterLoggerEngine {
 
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
-	protected final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 	protected final WebServer httpServer = WebServer.getInstance();
 	protected final RouterLoggerMqttClient mqttClient = RouterLoggerMqttClient.getInstance();
 	protected final Console out = SystemConsole.getInstance();
 
-	private Reader reader;
-	private Writer writer;
+	private IReader reader;
+	private IWriter writer;
 
 	protected Thread pollingThread;
 	private volatile boolean interruptible = false;
@@ -108,13 +109,13 @@ public abstract class RouterLoggerEngine {
 		return waitTimeInMillis;
 	}
 
-	protected Reader createReader() {
+	protected IReader createReader() {
 		final String configurationKey = "reader.class.name";
 		final String readerClassName = getReaderClassName(configuration.getString(configurationKey));
 
-		final Reader rdr;
+		final IReader rdr;
 		try {
-			rdr = (Reader) Class.forName(readerClassName).newInstance();
+			rdr = (IReader) Class.forName(readerClassName).newInstance();
 		}
 		catch (final Exception e) {
 			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), e, configurationKey);
@@ -125,13 +126,13 @@ public abstract class RouterLoggerEngine {
 		return rdr;
 	}
 
-	protected Writer createWriter() {
+	protected IWriter createWriter() {
 		final String configurationKey = "writer.class.name";
 		final String writerClassName = getWriterClassName(configuration.getString(configurationKey, RouterLoggerEngine.Defaults.WRITER_CLASS.getName()));
 
-		final Writer wrt;
+		final IWriter wrt;
 		try {
-			wrt = (Writer) Class.forName(writerClassName).newInstance();
+			wrt = (IWriter) Class.forName(writerClassName).newInstance();
 		}
 		catch (final Exception e) {
 			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), e, configurationKey);
@@ -150,11 +151,11 @@ public abstract class RouterLoggerEngine {
 		}
 		catch (final Exception e) {
 			logger.debug(e);
-			readerClassName = Reader.class.getPackage().getName() + '.' + configuredClassName;
+			readerClassName = IReader.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		catch (final LinkageError le) {
 			logger.debug(le);
-			readerClassName = Reader.class.getPackage().getName() + '.' + configuredClassName;
+			readerClassName = IReader.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return readerClassName;
 	}
@@ -167,11 +168,11 @@ public abstract class RouterLoggerEngine {
 		}
 		catch (final Exception e) {
 			logger.debug(e);
-			writerClassName = Writer.class.getPackage().getName() + '.' + configuredClassName;
+			writerClassName = IWriter.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		catch (final LinkageError le) {
 			logger.debug(le);
-			writerClassName = Writer.class.getPackage().getName() + '.' + configuredClassName;
+			writerClassName = IWriter.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return writerClassName;
 	}
@@ -607,19 +608,19 @@ public abstract class RouterLoggerEngine {
 		return currentThresholdsReached;
 	}
 
-	public Reader getReader() {
+	public IReader getReader() {
 		return reader;
 	}
 
-	protected void setReader(Reader reader) {
+	protected void setReader(IReader reader) {
 		this.reader = reader;
 	}
 
-	public Writer getWriter() {
+	public IWriter getWriter() {
 		return writer;
 	}
 
-	protected void setWriter(Writer writer) {
+	protected void setWriter(IWriter writer) {
 		this.writer = writer;
 	}
 

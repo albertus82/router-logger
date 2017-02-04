@@ -5,7 +5,7 @@ import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
-import it.albertus.router.reader.Reader;
+import it.albertus.router.reader.IReader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Localized;
@@ -19,9 +19,9 @@ public class ReaderPreferencePage extends RestartHeaderPreferencePage {
 		DLINK_2750(DLinkDsl2750Reader.DEVICE_MODEL_KEY, DLinkDsl2750Reader.class);
 
 		private final String resourceKey;
-		private final Class<? extends Reader> readerClass;
+		private final Class<? extends IReader> readerClass;
 
-		private ReaderComboData(final String resourceKey, final Class<? extends Reader> readerClass) {
+		private ReaderComboData(final String resourceKey, final Class<? extends IReader> readerClass) {
 			this.resourceKey = resourceKey;
 			this.readerClass = readerClass;
 		}
@@ -30,7 +30,7 @@ public class ReaderPreferencePage extends RestartHeaderPreferencePage {
 			return resourceKey;
 		}
 
-		public Class<? extends Reader> getReaderClass() {
+		public Class<? extends IReader> getReaderClass() {
 			return readerClass;
 		}
 	}

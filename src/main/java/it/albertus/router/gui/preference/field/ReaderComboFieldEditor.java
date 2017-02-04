@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.reader.Reader;
+import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.LoggerFactory;
@@ -24,7 +24,7 @@ public class ReaderComboFieldEditor extends ValidatedComboFieldEditor {
 	protected boolean checkState() {
 		try {
 			final Class<?> readerClass = Class.forName(RouterLoggerEngine.getReaderClassName(getValue()), false, this.getClass().getClassLoader());
-			if (Reader.class.isAssignableFrom(readerClass) && !Modifier.isAbstract(readerClass.getModifiers())) {
+			if (IReader.class.isAssignableFrom(readerClass) && !Modifier.isAbstract(readerClass.getModifiers())) {
 				return true;
 			}
 			else {

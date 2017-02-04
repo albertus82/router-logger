@@ -37,6 +37,8 @@ public abstract class BaseHttpServer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseHttpServer.class);
 
+	protected static final Configuration configuration = RouterLogger.getConfiguration();
+
 	public static class Defaults {
 		public static final int PORT = 8080;
 		public static final boolean ENABLED = false;
@@ -57,7 +59,6 @@ public abstract class BaseHttpServer {
 
 	protected static final int STOP_DELAY = 0;
 
-	protected final Configuration configuration = RouterLogger.getConfiguration();
 	protected final Authenticator authenticator = new WebServerAuthenticator();
 	protected volatile HttpServer httpServer;
 	protected volatile boolean started = false;

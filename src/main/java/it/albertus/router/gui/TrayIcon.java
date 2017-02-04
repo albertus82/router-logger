@@ -34,6 +34,8 @@ public class TrayIcon {
 
 	private static final Logger logger = LoggerFactory.getLogger(TrayIcon.class);
 
+	private static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+
 	public static class Defaults {
 		public static final boolean GUI_MINIMIZE_TRAY = true;
 		public static final boolean GUI_TRAY_TOOLTIP = true;
@@ -43,7 +45,6 @@ public class TrayIcon {
 		}
 	}
 
-	private final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 	private final RouterLoggerGui gui;
 
 	private Tray tray;

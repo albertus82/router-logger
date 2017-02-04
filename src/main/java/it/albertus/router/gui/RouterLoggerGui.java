@@ -118,7 +118,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				shell.open();
 
 				// Fix invisible (transparent) shell bug with some Linux distibutions
-				if (Util.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+				if (Util.isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 					shell.setMinimized(true);
 				}
 

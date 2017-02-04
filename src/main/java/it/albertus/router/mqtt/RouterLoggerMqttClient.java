@@ -28,6 +28,8 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerMqttClient.class);
 
+	private static final Configuration configuration = RouterLogger.getConfiguration();
+
 	private static final String CFG_KEY_MQTT_CLEAN_SESSION = "mqtt.clean.session";
 	private static final String CFG_KEY_MQTT_MAX_INFLIGHT = "mqtt.max.inflight";
 	private static final String CFG_KEY_MQTT_CONNECTION_TIMEOUT = "mqtt.connection.timeout";
@@ -95,8 +97,6 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
-
-	private final Configuration configuration = RouterLogger.getConfiguration();
 
 	private long lastDataMessageTime;
 	private long lastThresholdsMessageTime;

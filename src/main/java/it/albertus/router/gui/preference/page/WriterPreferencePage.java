@@ -6,7 +6,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 import it.albertus.router.writer.DummyWriter;
-import it.albertus.router.writer.Writer;
+import it.albertus.router.writer.IWriter;
 import it.albertus.util.Localized;
 
 public class WriterPreferencePage extends RestartHeaderPreferencePage {
@@ -17,9 +17,9 @@ public class WriterPreferencePage extends RestartHeaderPreferencePage {
 		DUMMY(DummyWriter.DESTINATION_KEY, DummyWriter.class);
 
 		private final String resourceKey;
-		private final Class<? extends Writer> writerClass;
+		private final Class<? extends IWriter> writerClass;
 
-		private WriterComboData(final String resourceKey, final Class<? extends Writer> writerClass) {
+		private WriterComboData(final String resourceKey, final Class<? extends IWriter> writerClass) {
 			this.resourceKey = resourceKey;
 			this.writerClass = writerClass;
 		}
@@ -28,7 +28,7 @@ public class WriterPreferencePage extends RestartHeaderPreferencePage {
 			return resourceKey;
 		}
 
-		public Class<? extends Writer> getWriterClass() {
+		public Class<? extends IWriter> getWriterClass() {
 			return writerClass;
 		}
 	}

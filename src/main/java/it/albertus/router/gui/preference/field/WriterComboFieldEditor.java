@@ -9,7 +9,7 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.LoggerFactory;
-import it.albertus.router.writer.Writer;
+import it.albertus.router.writer.IWriter;
 
 public class WriterComboFieldEditor extends ValidatedComboFieldEditor {
 
@@ -24,7 +24,7 @@ public class WriterComboFieldEditor extends ValidatedComboFieldEditor {
 	protected boolean checkState() {
 		try {
 			final Class<?> writerClass = Class.forName(RouterLoggerEngine.getWriterClassName(getValue()), false, this.getClass().getClassLoader());
-			if (Writer.class.isAssignableFrom(writerClass) && !Modifier.isAbstract(writerClass.getModifiers())) {
+			if (IWriter.class.isAssignableFrom(writerClass) && !Modifier.isAbstract(writerClass.getModifiers())) {
 				return true;
 			}
 			else {

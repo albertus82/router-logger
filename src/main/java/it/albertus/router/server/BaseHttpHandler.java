@@ -32,15 +32,15 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseHttpHandler.class);
 
+	protected static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+
+	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
+
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
 	private static final int BUFFER_SIZE = 4096;
 
-	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
-
 	private static final Charset charset = initCharset();
-
-	protected final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 
 	protected final RouterLoggerEngine engine;
 

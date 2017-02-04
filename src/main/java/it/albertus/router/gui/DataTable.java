@@ -46,6 +46,8 @@ public class DataTable {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataTable.class);
 
+	private static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+
 	private static final char SAMPLE_CHAR = '9';
 	private static final char FIELD_SEPARATOR = '\t';
 
@@ -83,8 +85,6 @@ public class DataTable {
 			return type;
 		}
 	}
-
-	private final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
 
 	private int iteration;
 

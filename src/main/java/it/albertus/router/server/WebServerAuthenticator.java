@@ -15,12 +15,12 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebServerAuthenticator.class);
 
+	private static final Configuration configuration = RouterLogger.getConfiguration();
+
 	private static final String CFG_KEY_SERVER_USERNAME = "server.username";
 	private static final String CFG_KEY_SERVER_PASSWORD = "server.password";
 
 	private static final int FAIL_DELAY_IN_MILLIS = 3000;
-
-	private final Configuration configuration = RouterLogger.getConfiguration();
 
 	protected WebServerAuthenticator() {
 		super(Messages.get("msg.application.name"));

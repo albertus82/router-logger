@@ -33,6 +33,8 @@ public class EmailSender {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
+	private static final Configuration configuration = RouterLogger.getConfiguration();
+
 	private static final String EMAIL_ADDRESSES_SPLIT_REGEX = EmailAddressesListEditor.EMAIL_ADDRESSES_SPLIT_REGEX;
 
 	private static final String CFG_KEY_EMAIL_HOST = "email.host";
@@ -74,7 +76,6 @@ public class EmailSender {
 		}
 	}
 
-	private final Configuration configuration = RouterLogger.getConfiguration();
 	private final Queue<RouterLoggerEmail> queue = new ConcurrentLinkedQueue<RouterLoggerEmail>();
 	private volatile Thread daemon;
 	private Console out = SystemConsole.getInstance();
