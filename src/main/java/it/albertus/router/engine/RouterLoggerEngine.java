@@ -59,6 +59,7 @@ public abstract class RouterLoggerEngine {
 	private static final String CFG_KEY_LOGGER_INTERVAL_NORMAL_MS = "logger.interval.normal.ms";
 
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
+	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
 
 	protected final WebServer httpServer = WebServer.getInstance();
 	protected final RouterLoggerMqttClient mqttClient = RouterLoggerMqttClient.getInstance();
@@ -118,10 +119,10 @@ public abstract class RouterLoggerEngine {
 			rdr = (IReader) Class.forName(readerClassName).newInstance();
 		}
 		catch (final Exception e) {
-			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), e, configurationKey);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), e, configurationKey);
 		}
 		catch (final LinkageError le) {
-			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), le, configurationKey);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), le, configurationKey);
 		}
 		return rdr;
 	}
@@ -135,10 +136,10 @@ public abstract class RouterLoggerEngine {
 			wrt = (IWriter) Class.forName(writerClassName).newInstance();
 		}
 		catch (final Exception e) {
-			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), e, configurationKey);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), e, configurationKey);
 		}
 		catch (final LinkageError le) {
-			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get("err.configuration.review", configuration.getFileName()), le, configurationKey);
+			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), le, configurationKey);
 		}
 		return wrt;
 	}
