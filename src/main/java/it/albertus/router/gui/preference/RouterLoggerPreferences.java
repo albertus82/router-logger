@@ -2,6 +2,7 @@ package it.albertus.router.gui.preference;
 
 import java.io.IOException;
 
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
@@ -16,15 +17,18 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.resources.Messages.Language;
 import it.albertus.router.util.Logger;
 import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.Configuration;
 
 public class RouterLoggerPreferences extends Preferences {
 
 	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerPreferences.class);
 
+	private static final Configuration configuration = RouterLogger.getConfiguration();
+
 	private final RouterLoggerGui gui;
 
 	public RouterLoggerPreferences(final RouterLoggerGui gui) {
-		super(PageDefinition.values(), Preference.values(), RouterLogger.getConfiguration(), Images.getMainIcons());
+		super(PageDefinition.values(), Preference.values(), configuration, Images.getMainIcons());
 		this.gui = gui;
 	}
 
@@ -43,6 +47,12 @@ public class RouterLoggerPreferences extends Preferences {
 		catch (final IOException ioe) {
 			logger.error(ioe);
 			returnCode = Window.CANCEL;
+		}
+
+		// Update console font...
+		final String fontDataString = configuration.getString("gui.console.font", true);
+		if (!fontDataString.isEmpty()) {
+			gui.getConsole().setFont(PreferenceConverter.readFontData(fontDataString));
 		}
 
 		// Check if must update texts...

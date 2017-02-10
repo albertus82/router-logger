@@ -29,6 +29,8 @@ import java.util.Set;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.FontFieldEditor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 
 import it.albertus.jface.console.StyledTextConsole;
@@ -155,6 +157,7 @@ public enum Preference implements IPreference {
 	DLINK_2750_COMMAND_INFO_ADSL_STATUS(new PreferenceDetailsBuilder(READER_DLINK_2750).defaultValue(DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_STATUS).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	DLINK_2750_COMMAND_INFO_ADSL_SNR(new PreferenceDetailsBuilder(READER_DLINK_2750).defaultValue(DLinkDsl2750Reader.Defaults.COMMAND_INFO_ADSL_SNR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 
+	GUI_CONSOLE_FONT(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(JFaceResources.getTextFont().getFontData()).build(), new FieldEditorDetailsBuilder(FontFieldEditor.class).build()),
 	GUI_CONSOLE_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(StyledTextConsole.DEFAULT_LIMIT).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).textLimit(6).build()),
 	GUI_CLIPBOARD_MAX_CHARS(new PreferenceDetailsBuilder(APPEARANCE).defaultValue(RouterLoggerGui.Defaults.GUI_CLIPBOARD_MAX_CHARS).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(0, 128 * 1024).build()),
 	GUI_MINIMIZE_TRAY(new PreferenceDetailsBuilder(APPEARANCE).separate().defaultValue(TrayIcon.Defaults.GUI_MINIMIZE_TRAY).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
