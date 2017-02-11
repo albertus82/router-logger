@@ -1,15 +1,15 @@
 package it.albertus.router.server;
 
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.net.httpserver.BasicAuthenticator;
 
 import it.albertus.router.RouterLogger;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
+import it.albertus.util.logging.LoggerFactory;
 
 public class WebServerAuthenticator extends BasicAuthenticator {
 
@@ -35,13 +35,13 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 
 			final String expectedUsername = configuration.getString(CFG_KEY_SERVER_USERNAME);
 			if (expectedUsername == null || expectedUsername.isEmpty()) {
-				logger.info(Messages.get("err.server.cfg.error.username"), Destination.CONSOLE, Destination.FILE);
+				logger.warning(Messages.get("err.server.cfg.error.username"));
 				return fail();
 			}
 
 			final char[] expectedPassword = configuration.getCharArray(CFG_KEY_SERVER_PASSWORD);
 			if (expectedPassword == null || expectedPassword.length == 0) {
-				logger.info(Messages.get("err.server.cfg.error.password"), Destination.CONSOLE, Destination.FILE);
+				logger.warning(Messages.get("err.server.cfg.error.password"));
 				return fail();
 			}
 
@@ -53,8 +53,8 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 				return fail();
 			}
 		}
-		catch (final Exception exception) {
-			logger.error(exception);
+		catch (final Exception e) {
+			logger.log(Level.SEVERE, e.toString(), e);
 			return fail();
 		}
 	}
@@ -77,8 +77,8 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 		try {
 			TimeUnit.MILLISECONDS.sleep(FAIL_DELAY_IN_MILLIS);
 		}
-		catch (final InterruptedException ie) {
-			logger.debug(ie);
+		catch (final InterruptedException e) {
+			logger.log(Level.FINE, e.toString(), e);
 			Thread.currentThread().interrupt();
 		}
 		return false;

@@ -9,6 +9,7 @@ import static it.albertus.router.gui.preference.page.PageDefinition.EMAIL;
 import static it.albertus.router.gui.preference.page.PageDefinition.EMAIL_ADVANCED;
 import static it.albertus.router.gui.preference.page.PageDefinition.EMAIL_CC_BCC;
 import static it.albertus.router.gui.preference.page.PageDefinition.GENERAL;
+import static it.albertus.router.gui.preference.page.PageDefinition.LOGGING;
 import static it.albertus.router.gui.preference.page.PageDefinition.MQTT;
 import static it.albertus.router.gui.preference.page.PageDefinition.MQTT_ADVANCED;
 import static it.albertus.router.gui.preference.page.PageDefinition.MQTT_MESSAGES;
@@ -59,6 +60,7 @@ import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.jface.preference.page.IPageDefinition;
 import it.albertus.router.console.RouterLoggerConsole;
+import it.albertus.router.email.EmailHandler;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.engine.RouterLoggerConfiguration;
@@ -79,7 +81,6 @@ import it.albertus.router.gui.preference.page.GeneralPreferencePage;
 import it.albertus.router.gui.preference.page.MqttPreferencePage;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
 import it.albertus.router.gui.preference.page.ServerHttpsPreferencePage;
-import it.albertus.router.gui.preference.page.ServerPreferencePage;
 import it.albertus.router.gui.preference.page.WriterPreferencePage;
 import it.albertus.router.mqtt.RouterLoggerMqttClient;
 import it.albertus.router.reader.AsusDslN12EReader;
@@ -98,7 +99,6 @@ import it.albertus.router.server.html.RestartHandler;
 import it.albertus.router.server.html.RootHtmlHandler;
 import it.albertus.router.server.html.StatusHtmlHandler;
 import it.albertus.router.server.json.BaseJsonHandler;
-import it.albertus.router.util.Logger;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.DatabaseWriter;
 import it.albertus.util.Configuration;
@@ -106,7 +106,7 @@ import it.albertus.util.Localized;
 
 public enum Preference implements IPreference {
 
-	LANGUAGE(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerConfiguration.Defaults.LANGUAGE).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
+	LANGUAGE(new PreferenceDetailsBuilder(GENERAL).defaultValue(Messages.Defaults.LANGUAGE).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLanguageComboOptions()).build()),
 	LOGGER_ITERATIONS(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.ITERATIONS).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
@@ -124,16 +124,13 @@ public enum Preference implements IPreference {
 		}
 	}, 0)).build()),
 	LOGGER_RETRY_INTERVAL_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
-	LOGGER_ERROR_LOG_DESTINATION_PATH(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(Logger.Defaults.DIRECTORY).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
+	LOGGER_ERROR_LOG_DESTINATION_PATH(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_PATH).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("msg.preferences.directory.dialog.message.log");
 		}
 	}).build()),
 	CONSOLE_SHOW_CONFIGURATION(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	DEBUG(new PreferenceDetailsBuilder(GENERAL).defaultValue(Logger.Defaults.DEBUG).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	LOG_EMAIL(new PreferenceDetailsBuilder(GENERAL).defaultValue(Logger.Defaults.EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	LOG_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(GENERAL).defaultValue(Logger.Defaults.EMAIL_IGNORE_DUPLICATES).parent(LOG_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	READER_CLASS_NAME(new PreferenceDetailsBuilder(READER).build(), new FieldEditorDetailsBuilder(ReaderComboFieldEditor.class).labelsAndValues(ReaderPreferencePage.getReaderComboOptions()).build()),
 	ROUTER_USERNAME(new PreferenceDetailsBuilder(READER).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
@@ -243,7 +240,7 @@ public enum Preference implements IPreference {
 	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(BaseHttpServer.Defaults.AUTHENTICATION).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_USERNAME(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
-	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHtmlHandler.Defaults.LOG_REQUEST).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(ServerPreferencePage.getLogComboOptions()).build()),
+	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHtmlHandler.Defaults.LOG_REQUEST).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHttpServer.Defaults.THREADS).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
 	SERVER_MAXREQTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(BaseHttpServer.Defaults.MAX_REQ_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
@@ -339,7 +336,19 @@ public enum Preference implements IPreference {
 		public String getString() {
 			return Messages.get("msg.preferences.directory.dialog.message.mqtt");
 		}
-	}).build());
+	}).build()),
+
+	LOGGING_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_LEVEL.intValue()).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingComboOptions()).build()),
+	LOGGING_FILES_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	LOGGING_FILES_PATH(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_ENABLED).defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_PATH).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryMustExist(false).directoryDialogMessage(new Localized() {
+		@Override
+		public String getString() {
+			return Messages.get("msg.preferences.directory.dialog.message.log");
+		}
+	}).build()),
+	LOGGING_EMAIL_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(EmailHandler.Defaults.EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	LOGGING_EMAIL_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.EMAIL_LEVEL.intValue()).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingComboOptions()).build()),
+	LOGGING_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.EMAIL_IGNORE_DUPLICATES).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

@@ -5,27 +5,38 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.albertus.jface.JFaceMessages;
+import it.albertus.router.email.EmailHandler;
 import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.router.util.LogManager;
 import it.albertus.util.Configuration;
 import it.albertus.util.StringUtils;
+import it.albertus.util.logging.CustomFormatter;
+import it.albertus.util.logging.DailyRollingFileHandlerBuilder;
+import it.albertus.util.logging.LoggerFactory;
+import it.albertus.util.logging.LoggingSupport;
 
 public class RouterLoggerConfiguration extends Configuration {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerConfiguration.class);
 
 	public static class Defaults {
-		public static final String LANGUAGE = Locale.getDefault().getLanguage();
+		public static final boolean LOGGING_FILES_ENABLED = true;
+		public static final Level LOGGING_LEVEL = Level.INFO;
+		public static final String LOGGING_FILES_PATH = getOsSpecificLocalAppDataDir() + File.separator + Messages.get("msg.application.name");
+		public static final int LOGGING_FILES_LIMIT = 0;
+		public static final int LOGGING_FILES_COUNT = 1;
+
 		public static final boolean THRESHOLDS_SPLIT = false;
 		public static final String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
 		public static final String CONSOLE_SHOW_KEYS_SEPARATOR = ",";
@@ -36,9 +47,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		}
 	}
 
-	public static final String CFG_KEY_LANGUAGE = "language";
-
-	public static final String FILE_NAME = "routerlogger.cfg";
+	public static final String CFG_FILE_NAME = "routerlogger.cfg";
 
 	private static final String MSG_KEY_ERR_THRESHOLD_MISCFG_NAME = "err.threshold.miscfg.name";
 	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
@@ -47,9 +56,14 @@ public class RouterLoggerConfiguration extends Configuration {
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
 
+	private DailyRollingFileHandlerBuilder fileHandlerBuilder;
+
+	private Handler fileHandler;
+	private Handler emailHandler;
+
 	public RouterLoggerConfiguration() throws IOException {
 		// Caricamento della configurazione...
-		super(Messages.get("msg.application.name") + File.separator + FILE_NAME, true);
+		super(Messages.get("msg.application.name") + File.separator + CFG_FILE_NAME, true);
 		init();
 	}
 
@@ -66,12 +80,8 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	private void init() {
-		/* Impostazione lingua */
-		if (this.contains("language")) {
-			final String language = getString(CFG_KEY_LANGUAGE, Defaults.LANGUAGE);
-			Messages.setLanguage(language);
-			JFaceMessages.setLanguage(language);
-		}
+		updateLanguage();
+		updateLogging();
 
 		/* Caricamento chiavi da evidenziare */
 		guiImportantKeys.clear();
@@ -93,6 +103,71 @@ public class RouterLoggerConfiguration extends Configuration {
 		}
 		else {
 			thresholds = new ExpressionThresholds(); /* Nuovo stile */
+		}
+	}
+
+	private void updateLanguage() {
+		final String language = getString("language", Messages.Defaults.LANGUAGE);
+		Messages.setLanguage(language);
+		JFaceMessages.setLanguage(language);
+	}
+
+	private void updateLogging() {
+		if (LoggingSupport.getInitialConfigurationProperty() == null) {
+			updateLoggingLevel();
+
+			if (this.getBoolean("logging.files.enabled", Defaults.LOGGING_FILES_ENABLED)) {
+				enableLoggingFileHandler();
+			}
+			else {
+				disableLoggingFileHandler();
+			}
+
+			if (emailHandler == null) {
+				emailHandler = new EmailHandler();
+				LoggingSupport.getRootLogger().addHandler(emailHandler);
+			}
+		}
+	}
+
+	private void updateLoggingLevel() {
+		try {
+			LoggingSupport.setLevel(LoggingSupport.getRootLogger().getName(), Level.parse(this.getString("logging.level", Defaults.LOGGING_LEVEL.getName())));
+		}
+		catch (final IllegalArgumentException iae) {
+			logger.log(Level.WARNING, iae.toString(), iae);
+		}
+	}
+
+	private void enableLoggingFileHandler() {
+		final String loggingPath = this.getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
+		if (loggingPath != null && !loggingPath.isEmpty()) {
+			final DailyRollingFileHandlerBuilder builder = new DailyRollingFileHandlerBuilder().fileNamePattern(loggingPath + File.separator + LogManager.FILE_NAME).limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024).count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT)).append(true).formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
+			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
+				if (fileHandler != null) {
+					LoggingSupport.getRootLogger().removeHandler(fileHandler);
+					fileHandler.close();
+					fileHandler = null;
+				}
+				try {
+					new File(loggingPath).mkdirs();
+					fileHandlerBuilder = builder;
+					fileHandler = builder.build();
+					LoggingSupport.getRootLogger().addHandler(fileHandler);
+				}
+				catch (final IOException ioe) {
+					logger.log(Level.SEVERE, ioe.toString(), ioe);
+				}
+			}
+		}
+	}
+
+	private void disableLoggingFileHandler() {
+		if (fileHandler != null) {
+			LoggingSupport.getRootLogger().removeHandler(fileHandler);
+			fileHandler.close();
+			fileHandler = null;
+			fileHandlerBuilder = null;
 		}
 	}
 
@@ -178,7 +253,8 @@ public class RouterLoggerConfiguration extends Configuration {
 				String key = (String) objectKey;
 				if (key != null && key.startsWith(CFG_PREFIX + '.')) {
 					if (key.indexOf('.') == key.lastIndexOf('.') || "".equals(key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'))) || (!key.endsWith(CFG_SUFFIX_KEY) && !key.endsWith(CFG_SUFFIX_TYPE) && !key.endsWith(CFG_SUFFIX_VALUE))) {
-						logger.error(new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName())));
+						final IllegalThresholdException e = new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()));
+						logger.log(Level.WARNING, e.toString(), e);
 						continue;
 					}
 					final String thresholdName = key.substring(key.indexOf('.') + 1, key.lastIndexOf('.'));
@@ -252,30 +328,30 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	}
 
-//	public static void main(String... args) throws IOException {
-//		Properties p = new Properties();
-//		InputStream r = RouterLoggerConfiguration.class.getResourceAsStream("/routerlogger.cfg");
-//		p.load(r);
-//		r.close();
-//		System.out.println("Presenti in routerlogger.cfg e non presenti in Preference:");
-//		outer: for (String key : p.stringPropertyNames()) {
-//			for (Preference preference : Preference.values()) {
-//				if (preference.getConfigurationKey().equals(key)) {
-//					continue outer;
-//				}
-//			}
-//			System.out.println(key);
-//		}
-//		System.out.println();
-//		System.out.println("Presenti in Preference e non presenti in routerlogger.cfg:");
-//		outer: for (Preference preference : Preference.values()) {
-//			for (String key : p.stringPropertyNames()) {
-//				if (preference.getConfigurationKey().equals(key)) {
-//					continue outer;
-//				}
-//			}
-//			System.out.println(preference.getConfigurationKey());
-//		}
-//	}
+	//	public static void main(String... args) throws IOException {
+	//		Properties p = new Properties();
+	//		InputStream r = RouterLoggerConfiguration.class.getResourceAsStream("/routerlogger.cfg");
+	//		p.load(r);
+	//		r.close();
+	//		System.out.println("Presenti in routerlogger.cfg e non presenti in Preference:");
+	//		outer: for (String key : p.stringPropertyNames()) {
+	//			for (Preference preference : Preference.values()) {
+	//				if (preference.getConfigurationKey().equals(key)) {
+	//					continue outer;
+	//				}
+	//			}
+	//			System.out.println(key);
+	//		}
+	//		System.out.println();
+	//		System.out.println("Presenti in Preference e non presenti in routerlogger.cfg:");
+	//		outer: for (Preference preference : Preference.values()) {
+	//			for (String key : p.stringPropertyNames()) {
+	//				if (preference.getConfigurationKey().equals(key)) {
+	//					continue outer;
+	//				}
+	//			}
+	//			System.out.println(preference.getConfigurationKey());
+	//		}
+	//	}
 
 }

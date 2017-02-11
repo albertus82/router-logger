@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
+import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
+import it.albertus.util.logging.LoggerFactory;
 
 /**
  * <b>ASUS DSL-N14U</b>. Comandi Telnet disponibili (case sensitive):
@@ -19,6 +21,8 @@ import it.albertus.router.resources.Messages;
  * </ul>
  */
 public class AsusDslN14UReader extends Reader {
+
+	private static final Logger logger = LoggerFactory.getLogger(AsusDslN14UReader.class);
 
 	public static class Defaults {
 		public static final String COMMAND_INFO_ADSL = "tcapi show Info_Adsl";
@@ -37,15 +41,15 @@ public class AsusDslN14UReader extends Reader {
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {
 		// Username...
-		out.print(readFromTelnet(LOGIN_PROMPT, true).trim(), true);
+		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(username);
 
 		// Password...
-		out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
+		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(password);
 
 		// Avanzamento fino al prompt...
-		out.print(readFromTelnet(COMMAND_PROMPT, true).trim());
+		logger.info(readFromTelnet(COMMAND_PROMPT, true).trim());
 		return true;
 	}
 

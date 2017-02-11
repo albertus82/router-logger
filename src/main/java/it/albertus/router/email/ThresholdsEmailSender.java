@@ -7,20 +7,32 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
+import it.albertus.util.logging.LoggerFactory;
+import it.albertus.util.logging.LoggingSupport;
 
 public class ThresholdsEmailSender {
 
-	private static final Logger logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
+	private static final Logger logger;
+
+	static {
+		logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
+		logger.setUseParentHandlers(false);
+		for (final Handler handler : LoggingSupport.getRootHandlers()) {
+			if (!(handler instanceof EmailHandler)) {
+				logger.addHandler(handler);
+			}
+		}
+	}
 
 	private static final Configuration configuration = RouterLogger.getConfiguration();
 
@@ -83,7 +95,7 @@ public class ThresholdsEmailSender {
 
 		@Override
 		public void run() {
-			logger.debug(Messages.get("msg.thread.started", getName()));
+			logger.fine(Messages.get("msg.thread.started", getName()));
 			while (!isInterrupted()) {
 				synchronized (lock) {
 					if (queue == null || queue.isEmpty()) {
@@ -95,8 +107,8 @@ public class ThresholdsEmailSender {
 				try {
 					sendMessages();
 				}
-				catch (final Exception exception) {
-					logger.error(exception, Destination.CONSOLE);
+				catch (final Exception e) {
+					logger.log(Level.WARNING, e.toString(), e);
 				}
 
 				final int sleepTime = configuration.getInt("thresholds.email.send.interval.secs", Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS);
@@ -104,13 +116,13 @@ public class ThresholdsEmailSender {
 					try {
 						TimeUnit.SECONDS.sleep(sleepTime);
 					}
-					catch (final InterruptedException ie) {
-						logger.debug(ie);
+					catch (final InterruptedException e) {
+						logger.log(Level.FINE, e.toString(), e);
 						interrupt();
 					}
 				}
 			}
-			logger.debug(Messages.get("msg.thread.terminated", getName()));
+			logger.fine(Messages.get("msg.thread.terminated", getName()));
 		}
 
 		private void sendMessages() {

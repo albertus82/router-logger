@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -31,13 +33,11 @@ import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Configured;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.Version;
+import it.albertus.util.logging.LoggerFactory;
 
 public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvider {
 
@@ -136,9 +136,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					}
 				}
 			}
-			catch (final Exception exception) {
-				logger.error(exception);
-				openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), exception);
+			catch (final Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
+				openErrorMessageBox(shell != null && !shell.isDisposed() ? shell : new Shell(display), e);
 			}
 			finally {
 				routerLogger.disconnect(true);
@@ -166,7 +166,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 	}
 
 	private static RouterLoggerGui showError(final Display display, final Throwable throwable) {
-		logger.error(throwable);
+		logger.log(Level.SEVERE, throwable.toString(), throwable);
 		final Shell shell = new Shell(display);
 		final int buttonId = openErrorMessageBox(shell, throwable);
 		if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName(((ConfigurationException) throwable).getKey()).getPageDefinition()) != Window.OK) {
@@ -188,7 +188,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				propertyName = Preference.forName(ce.getKey()).getLabel();
 			}
 			catch (final Exception e) {
-				logger.debug(e);
+				logger.log(Level.FINE, e.toString(), e);
 				propertyName = ce.getKey();
 			}
 			message = JFaceMessages.get("err.configuration.invalid", propertyName) + ' ' + Messages.get("lbl.preferences.edit");
@@ -217,8 +217,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		try {
 			dataTable.addRow(getIteration(), info, thresholdsReached);
 		}
-		catch (final ConfigurationException ce) {
-			logger.error(ce);
+		catch (final ConfigurationException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
 		}
 
 		// Aggiornamento icona e tooltip nella barra di notifica (se necessario)
@@ -242,7 +242,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				}
 			}
 			if (print) {
-				logger.info(Messages.get("msg.thresholds.reached", message), Destination.CONSOLE);
+				logger.info(Messages.get("msg.thresholds.reached", message));
 				if (trayIcon != null) {
 					trayIcon.showBalloonToolTip(thresholdsReached);
 				}
@@ -271,8 +271,8 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			try {
 				connect = canConnect();
 			}
-			catch (final Exception exception) {
-				logger.error(exception);
+			catch (final Exception e) {
+				logger.log(Level.WARNING, e.toString(), e);
 				return;
 			}
 			if (connect) {
@@ -283,13 +283,13 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 						try {
 							outerLoop();
 						}
-						catch (final Exception exception) {
-							logger.error(exception);
+						catch (final Exception e1) {
+							logger.log(Level.SEVERE, e1.toString(), e1);
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {
-								logger.debug(e);
+							catch (final Exception e2) {
+								logger.log(Level.FINE, e2.toString(), e2);
 							}
 							release();
 						}
@@ -298,7 +298,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				pollingThread.start();
 			}
 			else {
-				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()));
 			}
 		}
 	}
@@ -318,7 +318,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					new SwtThreadExecutor(shell) {
 						@Override
 						public void run() {
-							if (!logger.isDebugEnabled()) {
+							if (!logger.isLoggable(Level.FINE)) {
 								console.clear();
 							}
 							dataTable.reset();
@@ -328,7 +328,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					}.start();
 				}
 				catch (final Exception e) {
-					logger.error(e);
+					logger.log(Level.SEVERE, e.toString(), e);
 				}
 			}
 		}, "resetThread").start();
@@ -341,15 +341,15 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			try {
 				super.initReaderAndWriter();
 			}
-			catch (final ConfigurationException ce) {
+			catch (final ConfigurationException e) {
 				// Reset Reader & Writer...
 				setReader(null);
 				setWriter(null);
 
 				// Open Preferences dialog...
-				final int buttonId = openErrorMessageBox(shell, ce);
-				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName((ce).getKey()).getPageDefinition()) != Window.OK) {
-					logger.error(ce, Destination.CONSOLE);
+				final int buttonId = openErrorMessageBox(shell, e);
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName((e).getKey()).getPageDefinition()) != Window.OK) {
+					logger.log(Level.SEVERE, e.toString(), e);
 					return;
 				}
 			}

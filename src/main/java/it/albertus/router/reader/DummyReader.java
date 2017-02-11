@@ -5,11 +5,11 @@ import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.logging.LoggerFactory;
 
 public class DummyReader extends Reader {
 
@@ -28,7 +28,7 @@ public class DummyReader extends Reader {
 
 	@Override
 	public boolean connect() {
-		logger.info(Messages.get("msg.dummy.connect"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.dummy.connect"));
 		if (CONNECTION_TIME_IN_MILLIS > 0) {
 			try {
 				TimeUnit.MILLISECONDS.sleep(CONNECTION_TIME_IN_MILLIS);
@@ -38,7 +38,8 @@ public class DummyReader extends Reader {
 			}
 		}
 		if (Math.random() > (100.0 - CONNECTION_ERROR_PERCENTAGE) / 100.0) {
-			logger.error(new ConnectException(Messages.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE)));
+			final Exception e = new ConnectException(Messages.get("msg.dummy.connect.error", CONNECTION_ERROR_PERCENTAGE));
+			logger.log(Level.WARNING, e.toString(), e);
 			return false;
 		}
 		return true;
@@ -46,8 +47,8 @@ public class DummyReader extends Reader {
 
 	@Override
 	public boolean login(final String username, final char[] password) {
-		out.println("Username: " + username);
-		out.println("Password: " + (password != null ? String.valueOf(password) : Arrays.toString(password)));
+		logger.info("Username: " + username);
+		logger.info("Password: " + (password != null ? String.valueOf(password) : Arrays.toString(password)));
 		if (AUTHENTICATION_TIME_IN_MILLIS > 0) {
 			try {
 				TimeUnit.MILLISECONDS.sleep(AUTHENTICATION_TIME_IN_MILLIS);
@@ -64,9 +65,9 @@ public class DummyReader extends Reader {
 		for (int c = 0; c < message.length(); c++) {
 			separator.append('-');
 		}
-		out.println(separator.toString(), true);
-		out.println(message);
-		out.println(separator.toString());
+		logger.info(separator.toString());
+		logger.info(message);
+		logger.info(separator.toString());
 		return true;
 	}
 
@@ -96,12 +97,12 @@ public class DummyReader extends Reader {
 
 	@Override
 	public void logout() {
-		logger.info(Messages.get("msg.dummy.logout"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.dummy.logout"));
 	}
 
 	@Override
 	public void disconnect() {
-		logger.info(Messages.get("msg.dummy.disconnect"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.dummy.disconnect"));
 	}
 
 }

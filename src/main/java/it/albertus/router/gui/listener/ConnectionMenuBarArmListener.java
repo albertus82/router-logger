@@ -1,13 +1,15 @@
 package it.albertus.router.gui.listener;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.swt.events.ArmEvent;
 import org.eclipse.swt.events.ArmListener;
 import org.eclipse.swt.widgets.MenuItem;
 
 import it.albertus.router.gui.RouterLoggerGui;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.logging.LoggerFactory;
 
 /**
  * Attenzione: disabilitando gli elementi dei menu, vengono automaticamente
@@ -24,14 +26,14 @@ public class ConnectionMenuBarArmListener implements ArmListener {
 	}
 
 	@Override
-	public void widgetArmed(final ArmEvent e) {
+	public void widgetArmed(final ArmEvent event) {
 		final MenuItem connectMenuItem = gui.getMenuBar().getConnectionConnectItem();
 		boolean connectEnabled;
 		try {
 			connectEnabled = gui.canConnect();
 		}
-		catch (final ConfigurationException ce) {
-			logger.debug(ce);
+		catch (final ConfigurationException e) {
+			logger.log(Level.FINE, e.toString(), e);
 			connectEnabled = false;
 		}
 		connectMenuItem.setEnabled(connectEnabled);

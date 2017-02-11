@@ -6,8 +6,10 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
+import it.albertus.util.logging.LoggerFactory;
 
 /**
  * <b>ASUS DSL-N12E</b>. Comandi Telnet disponibili (case sensitive):
@@ -17,6 +19,8 @@ import it.albertus.router.resources.Messages;
  * </ul>
  */
 public class AsusDslN12EReader extends Reader {
+
+	private static final Logger logger = LoggerFactory.getLogger(AsusDslN12EReader.class);
 
 	public static class Defaults {
 		public static final String COMMAND_INFO_ADSL = "show wan adsl";
@@ -35,11 +39,11 @@ public class AsusDslN12EReader extends Reader {
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {
 		// Username...
-		out.print(readFromTelnet(LOGIN_PROMPT, true).trim(), true);
+		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(username);
 
 		// Password...
-		out.println(readFromTelnet(LOGIN_PROMPT, true).trim());
+		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(password);
 
 		// Avanzo fino al prompt dei comandi

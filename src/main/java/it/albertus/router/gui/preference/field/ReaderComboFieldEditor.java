@@ -1,6 +1,8 @@
 package it.albertus.router.gui.preference.field;
 
 import java.lang.reflect.Modifier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -8,8 +10,7 @@ import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.logging.LoggerFactory;
 
 public class ReaderComboFieldEditor extends ValidatedComboFieldEditor {
 
@@ -33,12 +34,12 @@ public class ReaderComboFieldEditor extends ValidatedComboFieldEditor {
 			}
 		}
 		catch (final Exception e) {
-			logger.debug(e);
+			logger.log(Level.FINE, e.toString(), e);
 			setErrorMessage(Messages.get("err.preferences.combo.class.reader.missing"));
 			return false;
 		}
-		catch (final LinkageError le) {
-			logger.debug(le);
+		catch (final LinkageError e) {
+			logger.log(Level.FINE, e.toString(), e);
 			setErrorMessage(Messages.get("err.preferences.combo.class.reader.missing"));
 			return false;
 		}

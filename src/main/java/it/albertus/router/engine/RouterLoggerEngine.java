@@ -1,6 +1,8 @@
 package it.albertus.router.engine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,6 +10,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.RouterLogger;
@@ -16,16 +20,12 @@ import it.albertus.router.mqtt.RouterLoggerMqttClient;
 import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.WebServer;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.IWriter;
 import it.albertus.util.ConfigurationException;
-import it.albertus.util.Console;
 import it.albertus.util.StringUtils;
-import it.albertus.util.SystemConsole;
 import it.albertus.util.Version;
+import it.albertus.util.logging.LoggerFactory;
 
 public abstract class RouterLoggerEngine {
 
@@ -63,7 +63,6 @@ public abstract class RouterLoggerEngine {
 
 	protected final WebServer httpServer = WebServer.getInstance();
 	protected final RouterLoggerMqttClient mqttClient = RouterLoggerMqttClient.getInstance();
-	protected final Console out = SystemConsole.getInstance();
 
 	private IReader reader;
 	private IWriter writer;
@@ -151,11 +150,11 @@ public abstract class RouterLoggerEngine {
 			Class.forName(readerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
 		catch (final Exception e) {
-			logger.debug(e);
+			logger.log(Level.FINER, e.toString(), e);
 			readerClassName = IReader.class.getPackage().getName() + '.' + configuredClassName;
 		}
-		catch (final LinkageError le) {
-			logger.debug(le);
+		catch (final LinkageError e) {
+			logger.log(Level.FINER, e.toString(), e);
 			readerClassName = IReader.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return readerClassName;
@@ -168,11 +167,11 @@ public abstract class RouterLoggerEngine {
 			Class.forName(writerClassName, false, RouterLoggerEngine.class.getClassLoader());
 		}
 		catch (final Exception e) {
-			logger.debug(e);
+			logger.log(Level.FINER, e.toString(), e);
 			writerClassName = IWriter.class.getPackage().getName() + '.' + configuredClassName;
 		}
-		catch (final LinkageError le) {
-			logger.debug(le);
+		catch (final LinkageError e) {
+			logger.log(Level.FINER, e.toString(), e);
 			writerClassName = IWriter.class.getPackage().getName() + '.' + configuredClassName;
 		}
 		return writerClassName;
@@ -199,7 +198,7 @@ public abstract class RouterLoggerEngine {
 						setStatus(Status.DISCONNECTED);
 					}
 					catch (final Exception e) {
-						logger.debug(e);
+						logger.log(Level.FINE, e.toString(), e);
 					}
 				}
 				release();
@@ -216,13 +215,13 @@ public abstract class RouterLoggerEngine {
 				Runtime.getRuntime().removeShutdownHook(shutdownHook);
 			}
 			catch (final Exception e) {
-				logger.debug(e);
+				logger.log(Level.FINE, e.toString(), e);
 			}
 		}
 	}
 
 	protected void printGoodbye() {
-		out.println(Messages.get("msg.bye"), true);
+		logger.info(Messages.get("msg.bye"));
 	}
 
 	protected void outerLoop() {
@@ -240,14 +239,14 @@ public abstract class RouterLoggerEngine {
 					message.append(' ').append(Messages.get("msg.wait.reconnection.retry", index, retries));
 				}
 				message.append(' ').append(Messages.get("msg.wait.reconnection.time", retryIntervalInMillis));
-				logger.info(message.toString(), Destination.CONSOLE);
+				logger.info(message.toString());
 				try {
 					interruptible = true;
 					TimeUnit.MILLISECONDS.sleep(retryIntervalInMillis);
 				}
-				catch (final InterruptedException ie) {
+				catch (final InterruptedException e) {
 					// Se si chiude il programma mentre e' in attesa di riconnessione...
-					logger.debug(ie);
+					logger.log(Level.FINER, e.toString(), e);
 					exit = true;
 					Thread.currentThread().interrupt();
 					continue;
@@ -263,9 +262,9 @@ public abstract class RouterLoggerEngine {
 				interruptible = true;
 				connected = reader.connect();
 			}
-			catch (final RuntimeException re) {
+			catch (final RuntimeException e) {
 				/* Configurazione non valida */
-				logger.error(re);
+				logger.log(Level.WARNING, e.toString(), e);
 				exit = true;
 				setStatus(Status.ERROR);
 				continue;
@@ -282,7 +281,7 @@ public abstract class RouterLoggerEngine {
 					loggedIn = reader.login(configuration.getString("router.username"), configuration.getCharArray("router.password"));
 				}
 				catch (final Exception e) {
-					logger.error(e);
+					logger.log(Level.WARNING, e.toString(), e);
 				}
 				finally {
 					interruptible = false;
@@ -292,25 +291,25 @@ public abstract class RouterLoggerEngine {
 				if (loggedIn && !exit) {
 					setStatus(Status.OK);
 					if (configuration.getBoolean("reader.log.connected", Defaults.LOG_CONNECTED)) {
-						logger.info(Messages.get("msg.reader.connected", reader.getDeviceModel()), Destination.FILE, Destination.EMAIL);
+						logger.warning(Messages.get("msg.reader.connected", reader.getDeviceModel()));
 					}
 					index = 0;
 					try {
 						innerLoop();
 						exit = true; // Se non si sono verificati errori.
 					}
-					catch (final InterruptedException ie) {
-						logger.debug(ie);
-						logger.info(Messages.get("msg.loop.interrupted"), Destination.CONSOLE);
+					catch (final InterruptedException e) {
+						logger.log(Level.FINER, e.toString(), e);
+						logger.info(Messages.get("msg.loop.interrupted"));
 						// Thread.currentThread().interrupt(); // FIXME
 					}
-					catch (final IOException ioe) {
+					catch (final IOException e) {
 						if (!exit) {
-							logger.error(ioe);
+							logger.log(Level.WARNING, e.toString(), e);
 						}
 					}
 					catch (final Exception e) {
-						logger.error(e);
+						logger.log(Level.WARNING, e.toString(), e);
 					}
 					finally {
 						// In ogni caso si esegue la disconnessione dal server...
@@ -319,7 +318,7 @@ public abstract class RouterLoggerEngine {
 						}
 						catch (final Exception e) {
 							if (!exit) {
-								logger.error(e);
+								logger.log(Level.WARNING, e.toString(), e);
 							}
 						}
 						reader.disconnect();
@@ -331,7 +330,7 @@ public abstract class RouterLoggerEngine {
 							reader.logout();
 						}
 						catch (final Exception e) {
-							logger.error(e);
+							logger.log(Level.WARNING, e.toString(), e);
 						}
 					}
 					// In caso di autenticazione fallita, si esce subito per evitare il blocco dell'account.
@@ -364,31 +363,33 @@ public abstract class RouterLoggerEngine {
 
 	/** Prints a welcome message. */
 	protected void printWelcome() {
-		out.println(" ____             _            _");
-		out.println("|  _ \\ ___  _   _| |_ ___ _ __| |    ___   __ _  __ _  ___ _ __");
-		out.println("| |_) / _ \\| | | | __/ _ \\ '__| |   / _ \\ / _` |/ _` |/ _ \\ '__|");
-		out.println("|  _ < (_) | |_| | ||  __/ |  | |__| (_) | (_| | (_| |  __/ |");
-		out.println("|_| \\_\\___/ \\__,_|\\__\\___|_|  |_____\\___/ \\__, |\\__, |\\___|_|");
-		out.println("                                          |___/ |___/");
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final PrintWriter pw = new PrintWriter(baos);
+		pw.println(Messages.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
+		pw.println(" ____             _            _");
+		pw.println("|  _ \\ ___  _   _| |_ ___ _ __| |    ___   __ _  __ _  ___ _ __");
+		pw.println("| |_) / _ \\| | | | __/ _ \\ '__| |   / _ \\ / _` |/ _` |/ _ \\ '__|");
+		pw.println("|  _ < (_) | |_| | ||  __/ |  | |__| (_) | (_| | (_| |  __/ |");
+		pw.println("|_| \\_\\___/ \\__,_|\\__\\___|_|  |_____\\___/ \\__, |\\__, |\\___|_|");
+		pw.println("                                          |___/ |___/");
 		final Version version = Version.getInstance();
-		out.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
-		out.println();
-		out.println(Messages.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
+		pw.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
+		pw.close();
+		logger.info(baos.toString());
 
 		if (!configuration.getThresholds().isEmpty()) {
-			out.println(Messages.get("msg.thresholds", configuration.getThresholds()));
+			logger.info(Messages.get("msg.thresholds", configuration.getThresholds()));
 		}
 		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
-			out.println(Messages.get("msg.settings", configuration));
+			logger.info(Messages.get("msg.settings", configuration));
 		}
 	}
 
 	/** Prints the device model name, if available. */
 	protected void printDeviceModel() {
 		if (reader != null && reader.getDeviceModel() != null && !reader.getDeviceModel().trim().isEmpty()) {
-			out.println(Messages.get("msg.device.model", reader.getDeviceModel().trim()));
+			logger.info(Messages.get("msg.device.model", reader.getDeviceModel().trim()));
 		}
-		out.println();
 	}
 
 	protected void innerLoop() throws IOException, InterruptedException {
@@ -412,12 +413,12 @@ public abstract class RouterLoggerEngine {
 						break; // Exit immediately!
 					}
 				}
-				catch (final IOException ioe) {
-					logger.error(ioe);
+				catch (final IOException e) {
+					logger.log(Level.SEVERE, e.toString(), e);
 					break; // Exit immediately!
 				}
-				catch (final RuntimeException re) {
-					logger.error(re);
+				catch (final RuntimeException e) {
+					logger.log(Level.SEVERE, e.toString(), e);
 					break; // Exit immediately!
 				}
 			}
@@ -495,7 +496,7 @@ public abstract class RouterLoggerEngine {
 				if (adjustedWaitTimeInMillis > 0L) {
 					if (disconnectionRequested) {
 						final String formattedDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(new Date(System.currentTimeMillis() + adjustedWaitTimeInMillis));
-						logger.info(Messages.get("msg.reconnection.info", formattedDate), Destination.CONSOLE);
+						logger.info(Messages.get("msg.reconnection.info", formattedDate));
 					}
 					interruptible = true;
 					TimeUnit.MILLISECONDS.sleep(adjustedWaitTimeInMillis);
@@ -516,14 +517,14 @@ public abstract class RouterLoggerEngine {
 		try {
 			reader.release();
 		}
-		catch (final RuntimeException re) {
-			logger.debug(re);
+		catch (final RuntimeException e) {
+			logger.log(Level.FINE, e.toString(), e);
 		}
 		try {
 			writer.release();
 		}
-		catch (final RuntimeException re) {
-			logger.debug(re);
+		catch (final RuntimeException e) {
+			logger.log(Level.FINE, e.toString(), e);
 		}
 	}
 
@@ -558,13 +559,13 @@ public abstract class RouterLoggerEngine {
 				try {
 					pollingThread.interrupt();
 				}
-				catch (final SecurityException se) {
-					logger.error(se);
+				catch (final SecurityException e) {
+					logger.log(Level.SEVERE, e.toString(), e);
 				}
 			}
 		}
 		else {
-			logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+			logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()));
 		}
 	}
 
@@ -577,12 +578,12 @@ public abstract class RouterLoggerEngine {
 			try {
 				pollingThread.join();
 			}
-			catch (final InterruptedException ie) {
-				logger.debug(ie);
+			catch (final InterruptedException e) {
+				logger.log(Level.FINER, e.toString(), e);
 				Thread.currentThread().interrupt();
 			}
 			catch (final Exception e) {
-				logger.error(e);
+				logger.log(Level.SEVERE, e.toString(), e);
 			}
 		}
 	}

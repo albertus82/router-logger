@@ -13,6 +13,8 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -20,12 +22,11 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpMethod;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.router.util.LogManager;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
+import it.albertus.util.logging.LoggerFactory;
 
 public class LogsHandler extends BaseHtmlHandler {
 
@@ -65,7 +66,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 		else { // The URL contains a log file name
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
-			final File file = new File(logger.getCurrentFile().getParentFile() + File.separator + decodedFileName);
+			final File file = new File(LogManager.getCurrentFile().getParentFile() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
 				notFound(exchange);
 			}
@@ -84,18 +85,18 @@ public class LogsHandler extends BaseHtmlHandler {
 	}
 
 	private void deleteAll(final HttpExchange exchange) throws IOException {
-		logger.deleteAllFiles();
+		LogManager.deleteAllFiles();
 		refresh(exchange);
 	}
 
 	private void delete(final HttpExchange exchange, final File file) throws IOException {
-		logger.deleteFile(file);
+		LogManager.deleteFile(file);
 		refresh(exchange);
 	}
 
 	private void download(final HttpExchange exchange, final File file) throws IOException {
-		if (logger.getCurrentFile().equals(file)) {
-			synchronized (logger) {
+		if (LogManager.getCurrentFile().equals(file)) {
+			synchronized (LogManager.class) {
 				doDownload(exchange, file);
 			}
 		}
@@ -123,8 +124,8 @@ public class LogsHandler extends BaseHtmlHandler {
 			}
 			IOUtils.copy(input, output, BUFFER_SIZE);
 		}
-		catch (final FileNotFoundException fnfe) {
-			logger.error(fnfe, Destination.CONSOLE);
+		catch (final FileNotFoundException e) {
+			logger.log(Level.WARNING, e.toString(), e);
 			notFound(exchange);
 		}
 		finally {
@@ -150,7 +151,7 @@ public class LogsHandler extends BaseHtmlHandler {
 	private void fileList(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.logs")));
 
-		final File[] files = logger.listFiles();
+		final File[] files = LogManager.listFiles();
 
 		html.append("<h3>").append(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length)).append("</h3>").append(NewLine.CRLF);
 
@@ -208,7 +209,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(Math.max(1, file.length() / 1024)))).append("</td>");
 			html.append("<td class=\"center\">");
 			html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
-			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\" />");
+			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(file.equals(LogManager.getCurrentFile()) ? " disabled=\"disabled\"" : "").append(" />");
 			html.append("</form>");
 			html.append("</td>");
 			html.append("</tr>").append(NewLine.CRLF);

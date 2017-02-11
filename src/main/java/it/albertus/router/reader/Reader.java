@@ -3,6 +3,8 @@ package it.albertus.router.reader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
@@ -10,13 +12,9 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.ConfigurationException;
-import it.albertus.util.Console;
 import it.albertus.util.NewLine;
-import it.albertus.util.SystemConsole;
+import it.albertus.util.logging.LoggerFactory;
 
 public abstract class Reader implements IReader {
 
@@ -45,7 +43,6 @@ public abstract class Reader implements IReader {
 
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
-	protected final Console out = SystemConsole.getInstance();
 	protected final TelnetClient telnet = new TelnetClient();
 
 	@Override
@@ -85,7 +82,7 @@ public abstract class Reader implements IReader {
 
 		/* Connessione... */
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		logger.info(Messages.get("msg.connecting", routerAddress, routerPort), Destination.CONSOLE);
+		logger.info(Messages.get("msg.connecting", routerAddress, routerPort));
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);
@@ -93,25 +90,25 @@ public abstract class Reader implements IReader {
 			telnet.setSoTimeout(socketTimeoutInMillis);
 		}
 		catch (final Exception e) {
-			logger.error(e);
+			logger.log(Level.WARNING, e.toString(), e);
 		}
 		return connected;
 	}
 
 	@Override
 	public void logout() throws IOException {
-		logger.info(Messages.get("msg.logging.out"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.logging.out"));
 		writeToTelnet("exit");
 	}
 
 	@Override
 	public void disconnect() {
-		logger.info(Messages.get("msg.disconnecting"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.disconnecting"));
 		try {
 			telnet.disconnect();
 		}
-		catch (final IOException ioe) {
-			logger.error(ioe);
+		catch (final IOException e) {
+			logger.log(Level.WARNING, e.toString(), e);
 		}
 	}
 

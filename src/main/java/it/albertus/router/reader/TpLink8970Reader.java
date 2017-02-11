@@ -4,11 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
+import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.logging.LoggerFactory;
 
 /**
  * <b>TP-Link TD-W8970 V1</b>. Comandi Telnet disponibili (case sensitive):
@@ -38,16 +37,16 @@ public class TpLink8970Reader extends Reader {
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {
 		// Username...
-		out.print(readFromTelnet(LOGIN_PROMPT, true).trim(), true);
+		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(username);
 
 		// Password...
-		out.print(readFromTelnet(LOGIN_PROMPT, true).trim());
+		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(password);
 
 		// Welcome! (salto caratteri speciali (clear screen, ecc.)...
 		String welcome = readFromTelnet("-", true);
-		out.println(welcome.charAt(welcome.length() - 1) + readFromTelnet(COMMAND_PROMPT, true).trim(), true);
+		logger.info(welcome.charAt(welcome.length() - 1) + readFromTelnet(COMMAND_PROMPT, true).trim());
 		return true;
 	}
 
@@ -83,7 +82,7 @@ public class TpLink8970Reader extends Reader {
 
 	@Override
 	public void logout() throws IOException {
-		logger.info(Messages.get("msg.logging.out"), Destination.CONSOLE);
+		logger.info(Messages.get("msg.logging.out"));
 		writeToTelnet("logout");
 	}
 

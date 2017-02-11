@@ -2,6 +2,8 @@ package it.albertus.router.gui;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
@@ -25,10 +27,8 @@ import it.albertus.router.engine.Status;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.NewLine;
+import it.albertus.util.logging.LoggerFactory;
 
 public class TrayIcon {
 
@@ -144,7 +144,7 @@ public class TrayIcon {
 				}
 			}
 			catch (final Exception e) {
-				logger.error(e, logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
+				logger.log(Level.WARNING, e.toString(), e);
 			}
 		}
 
@@ -155,7 +155,7 @@ public class TrayIcon {
 			gui.getShell().setMinimized(false);
 		}
 		else {
-			logger.info("Tray not available.", logger.isDebugEnabled() ? new Destination[] { Destination.CONSOLE, Destination.FILE } : new Destination[] { Destination.CONSOLE });
+			logger.warning("Tray not available.");
 		}
 	}
 
@@ -194,8 +194,8 @@ public class TrayIcon {
 						}
 					});
 				}
-				catch (final SWTException se) {
-					logger.debug(se);
+				catch (final SWTException e) {
+					logger.log(Level.FINE, e.toString(), e);
 				}
 			}
 		}
@@ -220,8 +220,8 @@ public class TrayIcon {
 					}
 				});
 			}
-			catch (final SWTException se) {
-				logger.debug(se);
+			catch (final SWTException e) {
+				logger.log(Level.FINE, e.toString(), e);
 			}
 		}
 	}

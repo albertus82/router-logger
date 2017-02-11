@@ -1,6 +1,10 @@
 package it.albertus.router.util;
 
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import it.albertus.util.logging.LoggerFactory;
 
 public class Payload {
 
@@ -18,8 +22,8 @@ public class Payload {
 			try {
 				payload = string.getBytes(PREFERRED_CHARSET);
 			}
-			catch (final UnsupportedEncodingException uee) {
-				logger.error(uee);
+			catch (final UnsupportedEncodingException e) {
+				logger.log(Level.WARNING, e.toString(), e);
 				payload = string.getBytes();
 			}
 		}

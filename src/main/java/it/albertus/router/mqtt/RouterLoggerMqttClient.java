@@ -1,5 +1,8 @@
 package it.albertus.router.mqtt;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -16,12 +19,10 @@ import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Status;
 import it.albertus.router.engine.ThresholdsReached;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.router.util.Payload;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
+import it.albertus.util.logging.LoggerFactory;
 
 /** @Singleton */
 public class RouterLoggerMqttClient extends BaseMqttClient {
@@ -162,12 +163,12 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 			}
 
 			doConnect(clientId, options, persistence, configuration.getBoolean(CFG_KEY_MQTT_CONNECT_RETRY, Defaults.CONNECT_RETRY));
-			if (logger.isDebugEnabled()) {
+			if (logger.isLoggable(Level.FINE)) {
 				System.out.println(options.toString().trim() + "======");
 			}
 		}
 		catch (final Exception e) {
-			logger.error(e);
+			logger.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
@@ -175,11 +176,11 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	public void disconnect() {
 		try {
 			if (doDisconnect()) {
-				logger.info(Messages.get("msg.mqtt.disconnected"), Destination.CONSOLE);
+				logger.info(Messages.get("msg.mqtt.disconnected"));
 			}
 		}
 		catch (final Exception e) {
-			logger.error(e, Destination.CONSOLE, Destination.FILE);
+			logger.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
@@ -193,7 +194,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				logger.error(e);
+				logger.log(Level.SEVERE, e.toString(), e);
 			}
 			lastDataMessageTime = System.currentTimeMillis();
 		}
@@ -209,7 +210,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				logger.error(e);
+				logger.log(Level.SEVERE, e.toString(), e);
 			}
 		}
 	}
@@ -224,7 +225,7 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 				doPublish(topic, message);
 			}
 			catch (final Exception e) {
-				logger.error(e);
+				logger.log(Level.SEVERE, e.toString(), e);
 			}
 			lastThresholdsMessageTime = System.currentTimeMillis();
 		}

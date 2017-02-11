@@ -4,13 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.IOUtils;
+import it.albertus.util.logging.LoggerFactory;
 
 public class FaviconHandler extends StaticResourceHandler {
 
@@ -32,8 +33,8 @@ public class FaviconHandler extends StaticResourceHandler {
 			outputStream = new ByteArrayOutputStream();
 			IOUtils.copy(inputStream, outputStream, BUFFER_SIZE);
 		}
-		catch (final IOException ioe) {
-			logger.error(ioe);
+		catch (final IOException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
 		}
 		finally {
 			IOUtils.closeQuietly(outputStream, inputStream);

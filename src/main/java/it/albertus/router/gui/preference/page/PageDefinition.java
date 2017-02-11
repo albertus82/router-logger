@@ -1,5 +1,7 @@
 package it.albertus.router.gui.preference.page;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+
 import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.jface.preference.page.IPageDefinition;
 import it.albertus.jface.preference.page.PageDefinitionDetails;
@@ -11,8 +13,6 @@ import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Localized;
-
-import org.eclipse.jface.resource.ImageDescriptor;
 
 public enum PageDefinition implements IPageDefinition {
 
@@ -52,12 +52,13 @@ public enum PageDefinition implements IPageDefinition {
 	EMAIL,
 	EMAIL_ADVANCED(new PageDefinitionDetailsBuilder().parent(EMAIL).build()),
 	EMAIL_CC_BCC(new PageDefinitionDetailsBuilder().parent(EMAIL).build()),
-	SERVER(new PageDefinitionDetailsBuilder().pageClass(ServerPreferencePage.class).build()),
+	SERVER(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).build()),
 	SERVER_HANDLER(new PageDefinitionDetailsBuilder().parent(SERVER).build()),
 	SERVER_HTTPS(new PageDefinitionDetailsBuilder().pageClass(ServerHttpsPreferencePage.class).parent(SERVER).build()),
 	MQTT(new PageDefinitionDetailsBuilder().pageClass(MqttPreferencePage.class).build()),
 	MQTT_MESSAGES(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).parent(MQTT).build()),
-	MQTT_ADVANCED(new PageDefinitionDetailsBuilder().pageClass(AdvancedMqttPreferencePage.class).parent(MQTT).build());
+	MQTT_ADVANCED(new PageDefinitionDetailsBuilder().pageClass(AdvancedMqttPreferencePage.class).parent(MQTT).build()),
+	LOGGING(new PageDefinitionDetailsBuilder().pageClass(LoggingPreferencePage.class).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

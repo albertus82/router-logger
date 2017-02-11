@@ -1,13 +1,19 @@
 package it.albertus.router;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.logging.CustomFormatter;
+import it.albertus.util.logging.LoggerFactory;
+import it.albertus.util.logging.LoggingSupport;
 
 public class RouterLogger {
 
@@ -26,12 +32,32 @@ public class RouterLogger {
 	private static InitializationException initializationException = null;
 
 	static {
+		final Logger rootLogger = LoggingSupport.getRootLogger();
+		for (int i = 0; i < rootLogger.getHandlers().length; i++) {
+			final Handler oldHandler = rootLogger.getHandlers()[i];
+			if (oldHandler instanceof ConsoleHandler) {
+				final ConsoleHandler newConsoleHandler = new ConsoleHandler();
+				newConsoleHandler.setLevel(oldHandler.getLevel());
+				newConsoleHandler.setFilter(oldHandler.getFilter());
+				newConsoleHandler.setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n"));
+				newConsoleHandler.setErrorManager(oldHandler.getErrorManager());
+				try {
+					newConsoleHandler.setEncoding(oldHandler.getEncoding());
+				}
+				catch (final UnsupportedEncodingException uee) {
+					throw new IllegalStateException(uee);
+				}
+				rootLogger.removeHandler(oldHandler);
+				rootLogger.addHandler(newConsoleHandler);
+			}
+		}
+
 		try {
 			configuration = new RouterLoggerConfiguration();
 		}
-		catch (final IOException ioe) {
-			logger.error(ioe);
-			initializationException = new InitializationException(Messages.get("err.open.cfg", RouterLoggerConfiguration.FILE_NAME), ioe);
+		catch (final IOException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			initializationException = new InitializationException(Messages.get("err.open.cfg", RouterLoggerConfiguration.CFG_FILE_NAME), e);
 		}
 	}
 

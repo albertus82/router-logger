@@ -2,6 +2,8 @@ package it.albertus.router.server.html;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -10,17 +12,15 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
 import it.albertus.router.server.HttpMethod;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.NewLine;
+import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseHtmlHandler.class);
 
 	public static class Defaults {
-		public static final byte LOG_REQUEST = 1;
+		public static final boolean LOG_REQUEST = true;
 		public static final boolean COMPRESS_RESPONSE = false;
 
 		private Defaults() {
@@ -140,11 +140,11 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			try {
 				service(exchange);
 			}
-			catch (final IOException ioe) {
-				logger.debug(ioe); // often caused by the client that interrupts the stream.
+			catch (final IOException e) {
+				logger.log(Level.FINE, e.toString(), e); // often caused by the client that interrupts the stream.
 			}
-			catch (final Exception exception) {
-				logger.error(exception);
+			catch (final Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
 				addCommonHeaders(exchange);
 
 				final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
@@ -162,25 +162,12 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	}
 
 	protected void log(final HttpExchange exchange) {
-		final Destination[] destinations;
-		switch (configuration.getByte("server.log.request", Defaults.LOG_REQUEST)) {
-		case 1:
-			destinations = new Destination[] { Destination.CONSOLE };
-			break;
-		case 2:
-			destinations = new Destination[] { Destination.FILE };
-			break;
-		case 3:
-			destinations = new Destination[] { Destination.CONSOLE, Destination.FILE };
-			break;
-		default:
-			return;
-		}
-
-		final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
-		if (!request.equals(lastRequest)) {
-			lastRequest = request;
-			logger.info(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request), destinations);
+		if (configuration.getBoolean("server.log.request", Defaults.LOG_REQUEST)) {
+			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
+			if (!request.equals(lastRequest)) {
+				lastRequest = request;
+				logger.info(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request));
+			}
 		}
 	}
 

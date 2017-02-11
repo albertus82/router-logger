@@ -1,6 +1,8 @@
 package it.albertus.router.gui.listener;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -13,8 +15,7 @@ import it.albertus.jface.preference.Preferences;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.logging.LoggerFactory;
 
 public class PreferencesListener extends SelectionAdapter implements Listener {
 
@@ -33,7 +34,7 @@ public class PreferencesListener extends SelectionAdapter implements Listener {
 			preferences.openDialog(gui.getShell());
 		}
 		catch (final IOException e) {
-			logger.error(e);
+			logger.log(Level.WARNING, e.toString(), e);
 		}
 		if (preferences.isRestartRequired()) {
 			final MessageBox messageBox = new MessageBox(gui.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);

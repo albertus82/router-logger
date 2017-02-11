@@ -9,6 +9,8 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.GZIPOutputStream;
 
@@ -22,11 +24,10 @@ import com.sun.net.httpserver.HttpHandler;
 import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.CRC32OutputStream;
 import it.albertus.util.DigestOutputStream;
 import it.albertus.util.IOUtils;
+import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseHttpHandler implements HttpHandler {
 
@@ -56,8 +57,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		try {
 			return Charset.forName(PREFERRED_CHARSET);
 		}
-		catch (final RuntimeException re) {
-			logger.error(re);
+		catch (final RuntimeException e) {
+			logger.log(Level.WARNING, e.toString(), e);
 			return Charset.defaultCharset();
 		}
 	}
@@ -108,8 +109,8 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			try {
 				return doCompressResponse(uncompressed, exchange);
 			}
-			catch (final IOException ioe) {
-				logger.error(ioe);
+			catch (final IOException e) {
+				logger.log(Level.WARNING, e.toString(), e);
 			}
 		}
 		return uncompressed;
@@ -180,7 +181,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(file));
 		}
 		catch (final Exception e) {
-			logger.error(e);
+			logger.log(Level.WARNING, e.toString(), e);
 		}
 	}
 
@@ -189,7 +190,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			exchange.getResponseHeaders().add("Content-MD5", generateContentMd5(responseBody));
 		}
 		catch (final Exception e) {
-			logger.error(e);
+			logger.log(Level.WARNING, e.toString(), e);
 		}
 	}
 

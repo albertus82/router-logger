@@ -1,6 +1,8 @@
 package it.albertus.router.gui.preference;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.window.Window;
@@ -15,9 +17,8 @@ import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.gui.preference.page.PageDefinition;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.resources.Messages.Language;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
+import it.albertus.util.logging.LoggerFactory;
 
 public class RouterLoggerPreferences extends Preferences {
 
@@ -44,8 +45,8 @@ public class RouterLoggerPreferences extends Preferences {
 		try {
 			returnCode = super.openDialog(parentShell, selectedPage);
 		}
-		catch (final IOException ioe) {
-			logger.error(ioe);
+		catch (final IOException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
 			returnCode = Window.CANCEL;
 		}
 
@@ -73,10 +74,10 @@ public class RouterLoggerPreferences extends Preferences {
 					setRestartRequired(true); // Restart dialog will be shown.
 				}
 				catch (final Exception e) {
-					logger.debug(e);
+					logger.log(Level.FINE, e.toString(), e);
 				}
-				catch (final LinkageError le) {
-					logger.debug(le);
+				catch (final LinkageError e) {
+					logger.log(Level.FINE, e.toString(), e);
 				}
 			}
 		}

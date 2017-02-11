@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.mail.EmailException;
 
@@ -14,14 +16,12 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
 import it.albertus.util.ZipUtils;
+import it.albertus.util.logging.LoggerFactory;
 
 public class CsvWriter extends Writer {
 
@@ -65,8 +65,8 @@ public class CsvWriter extends Writer {
 					try {
 						sendEmail(file);
 					}
-					catch (final Exception exception) {
-						logger.error(exception, Destination.CONSOLE, Destination.FILE);
+					catch (final Exception e) {
+						logger.log(Level.SEVERE, e.toString(), e);
 					}
 				}
 			}
@@ -100,7 +100,7 @@ public class CsvWriter extends Writer {
 				formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Messages.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(zipFileName.substring(0, zipFileName.indexOf('.'))));
 			}
 			catch (final Exception e) {
-				logger.error(e, Destination.CONSOLE, Destination.FILE);
+				logger.log(Level.SEVERE, e.toString(), e);
 				formattedDate = "";
 			}
 			return formattedDate;
@@ -133,7 +133,7 @@ public class CsvWriter extends Writer {
 				closeOutputFile();
 				csvFileWriter = new FileWriter(file);
 				csvBufferedWriter = new BufferedWriter(csvFileWriter);
-				logger.info(Messages.get("msg.logging.to.file", path), Destination.CONSOLE);
+				logger.info(Messages.get("msg.logging.to.file", path));
 				csvBufferedWriter.append(buildCsvHeader(info));
 			}
 
@@ -141,13 +141,13 @@ public class CsvWriter extends Writer {
 				// Open existing file...
 				csvFileWriter = new FileWriter(file, true);
 				csvBufferedWriter = new BufferedWriter(csvFileWriter);
-				logger.info(Messages.get("msg.logging.to.file", path), Destination.CONSOLE);
+				logger.info(Messages.get("msg.logging.to.file", path));
 			}
 			csvBufferedWriter.append(buildCsvRow(info));
 			csvBufferedWriter.flush();
 		}
-		catch (final Exception exception) {
-			logger.error(exception);
+		catch (final Exception e) {
+			logger.log(Level.SEVERE, e.toString(), e);
 			closeOutputFile();
 		}
 	}
@@ -225,7 +225,7 @@ public class CsvWriter extends Writer {
 
 	protected void closeOutputFile() {
 		if (csvBufferedWriter != null || csvFileWriter != null) {
-			logger.info(Messages.get("msg.closing.output.file"), Destination.CONSOLE);
+			logger.info(Messages.get("msg.closing.output.file"));
 			IOUtils.closeQuietly(csvBufferedWriter, csvFileWriter);
 			csvBufferedWriter = null;
 			csvFileWriter = null;
@@ -244,12 +244,12 @@ public class CsvWriter extends Writer {
 			path = file.getCanonicalPath();
 		}
 		catch (final Exception e1) {
-			logger.debug(e1);
+			logger.log(Level.FINE, e1.toString(), e1);
 			try {
 				path = file.getAbsolutePath();
 			}
 			catch (final Exception e2) {
-				logger.debug(e2);
+				logger.log(Level.FINE, e2.toString(), e2);
 				path = file.getPath();
 			}
 		}

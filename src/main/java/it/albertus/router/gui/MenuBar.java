@@ -1,5 +1,8 @@
 package it.albertus.router.gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
@@ -23,8 +26,7 @@ import it.albertus.router.gui.listener.PreferencesListener;
 import it.albertus.router.gui.listener.RestartSelectionListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.logging.LoggerFactory;
 
 /**
  * Solo i <tt>MenuItem</tt> che fanno parte di una barra dei men&ugrave; con
@@ -79,8 +81,8 @@ public class MenuBar {
 				new CocoaUIEnhancer(gui.getShell().getDisplay()).hookApplicationMenu(closeListener, aboutListener, preferencesListener);
 				cocoaMenuCreated = true;
 			}
-			catch (final CocoaEnhancerException cce) {
-				logger.error(cce);
+			catch (final CocoaEnhancerException e) {
+				logger.log(Level.WARNING, e.toString(), e);
 			}
 		}
 

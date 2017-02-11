@@ -2,16 +2,16 @@ package it.albertus.router.console;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.albertus.router.RouterLogger.InitializationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.Version;
+import it.albertus.util.logging.LoggerFactory;
 
 public class RouterLoggerConsole extends RouterLoggerEngine {
 
@@ -61,11 +61,11 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				Thread.sleep(Long.MAX_VALUE);
 			}
 			catch (final InterruptedException e) {
-				logger.debug(e);
+				logger.log(Level.FINER, e.toString(), e);
 				Thread.currentThread().interrupt();
 			}
-			catch (final Exception exception) {
-				logger.error(exception);
+			catch (final Exception e) {
+				logger.log(Level.SEVERE, e.toString(), e);
 			}
 			finally {
 				routerLogger.disconnect(true);
@@ -131,7 +131,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		// Fine scrittura informazioni aggiuntive.
 
 		lastLogLength = log.length();
-		out.print(clean.toString() + log.toString());
+		System.out.print(clean.toString() + log.toString());
 	}
 
 	@Override
@@ -142,8 +142,8 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			try {
 				connect = canConnect();
 			}
-			catch (final Exception exception) {
-				logger.error(exception);
+			catch (final Exception e) {
+				logger.log(Level.WARNING, e.toString(), e);
 				return;
 			}
 			if (connect) {
@@ -154,13 +154,13 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 						try {
 							outerLoop();
 						}
-						catch (final Exception exception) {
-							logger.error(exception);
+						catch (final Exception e1) {
+							logger.log(Level.SEVERE, e1.toString(), e1);
 							try {
 								getReader().disconnect();
 							}
-							catch (final Exception e) {
-								logger.debug(e);
+							catch (final Exception e2) {
+								logger.log(Level.FINE, e2.toString(), e2);
 							}
 							release();
 						}
@@ -169,7 +169,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				pollingThread.start();
 			}
 			else {
-				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()), Destination.CONSOLE);
+				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()));
 			}
 		}
 	}
@@ -185,12 +185,11 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 				try {
 					configuration.reload();
 				}
-				catch (final IOException ioe) {
-					logger.error(ioe);
+				catch (final IOException e) {
+					logger.log(Level.SEVERE, e.toString(), e);
 				}
 				mqttClient.disconnect();
 				setIteration(FIRST_ITERATION);
-				out.println();
 				beforeConnect();
 				connect();
 			}

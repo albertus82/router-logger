@@ -8,15 +8,15 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.Logger.Destination;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.StringUtils;
+import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.sql.SqlUtils;
 
 public class DatabaseWriter extends Writer {
@@ -90,14 +90,14 @@ public class DatabaseWriter extends Writer {
 			// Verifica esistenza tabella ed eventuale creazione...
 			final String tableName = getTableName();
 			if (!tableExists(tableName)) {
-				out.println(Messages.get("msg.creating.database.table", tableName), true);
+				logger.info(Messages.get("msg.creating.database.table", tableName));
 				createTable(tableName, info);
 				showMessage = true;
 			}
 
 			// Inserimento dati...
 			if (showMessage) {
-				out.println(Messages.get("msg.logging.into.database", tableName), true);
+				logger.info(Messages.get("msg.logging.into.database", tableName));
 			}
 
 			final Map<Integer, String> columns = new HashMap<Integer, String>();
@@ -160,8 +160,8 @@ public class DatabaseWriter extends Writer {
 			statement.executeQuery();
 			return true;
 		}
-		catch (final SQLException se) {
-			logger.debug(se);
+		catch (final SQLException e) {
+			logger.log(Level.FINE, e.toString(), e);
 			return false;
 		}
 		finally {
@@ -217,13 +217,13 @@ public class DatabaseWriter extends Writer {
 	protected void closeDatabaseConnection() {
 		try {
 			if (connection != null && !connection.isClosed()) {
-				logger.info(Messages.get("msg.closing.database.connection"), Destination.CONSOLE);
+				logger.info(Messages.get("msg.closing.database.connection"));
 				connection.close();
 				connection = null;
 			}
 		}
-		catch (final SQLException se) {
-			logger.debug(se);
+		catch (final SQLException e) {
+			logger.log(Level.FINE, e.toString(), e);
 		}
 	}
 
@@ -232,7 +232,7 @@ public class DatabaseWriter extends Writer {
 	}
 
 	protected void showSql(final String sql) {
-		logger.info(sql, Destination.CONSOLE, Destination.FILE);
+		logger.info(sql);
 	}
 
 	protected static String sanitizeName(final String str) {

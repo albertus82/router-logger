@@ -2,14 +2,15 @@ package it.albertus.router.server.json;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
+import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseJsonHandler extends BaseHttpHandler {
 
@@ -40,11 +41,11 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 			try {
 				service(exchange);
 			}
-			catch (final IOException ioe) {
-				logger.debug(ioe); // often caused by the client that interrupts the stream.
+			catch (final IOException e) {
+				logger.log(Level.FINE, e.toString(),e); // often caused by the client that interrupts the stream.
 			}
-			catch (final Exception exception) {
-				logger.error(exception);
+			catch (final Exception e) {
+				logger.log(Level.SEVERE, e.toString(),e);
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
 			}
 			finally {

@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
@@ -38,9 +40,8 @@ import it.albertus.router.gui.listener.DataTableContextMenuDetectListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.SelectAllDataTableSelectionListener;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.Logger;
-import it.albertus.router.util.LoggerFactory;
 import it.albertus.util.NewLine;
+import it.albertus.util.logging.LoggerFactory;
 
 public class DataTable {
 
@@ -391,8 +392,8 @@ public class DataTable {
 		try {
 			rgbColorData = StringConverter.asRGB(colorKey);
 		}
-		catch (final RuntimeException re) {
-			logger.debug(re);
+		catch (final RuntimeException e) {
+			logger.log(Level.FINE, e.toString(), e);
 			logger.info(Messages.get("err.invalid.color", colorKey));
 			colorKey = defaultColorKey;
 			rgbColorData = StringConverter.asRGB(colorKey);
