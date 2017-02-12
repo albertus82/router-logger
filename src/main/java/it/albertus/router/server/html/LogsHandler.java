@@ -142,17 +142,18 @@ public class LogsHandler extends BaseHtmlHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.logs")));
 
 		final File[] files = LogManager.listFiles();
+		final Set<File> lockedFiles = LogManager.getLockedFiles();
 
 		html.append("<h3>").append(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length)).append("</h3>").append(NewLine.CRLF);
 
 		if (files != null && files.length > 0) {
-			html.append(buildHtmlTable(files));
+			html.append(buildHtmlTable(files, lockedFiles));
 		}
 
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 		if (files != null && files.length > 0) {
-			html.append(buildHtmlDeleteAllButton());
+			html.append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
 		}
 		html.append(buildHtmlFooter());
 
@@ -176,7 +177,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 	}
 
-	private String buildHtmlTable(final File[] files) throws UnsupportedEncodingException {
+	private String buildHtmlTable(final File[] files, final Set<File> lockedFiles) throws UnsupportedEncodingException {
 		Arrays.sort(files);
 		final StringBuilder html = new StringBuilder();
 		html.append("<table><thead><tr>");
@@ -187,7 +188,6 @@ public class LogsHandler extends BaseHtmlHandler {
 		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
 		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
 		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
-		final Set<File> lockedFiles = LogManager.getLockedFiles();
 		for (final File file : files) {
 			final String encodedFileName = URLEncoder.encode(file.getName(), getCharset().name());
 			html.append("<tr>");
@@ -197,7 +197,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("</a>");
 			html.append("</td>");
 			html.append("<td class=\"right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
-			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(Math.max(1, file.length() / 1024)))).append("</td>");
+			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", file.length() == 0 ? 0 : numberFormatFileList.format(Math.max(1, file.length() / 1024)))).append("</td>");
 			html.append("<td class=\"center\">");
 			html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
 			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(lockedFiles.contains(file) ? " disabled=\"disabled\"" : "").append(" />");
@@ -209,8 +209,8 @@ public class LogsHandler extends BaseHtmlHandler {
 		return html.toString();
 	}
 
-	private String buildHtmlDeleteAllButton() {
-		return new StringBuilder("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\" /></form>").append(NewLine.CRLF.toString()).toString();
+	private String buildHtmlDeleteAllButton(final boolean disabled) {
+		return new StringBuilder("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(disabled ? " disabled=\"disabled\"" : "").append(" /></form>").append(NewLine.CRLF.toString()).toString();
 	}
 
 	private void refresh(HttpExchange exchange) throws IOException {
