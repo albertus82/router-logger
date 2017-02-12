@@ -18,13 +18,14 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.EmailHandler;
 import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.HousekeepingFilter;
 import it.albertus.router.util.LogManager;
 import it.albertus.util.Configuration;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.CustomFormatter;
-import it.albertus.util.logging.TimeBasedRollingFileHandlerBuilder;
 import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.logging.LoggingSupport;
+import it.albertus.util.logging.TimeBasedRollingFileHandlerBuilder;
 
 public class RouterLoggerConfiguration extends Configuration {
 
@@ -36,6 +37,8 @@ public class RouterLoggerConfiguration extends Configuration {
 		public static final String LOGGING_FILES_PATH = getOsSpecificLocalAppDataDir() + File.separator + Messages.get("msg.application.name");
 		public static final int LOGGING_FILES_LIMIT = 0;
 		public static final int LOGGING_FILES_COUNT = 1;
+		public static final boolean LOGGING_FILES_AUTOCLEAN_ENABLED = true;
+		public static final short LOGGING_FILES_AUTOCLEAN_KEEP = 30;
 
 		public static final boolean THRESHOLDS_SPLIT = false;
 		public static final String GUI_IMPORTANT_KEYS_SEPARATOR = ",";
@@ -142,7 +145,13 @@ public class RouterLoggerConfiguration extends Configuration {
 	private void enableLoggingFileHandler() {
 		final String loggingPath = this.getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
 		if (loggingPath != null && !loggingPath.isEmpty()) {
-			final TimeBasedRollingFileHandlerBuilder builder = new TimeBasedRollingFileHandlerBuilder().fileNamePattern(loggingPath + File.separator + LogManager.LOG_FILE_NAME).limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024).count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT)).append(true).formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
+			final TimeBasedRollingFileHandlerBuilder builder = new TimeBasedRollingFileHandlerBuilder();
+			builder.fileNamePattern(loggingPath + File.separator + LogManager.LOG_FILE_NAME);
+			builder.limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024);
+			builder.count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT));
+			builder.append(true);
+			builder.formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
+			builder.filter(this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED) ? new HousekeepingFilter(this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP)) : null);
 			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
 				if (fileHandler != null) {
 					LoggingSupport.getRootLogger().removeHandler(fileHandler);
