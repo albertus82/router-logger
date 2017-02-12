@@ -221,7 +221,7 @@ public abstract class RouterLoggerEngine {
 	}
 
 	protected void printGoodbye() {
-		logger.info(Messages.get("msg.bye"));
+		logger.warning(Messages.get("msg.bye"));
 	}
 
 	protected void outerLoop() {
@@ -363,19 +363,21 @@ public abstract class RouterLoggerEngine {
 
 	/** Prints a welcome message. */
 	protected void printWelcome() {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		final PrintWriter pw = new PrintWriter(baos);
-		pw.println(Messages.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
-		pw.println(" ____             _            _");
-		pw.println("|  _ \\ ___  _   _| |_ ___ _ __| |    ___   __ _  __ _  ___ _ __");
-		pw.println("| |_) / _ \\| | | | __/ _ \\ '__| |   / _ \\ / _` |/ _` |/ _ \\ '__|");
-		pw.println("|  _ < (_) | |_| | ||  __/ |  | |__| (_) | (_| | (_| |  __/ |");
-		pw.println("|_| \\_\\___/ \\__,_|\\__\\___|_|  |_____\\___/ \\__, |\\__, |\\___|_|");
-		pw.println("                                          |___/ |___/");
-		final Version version = Version.getInstance();
-		pw.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
-		pw.close();
-		logger.info(baos.toString());
+		if (logger.isLoggable(Level.WARNING)) {
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			final PrintWriter pw = new PrintWriter(baos);
+			pw.println(Messages.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
+			pw.println(" ____             _            _");
+			pw.println("|  _ \\ ___  _   _| |_ ___ _ __| |    ___   __ _  __ _  ___ _ __");
+			pw.println("| |_) / _ \\| | | | __/ _ \\ '__| |   / _ \\ / _` |/ _` |/ _ \\ '__|");
+			pw.println("|  _ < (_) | |_| | ||  __/ |  | |__| (_) | (_| | (_| |  __/ |");
+			pw.println("|_| \\_\\___/ \\__,_|\\__\\___|_|  |_____\\___/ \\__, |\\__, |\\___|_|");
+			pw.println("                                          |___/ |___/");
+			final Version version = Version.getInstance();
+			pw.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
+			pw.close();
+			logger.warning(baos.toString());
+		}
 
 		if (!configuration.getThresholds().isEmpty()) {
 			logger.info(Messages.get("msg.thresholds", configuration.getThresholds()));
