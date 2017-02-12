@@ -124,13 +124,6 @@ public enum Preference implements IPreference {
 		}
 	}, 0)).build()),
 	LOGGER_RETRY_INTERVAL_MS(new PreferenceDetailsBuilder(GENERAL).defaultValue(RouterLoggerEngine.Defaults.RETRY_INTERVAL_IN_MILLIS).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
-	LOGGER_ERROR_LOG_DESTINATION_PATH(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_PATH).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
-		@Override
-		public String getString() {
-			return Messages.get("msg.preferences.directory.dialog.message.log");
-		}
-	}).build()),
-	CONSOLE_SHOW_CONFIGURATION(new PreferenceDetailsBuilder(GENERAL).separate().defaultValue(RouterLoggerEngine.Defaults.CONSOLE_SHOW_CONFIGURATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	READER_CLASS_NAME(new PreferenceDetailsBuilder(READER).build(), new FieldEditorDetailsBuilder(ReaderComboFieldEditor.class).labelsAndValues(ReaderPreferencePage.getReaderComboOptions()).build()),
 	ROUTER_USERNAME(new PreferenceDetailsBuilder(READER).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
@@ -348,7 +341,8 @@ public enum Preference implements IPreference {
 	}).build()),
 	LOGGING_EMAIL_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(EmailHandler.Defaults.EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	LOGGING_EMAIL_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.EMAIL_LEVEL.intValue()).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingComboOptions()).build()),
-	LOGGING_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.EMAIL_IGNORE_DUPLICATES).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build());
+	LOGGING_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.EMAIL_IGNORE_DUPLICATES).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	LOGGING_PRINT_CONFIGURATION(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(RouterLoggerEngine.Defaults.LOGGING_PRINT_CONFIGURATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

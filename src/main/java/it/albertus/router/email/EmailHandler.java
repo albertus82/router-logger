@@ -1,6 +1,7 @@
 package it.albertus.router.email;
 
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.ErrorManager;
 import java.util.logging.Filter;
@@ -25,7 +26,7 @@ public class EmailHandler extends Handler {
 		}
 	}
 
-	private String lastEmailLog;
+	private Throwable lastThrownSent;
 
 	private boolean closed = false;
 
@@ -56,9 +57,10 @@ public class EmailHandler extends Handler {
 				return;
 			}
 
-			if (record.getThrown() == null || lastEmailLog == null || !configuration.getBoolean("logging.email.ignore.duplicates", Defaults.EMAIL_IGNORE_DUPLICATES) || !lastEmailLog.equals(log)) {
+			final Throwable thrown = record.getThrown();
+			if (thrown == null || lastThrownSent == null || !configuration.getBoolean("logging.email.ignore.duplicates", Defaults.EMAIL_IGNORE_DUPLICATES) || !Arrays.equals(lastThrownSent.getStackTrace(), thrown.getStackTrace())) {
 				final String subjectKey;
-				if (record.getThrown() != null) {
+				if (thrown != null) {
 					subjectKey = "msg.log.email.subject.exception";
 				}
 				else {
@@ -66,7 +68,7 @@ public class EmailHandler extends Handler {
 				}
 				final String subject = Messages.get(subjectKey, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(new Date()));
 				EmailSender.getInstance().reserve(subject, log);
-				lastEmailLog = log;
+				lastThrownSent = thrown;
 			}
 		}
 	}

@@ -209,7 +209,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(Math.max(1, file.length() / 1024)))).append("</td>");
 			html.append("<td class=\"center\">");
 			html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
-			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(file.equals(LogManager.getCurrentFile()) ? " disabled=\"disabled\"" : "").append(" />");
+			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(file.getPath().startsWith(LogManager.getCurrentFile().getPath()) ? " disabled=\"disabled\"" : "").append(" />");
 			html.append("</form>");
 			html.append("</td>");
 			html.append("</tr>").append(NewLine.CRLF);

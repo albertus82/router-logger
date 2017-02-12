@@ -134,8 +134,8 @@ public class RouterLoggerConfiguration extends Configuration {
 		try {
 			LoggingSupport.setLevel(LoggingSupport.getRootLogger().getName(), Level.parse(this.getString("logging.level", Defaults.LOGGING_LEVEL.getName())));
 		}
-		catch (final IllegalArgumentException iae) {
-			logger.log(Level.WARNING, iae.toString(), iae);
+		catch (final IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.toString(), e);
 		}
 	}
 
@@ -155,8 +155,8 @@ public class RouterLoggerConfiguration extends Configuration {
 					fileHandler = builder.build();
 					LoggingSupport.getRootLogger().addHandler(fileHandler);
 				}
-				catch (final IOException ioe) {
-					logger.log(Level.SEVERE, ioe.toString(), ioe);
+				catch (final IOException e) {
+					logger.log(Level.SEVERE, e.toString(), e);
 				}
 			}
 		}

@@ -41,7 +41,7 @@ public abstract class RouterLoggerEngine {
 		public static final long HYSTERESIS_IN_MILLIS = 10000L;
 		public static final int RETRIES = 3;
 		public static final long RETRY_INTERVAL_IN_MILLIS = 30000L;
-		public static final boolean CONSOLE_SHOW_CONFIGURATION = false;
+		public static final boolean LOGGING_PRINT_CONFIGURATION = false;
 		public static final boolean THRESHOLDS_EMAIL = false;
 		public static final boolean LOG_CONNECTED = false;
 		public static final boolean WAIT_DISCONNECTED = false;
@@ -380,7 +380,7 @@ public abstract class RouterLoggerEngine {
 		if (!configuration.getThresholds().isEmpty()) {
 			logger.info(Messages.get("msg.thresholds", configuration.getThresholds()));
 		}
-		if (configuration.getBoolean("console.show.configuration", Defaults.CONSOLE_SHOW_CONFIGURATION)) {
+		if (configuration.getBoolean("logging.print.configuration", Defaults.LOGGING_PRINT_CONFIGURATION)) {
 			logger.info(Messages.get("msg.settings", configuration));
 		}
 	}

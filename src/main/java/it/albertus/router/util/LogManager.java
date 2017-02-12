@@ -39,7 +39,7 @@ public class LogManager {
 	}
 
 	public static boolean deleteFile(final File file) {
-		if (getCurrentFile().equals(file)) {
+		if (file.getPath().startsWith(getCurrentFile().getPath())) {
 			return false;
 		}
 		else {
