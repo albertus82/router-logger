@@ -1,7 +1,6 @@
 package it.albertus.router;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -17,7 +16,7 @@ import it.albertus.util.logging.LoggingSupport;
 
 public class RouterLogger {
 
-	private static final Logger logger = LoggerFactory.getLogger(RouterLogger.class);
+	private static final Logger logger;
 
 	public static class InitializationException extends Exception {
 		private static final long serialVersionUID = -5943702854022883885L;
@@ -33,24 +32,12 @@ public class RouterLogger {
 
 	static {
 		final Logger rootLogger = LoggingSupport.getRootLogger();
-		for (int i = 0; i < rootLogger.getHandlers().length; i++) {
-			final Handler oldHandler = rootLogger.getHandlers()[i];
-			if (oldHandler instanceof ConsoleHandler) {
-				final ConsoleHandler newConsoleHandler = new ConsoleHandler();
-				newConsoleHandler.setLevel(oldHandler.getLevel());
-				newConsoleHandler.setFilter(oldHandler.getFilter());
-				newConsoleHandler.setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n"));
-				newConsoleHandler.setErrorManager(oldHandler.getErrorManager());
-				try {
-					newConsoleHandler.setEncoding(oldHandler.getEncoding());
-				}
-				catch (final UnsupportedEncodingException uee) {
-					throw new IllegalStateException(uee);
-				}
-				rootLogger.removeHandler(oldHandler);
-				rootLogger.addHandler(newConsoleHandler);
+		for (final Handler handler : rootLogger.getHandlers()) {
+			if (handler instanceof ConsoleHandler) {
+				handler.setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n"));
 			}
 		}
+		logger = LoggerFactory.getLogger(RouterLogger.class);
 
 		try {
 			configuration = new RouterLoggerConfiguration();
