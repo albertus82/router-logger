@@ -221,7 +221,7 @@ public abstract class RouterLoggerEngine {
 	}
 
 	protected void printGoodbye() {
-		logger.warning(Messages.get("msg.bye"));
+		logger.info(Messages.get("msg.bye"));
 	}
 
 	protected void outerLoop() {
@@ -363,7 +363,7 @@ public abstract class RouterLoggerEngine {
 
 	/** Prints a welcome message. */
 	protected void printWelcome() {
-		if (logger.isLoggable(Level.WARNING)) {
+		if (logger.isLoggable(Level.INFO)) {
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			final PrintWriter pw = new PrintWriter(baos);
 			pw.println(Messages.get("msg.startup.date", new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date())));
@@ -376,7 +376,7 @@ public abstract class RouterLoggerEngine {
 			final Version version = Version.getInstance();
 			pw.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
 			pw.close();
-			logger.warning(baos.toString());
+			logger.info(baos.toString());
 		}
 
 		if (!configuration.getThresholds().isEmpty()) {
