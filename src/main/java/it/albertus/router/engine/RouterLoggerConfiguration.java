@@ -22,7 +22,7 @@ import it.albertus.router.util.LogManager;
 import it.albertus.util.Configuration;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.CustomFormatter;
-import it.albertus.util.logging.DailyRollingFileHandlerBuilder;
+import it.albertus.util.logging.TimeBasedRollingFileHandlerBuilder;
 import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.logging.LoggingSupport;
 
@@ -56,7 +56,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
 
-	private DailyRollingFileHandlerBuilder fileHandlerBuilder;
+	private TimeBasedRollingFileHandlerBuilder fileHandlerBuilder;
 
 	private Handler fileHandler;
 	private Handler emailHandler;
@@ -142,7 +142,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	private void enableLoggingFileHandler() {
 		final String loggingPath = this.getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
 		if (loggingPath != null && !loggingPath.isEmpty()) {
-			final DailyRollingFileHandlerBuilder builder = new DailyRollingFileHandlerBuilder().fileNamePattern(loggingPath + File.separator + LogManager.LOG_FILE_NAME).limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024).count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT)).append(true).formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
+			final TimeBasedRollingFileHandlerBuilder builder = new TimeBasedRollingFileHandlerBuilder().fileNamePattern(loggingPath + File.separator + LogManager.LOG_FILE_NAME).limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024).count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT)).append(true).formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
 			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
 				if (fileHandler != null) {
 					LoggingSupport.getRootLogger().removeHandler(fileHandler);

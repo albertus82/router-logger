@@ -34,8 +34,7 @@ public class LogManager {
 	}
 
 	public static File[] listFiles() {
-		final String loggingPath = getLoggingPath();
-		return new File(loggingPath).listFiles(logFilenameFilter);
+		return new File(getLoggingPath()).listFiles(logFilenameFilter);
 	}
 
 	public static boolean deleteFile(final File file) {
