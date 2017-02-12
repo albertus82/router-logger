@@ -83,7 +83,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		updateLanguage();
 		updateLogging();
 
-		/* Caricamento chiavi da evidenziare */
+		// Caricamento chiavi da evidenziare
 		guiImportantKeys.clear();
 		for (final String importantKey : this.getString("gui.important.keys", true).split(this.getString("gui.important.keys.separator", Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).trim())) {
 			if (StringUtils.isNotBlank(importantKey)) {
@@ -97,12 +97,12 @@ public class RouterLoggerConfiguration extends Configuration {
 			}
 		}
 
-		/* Valorizzazione delle soglie... */
+		// Valorizzazione delle soglie...
 		if (this.getBoolean("thresholds.split", Defaults.THRESHOLDS_SPLIT)) {
-			thresholds = new SplitThresholds(); /* Vecchio stile */
+			thresholds = new SplitThresholds(); // Vecchio stile
 		}
 		else {
-			thresholds = new ExpressionThresholds(); /* Nuovo stile */
+			thresholds = new ExpressionThresholds(); // Nuovo stile
 		}
 	}
 
@@ -142,7 +142,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	private void enableLoggingFileHandler() {
 		final String loggingPath = this.getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
 		if (loggingPath != null && !loggingPath.isEmpty()) {
-			final DailyRollingFileHandlerBuilder builder = new DailyRollingFileHandlerBuilder().fileNamePattern(loggingPath + File.separator + LogManager.FILE_NAME).limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024).count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT)).append(true).formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
+			final DailyRollingFileHandlerBuilder builder = new DailyRollingFileHandlerBuilder().fileNamePattern(loggingPath + File.separator + LogManager.LOG_FILE_NAME).limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024).count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT)).append(true).formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
 			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
 				if (fileHandler != null) {
 					LoggingSupport.getRootLogger().removeHandler(fileHandler);
@@ -238,7 +238,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	}
 
-	/* Soglie vecchio stile (tre proprieta') */
+	// Soglie vecchio stile (tre proprieta')
 	private class SplitThresholds extends Thresholds {
 
 		private static final String CFG_SUFFIX_KEY = "key";
@@ -276,7 +276,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	}
 
-	/* Nuove soglie con espressione */
+	// Nuove soglie con espressione
 	private class ExpressionThresholds extends Thresholds {
 
 		@Override
@@ -294,7 +294,7 @@ public class RouterLoggerConfiguration extends Configuration {
 						operator = tokens[i];
 						thresholdType = Type.getEnum(operator);
 						if (thresholdType != null) {
-							break; /* Operatore trovato */
+							break; // Operatore trovato
 						}
 					}
 					if (thresholdType == null) {
@@ -328,30 +328,30 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	}
 
-	//	public static void main(String... args) throws IOException {
-	//		Properties p = new Properties();
-	//		InputStream r = RouterLoggerConfiguration.class.getResourceAsStream("/routerlogger.cfg");
-	//		p.load(r);
-	//		r.close();
-	//		System.out.println("Presenti in routerlogger.cfg e non presenti in Preference:");
-	//		outer: for (String key : p.stringPropertyNames()) {
-	//			for (Preference preference : Preference.values()) {
-	//				if (preference.getConfigurationKey().equals(key)) {
-	//					continue outer;
-	//				}
-	//			}
-	//			System.out.println(key);
-	//		}
-	//		System.out.println();
-	//		System.out.println("Presenti in Preference e non presenti in routerlogger.cfg:");
-	//		outer: for (Preference preference : Preference.values()) {
-	//			for (String key : p.stringPropertyNames()) {
-	//				if (preference.getConfigurationKey().equals(key)) {
-	//					continue outer;
-	//				}
-	//			}
-	//			System.out.println(preference.getConfigurationKey());
-	//		}
-	//	}
+//	public static void main(String... args) throws IOException {
+//		Properties p = new Properties();
+//		InputStream r = RouterLoggerConfiguration.class.getResourceAsStream("/routerlogger.cfg");
+//		p.load(r);
+//		r.close();
+//		System.out.println("Presenti in routerlogger.cfg e non presenti in Preference:");
+//		outer: for (String key : p.stringPropertyNames()) {
+//			for (Preference preference : Preference.values()) {
+//				if (preference.getConfigurationKey().equals(key)) {
+//					continue outer;
+//				}
+//			}
+//			System.out.println(key);
+//		}
+//		System.out.println();
+//		System.out.println("Presenti in Preference e non presenti in routerlogger.cfg:");
+//		outer: for (Preference preference : Preference.values()) {
+//			for (String key : p.stringPropertyNames()) {
+//				if (preference.getConfigurationKey().equals(key)) {
+//					continue outer;
+//				}
+//			}
+//			System.out.println(preference.getConfigurationKey());
+//		}
+//	}
 
 }

@@ -2,30 +2,30 @@ package it.albertus.router.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration.Defaults;
-import it.albertus.util.logging.DailyRollingFileHandler;
 
 public class LogManager {
 
-	public static final String FILE_EXTENSION = ".log";
-	public static final String FILE_NAME = "%d" + FILE_EXTENSION;
+	public static final String LOG_FILE_EXTENSION = ".log";
+	public static final String LOG_FILE_NAME = "%d" + LOG_FILE_EXTENSION;
 
-	private static final ThreadLocal<DateFormat> dateFormatFileName = new ThreadLocal<DateFormat>() {
+	public static final String LOCK_FILE_EXTENSION = ".lck";
+
+	private static final FilenameFilter logFilenameFilter = new FilenameFilter() {
 		@Override
-		protected DateFormat initialValue() {
-			return new SimpleDateFormat(DailyRollingFileHandler.Defaults.DATE_PATTERN);
+		public boolean accept(final File dir, final String name) {
+			return name != null && name.toLowerCase().contains(LOG_FILE_EXTENSION) && !name.endsWith(LOCK_FILE_EXTENSION);
 		}
 	};
 
-	private static final FilenameFilter filenameFilter = new FilenameFilter() {
+	private static final FilenameFilter lockFilenameFilter = new FilenameFilter() {
 		@Override
 		public boolean accept(final File dir, final String name) {
-			return name != null && name.toLowerCase().contains(FILE_EXTENSION) && !name.contains("lck");
+			return name != null && name.endsWith(LOCK_FILE_EXTENSION);
 		}
 	};
 
@@ -35,11 +35,11 @@ public class LogManager {
 
 	public static File[] listFiles() {
 		final String loggingPath = getLoggingPath();
-		return new File(loggingPath).listFiles(filenameFilter);
+		return new File(loggingPath).listFiles(logFilenameFilter);
 	}
 
 	public static boolean deleteFile(final File file) {
-		if (file.getPath().startsWith(getCurrentFile().getPath())) {
+		if (getLockedFiles().contains(file)) {
 			return false;
 		}
 		else {
@@ -47,8 +47,18 @@ public class LogManager {
 		}
 	}
 
-	public static File getCurrentFile() {
-		return new File(getLoggingPath() + File.separator + FILE_NAME.replace("%d", dateFormatFileName.get().format(new Date())));
+	public static Set<File> getLockedFiles() {
+		final Set<File> lockedFiles = new HashSet<File>();
+		final File[] lockFiles = new File(getLoggingPath()).listFiles(lockFilenameFilter);
+		if (lockFiles != null) {
+			for (final File lockFile : lockFiles) {
+				final File lockedFile = new File(lockFile.getPath().replace(LOCK_FILE_EXTENSION, ""));
+				if (lockedFile.exists()) {
+					lockedFiles.add(lockedFile);
+				}
+			}
+		}
+		return lockedFiles;
 	}
 
 	public static String getLoggingPath() {

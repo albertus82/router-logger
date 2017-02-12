@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
@@ -66,7 +67,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 		else { // The URL contains a log file name
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
-			final File file = new File(LogManager.getCurrentFile().getParentFile() + File.separator + decodedFileName);
+			final File file = new File(LogManager.getLoggingPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
 				notFound(exchange);
 			}
@@ -95,17 +96,6 @@ public class LogsHandler extends BaseHtmlHandler {
 	}
 
 	private void download(final HttpExchange exchange, final File file) throws IOException {
-		if (LogManager.getCurrentFile().equals(file)) {
-			synchronized (LogManager.class) {
-				doDownload(exchange, file);
-			}
-		}
-		else {
-			doDownload(exchange, file);
-		}
-	}
-
-	private void doDownload(final HttpExchange exchange, final File file) throws IOException {
 		FileInputStream input = null;
 		OutputStream output = null;
 		try {
@@ -197,6 +187,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
 		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
 		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
+		final Set<File> lockedFiles = LogManager.getLockedFiles();
 		for (final File file : files) {
 			final String encodedFileName = URLEncoder.encode(file.getName(), getCharset().name());
 			html.append("<tr>");
@@ -209,7 +200,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(Math.max(1, file.length() / 1024)))).append("</td>");
 			html.append("<td class=\"center\">");
 			html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
-			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(file.getPath().startsWith(LogManager.getCurrentFile().getPath()) ? " disabled=\"disabled\"" : "").append(" />");
+			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(lockedFiles.contains(file) ? " disabled=\"disabled\"" : "").append(" />");
 			html.append("</form>");
 			html.append("</td>");
 			html.append("</tr>").append(NewLine.CRLF);
