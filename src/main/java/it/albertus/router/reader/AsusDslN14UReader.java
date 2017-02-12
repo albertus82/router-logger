@@ -40,16 +40,22 @@ public class AsusDslN14UReader extends Reader {
 
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {
+		String received;
+
 		// Username...
-		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
+		received = readFromTelnet(LOGIN_PROMPT, true).trim();
+		logger.info(LOG_PREFIX_TELNET + received);
 		writeToTelnet(username);
 
 		// Password...
-		logger.info(readFromTelnet(LOGIN_PROMPT, true).trim());
+		received = readFromTelnet(LOGIN_PROMPT, true).trim();
+		logger.info(LOG_PREFIX_TELNET + received);
 		writeToTelnet(password);
 
 		// Avanzamento fino al prompt...
-		logger.info(readFromTelnet(COMMAND_PROMPT, true).trim());
+		received = readFromTelnet(COMMAND_PROMPT, true).trim();
+		logger.info(LOG_PREFIX_TELNET + received);
+
 		return true;
 	}
 

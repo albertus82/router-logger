@@ -1,6 +1,8 @@
 package it.albertus.router.reader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -65,9 +67,13 @@ public class DummyReader extends Reader {
 		for (int c = 0; c < message.length(); c++) {
 			separator.append('-');
 		}
-		logger.info(separator.toString());
-		logger.info(message);
-		logger.info(separator.toString());
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final PrintWriter pw = new PrintWriter(baos);
+		pw.println(separator.toString());
+		pw.println(message);
+		pw.println(separator.toString());
+		pw.close();
+		logger.info(LOG_PREFIX_TELNET + baos.toString().trim());
 		return true;
 	}
 

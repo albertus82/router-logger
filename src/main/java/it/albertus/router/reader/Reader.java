@@ -41,6 +41,8 @@ public abstract class Reader implements IReader {
 	protected static final String CFG_KEY_ROUTER_PORT = "router.port";
 	protected static final String CFG_KEY_ROUTER_ADDRESS = "router.address";
 
+	protected static final String LOG_PREFIX_TELNET = TelnetClient.class.getSimpleName() + ':' + NewLine.SYSTEM_LINE_SEPARATOR;
+
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 
 	protected final TelnetClient telnet = new TelnetClient();
