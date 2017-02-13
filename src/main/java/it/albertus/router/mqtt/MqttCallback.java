@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttToken;
 
 import it.albertus.router.resources.Messages;
 import it.albertus.util.logging.LoggerFactory;
@@ -32,12 +33,16 @@ public class MqttCallback implements MqttCallbackExtended {
 
 	@Override
 	public void messageArrived(final String topic, final MqttMessage message) {
-		logger.fine(Messages.get("msg.mqtt.message.arrived", topic, message));
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine(Messages.get("msg.mqtt.message.arrived", topic, message));
+		}
 	}
 
 	@Override
 	public void deliveryComplete(final IMqttDeliveryToken token) {
-		logger.fine(Messages.get("msg.mqtt.message.delivered", token));
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine(Messages.get("msg.mqtt.message.delivered", token instanceof MqttToken ? ((MqttToken) token).internalTok : token));
+		}
 	}
 
 }
