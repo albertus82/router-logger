@@ -3,6 +3,7 @@ package it.albertus.router.mqtt;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
@@ -16,7 +17,7 @@ public abstract class BaseMqttClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseMqttClient.class);
 
-	private volatile MqttClient client;
+	private volatile IMqttClient client;
 
 	protected class MqttClientStartThread extends Thread {
 
@@ -115,7 +116,7 @@ public abstract class BaseMqttClient {
 		}
 	}
 
-	public MqttClient getClient() {
+	public IMqttClient getClient() {
 		return client;
 	}
 

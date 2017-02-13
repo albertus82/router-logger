@@ -24,10 +24,10 @@ import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.logging.LoggerFactory;
 
-/** @Singleton */
-public class RouterLoggerMqttClient extends BaseMqttClient {
+// @Singleton
+public class MqttClient extends BaseMqttClient {
 
-	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerMqttClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(MqttClient.class);
 
 	private static final Configuration configuration = RouterLogger.getConfiguration();
 
@@ -102,17 +102,17 @@ public class RouterLoggerMqttClient extends BaseMqttClient {
 	private long lastDataMessageTime;
 	private long lastThresholdsMessageTime;
 
-	private RouterLoggerMqttClient() {}
+	private MqttClient() {}
 
 	private static class Singleton {
-		private static final RouterLoggerMqttClient instance = new RouterLoggerMqttClient();
+		private static final MqttClient instance = new MqttClient();
 
 		private Singleton() {
 			throw new IllegalAccessError();
 		}
 	}
 
-	public static RouterLoggerMqttClient getInstance() {
+	public static MqttClient getInstance() {
 		return Singleton.instance;
 	}
 

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.RouterLogger;
 import it.albertus.router.email.ThresholdsEmailSender;
-import it.albertus.router.mqtt.RouterLoggerMqttClient;
+import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.WebServer;
@@ -62,7 +62,7 @@ public abstract class RouterLoggerEngine {
 	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
 
 	protected final WebServer httpServer = WebServer.getInstance();
-	protected final RouterLoggerMqttClient mqttClient = RouterLoggerMqttClient.getInstance();
+	protected final MqttClient mqttClient = MqttClient.getInstance();
 
 	private IReader reader;
 	private IWriter writer;

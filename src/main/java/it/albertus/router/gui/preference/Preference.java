@@ -82,7 +82,7 @@ import it.albertus.router.gui.preference.page.MqttPreferencePage;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
 import it.albertus.router.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.router.gui.preference.page.WriterPreferencePage;
-import it.albertus.router.mqtt.RouterLoggerMqttClient;
+import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -283,48 +283,48 @@ public enum Preference implements IPreference {
 	SERVER_SSL_KMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_KMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
 	SERVER_SSL_TMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(BaseHttpServer.Defaults.SSL_TMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
 
-	MQTT_ENABLED(new PreferenceDetailsBuilder(MQTT).defaultValue(RouterLoggerMqttClient.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_ENABLED(new PreferenceDetailsBuilder(MQTT).defaultValue(MqttClient.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_SERVER_URI(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(UriListEditor.class).horizontalSpan(2).icons(Images.getMainIcons()).build()),
 	MQTT_USERNAME(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	MQTT_PASSWORD(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
-	MQTT_CLIENT_ID(new PreferenceDetailsBuilder(MQTT).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLIENT_ID).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
-	MQTT_CONNECT_RETRY(new PreferenceDetailsBuilder(MQTT).separate().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECT_RETRY).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_CLIENT_ID(new PreferenceDetailsBuilder(MQTT).restartRequired().defaultValue(MqttClient.Defaults.CLIENT_ID).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
+	MQTT_CONNECT_RETRY(new PreferenceDetailsBuilder(MQTT).separate().restartRequired().defaultValue(MqttClient.Defaults.CONNECT_RETRY).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
-	MQTT_DATA_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_DATA_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_TOPIC).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
-	MQTT_DATA_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_QOS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
-	MQTT_DATA_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_THROTTLING_IN_MILLIS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	MQTT_DATA_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.DATA_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_DATA_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.DATA_TOPIC).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
+	MQTT_DATA_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.DATA_QOS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
+	MQTT_DATA_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.DATA_THROTTLING_IN_MILLIS).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.mqtt.data.throttling.disabled");
 		}
 	}, 0)).build()),
-	MQTT_DATA_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.DATA_RETAINED).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_DATA_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.DATA_RETAINED).parent(MQTT_DATA_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
-	MQTT_STATUS_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).separate().restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_STATUS_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_TOPIC).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
-	MQTT_STATUS_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_QOS).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
-	MQTT_STATUS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.STATUS_RETAINED).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_STATUS_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).separate().restartRequired().defaultValue(MqttClient.Defaults.STATUS_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_STATUS_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(MqttClient.Defaults.STATUS_TOPIC).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
+	MQTT_STATUS_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(MqttClient.Defaults.STATUS_QOS).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
+	MQTT_STATUS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(MqttClient.Defaults.STATUS_RETAINED).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
-	MQTT_THRESHOLDS_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).separate().defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_THRESHOLDS_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_TOPIC).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
-	MQTT_THRESHOLDS_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_QOS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
-	MQTT_THRESHOLDS_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	MQTT_THRESHOLDS_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).separate().defaultValue(MqttClient.Defaults.THRESHOLDS_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_THRESHOLDS_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_TOPIC).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
+	MQTT_THRESHOLDS_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_QOS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
+	MQTT_THRESHOLDS_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.mqtt.thresholds.throttling.disabled");
 		}
 	}, 0)).build()),
-	MQTT_THRESHOLDS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(RouterLoggerMqttClient.Defaults.THRESHOLDS_RETAINED).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_THRESHOLDS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_RETAINED).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
-	MQTT_CLEAN_SESSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_AUTOMATIC_RECONNECT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.AUTOMATIC_RECONNECT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.CONNECTION_TIMEOUT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
-	MQTT_KEEP_ALIVE_INTERVAL(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.KEEP_ALIVE_INTERVAL).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
-	MQTT_MAX_INFLIGHT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MAX_INFLIGHT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
-	MQTT_VERSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.MQTT_VERSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
-	MQTT_PERSISTENCE_FILE_ENABLED(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_PERSISTENCE_FILE_CUSTOM(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(RouterLoggerMqttClient.Defaults.PERSISTENCE_FILE_CUSTOM).parent(MQTT_PERSISTENCE_FILE_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_CLEAN_SESSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_AUTOMATIC_RECONNECT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.AUTOMATIC_RECONNECT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.CONNECTION_TIMEOUT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
+	MQTT_KEEP_ALIVE_INTERVAL(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.KEEP_ALIVE_INTERVAL).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
+	MQTT_MAX_INFLIGHT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.MAX_INFLIGHT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
+	MQTT_VERSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.MQTT_VERSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(AdvancedMqttPreferencePage.getMqttVersionComboOptions()).build()),
+	MQTT_PERSISTENCE_FILE_ENABLED(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.PERSISTENCE_FILE_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	MQTT_PERSISTENCE_FILE_CUSTOM(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.PERSISTENCE_FILE_CUSTOM).parent(MQTT_PERSISTENCE_FILE_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_PERSISTENCE_FILE_PATH(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(Configuration.getOsSpecificConfigurationDir() + File.separator + Messages.get("msg.application.name")).parent(MQTT_PERSISTENCE_FILE_CUSTOM).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
