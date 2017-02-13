@@ -2,6 +2,7 @@ package it.albertus.router.console;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Version;
 import it.albertus.util.logging.LoggerFactory;
+import it.albertus.util.logging.LoggingSupport;
 
 public class RouterLoggerConsole extends RouterLoggerEngine {
 
@@ -62,7 +64,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			}
 			catch (final InterruptedException e) {
 				logger.log(Level.FINER, e.toString(), e);
-				Thread.currentThread().interrupt();
+				// Thread.currentThread().interrupt(); FIXME
 			}
 			catch (final Exception e) {
 				logger.log(Level.SEVERE, e.toString(), e);
@@ -132,6 +134,12 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 
 		lastLogLength = log.length();
 		System.out.print(clean.toString() + log.toString());
+		for (final Handler handler : LoggingSupport.getRootHandlers()) {
+			if (handler.getFormatter() instanceof ConsoleFormatter) {
+				((ConsoleFormatter) handler.getFormatter()).setPrintOnNewLine(true);
+				break;
+			}
+		}
 	}
 
 	@Override

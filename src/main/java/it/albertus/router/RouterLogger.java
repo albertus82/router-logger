@@ -6,11 +6,11 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import it.albertus.router.console.ConsoleFormatter;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.resources.Messages;
-import it.albertus.util.logging.CustomFormatter;
 import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.logging.LoggingSupport;
 
@@ -34,7 +34,7 @@ public class RouterLogger {
 		final Logger rootLogger = LoggingSupport.getRootLogger();
 		for (final Handler handler : rootLogger.getHandlers()) {
 			if (handler instanceof ConsoleHandler) {
-				handler.setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n"));
+				handler.setFormatter(new ConsoleFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n"));
 			}
 		}
 		logger = LoggerFactory.getLogger(RouterLogger.class);
