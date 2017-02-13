@@ -15,6 +15,7 @@ import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.logging.EmailHandler;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 import it.albertus.util.logging.LoggerFactory;

@@ -1,4 +1,4 @@
-package it.albertus.router.email;
+package it.albertus.router.util.logging;
 
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import it.albertus.router.RouterLogger;
+import it.albertus.router.email.EmailSender;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 import it.albertus.util.logging.CustomFormatter;

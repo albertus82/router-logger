@@ -15,11 +15,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import it.albertus.jface.JFaceMessages;
-import it.albertus.router.email.EmailHandler;
 import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.HousekeepingFilter;
-import it.albertus.router.util.LogManager;
+import it.albertus.router.util.logging.EmailHandler;
+import it.albertus.router.util.logging.HousekeepingFilter;
+import it.albertus.router.util.logging.LogManager;
 import it.albertus.util.Configuration;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.CustomFormatter;
@@ -51,6 +51,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	public static final String CFG_FILE_NAME = "routerlogger.cfg";
+	public static final String LOG_FILE_DATE_PATTERN = "yyyyMMdd";
 
 	private static final String MSG_KEY_ERR_THRESHOLD_MISCFG_NAME = "err.threshold.miscfg.name";
 	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
@@ -150,8 +151,9 @@ public class RouterLoggerConfiguration extends Configuration {
 			builder.limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024);
 			builder.count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT));
 			builder.append(true);
+			builder.datePattern(LOG_FILE_DATE_PATTERN);
 			builder.formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
-			builder.filter(this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED) ? new HousekeepingFilter(this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP)) : null);
+			builder.filter(this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED) ? new HousekeepingFilter(this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP), LOG_FILE_DATE_PATTERN) : null);
 			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
 				if (fileHandler != null) {
 					LoggingSupport.getRootLogger().removeHandler(fileHandler);

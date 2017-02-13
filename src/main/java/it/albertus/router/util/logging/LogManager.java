@@ -1,4 +1,4 @@
-package it.albertus.router.util;
+package it.albertus.router.util.logging;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -66,9 +66,12 @@ public class LogManager {
 
 	public static int deleteAllFiles() {
 		int count = 0;
-		for (final File file : listFiles()) {
-			if (!file.isDirectory()) {
-				count += deleteFile(file) ? 1 : 0;
+		final File[] files = listFiles();
+		if (files != null) {
+			for (final File file : files) {
+				if (!file.isDirectory()) {
+					count += deleteFile(file) ? 1 : 0;
+				}
 			}
 		}
 		return count;

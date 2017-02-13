@@ -23,6 +23,7 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.jface.preference.field.EmailAddressesListEditor;
 import it.albertus.router.RouterLogger;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.logging.EmailHandler;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.logging.LoggerFactory;
