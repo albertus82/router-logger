@@ -23,7 +23,7 @@ import it.albertus.util.logging.LoggingSupport;
 
 public class ThresholdsEmailSender {
 
-	private static final Logger logger;
+	private static final Logger logger; // without EmailHandler
 
 	static {
 		logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
