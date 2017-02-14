@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,26 +22,14 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.jface.preference.field.EmailAddressesListEditor;
 import it.albertus.router.RouterLogger;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.logging.EmailHandler;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.logging.LoggerFactory;
-import it.albertus.util.logging.LoggingSupport;
 
 /** Singleton. */
 public class EmailSender {
 
-	private static final Logger logger; // without EmailHandler
-
-	static {
-		logger = LoggerFactory.getLogger(EmailSender.class);
-		logger.setUseParentHandlers(false);
-		for (final Handler handler : LoggingSupport.getRootHandlers()) {
-			if (!(handler instanceof EmailHandler)) {
-				logger.addHandler(handler);
-			}
-		}
-	}
+	private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
 	private static final Configuration configuration = RouterLogger.getConfiguration();
 

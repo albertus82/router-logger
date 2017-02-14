@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,25 +14,13 @@ import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.logging.EmailHandler;
 import it.albertus.util.Configuration;
 import it.albertus.util.NewLine;
 import it.albertus.util.logging.LoggerFactory;
-import it.albertus.util.logging.LoggingSupport;
 
 public class ThresholdsEmailSender {
 
-	private static final Logger logger; // without EmailHandler
-
-	static {
-		logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
-		logger.setUseParentHandlers(false);
-		for (final Handler handler : LoggingSupport.getRootHandlers()) {
-			if (!(handler instanceof EmailHandler)) {
-				logger.addHandler(handler);
-			}
-		}
-	}
+	private static final Logger logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
 
 	private static final Configuration configuration = RouterLogger.getConfiguration();
 

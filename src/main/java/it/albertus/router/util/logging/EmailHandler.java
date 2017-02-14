@@ -3,6 +3,8 @@ package it.albertus.router.util.logging;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.ErrorManager;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
@@ -11,9 +13,11 @@ import java.util.logging.LogRecord;
 
 import it.albertus.router.RouterLogger;
 import it.albertus.router.email.EmailSender;
+import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 import it.albertus.util.logging.CustomFormatter;
+import it.albertus.util.logging.LoggingSupport;
 
 public class EmailHandler extends Handler {
 
@@ -25,6 +29,14 @@ public class EmailHandler extends Handler {
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
 		}
+	}
+
+	private static final Set<String> exclusions;
+
+	static {
+		exclusions = new HashSet<String>();
+		exclusions.add(LoggingSupport.getLoggerName(EmailSender.class));
+		exclusions.add(LoggingSupport.getLoggerName(ThresholdsEmailSender.class));
 	}
 
 	private Throwable lastThrownSent;
@@ -39,6 +51,11 @@ public class EmailHandler extends Handler {
 				return RouterLogger.getConfiguration() != null ? record.getLevel().intValue() >= RouterLogger.getConfiguration().getInt("logging.email.level", Defaults.EMAIL_LEVEL.intValue()) : false;
 			}
 		});
+	}
+
+	@Override
+	public boolean isLoggable(final LogRecord record) {
+		return super.isLoggable(record) && !exclusions.contains(record.getLoggerName());
 	}
 
 	@Override

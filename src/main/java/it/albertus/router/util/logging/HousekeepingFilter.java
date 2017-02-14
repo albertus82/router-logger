@@ -21,9 +21,23 @@ public class HousekeepingFilter implements Filter {
 	private static final int MIN_HISTORY = 1;
 
 	private final int maxHistory;
-	private DateFormat dateFormat;
+	private final String datePattern;
 
 	private String currentFileNamePart;
+
+	private final ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			try {
+				return new SimpleDateFormat(datePattern);
+			}
+			catch (final RuntimeException e) {
+				final String defaultDatePattern = TimeBasedRollingFileHandler.Defaults.DATE_PATTERN;
+				logger.log(Level.WARNING, Messages.get("err.log.housekeeping.datePattern", datePattern, defaultDatePattern), e);
+				return new SimpleDateFormat(defaultDatePattern);
+			}
+		}
+	};
 
 	public HousekeepingFilter(final int maxHistory) {
 		this(maxHistory, TimeBasedRollingFileHandler.Defaults.DATE_PATTERN);
@@ -37,19 +51,13 @@ public class HousekeepingFilter implements Filter {
 		else {
 			this.maxHistory = maxHistory;
 		}
-		try {
-			this.dateFormat = new SimpleDateFormat(datePattern);
-		}
-		catch (final RuntimeException e) {
-			final String defaultDatePattern = TimeBasedRollingFileHandler.Defaults.DATE_PATTERN;
-			logger.log(Level.WARNING, Messages.get("err.log.housekeeping.datePattern", datePattern, defaultDatePattern), e);
-			this.dateFormat = new SimpleDateFormat(defaultDatePattern);
-		}
+		this.datePattern = datePattern;
+		logger.config("Created new " + toString());
 	}
 
 	@Override
-	public synchronized boolean isLoggable(final LogRecord record) {
-		final String newFileNamePart = dateFormat.format(new Date());
+	public boolean isLoggable(final LogRecord record) {
+		final String newFileNamePart = dateFormat.get().format(new Date());
 		if (!newFileNamePart.equals(currentFileNamePart)) {
 			int keep = this.maxHistory;
 			if (currentFileNamePart == null) {
@@ -72,6 +80,11 @@ public class HousekeepingFilter implements Filter {
 				}
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "HousekeepingFilter [maxHistory=" + maxHistory + ", datePattern=" + datePattern + "]";
 	}
 
 }
