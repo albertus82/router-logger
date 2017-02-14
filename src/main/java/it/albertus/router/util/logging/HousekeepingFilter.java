@@ -82,9 +82,52 @@ public class HousekeepingFilter implements Filter {
 		}
 	}
 
+	public int getMaxHistory() {
+		return maxHistory;
+	}
+
+	public String getDatePattern() {
+		return datePattern;
+	}
+
 	@Override
 	public String toString() {
 		return "HousekeepingFilter [maxHistory=" + maxHistory + ", datePattern=" + datePattern + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((datePattern == null) ? 0 : datePattern.hashCode());
+		result = prime * result + maxHistory;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof HousekeepingFilter)) {
+			return false;
+		}
+		HousekeepingFilter other = (HousekeepingFilter) obj;
+		if (datePattern == null) {
+			if (other.datePattern != null) {
+				return false;
+			}
+		}
+		else if (!datePattern.equals(other.datePattern)) {
+			return false;
+		}
+		if (maxHistory != other.maxHistory) {
+			return false;
+		}
+		return true;
 	}
 
 }
