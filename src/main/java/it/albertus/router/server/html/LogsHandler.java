@@ -12,8 +12,8 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
@@ -142,19 +142,23 @@ public class LogsHandler extends BaseHtmlHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.logs")));
 
 		final File[] files = LogManager.listFiles();
-		final Set<File> lockedFiles = LogManager.getLockedFiles();
+		final Collection<File> lockedFiles = LogManager.getLockedFiles();
 
 		html.append("<h3>").append(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length)).append("</h3>").append(NewLine.CRLF);
 
-		if (files != null && files.length > 0) {
-			html.append(buildHtmlTable(files, lockedFiles));
-		}
-
+		// Button bar
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 		if (files != null && files.length > 0) {
 			html.append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
 		}
+
+		// Table
+		if (files != null && files.length > 0) {
+			html.append(buildHtmlTable(files, lockedFiles));
+		}
+
+		// Footer
 		html.append(buildHtmlFooter());
 
 		final byte[] payload = html.toString().getBytes(getCharset());
@@ -177,7 +181,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 	}
 
-	private String buildHtmlTable(final File[] files, final Set<File> lockedFiles) throws UnsupportedEncodingException {
+	private String buildHtmlTable(final File[] files, final Collection<File> lockedFiles) throws UnsupportedEncodingException {
 		Arrays.sort(files);
 		final StringBuilder html = new StringBuilder();
 		html.append("<table><thead><tr>");
