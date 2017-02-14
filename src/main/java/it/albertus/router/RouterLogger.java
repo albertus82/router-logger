@@ -31,8 +31,7 @@ public class RouterLogger {
 	private static InitializationException initializationException = null;
 
 	static {
-		final Logger rootLogger = LoggingSupport.getRootLogger();
-		for (final Handler handler : rootLogger.getHandlers()) {
+		for (final Handler handler : LoggingSupport.getRootHandlers()) {
 			if (handler instanceof ConsoleHandler) {
 				handler.setFormatter(new ConsoleFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n"));
 			}
