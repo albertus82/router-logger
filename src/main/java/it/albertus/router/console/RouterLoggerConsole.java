@@ -143,46 +143,6 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 	}
 
 	@Override
-	public void connect() {
-		// Avvia thread di interrogazione router...
-		if (getReader() != null && getWriter() != null) {
-			boolean connect;
-			try {
-				connect = canConnect();
-			}
-			catch (final Exception e) {
-				logger.log(Level.WARNING, e.toString(), e);
-				return;
-			}
-			if (connect) {
-				exit = false;
-				pollingThread = new Thread("pollingThread") {
-					@Override
-					public void run() {
-						try {
-							outerLoop();
-						}
-						catch (final Exception e1) {
-							logger.log(Level.SEVERE, e1.toString(), e1);
-							try {
-								getReader().disconnect();
-							}
-							catch (final Exception e2) {
-								logger.log(Level.FINE, e2.toString(), e2);
-							}
-							release();
-						}
-					}
-				};
-				pollingThread.start();
-			}
-			else {
-				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()));
-			}
-		}
-	}
-
-	@Override
 	public void restart() {
 		disconnect(true);
 		new Thread("ResetThread") {
