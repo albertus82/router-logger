@@ -45,7 +45,7 @@ public class ConnectHandler extends BaseHtmlHandler {
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_UNAVAILABLE, response.length);
+		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_CONFLICT, response.length);
 		exchange.getResponseBody().write(response);
 	}
 
