@@ -2,7 +2,6 @@ package it.albertus.router.gui.preference.page;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
@@ -35,8 +34,8 @@ public class GeneralPreferencePage extends BasePreferencePage {
 	public static StaticLabelsAndValues getLoggingComboOptions() {
 		final Map<Integer, Level> levels = LoggingSupport.getLevels();
 		final StaticLabelsAndValues options = new StaticLabelsAndValues(levels.size());
-		for (final Entry<Integer, Level> entry : levels.entrySet()) {
-			options.put(entry.getValue().getName(), entry.getKey().toString());
+		for (final Level level : levels.values()) {
+			options.put(level.getName(), level.getName());
 		}
 		return options;
 	}
