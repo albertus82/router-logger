@@ -90,14 +90,14 @@ public class DatabaseWriter extends Writer {
 			// Verifica esistenza tabella ed eventuale creazione...
 			final String tableName = getTableName();
 			if (!tableExists(tableName)) {
-				logger.info(Messages.get("msg.creating.database.table", tableName));
+				logger.log(Level.INFO, Messages.get("msg.creating.database.table"), tableName);
 				createTable(tableName, info);
 				showMessage = true;
 			}
 
 			// Inserimento dati...
 			if (showMessage) {
-				logger.info(Messages.get("msg.logging.into.database", tableName));
+				logger.log(Level.INFO, Messages.get("msg.logging.into.database"), tableName);
 			}
 
 			final Map<Integer, String> columns = new HashMap<Integer, String>();

@@ -49,7 +49,7 @@ public class WebServerAuthenticator extends BasicAuthenticator {
 				return true;
 			}
 			else {
-				logger.info(Messages.get("err.server.authentication", specifiedUsername, specifiedPassword));
+				logger.log(Level.WARNING, Messages.get("err.server.authentication"), new String[] { specifiedUsername, specifiedPassword });
 				return fail();
 			}
 		}

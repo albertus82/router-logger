@@ -84,7 +84,7 @@ public abstract class Reader implements IReader {
 
 		/* Connessione... */
 		telnet.setConnectTimeout(connectionTimeoutInMillis);
-		logger.info(Messages.get("msg.connecting", routerAddress, routerPort));
+		logger.log(Level.INFO, Messages.get("msg.connecting"), new Object[] { routerAddress, routerPort });
 		boolean connected = false;
 		try {
 			telnet.connect(routerAddress, routerPort);

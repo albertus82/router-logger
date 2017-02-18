@@ -133,7 +133,7 @@ public class CsvWriter extends Writer {
 				closeOutputFile();
 				csvFileWriter = new FileWriter(file);
 				csvBufferedWriter = new BufferedWriter(csvFileWriter);
-				logger.info(Messages.get("msg.logging.to.file", path));
+				logger.log(Level.INFO, Messages.get("msg.logging.to.file"), path);
 				csvBufferedWriter.append(buildCsvHeader(info));
 			}
 
@@ -141,7 +141,7 @@ public class CsvWriter extends Writer {
 				// Open existing file...
 				csvFileWriter = new FileWriter(file, true);
 				csvBufferedWriter = new BufferedWriter(csvFileWriter);
-				logger.info(Messages.get("msg.logging.to.file", path));
+				logger.log(Level.INFO, Messages.get("msg.logging.to.file"), path);
 			}
 			csvBufferedWriter.append(buildCsvRow(info));
 			csvBufferedWriter.flush();

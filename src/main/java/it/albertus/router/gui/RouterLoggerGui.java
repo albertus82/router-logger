@@ -242,7 +242,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				}
 			}
 			if (print) {
-				logger.info(Messages.get("msg.thresholds.reached", message));
+				logger.log(Level.INFO, Messages.get("msg.thresholds.reached"), message);
 				if (trayIcon != null) {
 					trayIcon.showBalloonToolTip(thresholdsReached);
 				}

@@ -94,7 +94,7 @@ public class EmailSender {
 
 		@Override
 		public void run() {
-			logger.fine(Messages.get("msg.thread.started", getName()));
+			logger.log(Level.FINE, Messages.get("msg.thread.started"), getName());
 			while (!isInterrupted()) {
 				final int maxSendingsPerCycle = configuration.getInt("email.max.sendings.per.cycle", Defaults.MAX_SENDINGS_PER_CYCLE);
 				final List<RouterLoggerEmail> sent = new ArrayList<RouterLoggerEmail>(Math.min(queue.size(), maxSendingsPerCycle));
@@ -103,7 +103,7 @@ public class EmailSender {
 						processQueuedMessage(sent, email);
 					}
 					else {
-						logger.info(Messages.get("msg.email.limit", maxSendingsPerCycle));
+						logger.log(Level.INFO, Messages.get("msg.email.limit"), maxSendingsPerCycle);
 						break; // for
 					}
 				}
@@ -125,7 +125,7 @@ public class EmailSender {
 					interrupt();
 				}
 			}
-			logger.fine(Messages.get("msg.thread.terminated", getName()));
+			logger.log(Level.FINE, Messages.get("msg.thread.terminated"), getName());
 		}
 
 		private void processQueuedMessage(final Collection<RouterLoggerEmail> sent, final RouterLoggerEmail email) {
@@ -158,7 +158,7 @@ public class EmailSender {
 				}
 			}
 			else {
-				logger.warning(Messages.get("err.email.max.queue.size", maxQueueSize, subject));
+				logger.log(Level.WARNING, Messages.get("err.email.max.queue.size"), new Object[] { maxQueueSize, subject });
 			}
 		}
 	}
@@ -194,7 +194,7 @@ public class EmailSender {
 		initializeEmail(email);
 		createContents(email, rle);
 		final String mimeMessageId = email.send();
-		logger.info(Messages.get("msg.email.sent", rle.getSubject()));
+		logger.log(Level.INFO, Messages.get("msg.email.sent"), rle.getSubject());
 		return mimeMessageId;
 	}
 

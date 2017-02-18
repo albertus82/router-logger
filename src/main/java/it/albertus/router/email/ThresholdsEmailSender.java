@@ -83,7 +83,7 @@ public class ThresholdsEmailSender {
 
 		@Override
 		public void run() {
-			logger.fine(Messages.get("msg.thread.started", getName()));
+			logger.log(Level.FINE, Messages.get("msg.thread.started"), getName());
 			while (!isInterrupted()) {
 				synchronized (lock) {
 					if (queue == null || queue.isEmpty()) {
@@ -110,7 +110,7 @@ public class ThresholdsEmailSender {
 					}
 				}
 			}
-			logger.fine(Messages.get("msg.thread.terminated", getName()));
+			logger.log(Level.FINE, Messages.get("msg.thread.terminated"), getName());
 		}
 
 		private void sendMessages() {

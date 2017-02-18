@@ -111,7 +111,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	private void updateLanguage() {
-		final String language = getString("language", Messages.Defaults.LANGUAGE);
+		final String language = this.getString("language", Messages.Defaults.LANGUAGE);
 		Messages.setLanguage(language);
 		JFaceMessages.setLanguage(language);
 	}
@@ -198,10 +198,10 @@ public class RouterLoggerConfiguration extends Configuration {
 			try {
 				load();
 			}
-			catch (IllegalThresholdException ite) {
+			catch (final IllegalThresholdException ite) {
 				throw ite;
 			}
-			catch (RuntimeException re) {
+			catch (final RuntimeException re) {
 				throw new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, RouterLoggerConfiguration.this.getFileName()), re);
 			}
 		}

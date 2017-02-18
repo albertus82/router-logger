@@ -30,7 +30,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	public static final String DEFAULT_STYLE = "";
 
-	protected static String lastRequest = null;
+	protected String lastRequest = null;
 
 	private static final String MSG_KEY_LBL_ERROR = "lbl.error";
 
@@ -162,11 +162,12 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	}
 
 	protected void log(final HttpExchange exchange) {
-		if (configuration.getBoolean("server.log.request", Defaults.LOG_REQUEST)) {
+		final Level level = Level.INFO;
+		if (logger.isLoggable(level) && configuration.getBoolean("server.log.request", Defaults.LOG_REQUEST)) {
 			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
 			if (!request.equals(lastRequest)) {
 				lastRequest = request;
-				logger.info(Messages.get("msg.server.log.request", Thread.currentThread().getName() + " " + request));
+				logger.log(level, Messages.get("msg.server.log.request"), Thread.currentThread().getName() + " " + request);
 			}
 		}
 	}

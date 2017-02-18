@@ -293,7 +293,7 @@ public abstract class RouterLoggerEngine {
 				if (loggedIn && !exit) {
 					setStatus(Status.OK);
 					if (configuration.getBoolean("reader.log.connected", Defaults.LOG_CONNECTED)) {
-						logger.warning(Messages.get("msg.reader.connected", reader.getDeviceModel()));
+						logger.log(Level.WARNING, Messages.get("msg.reader.connected"), reader.getDeviceModel());
 					}
 					index = 0;
 					try {
@@ -382,17 +382,17 @@ public abstract class RouterLoggerEngine {
 		}
 
 		if (!configuration.getThresholds().isEmpty()) {
-			logger.info(Messages.get("msg.thresholds", configuration.getThresholds()));
+			logger.log(Level.INFO, Messages.get("msg.thresholds"), configuration.getThresholds());
 		}
 		if (configuration.getBoolean("logging.print.configuration", Defaults.LOGGING_PRINT_CONFIGURATION)) {
-			logger.info(Messages.get("msg.settings", configuration));
+			logger.log(Level.INFO, Messages.get("msg.settings"), configuration);
 		}
 	}
 
 	/** Prints the device model name, if available. */
 	protected void printDeviceModel() {
 		if (reader != null && reader.getDeviceModel() != null && !reader.getDeviceModel().trim().isEmpty()) {
-			logger.info(Messages.get("msg.device.model", reader.getDeviceModel().trim()));
+			logger.log(Level.INFO, Messages.get("msg.device.model"), reader.getDeviceModel().trim());
 		}
 	}
 
@@ -500,7 +500,7 @@ public abstract class RouterLoggerEngine {
 				if (adjustedWaitTimeInMillis > 0L) {
 					if (disconnectionRequested) {
 						final String formattedDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(new Date(System.currentTimeMillis() + adjustedWaitTimeInMillis));
-						logger.info(Messages.get("msg.reconnection.info", formattedDate));
+						logger.log(Level.INFO, Messages.get("msg.reconnection.info"), formattedDate);
 					}
 					interruptible = true;
 					TimeUnit.MILLISECONDS.sleep(adjustedWaitTimeInMillis);
@@ -582,7 +582,7 @@ public abstract class RouterLoggerEngine {
 				pollingThread.start();
 			}
 			else {
-				logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()));
+				logger.log(Level.INFO, Messages.get("err.operation.not.allowed"), getCurrentStatus().getStatus().getDescription());
 			}
 		}
 	}
@@ -606,7 +606,7 @@ public abstract class RouterLoggerEngine {
 			}
 		}
 		else {
-			logger.info(Messages.get("err.operation.not.allowed", getCurrentStatus().getStatus().getDescription()));
+			logger.log(Level.INFO, Messages.get("err.operation.not.allowed"), getCurrentStatus().getStatus().getDescription());
 		}
 	}
 
