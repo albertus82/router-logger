@@ -20,6 +20,7 @@ import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.WebServer;
+import it.albertus.router.util.logging.CustomLevel;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.IWriter;
 import it.albertus.util.ConfigurationException;
@@ -292,9 +293,8 @@ public abstract class RouterLoggerEngine {
 				// Loop...
 				if (loggedIn && !exit) {
 					setStatus(Status.OK);
-					if (configuration.getBoolean("reader.log.connected", Defaults.LOG_CONNECTED)) {
-						logger.log(Level.WARNING, Messages.get("msg.reader.connected"), reader.getDeviceModel());
-					}
+					final Level level = configuration.getBoolean("reader.log.connected", Defaults.LOG_CONNECTED) ? CustomLevel.EMAIL : Level.INFO;
+					logger.log(level, Messages.get("msg.reader.connected"), reader.getDeviceModel());
 					index = 0;
 					try {
 						innerLoop();
@@ -561,7 +561,7 @@ public abstract class RouterLoggerEngine {
 			}
 			if (connect) {
 				exit = false;
-				pollingThread = new Thread("pollingThread") {
+				pollingThread = new Thread("PollingThread") {
 					@Override
 					public void run() {
 						try {

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.ErrorManager;
-import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -22,9 +21,9 @@ import it.albertus.util.logging.LoggingSupport;
 public class EmailHandler extends Handler {
 
 	public static class Defaults {
-		public static final boolean EMAIL = false;
-		public static final boolean EMAIL_IGNORE_DUPLICATES = true;
-		public static final Level EMAIL_LEVEL = Level.WARNING;
+		public static final boolean ENABLED = false;
+		public static final boolean IGNORE_DUPLICATES = true;
+		public static final Level LEVEL = Level.WARNING;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -45,17 +44,18 @@ public class EmailHandler extends Handler {
 
 	public EmailHandler() {
 		setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s"));
-		setFilter(new Filter() {
-			@Override
-			public boolean isLoggable(LogRecord record) {
-				return RouterLogger.getConfiguration() != null ? record.getLevel().intValue() >= RouterLogger.getConfiguration().getInt("logging.email.level", Defaults.EMAIL_LEVEL.intValue()) : false;
-			}
-		});
 	}
 
 	@Override
 	public boolean isLoggable(final LogRecord record) {
-		return super.isLoggable(record) && !exclusions.contains(record.getLoggerName());
+		final boolean loggable = super.isLoggable(record);
+		if (CustomLevel.EMAIL.equals(record.getLevel())) {
+			return loggable; // bypass other checks
+		}
+		else {
+			final Configuration configuration = RouterLogger.getConfiguration();
+			return loggable && !exclusions.contains(record.getLoggerName()) && configuration != null && configuration.getBoolean("logging.email.enabled", Defaults.ENABLED) && record.getLevel().intValue() >= configuration.getInt("logging.email.level", Defaults.LEVEL.intValue());
+		}
 	}
 
 	@Override
@@ -64,19 +64,18 @@ public class EmailHandler extends Handler {
 			return;
 		}
 
-		final Configuration configuration = RouterLogger.getConfiguration();
-		if (configuration != null && configuration.getBoolean("logging.email.enabled", Defaults.EMAIL)) {
-			String log;
-			try {
-				log = getFormatter().format(record);
-			}
-			catch (final Exception e) {
-				reportError(null, e, ErrorManager.FORMAT_FAILURE);
-				return;
-			}
+		final String log;
+		try {
+			log = getFormatter().format(record);
+		}
+		catch (final Exception e) {
+			reportError(null, e, ErrorManager.FORMAT_FAILURE);
+			return;
+		}
 
+		try {
 			final Throwable thrown = record.getThrown();
-			if (thrown == null || lastThrownSent == null || !configuration.getBoolean("logging.email.ignore.duplicates", Defaults.EMAIL_IGNORE_DUPLICATES) || !Arrays.equals(lastThrownSent.getStackTrace(), thrown.getStackTrace())) {
+			if (thrown == null || lastThrownSent == null || !RouterLogger.getConfiguration().getBoolean("logging.email.ignore.duplicates", Defaults.IGNORE_DUPLICATES) || !Arrays.equals(lastThrownSent.getStackTrace(), thrown.getStackTrace())) {
 				final String subjectKey;
 				if (thrown != null) {
 					subjectKey = "msg.log.email.subject.exception";
@@ -88,6 +87,9 @@ public class EmailHandler extends Handler {
 				EmailSender.getInstance().reserve(subject, log);
 				lastThrownSent = thrown;
 			}
+		}
+		catch (final Exception e) {
+			reportError(null, e, ErrorManager.WRITE_FAILURE);
 		}
 	}
 

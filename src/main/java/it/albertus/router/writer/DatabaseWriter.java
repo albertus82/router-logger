@@ -33,7 +33,6 @@ public class DatabaseWriter extends Writer {
 		public static final String INFO_COLUMN_TYPE = "VARCHAR(250)";
 		public static final int COLUMN_NAME_MAX_LENGTH = 30;
 		public static final int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
-		public static final boolean SHOWSQL = false;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -116,9 +115,7 @@ public class DatabaseWriter extends Writer {
 			dml.append(')');
 
 			final String sql = dml.toString();
-			if (isShowSql()) {
-				showSql(sql);
-			}
+			showSql(sql);
 			PreparedStatement insert = null;
 			try {
 				insert = connection.prepareStatement(sql);
@@ -152,16 +149,14 @@ public class DatabaseWriter extends Writer {
 		try {
 			// Verifica esistenza tabella...
 			final String sql = "SELECT 1 FROM " + sanitizeName(tableName);
-			if (isShowSql()) {
-				showSql(sql);
-			}
+			showSql(sql);
 			statement = connection.prepareStatement(sql);
 			statement.setFetchSize(1);
 			statement.executeQuery();
 			return true;
 		}
 		catch (final SQLException e) {
-			logger.log(Level.FINE, e.toString(), e);
+			logger.log(Level.FINER, e.toString(), e);
 			return false;
 		}
 		finally {
@@ -184,9 +179,7 @@ public class DatabaseWriter extends Writer {
 
 		PreparedStatement createTable = null;
 		final String sql = ddl.toString();
-		if (isShowSql()) {
-			showSql(sql);
-		}
+		showSql(sql);
 		try {
 			createTable = connection.prepareStatement(sql);
 			createTable.executeUpdate();
@@ -227,12 +220,8 @@ public class DatabaseWriter extends Writer {
 		}
 	}
 
-	protected boolean isShowSql() {
-		return configuration.getBoolean("database.showsql", Defaults.SHOWSQL);
-	}
-
 	protected void showSql(final String sql) {
-		logger.info(sql);
+		logger.fine(sql);
 	}
 
 	protected static String sanitizeName(final String str) {
