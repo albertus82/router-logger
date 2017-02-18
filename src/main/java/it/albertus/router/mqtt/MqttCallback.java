@@ -33,12 +33,18 @@ public class MqttCallback implements MqttCallbackExtended {
 
 	@Override
 	public void messageArrived(final String topic, final MqttMessage message) {
-		logger.log(Level.FINE, Messages.get("msg.mqtt.message.arrived"), new Object[] { topic, message });
+		final Level level = Level.FINE;
+		if (logger.isLoggable(level)) {
+			logger.log(level, Messages.get("msg.mqtt.message.arrived"), new Object[] { topic, message });
+		}
 	}
 
 	@Override
 	public void deliveryComplete(final IMqttDeliveryToken token) {
-		logger.log(Level.FINE, Messages.get("msg.mqtt.message.delivered"), token instanceof MqttToken ? ((MqttToken) token).internalTok : token);
+		final Level level = Level.FINE;
+		if (logger.isLoggable(level)) {
+			logger.log(level, Messages.get("msg.mqtt.message.delivered"), token instanceof MqttToken ? ((MqttToken) token).internalTok : token);
+		}
 	}
 
 }
