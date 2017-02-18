@@ -343,8 +343,7 @@ public enum Preference implements IPreference {
 	LOGGING_FILES_AUTOCLEAN_KEEP(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_AUTOCLEAN_ENABLED).defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_AUTOCLEAN_KEEP).build(), new FieldEditorDetailsBuilder(ShortFieldEditor.class).numberMinimum(1).build()),
 	LOGGING_EMAIL_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(EmailHandler.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	LOGGING_EMAIL_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.LEVEL.getName()).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingComboOptions()).build()),
-	LOGGING_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.IGNORE_DUPLICATES).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	LOGGING_PRINT_CONFIGURATION(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(RouterLoggerEngine.Defaults.LOGGING_PRINT_CONFIGURATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build());
+	LOGGING_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.IGNORE_DUPLICATES).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
 

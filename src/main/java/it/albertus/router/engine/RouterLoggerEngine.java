@@ -42,7 +42,6 @@ public abstract class RouterLoggerEngine {
 		public static final long HYSTERESIS_IN_MILLIS = 10000L;
 		public static final int RETRIES = 3;
 		public static final long RETRY_INTERVAL_IN_MILLIS = 30000L;
-		public static final boolean LOGGING_PRINT_CONFIGURATION = false;
 		public static final boolean THRESHOLDS_EMAIL = false;
 		public static final boolean LOG_CONNECTED = false;
 		public static final boolean WAIT_DISCONNECTED = false;
@@ -381,18 +380,14 @@ public abstract class RouterLoggerEngine {
 			logger.info(baos.toString());
 		}
 
-		if (!configuration.getThresholds().isEmpty()) {
-			logger.log(Level.INFO, Messages.get("msg.thresholds"), configuration.getThresholds());
-		}
-		if (configuration.getBoolean("logging.print.configuration", Defaults.LOGGING_PRINT_CONFIGURATION)) {
-			logger.log(Level.INFO, Messages.get("msg.settings"), configuration);
-		}
+		logger.log(Level.CONFIG, Messages.get("msg.settings"), configuration);
+		logger.log(Level.CONFIG, Messages.get("msg.thresholds"), configuration.getThresholds());
 	}
 
 	/** Prints the device model name, if available. */
 	protected void printDeviceModel() {
 		if (reader != null && reader.getDeviceModel() != null && !reader.getDeviceModel().trim().isEmpty()) {
-			logger.log(Level.INFO, Messages.get("msg.device.model"), reader.getDeviceModel().trim());
+			logger.log(Level.CONFIG, Messages.get("msg.device.model"), reader.getDeviceModel().trim());
 		}
 	}
 
