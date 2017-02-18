@@ -38,9 +38,7 @@ public class MqttCallback implements MqttCallbackExtended {
 
 	@Override
 	public void deliveryComplete(final IMqttDeliveryToken token) {
-//		if (logger.isLoggable(Level.FINE)) {
-			logger.log(Level.FINE, Messages.get("msg.mqtt.message.delivered"), token instanceof MqttToken ? ((MqttToken) token).internalTok : token);
-//		}
+		logger.log(Level.FINE, Messages.get("msg.mqtt.message.delivered"), token instanceof MqttToken ? ((MqttToken) token).internalTok : token);
 	}
 
 }
