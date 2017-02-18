@@ -27,22 +27,20 @@ public class MqttCallback implements MqttCallbackExtended {
 	}
 
 	@Override
-	public void connectComplete(boolean reconnect, final String serverURI) {
-		logger.info(Messages.get("msg.mqtt.connected", serverURI, clientId));
+	public void connectComplete(final boolean reconnect, final String serverURI) {
+		logger.log(Level.INFO, Messages.get("msg.mqtt.connected"), new String[] { serverURI, clientId });
 	}
 
 	@Override
 	public void messageArrived(final String topic, final MqttMessage message) {
-		if (logger.isLoggable(Level.FINE)) {
-			logger.fine(Messages.get("msg.mqtt.message.arrived", topic, message));
-		}
+		logger.log(Level.FINE, Messages.get("msg.mqtt.message.arrived"), new Object[] { topic, message });
 	}
 
 	@Override
 	public void deliveryComplete(final IMqttDeliveryToken token) {
-		if (logger.isLoggable(Level.FINE)) {
-			logger.fine(Messages.get("msg.mqtt.message.delivered", token instanceof MqttToken ? ((MqttToken) token).internalTok : token));
-		}
+//		if (logger.isLoggable(Level.FINE)) {
+			logger.log(Level.FINE, Messages.get("msg.mqtt.message.delivered"), token instanceof MqttToken ? ((MqttToken) token).internalTok : token);
+//		}
 	}
 
 }

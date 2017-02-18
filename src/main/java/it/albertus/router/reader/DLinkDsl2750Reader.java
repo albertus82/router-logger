@@ -2,6 +2,7 @@ package it.albertus.router.reader;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
@@ -38,17 +39,17 @@ public class DLinkDsl2750Reader extends Reader {
 
 		// Username...
 		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 		writeToTelnet(username);
 
 		// Password...
 		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 		writeToTelnet(password);
 
 		// Avanzamento fino al prompt...
 		received = readFromTelnet(COMMAND_PROMPT, true);
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 
 		return true;
 	}

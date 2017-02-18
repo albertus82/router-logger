@@ -52,7 +52,7 @@ public class HousekeepingFilter implements Filter {
 			this.maxHistory = maxHistory;
 		}
 		this.datePattern = datePattern;
-		logger.config("Created new " + toString());
+		logger.log(Level.CONFIG, "Created new {0}", toString());
 	}
 
 	@Override

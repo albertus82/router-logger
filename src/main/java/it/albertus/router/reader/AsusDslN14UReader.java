@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
@@ -44,17 +45,17 @@ public class AsusDslN14UReader extends Reader {
 
 		// Username...
 		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 		writeToTelnet(username);
 
 		// Password...
 		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 		writeToTelnet(password);
 
 		// Avanzamento fino al prompt...
 		received = readFromTelnet(COMMAND_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 
 		return true;
 	}

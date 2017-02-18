@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ConnectException;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -49,8 +48,10 @@ public class DummyReader extends Reader {
 
 	@Override
 	public boolean login(final String username, final char[] password) {
-		logger.info("Username: " + username);
-		logger.info("Password: " + (password != null ? String.valueOf(password) : Arrays.toString(password)));
+		if (logger.isLoggable(Level.INFO)) {
+			logger.log(Level.INFO, "Username: {0}", username);
+			logger.log(Level.INFO, "Password: {0}", password != null ? String.valueOf(password) : password);
+		}
 		if (AUTHENTICATION_TIME_IN_MILLIS > 0) {
 			try {
 				TimeUnit.MILLISECONDS.sleep(AUTHENTICATION_TIME_IN_MILLIS);
@@ -71,9 +72,9 @@ public class DummyReader extends Reader {
 		final PrintWriter pw = new PrintWriter(baos);
 		pw.println(separator.toString());
 		pw.println(message);
-		pw.println(separator.toString());
+		pw.print(separator.toString());
 		pw.close();
-		logger.info(LOG_PREFIX_TELNET + baos.toString().trim());
+		logger.log(Level.INFO, LOG_MASK_TELNET, baos);
 		return true;
 	}
 

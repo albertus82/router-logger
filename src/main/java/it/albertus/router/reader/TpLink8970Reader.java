@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
@@ -40,18 +41,20 @@ public class TpLink8970Reader extends Reader {
 
 		// Username...
 		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 		writeToTelnet(username);
 
 		// Password...
 		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + received);
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 		writeToTelnet(password);
 
 		// Welcome! (salto caratteri speciali (clear screen, ecc.)...
 		final String welcome = readFromTelnet("-", true);
 		received = readFromTelnet(COMMAND_PROMPT, true).trim();
-		logger.info(LOG_PREFIX_TELNET + welcome.charAt(welcome.length() - 1) + received);
+		if (logger.isLoggable(Level.INFO)) {
+			logger.log(Level.INFO, LOG_MASK_TELNET, welcome.charAt(welcome.length() - 1) + received);
+		}
 
 		return true;
 	}

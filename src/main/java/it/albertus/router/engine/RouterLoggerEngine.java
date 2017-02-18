@@ -234,12 +234,14 @@ public abstract class RouterLoggerEngine {
 			if (index > 0) {
 				setStatus(Status.RECONNECTING);
 				final long retryIntervalInMillis = configuration.getLong("logger.retry.interval.ms", Defaults.RETRY_INTERVAL_IN_MILLIS);
-				final StringBuilder message = new StringBuilder(Messages.get("msg.wait.reconnection"));
-				if (retries > 0) {
-					message.append(' ').append(Messages.get("msg.wait.reconnection.retry", index, retries));
+				if (logger.isLoggable(Level.INFO)) {
+					final StringBuilder message = new StringBuilder(Messages.get("msg.wait.reconnection"));
+					if (retries > 0) {
+						message.append(' ').append(Messages.get("msg.wait.reconnection.retry", index, retries));
+					}
+					message.append(' ').append(Messages.get("msg.wait.reconnection.time", retryIntervalInMillis));
+					logger.info(message.toString());
 				}
-				message.append(' ').append(Messages.get("msg.wait.reconnection.time", retryIntervalInMillis));
-				logger.info(message.toString());
 				try {
 					interruptible = true;
 					TimeUnit.MILLISECONDS.sleep(retryIntervalInMillis);
