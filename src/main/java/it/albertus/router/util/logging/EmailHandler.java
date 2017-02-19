@@ -3,20 +3,16 @@ package it.albertus.router.util.logging;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.ErrorManager;
+import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import it.albertus.router.RouterLogger;
 import it.albertus.router.email.EmailSender;
-import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.resources.Messages;
-import it.albertus.util.Configuration;
 import it.albertus.util.logging.CustomFormatter;
-import it.albertus.util.logging.LoggingSupport;
 
 public class EmailHandler extends Handler {
 
@@ -30,13 +26,8 @@ public class EmailHandler extends Handler {
 		}
 	}
 
-	private static final Set<String> exclusions;
-
-	static {
-		exclusions = new HashSet<String>();
-		exclusions.add(LoggingSupport.getLoggerName(EmailSender.class));
-		exclusions.add(LoggingSupport.getLoggerName(ThresholdsEmailSender.class));
-	}
+	public static final Level MIN_LEVEL = Level.INFO;
+	public static final Level MAX_LEVEL = Level.SEVERE;
 
 	private Throwable lastThrownSent;
 
@@ -44,17 +35,16 @@ public class EmailHandler extends Handler {
 
 	public EmailHandler() {
 		setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s"));
+		super.setFilter(new EmailHandlerFilter());
 	}
 
 	@Override
 	public boolean isLoggable(final LogRecord record) {
-		final boolean loggable = super.isLoggable(record);
-		if (CustomLevel.EMAIL.equals(record.getLevel())) {
-			return loggable; // bypass other checks
+		if (record != null && CustomLevel.EMAIL.equals(record.getLevel())) {
+			return true; // bypass other checks
 		}
 		else {
-			final Configuration configuration = RouterLogger.getConfiguration();
-			return loggable && !exclusions.contains(record.getLoggerName()) && configuration != null && configuration.getBoolean("logging.email.enabled", Defaults.ENABLED) && record.getLevel().intValue() >= Level.parse(configuration.getString("logging.email.level", Defaults.LEVEL.getName())).intValue();
+			return super.isLoggable(record);
 		}
 	}
 
@@ -100,5 +90,17 @@ public class EmailHandler extends Handler {
 	public void close() {
 		closed = true;
 	}
+
+	@Override
+	public EmailHandlerFilter getFilter() {
+		return (EmailHandlerFilter) super.getFilter();
+	}
+
+	/**
+	 * @deprecated This method does nothing.
+	 */
+	@Override
+	@Deprecated
+	public void setFilter(final Filter newFilter) {/* Ignore */}
 
 }

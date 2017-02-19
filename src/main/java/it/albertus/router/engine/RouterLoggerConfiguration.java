@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +17,7 @@ import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.logging.EmailHandler;
+import it.albertus.router.util.logging.EmailHandlerFilter;
 import it.albertus.router.util.logging.HousekeepingFilter;
 import it.albertus.router.util.logging.LogManager;
 import it.albertus.util.Configuration;
@@ -25,6 +25,7 @@ import it.albertus.util.StringUtils;
 import it.albertus.util.logging.CustomFormatter;
 import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.logging.LoggingSupport;
+import it.albertus.util.logging.TimeBasedRollingFileHandler;
 import it.albertus.util.logging.TimeBasedRollingFileHandlerBuilder;
 
 public class RouterLoggerConfiguration extends Configuration {
@@ -62,8 +63,8 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	private TimeBasedRollingFileHandlerBuilder fileHandlerBuilder;
 
-	private Handler fileHandler;
-	private Handler emailHandler;
+	private TimeBasedRollingFileHandler fileHandler;
+	private EmailHandler emailHandler;
 
 	private static RouterLoggerConfiguration instance;
 
@@ -135,16 +136,13 @@ public class RouterLoggerConfiguration extends Configuration {
 				disableLoggingFileHandler();
 			}
 
-			if (emailHandler == null) {
-				emailHandler = new EmailHandler();
-				LoggingSupport.getRootLogger().addHandler(emailHandler);
-			}
+			updateLoggingEmailHandler();
 		}
 	}
 
 	private void updateLoggingLevel() {
 		try {
-			LoggingSupport.setLevel(LoggingSupport.getRootLogger().getName(), Level.parse(this.getString("logging.level", Defaults.LOGGING_LEVEL.getName())));
+			LoggingSupport.setRootLevel(Level.parse(this.getString("logging.level", Defaults.LOGGING_LEVEL.getName())));
 		}
 		catch (final IllegalArgumentException e) {
 			logger.log(Level.WARNING, e.toString(), e);
@@ -187,6 +185,27 @@ public class RouterLoggerConfiguration extends Configuration {
 			fileHandler.close();
 			fileHandler = null;
 			fileHandlerBuilder = null;
+		}
+	}
+
+	private void updateLoggingEmailHandler() {
+		if (emailHandler == null) {
+			emailHandler = new EmailHandler();
+			LoggerFactory.getLogger("it.albertus").addHandler(emailHandler);
+		}
+		final EmailHandlerFilter filter = emailHandler.getFilter();
+		filter.setEnabled(this.getBoolean("logging.email.enabled", EmailHandler.Defaults.ENABLED));
+		try {
+			final Level level = Level.parse(this.getString("logging.email.level", EmailHandler.Defaults.LEVEL.getName()));
+			if (level.intValue() >= EmailHandler.MIN_LEVEL.intValue() && level.intValue() <= EmailHandler.MAX_LEVEL.intValue()) {
+				filter.setLevel(level);
+			}
+			else {
+				logger.log(Level.WARNING, Messages.get("err.log.email.level"), new Level[] { EmailHandler.MIN_LEVEL, EmailHandler.MAX_LEVEL });
+			}
+		}
+		catch (final IllegalArgumentException e) {
+			logger.log(Level.WARNING, Messages.get("err.log.email.level", EmailHandler.MIN_LEVEL, EmailHandler.MAX_LEVEL), e);
 		}
 	}
 
