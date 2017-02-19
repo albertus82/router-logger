@@ -1,6 +1,7 @@
 package it.albertus.router.console;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -41,7 +42,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 		// Check arguments...
 		if (args[0].trim().equalsIgnoreCase(ARG_HELP)) {
 			final Version version = Version.getInstance();
-			System.out.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), version.getDate()), Messages.get("msg.website")));
+			System.out.println(Messages.get("msg.welcome", Messages.get("msg.application.name"), Messages.get("msg.version", version.getNumber(), DateFormat.getDateInstance(DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(version.getDate())), Messages.get("msg.website")));
 			System.out.println();
 			System.out.println(Messages.get("msg.help.usage", ARG_CONSOLE, ARG_HELP));
 			System.out.println();

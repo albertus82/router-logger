@@ -2,6 +2,7 @@ package it.albertus.router.server.html;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.text.DateFormat;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -39,7 +40,7 @@ public class RootHtmlHandler extends BaseHtmlHandler {
 		// Response...
 		final Version version = Version.getInstance();
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.home")));
-		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(version.getDate()).append(")</h3>").append(NewLine.CRLF.toString());
+		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(DateFormat.getDateInstance(DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(version.getDate())).append(")</h3>").append(NewLine.CRLF.toString());
 
 		if (configuration.getBoolean(StatusHtmlHandler.CFG_KEY_ENABLED, StatusHtmlHandler.Defaults.ENABLED)) {
 			html.append("<form action=\"").append(StatusHtmlHandler.PATH).append("\" method=\"").append(StatusHtmlHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.status")).append("\" /></form>").append(NewLine.CRLF.toString());
