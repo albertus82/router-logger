@@ -26,22 +26,23 @@ public class RouterLogger {
 		}
 	}
 
-	private static RouterLoggerConfiguration configuration = null;
+	private static final String LOG_FORMAT_CONSOLE = "%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n";
 
-	private static InitializationException initializationException = null;
+	private static RouterLoggerConfiguration configuration;
+	private static InitializationException initializationException;
 
 	static {
 		if (LoggingSupport.getFormat() == null) {
 			for (final Handler handler : LoggingSupport.getRootHandlers()) {
 				if (handler instanceof ConsoleHandler) {
-					handler.setFormatter(new ConsoleFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s: %5$s%6$s%n"));
+					handler.setFormatter(new ConsoleFormatter(LOG_FORMAT_CONSOLE));
 				}
 			}
 		}
 		logger = LoggerFactory.getLogger(RouterLogger.class);
 
 		try {
-			configuration = new RouterLoggerConfiguration();
+			configuration = RouterLoggerConfiguration.getInstance();
 		}
 		catch (final IOException e) {
 			logger.log(Level.SEVERE, e.toString(), e);

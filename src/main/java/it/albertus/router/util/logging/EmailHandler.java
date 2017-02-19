@@ -54,7 +54,7 @@ public class EmailHandler extends Handler {
 		}
 		else {
 			final Configuration configuration = RouterLogger.getConfiguration();
-			return loggable && !exclusions.contains(record.getLoggerName()) && configuration != null && configuration.getBoolean("logging.email.enabled", Defaults.ENABLED) && record.getLevel().intValue() >= configuration.getInt("logging.email.level", Defaults.LEVEL.intValue());
+			return loggable && !exclusions.contains(record.getLoggerName()) && configuration != null && configuration.getBoolean("logging.email.enabled", Defaults.ENABLED) && record.getLevel().intValue() >= Level.parse(configuration.getString("logging.email.level", Defaults.LEVEL.getName())).intValue();
 		}
 	}
 

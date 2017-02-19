@@ -65,10 +65,18 @@ public class RouterLoggerConfiguration extends Configuration {
 	private Handler fileHandler;
 	private Handler emailHandler;
 
-	public RouterLoggerConfiguration() throws IOException {
-		// Caricamento della configurazione...
+	private static RouterLoggerConfiguration instance;
+
+	private RouterLoggerConfiguration() throws IOException {
 		super(Messages.get("msg.application.name") + File.separator + CFG_FILE_NAME, true);
 		init();
+	}
+
+	public static synchronized RouterLoggerConfiguration getInstance() throws IOException {
+		if (instance == null) {
+			instance = new RouterLoggerConfiguration();
+		}
+		return instance;
 	}
 
 	public Set<String> getGuiImportantKeys() {
