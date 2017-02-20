@@ -18,11 +18,11 @@ import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.logging.EmailHandler;
 import it.albertus.router.util.logging.EmailHandlerFilter;
-import it.albertus.router.util.logging.HousekeepingFilter;
-import it.albertus.router.util.logging.LogManager;
+import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.Configuration;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.CustomFormatter;
+import it.albertus.util.logging.HousekeepingFilter;
 import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.logging.LoggingSupport;
 import it.albertus.util.logging.TimeBasedRollingFileHandler;
@@ -153,13 +153,13 @@ public class RouterLoggerConfiguration extends Configuration {
 		final String loggingPath = this.getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
 		if (loggingPath != null && !loggingPath.isEmpty()) {
 			final TimeBasedRollingFileHandlerBuilder builder = new TimeBasedRollingFileHandlerBuilder();
-			builder.fileNamePattern(loggingPath + File.separator + LogManager.LOG_FILE_NAME);
+			builder.fileNamePattern(loggingPath + File.separator + LogFileManager.LOG_FILE_NAME);
 			builder.limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024);
 			builder.count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT));
 			builder.append(true);
 			builder.datePattern(LOG_FILE_DATE_PATTERN);
 			builder.formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
-			builder.filter(this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED) ? new HousekeepingFilter(this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP), LOG_FILE_DATE_PATTERN) : null);
+			builder.filter(this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED) ? new HousekeepingFilter(LogFileManager.getInstance(), this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP), LOG_FILE_DATE_PATTERN) : null);
 			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
 				if (fileHandler != null) {
 					LoggingSupport.getRootLogger().removeHandler(fileHandler);

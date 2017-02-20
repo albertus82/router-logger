@@ -23,7 +23,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpMethod;
-import it.albertus.router.util.logging.LogManager;
+import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
@@ -50,6 +50,8 @@ public class LogsHandler extends BaseHtmlHandler {
 
 	private static final int BUFFER_SIZE = 4 * 1024;
 
+	private static final LogFileManager logManager = LogFileManager.getInstance();
+
 	public LogsHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
@@ -67,7 +69,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 		else { // The URL contains a log file name
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
-			final File file = new File(LogManager.getLoggingPath() + File.separator + decodedFileName);
+			final File file = new File(logManager.getPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
 				notFound(exchange);
 			}
@@ -86,12 +88,12 @@ public class LogsHandler extends BaseHtmlHandler {
 	}
 
 	private void deleteAll(final HttpExchange exchange) throws IOException {
-		LogManager.deleteAllFiles();
+		logManager.deleteAllFiles();
 		refresh(exchange);
 	}
 
 	private void delete(final HttpExchange exchange, final File file) throws IOException {
-		LogManager.deleteFile(file);
+		logManager.deleteFile(file);
 		refresh(exchange);
 	}
 
@@ -141,8 +143,8 @@ public class LogsHandler extends BaseHtmlHandler {
 	private void fileList(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.logs")));
 
-		final File[] files = LogManager.listFiles();
-		final Collection<File> lockedFiles = LogManager.getLockedFiles();
+		final File[] files = logManager.listFiles();
+		final Collection<File> lockedFiles = logManager.getLockedFiles();
 
 		html.append("<h3>").append(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length)).append("</h3>").append(NewLine.CRLF);
 
