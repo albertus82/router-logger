@@ -50,7 +50,7 @@ public class LogsHandler extends BaseHtmlHandler {
 
 	private static final int BUFFER_SIZE = 4 * 1024;
 
-	private static final LogFileManager logManager = LogFileManager.getInstance();
+	private static final LogFileManager logFileManager = LogFileManager.getInstance();
 
 	public LogsHandler(final RouterLoggerEngine engine) {
 		super(engine);
@@ -69,7 +69,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 		else { // The URL contains a log file name
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
-			final File file = new File(logManager.getPath() + File.separator + decodedFileName);
+			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
 				notFound(exchange);
 			}
@@ -88,12 +88,12 @@ public class LogsHandler extends BaseHtmlHandler {
 	}
 
 	private void deleteAll(final HttpExchange exchange) throws IOException {
-		logManager.deleteAllFiles();
+		logFileManager.deleteAllFiles();
 		refresh(exchange);
 	}
 
 	private void delete(final HttpExchange exchange, final File file) throws IOException {
-		logManager.deleteFile(file);
+		logFileManager.deleteFile(file);
 		refresh(exchange);
 	}
 
@@ -143,8 +143,8 @@ public class LogsHandler extends BaseHtmlHandler {
 	private void fileList(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.logs")));
 
-		final File[] files = logManager.listFiles();
-		final Collection<File> lockedFiles = logManager.getLockedFiles();
+		final File[] files = logFileManager.listFiles();
+		final Collection<File> lockedFiles = logFileManager.getLockedFiles();
 
 		html.append("<h3>").append(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length)).append("</h3>").append(NewLine.CRLF);
 
