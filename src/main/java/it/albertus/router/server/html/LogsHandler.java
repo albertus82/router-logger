@@ -222,7 +222,14 @@ public class LogsHandler extends BaseHtmlHandler {
 	}
 
 	private String buildHtmlDeleteAllButton(final boolean disabled) {
-		return new StringBuilder("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(disabled ? " disabled=\"disabled\"" : "").append(" /></form>").append(NewLine.CRLF.toString()).toString();
+		final StringBuilder html = new StringBuilder();
+		if (disabled) {
+			html.append("<form><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" disabled=\"disabled\" /></form>");
+		}
+		else {
+			html.append("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(" /></form>");
+		}
+		return html.append(NewLine.CRLF.toString()).toString();
 	}
 
 	private void refresh(HttpExchange exchange) throws IOException {
