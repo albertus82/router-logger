@@ -205,8 +205,14 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<td class=\"right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
 			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file)))).append("</td>");
 			html.append("<td class=\"center\">");
-			html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
-			html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(lockedFiles.contains(file) ? " disabled=\"disabled\"" : "").append(" />");
+			if (lockedFiles.contains(file)) {
+				html.append("<form>");
+				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" disabled=\"disabled\" />");
+			}
+			else {
+				html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
+				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(" />");
+			}
 			html.append("</form>");
 			html.append("</td>");
 			html.append("</tr>").append(NewLine.CRLF);
