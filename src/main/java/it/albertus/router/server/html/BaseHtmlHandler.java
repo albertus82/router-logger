@@ -184,7 +184,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	 */
 	protected String buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF.toString());
-		html.append("<html lang=\"").append(Messages.getLanguage().getLocale().getLanguage()).append("\">");
+		html.append("<html lang=\"").append(Messages.getLanguage().getLocale().getLanguage()).append("\" xmlns=\"http://www.w3.org/1999/xhtml\">");
 		html.append(buildHtmlHead(title));
 		html.append("<body>").append(NewLine.CRLF.toString());
 		html.append("<h1>").append(Messages.get("msg.application.name")).append("</h1>").append(NewLine.CRLF.toString());
