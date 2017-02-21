@@ -206,11 +206,11 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file)))).append("</td>");
 			html.append("<td class=\"center\">");
 			if (lockedFiles.contains(file)) {
-				html.append("<form>");
+				html.append("<form action=\"?\">");
 				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" disabled=\"disabled\" />");
 			}
 			else {
-				html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"POST\">");
+				html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\">");
 				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(" />");
 			}
 			html.append("</form>");
@@ -224,7 +224,7 @@ public class LogsHandler extends BaseHtmlHandler {
 	private String buildHtmlDeleteAllButton(final boolean disabled) {
 		final StringBuilder html = new StringBuilder();
 		if (disabled) {
-			html.append("<form><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" disabled=\"disabled\" /></form>");
+			html.append("<form action=\"?\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" disabled=\"disabled\" /></form>");
 		}
 		else {
 			html.append("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(" /></form>");
