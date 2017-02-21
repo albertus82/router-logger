@@ -129,7 +129,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 
 	@Override
 	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>";
+		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>";
 	}
 
 	@Override

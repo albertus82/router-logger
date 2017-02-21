@@ -203,9 +203,9 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	 */
 	protected String buildHtmlHead(final String title) {
 		final StringBuilder html = new StringBuilder("<head>");
+		html.append(buildHtmlHeadMeta());
 		html.append(buildHtmlHeadTitle(title));
 		html.append(buildHtmlHeadStyle());
-		html.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"); // responsive
 		html.append("</head>");
 		return html.toString();
 	}
@@ -236,6 +236,13 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		return DEFAULT_STYLE;
 	}
 
+	protected String buildHtmlHeadMeta() {
+		final StringBuilder html = new StringBuilder();
+		html.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"); // responsive
+		html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=").append(getCharset().name().toLowerCase()).append("\" />"); // XHTML
+		return html.toString();
+	}
+
 	/**
 	 * Closes {@code <body>} and {@code <html>} tags.
 	 * 
@@ -247,7 +254,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	protected String buildHtmlHomeButton() {
 		if (configuration.getBoolean(RootHtmlHandler.CFG_KEY_ENABLED, RootHtmlHandler.Defaults.ENABLED)) {
-			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(RootHtmlHandler.METHODS[0]).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
+			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(RootHtmlHandler.METHODS[0]).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></div></form>").append(NewLine.CRLF.toString()).toString();
 		}
 		else {
 			return "";
@@ -255,7 +262,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	}
 
 	protected String buildHtmlRefreshButton() {
-		return new StringBuilder("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.GET).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.refresh")).append("\" /></form>").append(NewLine.CRLF.toString()).toString();
+		return new StringBuilder("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.refresh")).append("\" /></div></form>").append(NewLine.CRLF.toString()).toString();
 	}
 
 	/**
@@ -266,7 +273,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	 */
 	@Override
 	protected void addCommonHeaders(final HttpExchange exchange) {
-		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + getCharset().name());
+		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + getCharset().name().toLowerCase());
 		addDateHeader(exchange);
 	}
 

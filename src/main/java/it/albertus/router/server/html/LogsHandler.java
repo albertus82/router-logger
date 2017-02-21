@@ -206,14 +206,14 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<td class=\"right\">").append(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file)))).append("</td>");
 			html.append("<td class=\"center\">");
 			if (lockedFiles.contains(file)) {
-				html.append("<form action=\"?\">");
+				html.append("<form action=\"?\"><div>");
 				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" disabled=\"disabled\" />");
 			}
 			else {
-				html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\">");
+				html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
 				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(" />");
 			}
-			html.append("</form>");
+			html.append("</div></form>");
 			html.append("</td>");
 			html.append("</tr>").append(NewLine.CRLF);
 		}
@@ -224,10 +224,10 @@ public class LogsHandler extends BaseHtmlHandler {
 	private String buildHtmlDeleteAllButton(final boolean disabled) {
 		final StringBuilder html = new StringBuilder();
 		if (disabled) {
-			html.append("<form action=\"?\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" disabled=\"disabled\" /></form>");
+			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(" /></form>");
+			html.append("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(" /></div></form>");
 		}
 		return html.append(NewLine.CRLF.toString()).toString();
 	}
@@ -241,7 +241,7 @@ public class LogsHandler extends BaseHtmlHandler {
 
 	@Override
 	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} table {margin-top: 1em; margin-bottom: 1em;} td.center {text-align: center;} td.right {text-align: right;}</style>";
+		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} table {margin-top: 1em; margin-bottom: 1em;} td.center {text-align: center;} td.right {text-align: right;}</style>";
 	}
 
 	@Override
