@@ -37,23 +37,24 @@ public class TpLink8970Reader extends Reader {
 
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {
-		String received;
+		final StringBuilder received = new StringBuilder();
 
 		// Username...
-		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.log(Level.INFO, LOG_MASK_TELNET, received);
+		received.append(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(username);
 
 		// Password...
-		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.log(Level.INFO, LOG_MASK_TELNET, received);
+		received.append(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(password);
+
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
+		received.setLength(0);
 
 		// Welcome! (salto caratteri speciali (clear screen, ecc.)...
 		final String welcome = readFromTelnet("-", true);
-		received = readFromTelnet(COMMAND_PROMPT, true).trim();
+		received.append(readFromTelnet(COMMAND_PROMPT, true).trim());
 		if (logger.isLoggable(Level.INFO)) {
-			logger.log(Level.INFO, LOG_MASK_TELNET, welcome.charAt(welcome.length() - 1) + received);
+			logger.log(Level.INFO, LOG_MASK_TELNET, welcome.charAt(welcome.length() - 1) + received.toString());
 		}
 
 		return true;

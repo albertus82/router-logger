@@ -39,20 +39,21 @@ public class AsusDslN12EReader extends Reader {
 
 	@Override
 	public boolean login(final String username, final char[] password) throws IOException {
-		String received;
+		final StringBuilder received = new StringBuilder();
 
 		// Username...
-		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.log(Level.INFO, LOG_MASK_TELNET, received);
+		received.append(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(username);
 
 		// Password...
-		received = readFromTelnet(LOGIN_PROMPT, true).trim();
-		logger.log(Level.INFO, LOG_MASK_TELNET, received);
+		received.append(readFromTelnet(LOGIN_PROMPT, true).trim());
 		writeToTelnet(password);
 
+		logger.log(Level.INFO, LOG_MASK_TELNET, received);
+		received.setLength(0);
+
 		// Avanzo fino al prompt dei comandi
-		received = readFromTelnet(COMMAND_PROMPT, true);
+		received.append(readFromTelnet(COMMAND_PROMPT, true));
 		logger.log(Level.INFO, LOG_MASK_TELNET, received);
 
 		return true;
