@@ -5,6 +5,7 @@ import java.util.Set;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.html.CloseHandler;
+import it.albertus.router.server.html.ConfigurationHandler;
 import it.albertus.router.server.html.ConnectHandler;
 import it.albertus.router.server.html.DisconnectHandler;
 import it.albertus.router.server.html.LogsHandler;
@@ -49,6 +50,7 @@ public class WebServer extends BaseHttpServer {
 		handlers.add(new ConnectHandler(engine));
 		handlers.add(new CloseHandler(engine));
 		handlers.add(new LogsHandler(engine));
+		handlers.add(new ConfigurationHandler(engine));
 
 		// JSON
 		handlers.add(new DataJsonHandler(engine));

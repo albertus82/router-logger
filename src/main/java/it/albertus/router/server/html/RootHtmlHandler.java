@@ -48,6 +48,9 @@ public class RootHtmlHandler extends BaseHtmlHandler {
 		if (configuration.getBoolean(LogsHandler.CFG_KEY_ENABLED, LogsHandler.Defaults.ENABLED)) {
 			html.append("<form action=\"").append(LogsHandler.PATH).append("\" method=\"").append(LogsHandler.METHODS[0]).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs")).append("\" /></div></form>").append(NewLine.CRLF.toString());
 		}
+		if (configuration.getBoolean(ConfigurationHandler.CFG_KEY_ENABLED, ConfigurationHandler.Defaults.ENABLED)) {
+			html.append("<form action=\"").append(ConfigurationHandler.PATH).append("\" method=\"").append(ConfigurationHandler.METHODS[0]).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.configuration")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.configuration.confirm.open")).append("');\" /></div></form>").append(NewLine.CRLF.toString());
+		}
 		if (configuration.getBoolean(RestartHandler.CFG_KEY_ENABLED, RestartHandler.Defaults.ENABLED)) {
 			html.append("<form action=\"").append(RestartHandler.PATH).append("\" method=\"").append(RestartHandler.METHODS[0]).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.restart")).append("\" onclick=\"return confirm('").append(Messages.get("msg.confirm.restart.message")).append("');\" /></div></form>").append(NewLine.CRLF.toString());
 		}

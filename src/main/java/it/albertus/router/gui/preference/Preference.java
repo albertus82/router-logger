@@ -92,6 +92,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.server.BaseHttpServer;
 import it.albertus.router.server.html.BaseHtmlHandler;
 import it.albertus.router.server.html.CloseHandler;
+import it.albertus.router.server.html.ConfigurationHandler;
 import it.albertus.router.server.html.ConnectHandler;
 import it.albertus.router.server.html.DisconnectHandler;
 import it.albertus.router.server.html.LogsHandler;
@@ -250,6 +251,7 @@ public enum Preference implements IPreference {
 
 	SERVER_HANDLER_ROOT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_LOGS_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(LogsHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_HANDLER_CONFIGURATION_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(ConfigurationHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_STATUS_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_STATUS_REFRESH(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.REFRESH).parent(SERVER_HANDLER_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_STATUS_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(StatusHtmlHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_STATUS_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
