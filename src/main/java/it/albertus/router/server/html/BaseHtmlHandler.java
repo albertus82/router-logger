@@ -11,8 +11,10 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
+import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
 import it.albertus.util.NewLine;
+import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseHtmlHandler extends BaseHttpHandler {
@@ -30,7 +32,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	public static final String DEFAULT_STYLE = "";
 
-	protected String lastRequest = null;
+	protected static String lastRequest = null;
 
 	private static final String MSG_KEY_LBL_ERROR = "lbl.error";
 
@@ -44,7 +46,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		super(null);
 	}
 
-	protected abstract void service(HttpExchange exchange) throws IOException;
+	protected abstract void service(HttpExchange exchange) throws IOException, HttpException;
 
 	/**
 	 * Returns the method names (GET, POST, PUT, DELETE) that are allowed for
@@ -140,6 +142,18 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			try {
 				service(exchange);
 			}
+			catch (final HttpException e) {
+				logger.log(Level.WARNING, e.toString(), e);
+				addCommonHeaders(exchange);
+
+				final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
+				html.append("<h3>").append(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode())).append("</h3>").append(NewLine.CRLF);
+				html.append(buildHtmlFooter());
+
+				final byte[] response = html.toString().getBytes(getCharset());
+				exchange.sendResponseHeaders(e.getStatusCode(), response.length);
+				exchange.getResponseBody().write(response);
+			}
 			catch (final IOException e) {
 				logger.log(Level.FINE, e.toString(), e); // often caused by the client that interrupts the stream.
 			}
@@ -167,7 +181,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
 			if (!request.equals(lastRequest)) {
 				lastRequest = request;
-				logger.log(level, Messages.get("msg.server.log.request"), Thread.currentThread().getName() + " " + request);
+				logger.log(level, Messages.get("msg.server.log.request"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() });
 			}
 		}
 	}

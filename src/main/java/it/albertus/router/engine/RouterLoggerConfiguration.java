@@ -1,12 +1,14 @@
 package it.albertus.router.engine;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -20,6 +22,7 @@ import it.albertus.router.util.logging.EmailHandler;
 import it.albertus.router.util.logging.EmailHandlerFilter;
 import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.Configuration;
+import it.albertus.util.IOUtils;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.CustomFormatter;
 import it.albertus.util.logging.HousekeepingFilter;
@@ -213,6 +216,17 @@ public class RouterLoggerConfiguration extends Configuration {
 	public void reload() throws IOException {
 		super.reload();
 		init();
+	}
+
+	public void save(final Properties properties) throws IOException {
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(getFileName());
+			properties.store(writer, null);
+		}
+		finally {
+			IOUtils.closeQuietly(writer);
+		}
 	}
 
 	public abstract class Thresholds {
