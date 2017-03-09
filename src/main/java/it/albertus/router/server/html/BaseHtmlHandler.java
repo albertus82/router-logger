@@ -168,24 +168,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	}
 
 	protected void sendResponse(final HttpExchange exchange, final String html) throws IOException {
-		final byte[] payload = html.getBytes(getCharset());
-
-		final String currentEtag = generateEtag(payload);
-		addEtagHeader(exchange, currentEtag);
-
-		// If-None-Match...
-		final String ifNoneMatch = exchange.getRequestHeaders().getFirst("If-None-Match");
-		if (ifNoneMatch != null && currentEtag != null && currentEtag.equals(ifNoneMatch)) {
-			addDateHeader(exchange);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_MODIFIED, -1);
-			exchange.getResponseBody().close(); // Needed when no write occurs.
-		}
-		else {
-			addCommonHeaders(exchange);
-			final byte[] response = compressResponse(payload, exchange);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-			exchange.getResponseBody().write(response);
-		}
+		sendResponse(exchange, html.getBytes(getCharset()));
 	}
 
 	protected void log(final HttpExchange exchange) {
