@@ -20,6 +20,8 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
+import it.albertus.router.util.PropertiesComparator;
+import it.albertus.router.util.PropertiesComparator.CompareResults;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
@@ -90,7 +92,6 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		if (!requestBody.startsWith(prefix)) {
 			throw new HttpException(HttpURLConnection.HTTP_BAD_REQUEST, Messages.get("msg.server.bad.request"));
 		}
-		final String backup = configuration.toString();
 		final Properties updatedProperties = new Properties();
 		try {
 			updatedProperties.load(new StringReader(unescapeHtml(URLDecoder.decode(StringUtils.substringAfter(requestBody, prefix), getCharset().name()))));
@@ -99,10 +100,13 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 			throw new HttpException(HttpURLConnection.HTTP_BAD_REQUEST, Messages.get("msg.server.bad.request"), e);
 		}
 		if (!updatedProperties.equals(configuration.getProperties())) {
+			final Properties backup = new Properties();
+			backup.putAll(configuration.getProperties());
 			try {
 				configuration.save(updatedProperties);
 				configuration.reload();
-				logger.log(Level.WARNING, Messages.get("msg.server.configuration.save"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI(), backup, configuration.toString(), NewLine.SYSTEM_LINE_SEPARATOR });
+				final CompareResults results = PropertiesComparator.compare(backup, configuration.getProperties());
+				logger.log(Level.WARNING, Messages.get("msg.server.configuration.save"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI(), results.getRightOnly(), results.getLeftOnly(), results.getDifferentValues() });
 			}
 			catch (final IOException e) {
 				throw new HttpException(HttpURLConnection.HTTP_INTERNAL_ERROR, Messages.get("err.server.handler"), e);
