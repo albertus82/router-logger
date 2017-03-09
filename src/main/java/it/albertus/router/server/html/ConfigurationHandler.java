@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -143,7 +144,7 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 	}
 
 	@Override
-	public String[] getMethods() {
+	public String[] getMethodsAllowed() {
 		return METHODS;
 	}
 
@@ -156,9 +157,9 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 	protected void log(final HttpExchange exchange) {
 		final Level level = Level.WARNING;
 		if (logger.isLoggable(level) && configuration.getBoolean("server.log.request", BaseHtmlHandler.Defaults.LOG_REQUEST)) {
-			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestURI();
-			if (!request.equals(lastRequest)) {
-				lastRequest = request;
+			final Object[] requestInfo = new Object[] { exchange.getRemoteAddress(), exchange.getRequestURI() };
+			if (!Arrays.equals(requestInfo, getLastRequestInfo())) {
+				setLastRequestInfo(requestInfo);
 				logger.log(level, Messages.get("msg.server.configuration.open"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() });
 			}
 		}

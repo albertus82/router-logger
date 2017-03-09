@@ -55,7 +55,7 @@ public class DisconnectHandler extends BaseHtmlHandler {
 	}
 
 	@Override
-	public String[] getMethods() {
+	public String[] getMethodsAllowed() {
 		return METHODS;
 	}
 

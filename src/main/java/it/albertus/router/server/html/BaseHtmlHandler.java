@@ -2,6 +2,7 @@ package it.albertus.router.server.html;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +33,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	public static final String DEFAULT_STYLE = "";
 
-	protected static String lastRequest = null;
+	private static Object[] lastRequestInfo;
 
 	private static final String MSG_KEY_LBL_ERROR = "lbl.error";
 
@@ -50,15 +51,12 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	/**
 	 * Returns the method names (GET, POST, PUT, DELETE) that are allowed for
-	 * this handler. <b>By default all methods are allowed.</b> Requests with
-	 * forbidden methods will be bounced with <b>HTTP Status-Code 405: Method
-	 * Not Allowed.</b>
+	 * this handler. Requests with forbidden methods will be bounced with
+	 * <b>HTTP Status-Code 405: Method Not Allowed.</b>
 	 * 
 	 * @return the array containing the names of the methods that are allowed.
 	 */
-	public String[] getMethods() {
-		return null;
-	}
+	public abstract String[] getMethodsAllowed();
 
 	public boolean isFound() {
 		return found;
@@ -107,17 +105,11 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	}
 
 	protected boolean isMethodAllowed(final HttpExchange exchange) throws IOException {
-		boolean match;
-		if (getMethods() == null) {
-			match = true;
-		}
-		else {
-			match = false;
-			for (final String method : getMethods()) {
-				if (method.equalsIgnoreCase(exchange.getRequestMethod())) {
-					match = true;
-					break;
-				}
+		boolean match = false;
+		for (final String method : getMethodsAllowed()) {
+			if (method.equalsIgnoreCase(exchange.getRequestMethod())) {
+				match = true;
+				break;
 			}
 		}
 		if (!match) {
@@ -178,12 +170,16 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	protected void log(final HttpExchange exchange) {
 		final Level level = Level.INFO;
 		if (logger.isLoggable(level) && configuration.getBoolean("server.log.request", Defaults.LOG_REQUEST)) {
-			final String request = exchange.getRemoteAddress() + " " + exchange.getRequestMethod() + " " + exchange.getRequestURI();
-			if (!request.equals(lastRequest)) {
-				lastRequest = request;
+			final Object[] requestInfo = new Object[] { exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() };
+			if (!Arrays.equals(requestInfo, getLastRequestInfo())) {
+				setLastRequestInfo(requestInfo);
 				logger.log(level, Messages.get("msg.server.log.request"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() });
 			}
 		}
+	}
+
+	protected static void updateLastRequestInfo(final Object[] request) {
+		lastRequestInfo = request;
 	}
 
 	/**
@@ -294,6 +290,14 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	@Override
 	protected boolean canCompressResponse(final HttpExchange exchange) {
 		return configuration.getBoolean("server.compress.response", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
+	}
+
+	protected static Object[] getLastRequestInfo() {
+		return lastRequestInfo;
+	}
+
+	protected static void setLastRequestInfo(final Object[] lastRequestInfo) {
+		BaseHtmlHandler.lastRequestInfo = lastRequestInfo;
 	}
 
 }

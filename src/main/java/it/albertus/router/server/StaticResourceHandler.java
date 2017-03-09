@@ -63,7 +63,7 @@ public class StaticResourceHandler extends BaseHtmlHandler {
 	}
 
 	@Override
-	public String[] getMethods() {
+	public String[] getMethodsAllowed() {
 		return METHODS;
 	}
 
