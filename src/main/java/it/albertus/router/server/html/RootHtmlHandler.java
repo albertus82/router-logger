@@ -1,7 +1,6 @@
 package it.albertus.router.server.html;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.text.DateFormat;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -34,9 +33,6 @@ public class RootHtmlHandler extends BaseHtmlHandler {
 
 	@Override
 	public void service(HttpExchange exchange) throws IOException {
-		// Headers...
-		addCommonHeaders(exchange);
-
 		// Response...
 		final Version version = Version.getInstance();
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.home")));
@@ -66,9 +62,7 @@ public class RootHtmlHandler extends BaseHtmlHandler {
 
 		html.append(buildHtmlFooter());
 
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-		exchange.getResponseBody().write(response);
+		sendResponse(exchange, html.toString());
 	}
 
 	@Override
