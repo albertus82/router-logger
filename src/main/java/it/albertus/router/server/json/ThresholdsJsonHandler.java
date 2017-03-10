@@ -17,7 +17,7 @@ public class ThresholdsJsonHandler extends BaseJsonHandler {
 	}
 
 	@Override
-	public void service(final HttpExchange exchange) throws IOException {
+	protected void doGet(final HttpExchange exchange) throws IOException {
 		final byte[] payload = Payload.createPayload(new ThresholdsDto(engine.getCurrentThresholdsReached()).toJson());
 		addRefreshHeader(exchange);
 		sendResponse(exchange, payload);

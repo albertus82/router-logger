@@ -50,7 +50,7 @@ public class FaviconHandler extends StaticResourceHandler {
 	}
 
 	@Override
-	protected void service(final HttpExchange exchange) throws IOException {
+	protected void doGet(final HttpExchange exchange) throws IOException {
 		addHeaders(exchange);
 		final byte[] response = compressResponse(favicon, exchange);
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);

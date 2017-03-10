@@ -43,14 +43,14 @@ public class WebServer extends BaseHttpServer {
 		final Set<BaseHttpHandler> handlers = new HashSet<BaseHttpHandler>();
 
 		// HTML
-		handlers.add(new RootHtmlHandler(engine));
+		handlers.add(new RootHtmlHandler());
 		handlers.add(new StatusHtmlHandler(engine));
 		handlers.add(new RestartHandler(engine));
 		handlers.add(new DisconnectHandler(engine));
 		handlers.add(new ConnectHandler(engine));
 		handlers.add(new CloseHandler(engine));
-		handlers.add(new LogsHandler(engine));
-		handlers.add(new ConfigurationHandler(engine));
+		handlers.add(new LogsHandler());
+		handlers.add(new ConfigurationHandler());
 
 		// JSON
 		handlers.add(new DataJsonHandler(engine));

@@ -5,12 +5,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,12 +31,16 @@ import com.sun.net.httpserver.HttpHandler;
 import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.CRC32OutputStream;
 import it.albertus.util.DigestOutputStream;
 import it.albertus.util.IOUtils;
+import it.albertus.util.NewLine;
 import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseHttpHandler implements HttpHandler {
+
+	private static final String MSG_KEY_BAD_METHOD = "msg.server.bad.method";
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseHttpHandler.class);
 
@@ -121,6 +128,182 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	protected BaseHttpHandler() {
 		this.engine = null;
+	}
+
+	protected final void service(final HttpExchange exchange) throws IOException, HttpException {
+		if (HttpMethod.GET.equalsIgnoreCase(exchange.getRequestMethod())) {
+			doGet(exchange);
+		}
+		else if (HttpMethod.POST.equalsIgnoreCase(exchange.getRequestMethod())) {
+			doPost(exchange);
+		}
+		else if (HttpMethod.PUT.equalsIgnoreCase(exchange.getRequestMethod())) {
+			doPut(exchange);
+		}
+		else if (HttpMethod.DELETE.equalsIgnoreCase(exchange.getRequestMethod())) {
+			doDelete(exchange);
+		}
+		else if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
+			doHead(exchange);
+		}
+		else if (HttpMethod.TRACE.equalsIgnoreCase(exchange.getRequestMethod())) {
+			doTrace(exchange);
+		}
+		else if (HttpMethod.OPTIONS.equalsIgnoreCase(exchange.getRequestMethod())) {
+			doOptions(exchange);
+		}
+		else {
+			throw new HttpException(HttpURLConnection.HTTP_BAD_METHOD, Messages.get(MSG_KEY_BAD_METHOD));
+		}
+	}
+
+	protected void doHead(final HttpExchange exchange) throws IOException, HttpException { // TODO
+		final OutputStream out = exchange.getResponseBody();
+		ByteArrayOutputStream dummy = new ByteArrayOutputStream();
+		exchange.setStreams(exchange.getRequestBody(), dummy);
+		try {
+			doGet(exchange);
+		}
+		finally {
+			IOUtils.closeQuietly(out);
+		}
+		System.out.println(dummy.toString(getCharset().name())); 
+	}
+
+	protected void doTrace(final HttpExchange exchange) throws IOException, HttpException {
+		final StringBuilder responseString = new StringBuilder(HttpMethod.TRACE.toUpperCase()).append(' ').append(exchange.getRequestURI()).append(' ').append(exchange.getProtocol());
+		final Iterator<String> reqHeaderIter = exchange.getRequestHeaders().keySet().iterator();
+		while (reqHeaderIter.hasNext()) {
+			final String headerName = reqHeaderIter.next();
+			responseString.append(NewLine.CRLF).append(headerName).append(": ").append(exchange.getRequestHeaders().getFirst(headerName));
+		}
+		responseString.append(NewLine.CRLF);
+
+		exchange.getResponseHeaders().set("Content-Type", "message/http");
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseString.length());
+		final OutputStream out = exchange.getResponseBody();
+		out.write(responseString.toString().getBytes(getCharset()));
+		out.close();
+	}
+
+	protected void doOptions(final HttpExchange exchange) throws IOException, HttpException {
+		final Method[] methods = getAllDeclaredMethods(this.getClass());
+
+		boolean allowGet = false;
+		boolean allowHead = false;
+		boolean allowPost = false;
+		boolean allowPut = false;
+		boolean allowDelete = false;
+		boolean allowTrace = true;
+		boolean allowOptions = true;
+
+		for (int i = 0; i < methods.length; i++) {
+			final Method m = methods[i];
+
+			if ("doGet".equals(m.getName())) {
+				allowGet = true;
+				allowHead = true;
+			}
+			if ("doPost".equals(m.getName())) {
+				allowPost = true;
+			}
+			if ("doPut".equals(m.getName())) {
+				allowPut = true;
+			}
+			if ("doDelete".equals(m.getName())) {
+				allowDelete = true;
+			}
+		}
+
+		String allow = null;
+		if (allowGet) {
+			allow = HttpMethod.GET.toUpperCase();
+		}
+		if (allowHead) {
+			if (allow == null) {
+				allow = HttpMethod.HEAD.toUpperCase();
+			}
+			else {
+				allow += ", " + HttpMethod.HEAD.toUpperCase();
+			}
+		}
+		if (allowPost) {
+			if (allow == null) {
+				allow = HttpMethod.POST.toUpperCase();
+			}
+			else {
+				allow += ", " + HttpMethod.POST.toUpperCase();
+			}
+		}
+		if (allowPut) {
+			if (allow == null) {
+				allow = HttpMethod.PUT.toUpperCase();
+			}
+			else {
+				allow += ", " + HttpMethod.PUT.toUpperCase();
+			}
+		}
+		if (allowDelete) {
+			if (allow == null) {
+				allow = HttpMethod.DELETE.toUpperCase();
+			}
+			else {
+				allow += ", " + HttpMethod.DELETE.toUpperCase();
+			}
+		}
+		if (allowTrace) {
+			if (allow == null) {
+				allow = HttpMethod.TRACE.toUpperCase();
+			}
+			else {
+				allow += ", " + HttpMethod.TRACE.toUpperCase();
+			}
+		}
+		if (allowOptions) {
+			if (allow == null) {
+				allow = HttpMethod.OPTIONS.toUpperCase();
+			}
+			else {
+				allow += ", " + HttpMethod.OPTIONS.toUpperCase();
+			}
+		}
+
+		exchange.getResponseHeaders().add("Allow", allow);
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
+	}
+
+	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
+		throw new HttpException(HttpURLConnection.HTTP_BAD_METHOD, Messages.get(MSG_KEY_BAD_METHOD));
+	}
+
+	protected void doPost(final HttpExchange exchange) throws IOException, HttpException {
+		throw new HttpException(HttpURLConnection.HTTP_BAD_METHOD, Messages.get(MSG_KEY_BAD_METHOD));
+	}
+
+	protected void doPut(final HttpExchange exchange) throws IOException, HttpException {
+		throw new HttpException(HttpURLConnection.HTTP_BAD_METHOD, Messages.get(MSG_KEY_BAD_METHOD));
+	}
+
+	protected void doDelete(final HttpExchange exchange) throws IOException, HttpException {
+		throw new HttpException(HttpURLConnection.HTTP_BAD_METHOD, Messages.get(MSG_KEY_BAD_METHOD));
+	}
+
+	private Method[] getAllDeclaredMethods(final Class<?> c) {
+		if (c.equals(BaseHttpHandler.class)) {
+			return new Method[] {};
+		}
+
+		final Method[] parentMethods = getAllDeclaredMethods(c.getSuperclass());
+		Method[] thisMethods = c.getDeclaredMethods();
+
+		if (parentMethods.length > 0) {
+			final Method[] allMethods = new Method[parentMethods.length + thisMethods.length];
+			System.arraycopy(parentMethods, 0, allMethods, 0, parentMethods.length);
+			System.arraycopy(thisMethods, 0, allMethods, parentMethods.length, thisMethods.length);
+			thisMethods = allMethods;
+		}
+
+		return thisMethods;
 	}
 
 	private static Charset initCharset() {
@@ -279,6 +462,12 @@ public abstract class BaseHttpHandler implements HttpHandler {
 			addCommonHeaders(exchange);
 			final byte[] response = compressResponse(payload, exchange);
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
+			//			if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
+			//				exchange.getResponseBody().close(); // no body
+			//			}
+			//			else {
+			//				exchange.getResponseBody().write(response);
+			//			}
 			exchange.getResponseBody().write(response);
 		}
 	}

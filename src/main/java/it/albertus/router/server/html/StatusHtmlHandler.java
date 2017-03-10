@@ -29,7 +29,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 
 	public static final String PATH = "/status";
 
-	protected static final String[] METHODS = { HttpMethod.GET };
+	protected static final String[] METHODS = { HttpMethod.GET, HttpMethod.HEAD };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
 
@@ -47,7 +47,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 	}
 
 	@Override
-	public void service(final HttpExchange exchange) throws IOException {
+	protected void doGet(final HttpExchange exchange) throws IOException {
 		// Refresh...
 		if (configuration.getBoolean("server.handler.status.refresh", Defaults.REFRESH)) {
 			int refresh = configuration.getInt("server.handler.status.refresh.secs", Defaults.REFRESH_SECS);
@@ -135,11 +135,6 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 	@Override
 	public String getPath() {
 		return PATH;
-	}
-
-	@Override
-	public String[] getMethodsAllowed() {
-		return METHODS;
 	}
 
 	@Override

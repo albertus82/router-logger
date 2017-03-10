@@ -17,8 +17,6 @@ import it.albertus.util.IOUtils;
 
 public class StaticResourceHandler extends BaseHtmlHandler {
 
-	protected static final String[] METHODS = { HttpMethod.GET };
-
 	protected static final int BUFFER_SIZE = 8192;
 	protected static final String DEFAULT_CACHE_CONTROL = "no-transform,public,max-age=300,s-maxage=900";
 
@@ -37,7 +35,7 @@ public class StaticResourceHandler extends BaseHtmlHandler {
 	}
 
 	@Override
-	protected void service(final HttpExchange exchange) throws IOException {
+	protected void doGet(final HttpExchange exchange) throws IOException {
 		addHeaders(exchange);
 
 		InputStream inputStream = null;
@@ -60,11 +58,6 @@ public class StaticResourceHandler extends BaseHtmlHandler {
 	@Override
 	public String getPath() {
 		return path;
-	}
-
-	@Override
-	public String[] getMethodsAllowed() {
-		return METHODS;
 	}
 
 	public String getResourceName() {

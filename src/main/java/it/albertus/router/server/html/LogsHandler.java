@@ -20,8 +20,8 @@ import java.util.zip.GZIPOutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
 import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
@@ -44,45 +44,49 @@ public class LogsHandler extends BaseHtmlHandler {
 	public static final String PATH = "/logs";
 	public static final String CLEAR_PATH_INFO = "clear";
 
-	protected static final String[] METHODS = { HttpMethod.GET, HttpMethod.DELETE, HttpMethod.POST };
-
 	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 
 	private static final int BUFFER_SIZE = 4 * 1024;
 
 	private static final LogFileManager logFileManager = LogFileManager.getInstance();
 
-	public LogsHandler(final RouterLoggerEngine engine) {
-		super(engine);
-	}
-
 	@Override
-	public void service(final HttpExchange exchange) throws IOException {
-		final String requestMethod = exchange.getRequestMethod();
+	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
 		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), PATH + '/');
-
 		if (pathInfo == null || pathInfo.trim().isEmpty()) { // List log files (no file name present in URL)
 			fileList(exchange);
 		}
-		else if (pathInfo.trim().equals(CLEAR_PATH_INFO) && (HttpMethod.DELETE.equalsIgnoreCase(requestMethod) || HttpMethod.POST.equalsIgnoreCase(requestMethod))) { // Delete all log files
-			deleteAll(exchange);
-		}
-		else { // The URL contains a log file name
+		else {
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
 			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
 				notFound(exchange);
 			}
 			else {
-				if (HttpMethod.GET.equalsIgnoreCase(requestMethod)) { // Download log file
-					download(exchange, file);
-				}
-				else if (HttpMethod.DELETE.equalsIgnoreCase(requestMethod) || HttpMethod.POST.equalsIgnoreCase(requestMethod)) { // Delete log file
-					delete(exchange, file);
-				}
-				else {
-					throw new IllegalStateException("Method not supported: " + requestMethod);
-				}
+				download(exchange, file);
+			}
+		}
+	}
+
+	@Override
+	protected void doPost(HttpExchange exchange) throws IOException, HttpException {
+		doDelete(exchange);
+	}
+
+	@Override
+	protected void doDelete(HttpExchange exchange) throws IOException, HttpException {
+		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), PATH + '/');
+		if (CLEAR_PATH_INFO.equals(pathInfo.trim())) { // Delete all log files
+			deleteAll(exchange);
+		}
+		else {
+			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
+			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
+			if (!file.exists() || file.isDirectory()) {
+				notFound(exchange);
+			}
+			else {
+				delete(exchange, file);
 			}
 		}
 	}
@@ -230,11 +234,6 @@ public class LogsHandler extends BaseHtmlHandler {
 	@Override
 	public String getPath() {
 		return PATH;
-	}
-
-	@Override
-	public String[] getMethodsAllowed() {
-		return METHODS;
 	}
 
 	@Override

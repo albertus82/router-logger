@@ -47,17 +47,6 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		super(null);
 	}
 
-	protected abstract void service(HttpExchange exchange) throws IOException, HttpException;
-
-	/**
-	 * Returns the method names (GET, POST, PUT, DELETE) that are allowed for
-	 * this handler. Requests with forbidden methods will be bounced with
-	 * <b>HTTP Status-Code 405: Method Not Allowed.</b>
-	 * 
-	 * @return the array containing the names of the methods that are allowed.
-	 */
-	public abstract String[] getMethodsAllowed();
-
 	public boolean isFound() {
 		return found;
 	}
@@ -104,33 +93,10 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		}
 	}
 
-	protected boolean isMethodAllowed(final HttpExchange exchange) throws IOException {
-		boolean match = false;
-		for (final String method : getMethodsAllowed()) {
-			if (method.equalsIgnoreCase(exchange.getRequestMethod())) {
-				match = true;
-				break;
-			}
-		}
-		if (!match) {
-			addCommonHeaders(exchange);
-
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR)));
-			html.append("<h3>").append(Messages.get("msg.server.bad.method")).append("</h3>").append(NewLine.CRLF);
-			html.append(buildHtmlFooter());
-
-			final byte[] response = html.toString().getBytes(getCharset());
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, response.length);
-			exchange.getResponseBody().write(response);
-			exchange.close();
-		}
-		return match;
-	}
-
 	@Override
-	public void handle(final HttpExchange exchange) throws IOException {
+	public final void handle(final HttpExchange exchange) throws IOException {
 		log(exchange);
-		if (isEnabled(exchange) && isFound(exchange) && isMethodAllowed(exchange)) {
+		if (isEnabled(exchange) && isFound(exchange)) {
 			try {
 				service(exchange);
 			}
@@ -268,7 +234,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	protected String buildHtmlHomeButton() {
 		if (configuration.getBoolean(RootHtmlHandler.CFG_KEY_ENABLED, RootHtmlHandler.Defaults.ENABLED)) {
-			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(RootHtmlHandler.METHODS[0]).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></div></form>").append(NewLine.CRLF.toString()).toString();
+			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></div></form>").append(NewLine.CRLF.toString()).toString();
 		}
 		else {
 			return "";

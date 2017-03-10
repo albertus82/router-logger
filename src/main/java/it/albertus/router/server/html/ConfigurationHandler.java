@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
@@ -41,31 +40,12 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 
 	public static final String PATH = "/configuration";
 
-	protected static final String[] METHODS = { HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT };
-
 	protected static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
 
 	private static final String REQUEST_PARAM_NAME = "properties";
 
-	public ConfigurationHandler(final RouterLoggerEngine engine) {
-		super(engine);
-	}
-
 	@Override
-	public void service(final HttpExchange exchange) throws IOException, HttpException {
-		final String method = exchange.getRequestMethod();
-		if (HttpMethod.GET.equalsIgnoreCase(method)) {
-			load(exchange);
-		}
-		else if (HttpMethod.POST.equalsIgnoreCase(method) || exchange.getRequestMethod().equalsIgnoreCase(HttpMethod.PUT)) {
-			save(exchange);
-		}
-		else {
-			throw new IllegalStateException(method);
-		}
-	}
-
-	private void load(final HttpExchange exchange) throws IOException {
+	protected void doGet(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.configuration")));
 		html.append("<h3>").append(Messages.get("lbl.server.configuration")).append("</h3>").append(NewLine.CRLF);
 
@@ -84,7 +64,13 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		sendResponse(exchange, html.toString());
 	}
 
-	private void save(final HttpExchange exchange) throws IOException, HttpException {
+	@Override
+	protected void doPut(final HttpExchange exchange) throws IOException, HttpException {
+		doPost(exchange);
+	}
+
+	@Override
+	protected void doPost(final HttpExchange exchange) throws IOException, HttpException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		IOUtils.copy(exchange.getRequestBody(), baos, 1024);
 		final String requestBody = baos.toString(getCharset().name());
@@ -128,11 +114,6 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 	@Override
 	public String getPath() {
 		return PATH;
-	}
-
-	@Override
-	public String[] getMethodsAllowed() {
-		return METHODS;
 	}
 
 	@Override

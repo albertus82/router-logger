@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
+import it.albertus.router.server.HttpException;
 import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseJsonHandler extends BaseHttpHandler {
@@ -33,20 +34,22 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 		super(engine);
 	}
 
-	protected abstract void service(HttpExchange exchange) throws IOException;
-
 	@Override
-	public void handle(final HttpExchange exchange) throws IOException {
+	public final void handle(final HttpExchange exchange) throws IOException {
 		if (isEnabled(exchange)) {
 			try {
 				service(exchange);
 			}
+			catch (final HttpException e) {
+				logger.log(Level.WARNING, e.toString(), e);
+				exchange.sendResponseHeaders(e.getStatusCode(), -1);
+			}
 			catch (final IOException e) {
-				logger.log(Level.FINE, e.toString(),e); // often caused by the client that interrupts the stream.
+				logger.log(Level.FINE, e.toString(), e); // often caused by the client that interrupts the stream.
 			}
 			catch (final Exception e) {
-				logger.log(Level.SEVERE, e.toString(),e);
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+				logger.log(Level.SEVERE, e.toString(), e);
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, -1);
 			}
 			finally {
 				exchange.close();
