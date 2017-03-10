@@ -29,8 +29,6 @@ import it.albertus.util.logging.LoggerFactory;
 
 public class ConfigurationHandler extends BaseHtmlHandler {
 
-	private static final String REQUEST_PARAM_NAME = "properties";
-
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationHandler.class);
 
 	public static class Defaults {
@@ -46,6 +44,8 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 	protected static final String[] METHODS = { HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT };
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
+
+	private static final String REQUEST_PARAM_NAME = "properties";
 
 	public ConfigurationHandler(final RouterLoggerEngine engine) {
 		super(engine);

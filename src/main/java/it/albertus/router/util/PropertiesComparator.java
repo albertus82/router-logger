@@ -38,6 +38,7 @@ public class PropertiesComparator {
 		public Map<String, List<String>> getDifferentValues() {
 			return differentValues;
 		}
+
 	}
 
 	public static CompareResults compare(final Properties left, final Properties right) {
