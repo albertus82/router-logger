@@ -137,6 +137,10 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 		sendResponse(exchange, html.getBytes(getCharset()));
 	}
 
+	protected void sendResponse(final HttpExchange exchange, final String html, final int statusCode) throws IOException {
+		sendResponse(exchange, html.getBytes(getCharset()), statusCode);
+	}
+
 	protected void log(final HttpExchange exchange) {
 		final Level level = Level.INFO;
 		if (logger.isLoggable(level) && configuration.getBoolean("server.log.request", Defaults.LOG_REQUEST)) {

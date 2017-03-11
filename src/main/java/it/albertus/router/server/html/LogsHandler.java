@@ -115,10 +115,18 @@ public class LogsHandler extends BaseHtmlHandler {
 				output = new GZIPOutputStream(exchange.getResponseBody(), BUFFER_SIZE);
 			}
 			else {
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, file.length());
-				output = exchange.getResponseBody();
+				if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
+					exchange.getResponseHeaders().set("Content-Length", Long.toString(file.length()));
+					exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
+				}
+				else {
+					exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, file.length());
+					output = exchange.getResponseBody();
+				}
 			}
-			IOUtils.copy(input, output, BUFFER_SIZE);
+			if (!HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
+				IOUtils.copy(input, output, BUFFER_SIZE);
+			}
 		}
 		catch (final FileNotFoundException e) {
 			logger.log(Level.WARNING, e.toString(), e);
@@ -137,11 +145,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		html.append("<h3>").append(Messages.get("msg.server.not.found")).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length);
-		exchange.getResponseBody().write(response);
-		exchange.getResponseBody().close();
-		exchange.close();
+		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND);
 	}
 
 	private void fileList(final HttpExchange exchange) throws IOException {
@@ -219,8 +223,8 @@ public class LogsHandler extends BaseHtmlHandler {
 		return html.append(NewLine.CRLF.toString()).toString();
 	}
 
-	private void refresh(HttpExchange exchange) throws IOException {
-		exchange.getResponseHeaders().add("Location", PATH);
+	private void refresh(final HttpExchange exchange) throws IOException {
+		exchange.getResponseHeaders().add("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
 		exchange.getResponseBody().close();
 		exchange.close();

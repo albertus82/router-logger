@@ -25,7 +25,7 @@ public class RootHtmlHandler extends BaseHtmlHandler {
 	protected static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
 	@Override
-	public void doGet(HttpExchange exchange) throws IOException {
+	protected void doGet(HttpExchange exchange) throws IOException {
 		// Response...
 		final Version version = Version.getInstance();
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.home")));

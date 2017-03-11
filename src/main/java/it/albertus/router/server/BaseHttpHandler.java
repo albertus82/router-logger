@@ -157,17 +157,24 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 	}
 
-	protected void doHead(final HttpExchange exchange) throws IOException, HttpException { // TODO
+	protected void doHead(final HttpExchange exchange) throws IOException, HttpException {
 		final OutputStream out = exchange.getResponseBody();
-		ByteArrayOutputStream dummy = new ByteArrayOutputStream();
+		final OutputStream dummy = new OutputStream() {
+			@Override
+			public void write(final int b) {/* Dummy */}
+		};
 		exchange.setStreams(exchange.getRequestBody(), dummy);
 		try {
 			doGet(exchange);
 		}
 		finally {
-			IOUtils.closeQuietly(out);
+			try {
+				out.close();
+			}
+			catch (final IOException e) {
+				logger.log(Level.FINE, e.toString(), e);
+			}
 		}
-		System.out.println(dummy.toString(getCharset().name())); 
 	}
 
 	protected void doTrace(final HttpExchange exchange) throws IOException, HttpException {
@@ -447,9 +454,15 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 	}
 
-	protected void sendResponse(final HttpExchange exchange, final byte[] payload) throws IOException {
-		final String currentEtag = generateEtag(payload);
-		addEtagHeader(exchange, currentEtag);
+	protected void sendResponse(final HttpExchange exchange, final byte[] payload, final int statusCode) throws IOException {
+		final String currentEtag;
+		if (statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE) {
+			currentEtag = generateEtag(payload);
+			addEtagHeader(exchange, currentEtag);
+		}
+		else {
+			currentEtag = null;
+		}
 
 		// If-None-Match...
 		final String ifNoneMatch = exchange.getRequestHeaders().getFirst("If-None-Match");
@@ -461,15 +474,20 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		else {
 			addCommonHeaders(exchange);
 			final byte[] response = compressResponse(payload, exchange);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-			//			if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
-			//				exchange.getResponseBody().close(); // no body
-			//			}
-			//			else {
-			//				exchange.getResponseBody().write(response);
-			//			}
-			exchange.getResponseBody().write(response);
+			if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
+				exchange.getResponseHeaders().set("Content-Length", Integer.toString(response.length));
+				exchange.sendResponseHeaders(statusCode, -1);
+				exchange.getResponseBody().close(); // no body
+			}
+			else {
+				exchange.sendResponseHeaders(statusCode, response.length);
+				exchange.getResponseBody().write(response);
+			}
 		}
+	}
+
+	protected void sendResponse(final HttpExchange exchange, final byte[] payload) throws IOException {
+		sendResponse(exchange, payload, HttpURLConnection.HTTP_OK);
 	}
 
 	protected Charset getCharset() {

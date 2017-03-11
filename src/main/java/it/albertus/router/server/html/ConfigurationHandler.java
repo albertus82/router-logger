@@ -104,6 +104,7 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		exchange.getResponseHeaders().add("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
 		exchange.getResponseBody().close(); // Needed when no write occurs.
+		exchange.close();
 	}
 
 	@Override

@@ -81,8 +81,15 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 				exchange.getResponseHeaders().add("Last-Modified", httpDateGenerator.format(currentData.getTimestamp()));
 			}
 			final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-			exchange.getResponseBody().write(response);
+			if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
+				exchange.getResponseHeaders().set("Content-Length", Integer.toString(response.length));
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
+				exchange.getResponseBody().close(); // no body
+			}
+			else {
+				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
+				exchange.getResponseBody().write(response);
+			}
 		}
 	}
 
