@@ -23,8 +23,10 @@ public class DisconnectHandler extends BaseHtmlHandler {
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
 
+	private final RouterLoggerEngine engine;
+
 	public DisconnectHandler(final RouterLoggerEngine engine) {
-		super(engine);
+		this.engine = engine;
 	}
 
 	@Override

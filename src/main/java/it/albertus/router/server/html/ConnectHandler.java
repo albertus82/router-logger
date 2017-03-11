@@ -23,8 +23,10 @@ public class ConnectHandler extends BaseHtmlHandler {
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
 
+	private final RouterLoggerEngine engine;
+
 	public ConnectHandler(final RouterLoggerEngine engine) {
-		super(engine);
+		this.engine = engine;
 	}
 
 	@Override

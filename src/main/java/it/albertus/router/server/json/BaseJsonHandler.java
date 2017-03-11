@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.router.RouterLogger;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
@@ -30,8 +32,12 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 
 	protected static final String CFG_KEY_SERVER_HANDLER_JSON_ENABLED = "server.handler.json.enabled";
 
+	protected static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+
+	protected final RouterLoggerEngine engine;
+
 	public BaseJsonHandler(final RouterLoggerEngine engine) {
-		super(engine);
+		this.engine = engine;
 	}
 
 	@Override

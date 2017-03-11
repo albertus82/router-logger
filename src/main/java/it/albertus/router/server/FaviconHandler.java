@@ -13,12 +13,12 @@ import it.albertus.router.server.annotation.Path;
 import it.albertus.util.IOUtils;
 import it.albertus.util.logging.LoggerFactory;
 
-@Path("/favicon.ico")
+@Path('/' + FaviconHandler.RESOURCE_NAME)
 public class FaviconHandler extends StaticResourceHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(FaviconHandler.class);
 
-	private static final String RESOURCE_NAME = "favicon.ico";
+	protected static final String RESOURCE_NAME = "favicon.ico";
 
 	private static final byte[] favicon = loadFavicon(); // Cached
 
@@ -27,7 +27,7 @@ public class FaviconHandler extends StaticResourceHandler {
 		setFound(favicon != null);
 	}
 
-	private static final byte[] loadFavicon() {
+	private static byte[] loadFavicon() {
 		InputStream inputStream = null;
 		ByteArrayOutputStream outputStream = null;
 		try {
@@ -44,7 +44,7 @@ public class FaviconHandler extends StaticResourceHandler {
 		return outputStream.toByteArray();
 	}
 
-	private static final Headers createHeaders() {
+	private static Headers createHeaders() {
 		final Headers faviconHeaders = new Headers();
 		faviconHeaders.add("Content-Type", "image/x-icon");
 		faviconHeaders.add("Cache-Control", "no-transform,public,max-age=86400,s-maxage=259200");

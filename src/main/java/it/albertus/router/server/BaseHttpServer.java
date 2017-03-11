@@ -60,13 +60,13 @@ public abstract class BaseHttpServer {
 
 	protected final Authenticator authenticator = new WebServerAuthenticator();
 	protected volatile HttpServer httpServer;
-	protected volatile boolean started = false;
+	protected volatile boolean running = false;
 	protected volatile ExecutorService threadPool;
 
 	private final Object lock = new Object();
 
 	public void start() {
-		if (!started && configuration.getBoolean("server.enabled", Defaults.ENABLED)) {
+		if (!running && configuration.getBoolean("server.enabled", Defaults.ENABLED)) {
 			new HttpServerStartThread().start();
 		}
 	}
@@ -88,13 +88,13 @@ public abstract class BaseHttpServer {
 				catch (final Exception e) {
 					logger.log(Level.SEVERE, e.toString(), e);
 				}
-				started = false;
+				running = false;
 			}
 		}
 	}
 
-	public boolean isStarted() {
-		return started;
+	public boolean isRunning() {
+		return running;
 	}
 
 	protected void createContexts() {
@@ -188,7 +188,7 @@ public abstract class BaseHttpServer {
 					}
 
 					httpServer.start();
-					started = true;
+					running = true;
 				}
 			}
 			catch (final BindException e) {

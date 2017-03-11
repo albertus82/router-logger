@@ -23,8 +23,10 @@ public class RestartHandler extends BaseHtmlHandler {
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
 
+	private final RouterLoggerEngine engine;
+
 	public RestartHandler(final RouterLoggerEngine engine) {
-		super(engine);
+		this.engine = engine;
 	}
 
 	@Override

@@ -40,8 +40,10 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		}
 	};
 
+	private final RouterLoggerEngine engine;
+
 	public StatusHtmlHandler(final RouterLoggerEngine engine) {
-		super(engine);
+		this.engine = engine;
 	}
 
 	@Override

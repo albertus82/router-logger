@@ -8,7 +8,8 @@ import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.RouterLogger;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.BaseHttpHandler;
 import it.albertus.router.server.BaseHttpServer;
@@ -33,19 +34,13 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	public static final String DEFAULT_STYLE = "";
 
+	protected static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+
 	private static Object[] lastRequestInfo;
 
 	private static final String MSG_KEY_LBL_ERROR = "lbl.error";
 
 	private boolean found = true;
-
-	public BaseHtmlHandler(final RouterLoggerEngine engine) {
-		super(engine);
-	}
-
-	public BaseHtmlHandler() {
-		super(null);
-	}
 
 	public boolean isFound() {
 		return found;

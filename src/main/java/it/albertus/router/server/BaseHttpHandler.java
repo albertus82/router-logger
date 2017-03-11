@@ -30,9 +30,6 @@ import org.apache.http.protocol.HttpDateGenerator;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import it.albertus.router.RouterLogger;
-import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.annotation.Path;
 import it.albertus.util.CRC32OutputStream;
@@ -42,8 +39,6 @@ import it.albertus.util.NewLine;
 import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseHttpHandler implements HttpHandler {
-
-	private static final String MSG_KEY_BAD_METHOD = "msg.server.bad.method";
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseHttpHandler.class);
 
@@ -113,25 +108,15 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		httpStatusCodes.put(511, "Network Authentication Required");
 	}
 
-	protected static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+	public static final String PREFERRED_CHARSET = "UTF-8";
 
 	protected static final HttpDateGenerator httpDateGenerator = new HttpDateGenerator();
 
-	public static final String PREFERRED_CHARSET = "UTF-8";
+	private static final String MSG_KEY_BAD_METHOD = "msg.server.bad.method";
 
 	private static final int BUFFER_SIZE = 4096;
 
 	private static final Charset charset = initCharset();
-
-	protected final RouterLoggerEngine engine;
-
-	protected BaseHttpHandler(final RouterLoggerEngine engine) {
-		this.engine = engine;
-	}
-
-	protected BaseHttpHandler() {
-		this.engine = null;
-	}
 
 	protected final void service(final HttpExchange exchange) throws IOException, HttpException {
 		if (HttpMethod.GET.equalsIgnoreCase(exchange.getRequestMethod())) {
