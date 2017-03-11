@@ -1,33 +1,20 @@
 package it.albertus.router.util.logging;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Filter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import it.albertus.router.email.EmailSender;
-import it.albertus.router.email.ThresholdsEmailSender;
-import it.albertus.util.logging.LoggingSupport;
+import it.albertus.util.logging.LoggerNameFilter;
+import it.albertus.util.logging.annotation.FilterExclusions;
 
-public class EmailHandlerFilter implements Filter {
-
-	private static final Set<String> exclusions;
-
-	static {
-		exclusions = new HashSet<String>();
-		exclusions.add(LoggingSupport.getLoggerName(EmailSender.class));
-		exclusions.add(LoggingSupport.getLoggerName(EmailHandlerFilter.class));
-		exclusions.add(LoggingSupport.getLoggerName(ThresholdsEmailSender.class));
-		exclusions.add("javax.mail");
-	}
+@FilterExclusions(names = { "javax.mail", "it.albertus.router.email", "it.albertus.router.util.logging" })
+public class EmailHandlerFilter extends LoggerNameFilter {
 
 	private Level level = EmailHandler.Defaults.LEVEL;
 	private boolean enabled = EmailHandler.Defaults.ENABLED;
 
 	@Override
 	public boolean isLoggable(final LogRecord record) {
-		return enabled && !exclusions.contains(record.getLoggerName()) && record.getLevel().intValue() >= level.intValue();
+		return enabled && record.getLevel().intValue() >= level.intValue() && super.isLoggable(record);
 	}
 
 	public Level getLevel() {

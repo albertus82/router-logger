@@ -20,10 +20,10 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
 import it.albertus.router.server.annotation.Path;
-import it.albertus.router.util.PropertiesComparator;
-import it.albertus.router.util.PropertiesComparator.CompareResults;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
+import it.albertus.util.PropertiesComparator;
+import it.albertus.util.PropertiesComparator.CompareResults;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
