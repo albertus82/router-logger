@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.server.html.annotation.Path;
+import it.albertus.router.server.annotation.Path;
 import it.albertus.router.util.Payload;
 
 @Path("/json/data")

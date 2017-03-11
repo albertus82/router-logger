@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.router.server.html.annotation.Path;
+import it.albertus.router.server.annotation.Path;
 import it.albertus.util.IOUtils;
 import it.albertus.util.logging.LoggerFactory;
 

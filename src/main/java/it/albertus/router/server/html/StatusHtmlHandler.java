@@ -13,7 +13,7 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpMethod;
-import it.albertus.router.server.html.annotation.Path;
+import it.albertus.router.server.annotation.Path;
 import it.albertus.util.NewLine;
 
 @Path("/status")

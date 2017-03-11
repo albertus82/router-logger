@@ -34,7 +34,7 @@ import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.server.html.annotation.Path;
+import it.albertus.router.server.annotation.Path;
 import it.albertus.util.CRC32OutputStream;
 import it.albertus.util.DigestOutputStream;
 import it.albertus.util.IOUtils;

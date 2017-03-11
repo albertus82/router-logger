@@ -23,7 +23,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
-import it.albertus.router.server.html.annotation.Path;
+import it.albertus.router.server.annotation.Path;
 import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;

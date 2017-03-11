@@ -1,4 +1,4 @@
-package it.albertus.router.server.html.annotation;
+package it.albertus.router.server.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
