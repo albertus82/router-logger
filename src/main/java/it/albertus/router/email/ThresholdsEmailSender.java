@@ -119,7 +119,7 @@ public class ThresholdsEmailSender {
 			// Build email message...
 			final StringBuilder message = new StringBuilder();
 			for (final ThresholdEmailItem item : queue) {
-				message.append(item.toString()).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString());
+				message.append(item).append(NewLine.CRLF).append(NewLine.CRLF).append(NewLine.CRLF);
 				sent.add(item);
 			}
 

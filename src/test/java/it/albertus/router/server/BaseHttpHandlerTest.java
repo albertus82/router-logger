@@ -30,11 +30,6 @@ public class BaseHttpHandlerTest {
 		public void handle(final HttpExchange exchange) {}
 
 		@Override
-		public String getPath() {
-			return null;
-		}
-
-		@Override
 		protected void addCommonHeaders(final HttpExchange exchange) {}
 	}
 

@@ -50,7 +50,7 @@ public class ThresholdEmailItem implements Serializable {
 
 	@Override
 	public String toString() {
-		return new StringBuilder(dateFormat.get().format(date)).append(" - ").append(Messages.get("msg.thresholds.reached", thresholds)).append(NewLine.CRLF.toString()).append(NewLine.CRLF.toString()).append(routerData).toString();
+		return new StringBuilder(dateFormat.get().format(date)).append(" - ").append(Messages.get("msg.thresholds.reached", thresholds)).append(NewLine.CRLF).append(NewLine.CRLF).append(routerData).toString();
 	}
 
 }

@@ -13,8 +13,10 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpMethod;
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.util.NewLine;
 
+@Path("/status")
 public class StatusHtmlHandler extends BaseHtmlHandler {
 
 	public static class Defaults {
@@ -26,8 +28,6 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
-
-	public static final String PATH = "/status";
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
 
@@ -135,11 +135,6 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 	@Override
 	protected String buildHtmlHeadStyle() {
 		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} ul {list-style-type: none; padding-left: 0;} span.warning {color: red;}</style>";
-	}
-
-	@Override
-	public String getPath() {
-		return PATH;
 	}
 
 	@Override

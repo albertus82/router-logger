@@ -3,25 +3,27 @@ package it.albertus.router.server;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.util.IOUtils;
 import it.albertus.util.logging.LoggerFactory;
 
+@Path("/favicon.ico")
 public class FaviconHandler extends StaticResourceHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(FaviconHandler.class);
 
 	private static final String RESOURCE_NAME = "favicon.ico";
+
 	private static final byte[] favicon = loadFavicon(); // Cached
 
 	public FaviconHandler() {
-		super("/favicon.ico", RESOURCE_NAME, createHeaders());
+		super(RESOURCE_NAME, createHeaders());
 		setFound(favicon != null);
 	}
 
@@ -51,12 +53,7 @@ public class FaviconHandler extends StaticResourceHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		addHeaders(exchange);
-		final byte[] response = compressResponse(favicon, exchange);
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-		exchange.getResponseBody().write(response);
-		exchange.getResponseBody().flush();
-		exchange.getResponseBody().close();
+		sendResponse(exchange, favicon);
 	}
 
 }

@@ -99,7 +99,7 @@ public abstract class BaseHttpServer {
 
 	protected void createContexts() {
 		for (final BaseHttpHandler handler : createHandlers()) {
-			final HttpContext httpContext = httpServer.createContext(handler.getPath(), handler);
+			final HttpContext httpContext = httpServer.createContext(BaseHttpHandler.getPath(handler.getClass()), handler);
 			if (configuration.getBoolean("server.authentication", Defaults.AUTHENTICATION)) {
 				httpContext.setAuthenticator(authenticator);
 			}

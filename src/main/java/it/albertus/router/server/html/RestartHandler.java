@@ -7,8 +7,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.util.NewLine;
 
+@Path("/restart")
 public class RestartHandler extends BaseHtmlHandler {
 
 	public static class Defaults {
@@ -18,8 +20,6 @@ public class RestartHandler extends BaseHtmlHandler {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
-
-	public static final String PATH = "/restart";
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
 
@@ -34,7 +34,7 @@ public class RestartHandler extends BaseHtmlHandler {
 
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.restart")));
-		html.append("<h3>").append(Messages.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
+		html.append("<h3>").append(Messages.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 
@@ -44,11 +44,6 @@ public class RestartHandler extends BaseHtmlHandler {
 		exchange.close();
 
 		engine.restart();
-	}
-
-	@Override
-	public String getPath() {
-		return PATH;
 	}
 
 	@Override

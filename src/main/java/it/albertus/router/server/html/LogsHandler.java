@@ -23,12 +23,14 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
+@Path("/logs")
 public class LogsHandler extends BaseHtmlHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(LogsHandler.class);
@@ -41,7 +43,6 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 	}
 
-	public static final String PATH = "/logs";
 	public static final String CLEAR_PATH_INFO = "clear";
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
@@ -52,7 +53,7 @@ public class LogsHandler extends BaseHtmlHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), PATH + '/');
+		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath(this.getClass()) + '/');
 		if (pathInfo == null || pathInfo.trim().isEmpty()) { // List log files (no file name present in URL)
 			fileList(exchange);
 		}
@@ -75,7 +76,7 @@ public class LogsHandler extends BaseHtmlHandler {
 
 	@Override
 	protected void doDelete(HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), PATH + '/');
+		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath(this.getClass()) + '/');
 		if (CLEAR_PATH_INFO.equals(pathInfo.trim())) { // Delete all log files
 			deleteAll(exchange);
 		}
@@ -189,7 +190,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			final String encodedFileName = URLEncoder.encode(file.getName(), getCharset().name());
 			html.append("<tr>");
 			html.append("<td>");
-			html.append("<a href=\"").append(PATH).append('/').append(encodedFileName).append("\">");
+			html.append("<a href=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\">");
 			html.append(file.getName());
 			html.append("</a>");
 			html.append("</td>");
@@ -201,7 +202,7 @@ public class LogsHandler extends BaseHtmlHandler {
 				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" disabled=\"disabled\" />");
 			}
 			else {
-				html.append("<form action=\"").append(PATH).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+				html.append("<form action=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
 				html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.list.delete")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete", file.getName().replace("'", "\\x27"))).append("');\"").append(" />");
 			}
 			html.append("</div></form>");
@@ -218,13 +219,13 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(PATH).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(" /></div></form>");
+			html.append("<form action=\"").append(getPath(this.getClass())).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.logs.delete.all")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.logs.delete.all")).append("');\"").append(" /></div></form>");
 		}
-		return html.append(NewLine.CRLF.toString()).toString();
+		return html.append(NewLine.CRLF).toString();
 	}
 
 	private void refresh(final HttpExchange exchange) throws IOException {
-		exchange.getResponseHeaders().add("Location", getPath());
+		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
 		exchange.getResponseBody().close();
 		exchange.close();
@@ -233,11 +234,6 @@ public class LogsHandler extends BaseHtmlHandler {
 	@Override
 	protected String buildHtmlHeadStyle() {
 		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} table {margin-top: 1em; margin-bottom: 1em;} td.center {text-align: center;} td.right {text-align: right;}</style>";
-	}
-
-	@Override
-	public String getPath() {
-		return PATH;
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.util.CRC32OutputStream;
 import it.albertus.util.DigestOutputStream;
 import it.albertus.util.IOUtils;
@@ -271,8 +272,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 		}
 	}
 
-	public abstract String getPath();
-
 	protected abstract void addCommonHeaders(HttpExchange exchange);
 
 	/**
@@ -455,6 +454,11 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
 	public static Map<Integer, String> getHttpStatusCodes() {
 		return Collections.unmodifiableMap(httpStatusCodes);
+	}
+
+	public static String getPath(final Class<?> clazz) {
+		final Path annotation = clazz.getAnnotation(Path.class);
+		return annotation != null ? annotation.value() : null;
 	}
 
 }

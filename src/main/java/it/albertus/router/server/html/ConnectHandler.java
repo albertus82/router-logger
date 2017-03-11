@@ -7,8 +7,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.util.NewLine;
 
+@Path("/connect")
 public class ConnectHandler extends BaseHtmlHandler {
 
 	public static class Defaults {
@@ -18,8 +20,6 @@ public class ConnectHandler extends BaseHtmlHandler {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
-
-	public static final String PATH = "/connect";
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
 
@@ -38,17 +38,12 @@ public class ConnectHandler extends BaseHtmlHandler {
 		if (accepted) {
 			engine.connect();
 		}
-		html.append("<h3>").append(accepted ? Messages.get("msg.server.accepted") : Messages.get("msg.server.not.acceptable")).append("</h3>").append(NewLine.CRLF.toString());
+		html.append("<h3>").append(accepted ? Messages.get("msg.server.accepted") : Messages.get("msg.server.not.acceptable")).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_PRECON_FAILED, response.length);
 		exchange.getResponseBody().write(response);
-	}
-
-	@Override
-	public String getPath() {
-		return PATH;
 	}
 
 	@Override

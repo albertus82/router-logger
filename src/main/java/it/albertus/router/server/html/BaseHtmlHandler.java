@@ -167,11 +167,11 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	 * @return the string containing the HTML code.
 	 */
 	protected String buildHtmlHeader(final String title) {
-		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF.toString());
+		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF);
 		html.append("<html lang=\"").append(Messages.getLanguage().getLocale().getLanguage()).append("\" xmlns=\"http://www.w3.org/1999/xhtml\">");
 		html.append(buildHtmlHead(title));
-		html.append("<body>").append(NewLine.CRLF.toString());
-		html.append("<h1>").append(Messages.get("msg.application.name")).append("</h1>").append(NewLine.CRLF.toString());
+		html.append("<body>").append(NewLine.CRLF);
+		html.append("<h1>").append(Messages.get("msg.application.name")).append("</h1>").append(NewLine.CRLF);
 		return html.toString();
 	}
 
@@ -238,7 +238,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 
 	protected String buildHtmlHomeButton() {
 		if (configuration.getBoolean(RootHtmlHandler.CFG_KEY_ENABLED, RootHtmlHandler.Defaults.ENABLED)) {
-			return new StringBuilder("<form action=\"").append(RootHtmlHandler.PATH).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></div></form>").append(NewLine.CRLF.toString()).toString();
+			return new StringBuilder("<form action=\"").append(getPath(RootHtmlHandler.class)).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.home")).append("\" /></div></form>").append(NewLine.CRLF).toString();
 		}
 		else {
 			return "";
@@ -246,7 +246,7 @@ public abstract class BaseHtmlHandler extends BaseHttpHandler {
 	}
 
 	protected String buildHtmlRefreshButton() {
-		return new StringBuilder("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.refresh")).append("\" /></div></form>").append(NewLine.CRLF.toString()).toString();
+		return new StringBuilder("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(Messages.get("lbl.server.refresh")).append("\" /></div></form>").append(NewLine.CRLF).toString();
 	}
 
 	/**

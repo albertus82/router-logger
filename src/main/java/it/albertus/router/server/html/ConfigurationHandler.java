@@ -19,6 +19,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.router.util.PropertiesComparator;
 import it.albertus.router.util.PropertiesComparator.CompareResults;
 import it.albertus.util.IOUtils;
@@ -26,6 +27,7 @@ import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
+@Path("/configuration")
 public class ConfigurationHandler extends BaseHtmlHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationHandler.class);
@@ -37,8 +39,6 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
-
-	public static final String PATH = "/configuration";
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
 
@@ -52,8 +52,8 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 
-		html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-		html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.save")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.configuration.confirm.save")).append("');\" />").append(NewLine.CRLF.toString());
+		html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+		html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.save")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.configuration.confirm.save")).append("');\" />").append(NewLine.CRLF);
 		html.append("<textarea rows=\"25\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">");
 		html.append(escapeHtml(getPropertiesAsString(configuration.getProperties())));
 		html.append("</textarea>");
@@ -101,7 +101,7 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 
 		// Post/Redirect/Get
 		addDateHeader(exchange);
-		exchange.getResponseHeaders().add("Location", getPath());
+		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
 		exchange.getResponseBody().close(); // Needed when no write occurs.
 		exchange.close();
@@ -110,11 +110,6 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 	@Override
 	protected String buildHtmlHeadStyle() {
 		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} textarea {display: block; margin-top: 1.75em;}</style>";
-	}
-
-	@Override
-	public String getPath() {
-		return PATH;
 	}
 
 	@Override

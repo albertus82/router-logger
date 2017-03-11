@@ -7,8 +7,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.server.html.annotation.Path;
 import it.albertus.util.NewLine;
 
+@Path("/close")
 public class CloseHandler extends BaseHtmlHandler {
 
 	public static class Defaults {
@@ -18,8 +20,6 @@ public class CloseHandler extends BaseHtmlHandler {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
-
-	public static final String PATH = "/close";
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.close.enabled";
 
@@ -34,7 +34,7 @@ public class CloseHandler extends BaseHtmlHandler {
 
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.close")));
-		html.append("<h3>").append(Messages.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF.toString());
+		html.append("<h3>").append(Messages.get("msg.server.accepted")).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
@@ -42,11 +42,6 @@ public class CloseHandler extends BaseHtmlHandler {
 		exchange.getResponseBody().close();
 		exchange.close();
 		engine.close();
-	}
-
-	@Override
-	public String getPath() {
-		return PATH;
 	}
 
 	@Override
