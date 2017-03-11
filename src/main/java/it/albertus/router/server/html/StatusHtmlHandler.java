@@ -29,8 +29,6 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 
 	public static final String PATH = "/status";
 
-	protected static final String[] METHODS = { HttpMethod.GET, HttpMethod.HEAD };
-
 	protected static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
 
 	protected static final char KEY_VALUE_SEPARATOR = ':';

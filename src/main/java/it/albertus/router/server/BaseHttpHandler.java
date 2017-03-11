@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
@@ -194,88 +196,34 @@ public abstract class BaseHttpHandler implements HttpHandler {
 	}
 
 	protected void doOptions(final HttpExchange exchange) throws IOException, HttpException {
-		final Method[] methods = getAllDeclaredMethods(this.getClass());
-
-		boolean allowGet = false;
-		boolean allowHead = false;
-		boolean allowPost = false;
-		boolean allowPut = false;
-		boolean allowDelete = false;
-		boolean allowTrace = true;
-		boolean allowOptions = true;
-
-		for (int i = 0; i < methods.length; i++) {
-			final Method m = methods[i];
-
+		final Set<String> allowedMethods = new TreeSet<String>();
+		allowedMethods.add(HttpMethod.TRACE.toUpperCase());
+		allowedMethods.add(HttpMethod.OPTIONS.toUpperCase());
+		for (final Method m : getAllDeclaredMethods(this.getClass())) {
 			if ("doGet".equals(m.getName())) {
-				allowGet = true;
-				allowHead = true;
+				allowedMethods.add(HttpMethod.GET.toUpperCase());
+				allowedMethods.add(HttpMethod.HEAD.toUpperCase());
 			}
 			if ("doPost".equals(m.getName())) {
-				allowPost = true;
+				allowedMethods.add(HttpMethod.POST.toUpperCase());
 			}
 			if ("doPut".equals(m.getName())) {
-				allowPut = true;
+				allowedMethods.add(HttpMethod.PUT.toUpperCase());
 			}
 			if ("doDelete".equals(m.getName())) {
-				allowDelete = true;
+				allowedMethods.add(HttpMethod.DELETE.toUpperCase());
 			}
 		}
 
-		String allow = null;
-		if (allowGet) {
-			allow = HttpMethod.GET.toUpperCase();
-		}
-		if (allowHead) {
-			if (allow == null) {
-				allow = HttpMethod.HEAD.toUpperCase();
+		final StringBuilder allow = new StringBuilder();
+		for (final String allowedMethod : allowedMethods) {
+			if (allow.length() != 0) {
+				allow.append(", ");
 			}
-			else {
-				allow += ", " + HttpMethod.HEAD.toUpperCase();
-			}
-		}
-		if (allowPost) {
-			if (allow == null) {
-				allow = HttpMethod.POST.toUpperCase();
-			}
-			else {
-				allow += ", " + HttpMethod.POST.toUpperCase();
-			}
-		}
-		if (allowPut) {
-			if (allow == null) {
-				allow = HttpMethod.PUT.toUpperCase();
-			}
-			else {
-				allow += ", " + HttpMethod.PUT.toUpperCase();
-			}
-		}
-		if (allowDelete) {
-			if (allow == null) {
-				allow = HttpMethod.DELETE.toUpperCase();
-			}
-			else {
-				allow += ", " + HttpMethod.DELETE.toUpperCase();
-			}
-		}
-		if (allowTrace) {
-			if (allow == null) {
-				allow = HttpMethod.TRACE.toUpperCase();
-			}
-			else {
-				allow += ", " + HttpMethod.TRACE.toUpperCase();
-			}
-		}
-		if (allowOptions) {
-			if (allow == null) {
-				allow = HttpMethod.OPTIONS.toUpperCase();
-			}
-			else {
-				allow += ", " + HttpMethod.OPTIONS.toUpperCase();
-			}
+			allow.append(allowedMethod);
 		}
 
-		exchange.getResponseHeaders().add("Allow", allow);
+		exchange.getResponseHeaders().add("Allow", allow.toString());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
 	}
 
