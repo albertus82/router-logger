@@ -46,14 +46,14 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.configuration")));
-		html.append("<h3>").append(Messages.get("lbl.server.configuration")).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.configuration"))));
+		html.append("<h3>").append(escapeHtml(Messages.get("lbl.server.configuration"))).append("</h3>").append(NewLine.CRLF);
 
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 
 		html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-		html.append("<input type=\"submit\" value=\"").append(Messages.get("lbl.server.save")).append("\" onclick=\"return confirm('").append(Messages.get("msg.server.configuration.confirm.save")).append("');\" />").append(NewLine.CRLF);
+		html.append("<input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
 		html.append("<textarea rows=\"25\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">");
 		html.append(escapeHtml(getPropertiesAsString(configuration.getProperties())));
 		html.append("</textarea>");
@@ -153,14 +153,6 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 			}
 		}
 		return lines;
-	}
-
-	private static String escapeHtml(final String unescaped) {
-		return unescaped.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
-	}
-
-	private static String unescapeHtml(final String escaped) {
-		return escaped.replace("&gt;", ">").replace("&lt;", "<").replace("&quot;", "\"").replace("&amp;", "&");
 	}
 
 }

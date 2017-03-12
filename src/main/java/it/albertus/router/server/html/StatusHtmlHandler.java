@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -58,8 +59,8 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		}
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.status")));
-		html.append("<h3>").append(Messages.get("lbl.status")).append(KEY_VALUE_SEPARATOR).append(' ').append(engine.getCurrentStatus().getStatus().getDescription()).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.status"))));
+		html.append("<h3>").append(escapeHtml(Messages.get("lbl.status"))).append(KEY_VALUE_SEPARATOR).append(' ').append(escapeHtml(engine.getCurrentStatus().getStatus().getDescription())).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 		final RouterData currentData = engine.getCurrentData();
@@ -97,9 +98,11 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
 		final StringBuilder html = new StringBuilder();
 		html.append("<ul>").append(NewLine.CRLF);
-		html.append("<li><strong>").append(Messages.get("lbl.column.timestamp.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(dateFormat.get().format(currentData.getTimestamp())).append("</li>").append(NewLine.CRLF);
-		html.append("<li><strong>").append(Messages.get("lbl.column.response.time.text")).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
-		for (final String key : currentData.getData().keySet()) {
+		html.append("<li><strong>").append(escapeHtml(Messages.get("lbl.column.timestamp.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(escapeHtml(dateFormat.get().format(currentData.getTimestamp()))).append("</li>").append(NewLine.CRLF);
+		html.append("<li><strong>").append(escapeHtml(Messages.get("lbl.column.response.time.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
+		for (final Entry<String, String> entry : currentData.getData().entrySet()) {
+			final String key = entry.getKey();
+
 			html.append("<li>");
 
 			final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
@@ -118,7 +121,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 				html.append("<span class=\"warning\">");
 			}
 
-			html.append("<strong>").append(key).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getData().get(key));
+			html.append("<strong>").append(escapeHtml(key)).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(escapeHtml(entry.getValue()));
 
 			if (warning) {
 				html.append("</span>");

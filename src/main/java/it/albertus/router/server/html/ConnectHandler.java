@@ -35,12 +35,12 @@ public class ConnectHandler extends BaseHtmlHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.connect")));
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.connect"))));
 		final boolean accepted = engine.canConnect();
 		if (accepted) {
 			engine.connect();
 		}
-		html.append("<h3>").append(accepted ? Messages.get("msg.server.accepted") : Messages.get("msg.server.not.acceptable")).append("</h3>").append(NewLine.CRLF);
+		html.append("<h3>").append(accepted ? escapeHtml(Messages.get("msg.server.accepted")) : escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
