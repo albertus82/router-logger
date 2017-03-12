@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
@@ -162,7 +164,16 @@ public class RouterLoggerConfiguration extends Configuration {
 			builder.append(true);
 			builder.datePattern(LOG_FILE_DATE_PATTERN);
 			builder.formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
-			builder.filter(this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED) ? new HousekeepingFilter(LogFileManager.getInstance(), this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP), LOG_FILE_DATE_PATTERN) : null);
+			if (this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED)) {
+				final HousekeepingFilter hf = new HousekeepingFilter(LogFileManager.getInstance(), this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP), LOG_FILE_DATE_PATTERN);
+				hf.addObserver(new Observer() {
+					@Override
+					public void update(final Observable o, final Object deletedFile) {
+						LoggerFactory.getLogger(o.getClass()).log(Level.INFO, Messages.get("msg.logging.housekeeping.deleted"), deletedFile);
+					}
+				});
+				builder.filter(hf);
+			}
 			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
 				if (fileHandler != null) {
 					LoggingSupport.getRootLogger().removeHandler(fileHandler);
