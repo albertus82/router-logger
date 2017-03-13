@@ -1,20 +1,17 @@
 package it.albertus.router.util.logging;
 
+import java.util.logging.Filter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import it.albertus.util.logging.LoggerNameFilter;
-import it.albertus.util.logging.annotation.FilterExclusions;
-
-@FilterExclusions(names = { "javax.mail", "it.albertus.router.email", "it.albertus.router.util.logging" })
-public class EmailHandlerFilter extends LoggerNameFilter {
+public class EmailHandlerFilter implements Filter {
 
 	private Level level = EmailHandler.Defaults.LEVEL;
 	private boolean enabled = EmailHandler.Defaults.ENABLED;
 
 	@Override
 	public boolean isLoggable(final LogRecord record) {
-		return enabled && record.getLevel().intValue() >= level.intValue() && super.isLoggable(record);
+		return enabled && record.getLevel().intValue() >= level.intValue();
 	}
 
 	public Level getLevel() {

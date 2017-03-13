@@ -5,16 +5,21 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.ErrorManager;
 import java.util.logging.Filter;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import it.albertus.router.RouterLogger;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.resources.Messages;
-import it.albertus.util.logging.CustomFormatter;
+import it.albertus.util.logging.AnnotationConfigHandler;
+import it.albertus.util.logging.annotation.ExcludeLoggers;
+import it.albertus.util.logging.annotation.LogFilter;
+import it.albertus.util.logging.annotation.LogFormat;
 
-public class EmailHandler extends Handler {
+@LogFormat("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s")
+@LogFilter(EmailHandlerFilter.class)
+@ExcludeLoggers({ "javax.mail", "it.albertus.router.email", "it.albertus.router.util.logging" })
+public class EmailHandler extends AnnotationConfigHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;
@@ -32,11 +37,6 @@ public class EmailHandler extends Handler {
 	private Throwable lastThrownSent;
 
 	private boolean closed = false;
-
-	public EmailHandler() {
-		setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s"));
-		super.setFilter(new EmailHandlerFilter());
-	}
 
 	@Override
 	public boolean isLoggable(final LogRecord record) {
@@ -93,14 +93,23 @@ public class EmailHandler extends Handler {
 
 	@Override
 	public EmailHandlerFilter getFilter() {
-		return (EmailHandlerFilter) super.getFilter();
+		final Filter filter = super.getFilter();
+		if (filter == null || filter instanceof EmailHandlerFilter) {
+			return (EmailHandlerFilter) filter;
+		}
+		else {
+			throw new IllegalStateException(filter.getClass().toString());
+		}
 	}
 
-	/**
-	 * @deprecated This method does nothing.
-	 */
 	@Override
-	@Deprecated
-	public void setFilter(final Filter newFilter) {/* Ignore */}
+	public void setFilter(final Filter newFilter) {
+		if (newFilter == null || newFilter instanceof EmailHandlerFilter) {
+			super.setFilter(newFilter);
+		}
+		else {
+			throw new IllegalArgumentException(newFilter.getClass().toString());
+		}
+	}
 
 }
