@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.ErrorManager;
-import java.util.logging.Filter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -13,11 +12,9 @@ import it.albertus.router.email.EmailSender;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.logging.AnnotationConfigHandler;
 import it.albertus.util.logging.annotation.ExcludeLoggers;
-import it.albertus.util.logging.annotation.LogFilter;
 import it.albertus.util.logging.annotation.LogFormat;
 
 @LogFormat("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s")
-@LogFilter(EmailHandlerFilter.class)
 @ExcludeLoggers({ "javax.mail", "it.albertus.router.email", "it.albertus.router.util.logging" })
 public class EmailHandler extends AnnotationConfigHandler {
 
@@ -89,27 +86,6 @@ public class EmailHandler extends AnnotationConfigHandler {
 	@Override
 	public void close() {
 		closed = true;
-	}
-
-	@Override
-	public EmailHandlerFilter getFilter() {
-		final Filter filter = super.getFilter();
-		if (filter == null || filter instanceof EmailHandlerFilter) {
-			return (EmailHandlerFilter) filter;
-		}
-		else {
-			throw new IllegalStateException(filter.getClass().toString());
-		}
-	}
-
-	@Override
-	public void setFilter(final Filter newFilter) {
-		if (newFilter == null || newFilter instanceof EmailHandlerFilter) {
-			super.setFilter(newFilter);
-		}
-		else {
-			throw new IllegalArgumentException(newFilter.getClass().toString());
-		}
 	}
 
 }

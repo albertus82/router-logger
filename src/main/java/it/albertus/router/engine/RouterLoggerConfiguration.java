@@ -205,9 +205,9 @@ public class RouterLoggerConfiguration extends Configuration {
 	private void updateLoggingEmailHandler() {
 		if (emailHandler == null) {
 			emailHandler = new EmailHandler();
-			LoggerFactory.getLogger("it.albertus").addHandler(emailHandler);
+			LoggingSupport.getRootLogger().addHandler(emailHandler);
 		}
-		final EmailHandlerFilter filter = emailHandler.getFilter();
+		final EmailHandlerFilter filter = new EmailHandlerFilter();
 		filter.setEnabled(this.getBoolean("logging.email.enabled", EmailHandler.Defaults.ENABLED));
 		try {
 			final Level level = Level.parse(this.getString("logging.email.level", EmailHandler.Defaults.LEVEL.getName()));
@@ -221,6 +221,7 @@ public class RouterLoggerConfiguration extends Configuration {
 		catch (final IllegalArgumentException e) {
 			logger.log(Level.WARNING, Messages.get("err.log.email.level", EmailHandler.MIN_LEVEL, EmailHandler.MAX_LEVEL), e);
 		}
+		emailHandler.setFilter(filter);
 	}
 
 	@Override
