@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import it.albertus.jface.DisplayThreadExecutor;
 import it.albertus.jface.EnhancedErrorDialog;
 import it.albertus.jface.JFaceMessages;
-import it.albertus.jface.SwtThreadExecutor;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.router.RouterLogger.InitializationException;
 import it.albertus.router.engine.RouterData;
@@ -274,7 +274,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 					configuration.reload();
 					mqttClient.disconnect();
 					setIteration(FIRST_ITERATION);
-					new SwtThreadExecutor(shell) {
+					new DisplayThreadExecutor(shell).execute(new Runnable() {
 						@Override
 						public void run() {
 							if (!logger.isLoggable(Level.FINE)) {
@@ -284,7 +284,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 							beforeConnect();
 							connect();
 						}
-					}.start();
+					});
 				}
 				catch (final Exception e) {
 					logger.log(Level.SEVERE, e.toString(), e);
@@ -318,12 +318,12 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 	@Override
 	public void close() {
-		new SwtThreadExecutor(shell) {
+		new DisplayThreadExecutor(shell).execute(new Runnable() {
 			@Override
-			protected void run() {
+			public void run() {
 				shell.dispose();
 			}
-		}.start();
+		});
 	}
 
 	@Override
