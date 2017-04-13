@@ -23,6 +23,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.server.HttpException;
 import it.albertus.router.server.HttpMethod;
+import it.albertus.router.server.RequestParameterExtractor;
 import it.albertus.router.server.annotation.Path;
 import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
@@ -42,8 +43,6 @@ public class LogsHandler extends BaseHtmlHandler {
 			throw new IllegalAccessError("Constants class");
 		}
 	}
-
-	public static final String CLEAR_PATH_INFO = "clear";
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 
@@ -70,14 +69,19 @@ public class LogsHandler extends BaseHtmlHandler {
 	}
 
 	@Override
-	protected void doPost(HttpExchange exchange) throws IOException, HttpException {
-		doDelete(exchange);
+	protected void doPost(final HttpExchange exchange) throws IOException, HttpException {
+		if (HttpMethod.DELETE.equalsIgnoreCase(new RequestParameterExtractor(exchange, getCharset()).getParameter("_method"))) {
+			doDelete(exchange);
+		}
+		else {
+			super.doPost(exchange);
+		}
 	}
 
 	@Override
-	protected void doDelete(HttpExchange exchange) throws IOException, HttpException {
+	protected void doDelete(final HttpExchange exchange) throws IOException, HttpException {
 		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath(this.getClass()) + '/');
-		if (CLEAR_PATH_INFO.equals(pathInfo.trim())) { // Delete all log files
+		if (pathInfo.trim().isEmpty()) { // Delete all log files
 			deleteAll(exchange);
 		}
 		else {
@@ -208,7 +212,7 @@ public class LogsHandler extends BaseHtmlHandler {
 			}
 			else {
 				html.append("<form action=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-				html.append("<input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
+				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
 			}
 			html.append("</div></form>");
 			html.append("</td>");
@@ -224,12 +228,13 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(getPath(this.getClass())).append('/').append(CLEAR_PATH_INFO).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
+			html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
 		}
 		return html.append(NewLine.CRLF).toString();
 	}
 
 	private void refresh(final HttpExchange exchange) throws IOException {
+		addDateHeader(exchange);
 		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
 		exchange.getResponseBody().close();
