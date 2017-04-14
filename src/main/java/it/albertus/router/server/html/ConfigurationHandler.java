@@ -102,7 +102,7 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		// Post/Redirect/Get
 		addDateHeader(exchange);
 		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close(); // Needed when no write occurs.
 		exchange.close();
 	}

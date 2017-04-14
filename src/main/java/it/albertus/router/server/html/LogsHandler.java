@@ -236,7 +236,7 @@ public class LogsHandler extends BaseHtmlHandler {
 	private void refresh(final HttpExchange exchange) throws IOException {
 		addDateHeader(exchange);
 		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, -1);
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close();
 		exchange.close();
 	}
