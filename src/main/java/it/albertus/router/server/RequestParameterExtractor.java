@@ -14,10 +14,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.util.logging.LoggerFactory;
+
 public class RequestParameterExtractor {
+
+	private static final Logger logger = LoggerFactory.getLogger(RequestParameterExtractor.class);
 
 	public static final String PREFERRED_CHARSET = "UTF-8";
 
@@ -39,7 +45,17 @@ public class RequestParameterExtractor {
 	}
 
 	public RequestParameterExtractor(final HttpExchange exchange) throws IOException {
-		this(exchange, Charset.forName(PREFERRED_CHARSET));
+		this(exchange, initCharset());
+	}
+
+	private static Charset initCharset() {
+		try {
+			return Charset.forName(PREFERRED_CHARSET);
+		}
+		catch (final RuntimeException e) {
+			logger.log(Level.WARNING, e.toString(), e);
+			return Charset.defaultCharset();
+		}
 	}
 
 	public Map<String, String[]> getParameterMap() {
