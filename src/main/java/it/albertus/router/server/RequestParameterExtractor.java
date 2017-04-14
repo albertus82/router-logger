@@ -74,7 +74,7 @@ public class RequestParameterExtractor {
 		return Collections.enumeration(getParameterMap().keySet());
 	}
 
-	private Map<String, List<String>> parseQueryParameters(final HttpExchange exchange, final Charset charset) {
+	private Map<String, List<String>> parseQueryParameters(final HttpExchange exchange, final Charset charset) throws UnsupportedEncodingException {
 		final URI requestedUri = exchange.getRequestURI();
 		final String query = requestedUri.getRawQuery();
 		return parseQuery(query, charset);
@@ -87,7 +87,7 @@ public class RequestParameterExtractor {
 		return parseQuery(query, charset);
 	}
 
-	private Map<String, List<String>> parseQuery(final String query, final Charset charset) {
+	private Map<String, List<String>> parseQuery(final String query, final Charset charset) throws UnsupportedEncodingException {
 		final Map<String, List<String>> parameterMap = new HashMap<String, List<String>>();
 		if (query != null) {
 			final String[] pairs = query.split("[&]");
@@ -97,17 +97,12 @@ public class RequestParameterExtractor {
 
 				String key = null;
 				String value = null;
-				try {
-					if (param.length > 0) {
-						key = URLDecoder.decode(param[0], charset.name());
-					}
-
-					if (param.length > 1) {
-						value = URLDecoder.decode(param[1], charset.name());
-					}
+				if (param.length > 0) {
+					key = URLDecoder.decode(param[0], charset.name());
 				}
-				catch (final UnsupportedEncodingException e) {
-					throw new IllegalStateException(e); // Charset has been validated at this point!
+
+				if (param.length > 1) {
+					value = URLDecoder.decode(param[1], charset.name());
 				}
 
 				if (!parameterMap.containsKey(key)) {
