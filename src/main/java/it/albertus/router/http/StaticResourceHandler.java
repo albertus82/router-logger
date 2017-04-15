@@ -1,4 +1,4 @@
-package it.albertus.router.server;
+package it.albertus.router.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import javax.activation.MimetypesFileTypeMap;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.router.server.html.BaseHtmlHandler;
+import it.albertus.router.http.html.BaseHtmlHandler;
 import it.albertus.util.IOUtils;
 
 public abstract class StaticResourceHandler extends BaseHtmlHandler {

@@ -1,4 +1,4 @@
-package it.albertus.router.server.html;
+package it.albertus.router.http.html;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -11,8 +11,8 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
-@Path("/restart")
-public class RestartHandler extends BaseHtmlHandler {
+@Path("/connect")
+public class ConnectHandler extends BaseHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;
@@ -22,31 +22,31 @@ public class RestartHandler extends BaseHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
+	protected static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
 
 	private final RouterLoggerEngine engine;
 
-	public RestartHandler(final RouterLoggerEngine engine) {
+	public ConnectHandler(final RouterLoggerEngine engine) {
 		this.engine = engine;
 	}
 
 	@Override
-	public void doPost(final HttpExchange exchange) throws IOException {
+	protected void doPost(final HttpExchange exchange) throws IOException {
 		// Headers...
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.restart"))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.connect"))));
+		final boolean accepted = engine.canConnect();
+		if (accepted) {
+			engine.connect();
+		}
+		html.append("<h3>").append(accepted ? HtmlUtils.escapeHtml(Messages.get("msg.server.accepted")) : HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
-
 		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
+		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_PRECON_FAILED, response.length);
 		exchange.getResponseBody().write(response);
-		exchange.close();
-
-		engine.restart();
 	}
 
 	@Override

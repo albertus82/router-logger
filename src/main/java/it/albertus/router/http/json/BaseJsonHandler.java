@@ -1,4 +1,4 @@
-package it.albertus.router.server.json;
+package it.albertus.router.http.json;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -11,7 +11,7 @@ import it.albertus.httpserver.AbstractHttpHandler;
 import it.albertus.httpserver.HttpException;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.server.HttpServerConfiguration;
+import it.albertus.router.http.HttpServerConfiguration;
 import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseJsonHandler extends AbstractHttpHandler {

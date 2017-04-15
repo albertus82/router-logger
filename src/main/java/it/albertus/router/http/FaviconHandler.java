@@ -1,4 +1,4 @@
-package it.albertus.router.server;
+package it.albertus.router.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

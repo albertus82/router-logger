@@ -1,4 +1,4 @@
-package it.albertus.router.server.html;
+package it.albertus.router.http.html;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -11,8 +11,8 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
-@Path("/connect")
-public class ConnectHandler extends BaseHtmlHandler {
+@Path("/disconnect")
+public class DisconnectHandler extends BaseHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;
@@ -22,11 +22,11 @@ public class ConnectHandler extends BaseHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
+	protected static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
 
 	private final RouterLoggerEngine engine;
 
-	public ConnectHandler(final RouterLoggerEngine engine) {
+	public DisconnectHandler(final RouterLoggerEngine engine) {
 		this.engine = engine;
 	}
 
@@ -36,10 +36,10 @@ public class ConnectHandler extends BaseHtmlHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.connect"))));
-		final boolean accepted = engine.canConnect();
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.disconnect"))));
+		final boolean accepted = engine.canDisconnect();
 		if (accepted) {
-			engine.connect();
+			engine.disconnect();
 		}
 		html.append("<h3>").append(accepted ? HtmlUtils.escapeHtml(Messages.get("msg.server.accepted")) : HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());

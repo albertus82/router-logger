@@ -15,10 +15,10 @@ import java.util.logging.Logger;
 
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.ThresholdsEmailSender;
+import it.albertus.router.http.HttpServer;
 import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.server.HttpServer;
 import it.albertus.router.util.logging.CustomLevel;
 import it.albertus.router.writer.CsvWriter;
 import it.albertus.router.writer.IWriter;

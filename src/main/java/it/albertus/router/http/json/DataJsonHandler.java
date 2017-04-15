@@ -1,4 +1,4 @@
-package it.albertus.router.server.json;
+package it.albertus.router.http.json;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package it.albertus.router.server;
+package it.albertus.router.http;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,17 +7,17 @@ import com.sun.net.httpserver.HttpHandler;
 
 import it.albertus.httpserver.AbstractHttpServer;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.server.html.CloseHandler;
-import it.albertus.router.server.html.ConfigurationHandler;
-import it.albertus.router.server.html.ConnectHandler;
-import it.albertus.router.server.html.DisconnectHandler;
-import it.albertus.router.server.html.LogsHandler;
-import it.albertus.router.server.html.RestartHandler;
-import it.albertus.router.server.html.RootHtmlHandler;
-import it.albertus.router.server.html.StatusHtmlHandler;
-import it.albertus.router.server.json.DataJsonHandler;
-import it.albertus.router.server.json.StatusJsonHandler;
-import it.albertus.router.server.json.ThresholdsJsonHandler;
+import it.albertus.router.http.html.CloseHandler;
+import it.albertus.router.http.html.ConfigurationHandler;
+import it.albertus.router.http.html.ConnectHandler;
+import it.albertus.router.http.html.DisconnectHandler;
+import it.albertus.router.http.html.LogsHandler;
+import it.albertus.router.http.html.RestartHandler;
+import it.albertus.router.http.html.RootHtmlHandler;
+import it.albertus.router.http.html.StatusHtmlHandler;
+import it.albertus.router.http.json.DataJsonHandler;
+import it.albertus.router.http.json.StatusJsonHandler;
+import it.albertus.router.http.json.ThresholdsJsonHandler;
 
 public class HttpServer extends AbstractHttpServer {
 

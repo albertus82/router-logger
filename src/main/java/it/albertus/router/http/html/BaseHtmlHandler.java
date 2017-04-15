@@ -1,4 +1,4 @@
-package it.albertus.router.server.html;
+package it.albertus.router.http.html;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -12,8 +12,8 @@ import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.http.HttpServerConfiguration;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.server.HttpServerConfiguration;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;

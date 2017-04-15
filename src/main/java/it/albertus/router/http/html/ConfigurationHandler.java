@@ -1,4 +1,4 @@
-package it.albertus.router.server.html;
+package it.albertus.router.http.html;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

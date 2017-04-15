@@ -13,7 +13,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import it.albertus.jface.preference.StaticLabelsAndValues;
 import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
-import it.albertus.router.server.HttpServerConfiguration;
+import it.albertus.router.http.HttpServerConfiguration;
 
 public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 

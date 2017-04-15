@@ -1,24 +1,24 @@
-package it.albertus.router.server.json;
+package it.albertus.router.http.json;
 
 import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
-import it.albertus.router.dto.ThresholdsDto;
+import it.albertus.router.dto.StatusDto;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Payload;
 
-@Path("/json/thresholds")
-public class ThresholdsJsonHandler extends BaseJsonHandler {
+@Path("/json/status")
+public class StatusJsonHandler extends BaseJsonHandler {
 
-	public ThresholdsJsonHandler(final RouterLoggerEngine engine) {
+	public StatusJsonHandler(final RouterLoggerEngine engine) {
 		super(engine);
 	}
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		final byte[] payload = Payload.createPayload(new ThresholdsDto(engine.getCurrentThresholdsReached()).toJson());
+		final byte[] payload = Payload.createPayload(new StatusDto(engine.getCurrentStatus()).toJson());
 		addRefreshHeader(exchange);
 		sendResponse(exchange, payload);
 	}

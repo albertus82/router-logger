@@ -1,4 +1,4 @@
-package it.albertus.router.server;
+package it.albertus.router.http;
 
 import it.albertus.httpserver.DefaultHttpServerConfiguration;
 import it.albertus.router.engine.RouterLoggerConfiguration;
