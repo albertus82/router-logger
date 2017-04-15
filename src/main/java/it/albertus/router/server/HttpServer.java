@@ -3,6 +3,8 @@ package it.albertus.router.server;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sun.net.httpserver.HttpHandler;
+
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.html.CloseHandler;
 import it.albertus.router.server.html.ConfigurationHandler;
@@ -16,10 +18,10 @@ import it.albertus.router.server.json.DataJsonHandler;
 import it.albertus.router.server.json.StatusJsonHandler;
 import it.albertus.router.server.json.ThresholdsJsonHandler;
 
-public class WebServer extends AbstractHttpServer {
+public class HttpServer extends AbstractHttpServer {
 
 	private static class Singleton {
-		private static final WebServer instance = new WebServer();
+		private static final HttpServer instance = new HttpServer();
 
 		private Singleton() {
 			throw new IllegalAccessError();
@@ -28,11 +30,11 @@ public class WebServer extends AbstractHttpServer {
 
 	private RouterLoggerEngine engine;
 
-	private WebServer() {
+	private HttpServer() {
 		super(new HttpServerConfiguration());
 	}
 
-	public static WebServer getInstance() {
+	public static HttpServer getInstance() {
 		return Singleton.instance;
 	}
 
@@ -41,8 +43,8 @@ public class WebServer extends AbstractHttpServer {
 	}
 
 	@Override
-	protected Set<AbstractHttpHandler> createHandlers() {
-		final Set<AbstractHttpHandler> handlers = new HashSet<AbstractHttpHandler>();
+	protected Set<HttpHandler> createHandlers() {
+		final Set<HttpHandler> handlers = new HashSet<HttpHandler>();
 
 		// HTML
 		handlers.add(new RootHtmlHandler());

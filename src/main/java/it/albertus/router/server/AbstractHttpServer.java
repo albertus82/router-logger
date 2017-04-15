@@ -21,6 +21,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
@@ -108,7 +109,7 @@ public abstract class AbstractHttpServer {
 			authenticator = null;
 		}
 
-		for (final AbstractHttpHandler handler : createHandlers()) {
+		for (final HttpHandler handler : createHandlers()) {
 			final HttpContext httpContext = httpServer.createContext(AbstractHttpHandler.getPath(handler.getClass()), handler);
 			if (authenticator != null) {
 				httpContext.setAuthenticator(authenticator);
@@ -117,11 +118,11 @@ public abstract class AbstractHttpServer {
 	}
 
 	/**
-	 * Creates {@code BaseHttpHandler} objects.
+	 * Creates {@code HttpHandler} objects.
 	 * 
 	 * @return the {@code Set} containing the handlers.
 	 */
-	protected abstract Set<AbstractHttpHandler> createHandlers();
+	protected abstract Set<HttpHandler> createHandlers();
 
 	protected class HttpServerStartThread extends Thread {
 
