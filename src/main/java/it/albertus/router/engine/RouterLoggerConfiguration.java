@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.Threshold.Type;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.InitializationException;
 import it.albertus.router.util.logging.EmailHandler;
 import it.albertus.router.util.logging.EmailHandlerFilter;
 import it.albertus.router.util.logging.LogFileManager;
@@ -78,9 +79,16 @@ public class RouterLoggerConfiguration extends Configuration {
 		init();
 	}
 
-	public static synchronized RouterLoggerConfiguration getInstance() throws IOException {
+	public static synchronized RouterLoggerConfiguration getInstance() throws InitializationException {
 		if (instance == null) {
-			instance = new RouterLoggerConfiguration();
+			try {
+				instance = new RouterLoggerConfiguration();
+			}
+			catch (final IOException e) {
+				final String message = Messages.get("err.open.cfg", CFG_FILE_NAME);
+				logger.log(Level.SEVERE, message, e);
+				throw new InitializationException(message, e);
+			}
 		}
 		return instance;
 	}

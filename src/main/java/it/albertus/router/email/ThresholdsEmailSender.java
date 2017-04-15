@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
@@ -22,7 +22,7 @@ public class ThresholdsEmailSender {
 
 	private static final Logger logger = LoggerFactory.getLogger(ThresholdsEmailSender.class);
 
-	private static final Configuration configuration = RouterLogger.getConfiguration();
+	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	public static class Defaults {
 		public static final int THRESHOLDS_EMAIL_SEND_INTERVAL_SECS = 3600;

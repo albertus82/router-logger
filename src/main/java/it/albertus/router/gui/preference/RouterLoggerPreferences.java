@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import it.albertus.jface.preference.Preferences;
 import it.albertus.jface.preference.page.IPageDefinition;
-import it.albertus.router.RouterLogger;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.Images;
 import it.albertus.router.gui.RouterLoggerGui;
@@ -24,7 +24,7 @@ public class RouterLoggerPreferences extends Preferences {
 
 	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerPreferences.class);
 
-	private static final Configuration configuration = RouterLogger.getConfiguration();
+	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	private final RouterLoggerGui gui;
 

@@ -1,6 +1,6 @@
 package it.albertus.router.util.logging;
 
-import it.albertus.router.RouterLogger;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerConfiguration.Defaults;
 import it.albertus.util.logging.AbstractLogFileManager;
 
@@ -24,7 +24,7 @@ public class LogFileManager extends AbstractLogFileManager {
 
 	@Override
 	public String getPath() {
-		return RouterLogger.getConfiguration().getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
+		return RouterLoggerConfiguration.getInstance().getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
 	}
 
 }

@@ -7,8 +7,8 @@ import java.util.logging.ErrorManager;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import it.albertus.router.RouterLogger;
 import it.albertus.router.email.EmailSender;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.logging.AnnotationConfigHandler;
 import it.albertus.util.logging.annotation.ExcludeLoggers;
@@ -62,7 +62,7 @@ public class EmailHandler extends AnnotationConfigHandler {
 
 		try {
 			final Throwable thrown = record.getThrown();
-			if (thrown == null || lastThrownSent == null || !RouterLogger.getConfiguration().getBoolean("logging.email.ignore.duplicates", Defaults.IGNORE_DUPLICATES) || !Arrays.equals(lastThrownSent.getStackTrace(), thrown.getStackTrace())) {
+			if (thrown == null || lastThrownSent == null || !RouterLoggerConfiguration.getInstance().getBoolean("logging.email.ignore.duplicates", Defaults.IGNORE_DUPLICATES) || !Arrays.equals(lastThrownSent.getStackTrace(), thrown.getStackTrace())) {
 				final String subjectKey;
 				if (thrown != null) {
 					subjectKey = "msg.log.email.subject.exception";

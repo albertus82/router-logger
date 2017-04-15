@@ -7,11 +7,11 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.albertus.router.RouterLogger.InitializationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.InitializationException;
 import it.albertus.util.Version;
 import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.logging.LoggingSupport;

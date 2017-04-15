@@ -20,7 +20,7 @@ import org.apache.commons.mail.SimpleEmail;
 
 import it.albertus.jface.JFaceMessages;
 import it.albertus.jface.preference.field.EmailAddressesListEditor;
-import it.albertus.router.RouterLogger;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 import it.albertus.util.ConfigurationException;
@@ -31,7 +31,7 @@ public class EmailSender {
 
 	private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
-	private static final Configuration configuration = RouterLogger.getConfiguration();
+	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	private static final String EMAIL_ADDRESSES_SPLIT_REGEX = EmailAddressesListEditor.EMAIL_ADDRESSES_SPLIT_REGEX;
 

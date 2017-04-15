@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import it.albertus.router.RouterLogger;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 
 public class CloseDialog {
@@ -30,7 +30,7 @@ public class CloseDialog {
 	}
 
 	public static boolean mustShow() {
-		return RouterLogger.getConfiguration().getBoolean("gui.confirm.close", Defaults.CONFIRM_CLOSE);
+		return RouterLoggerConfiguration.getInstance().getBoolean("gui.confirm.close", Defaults.CONFIRM_CLOSE);
 	}
 
 }

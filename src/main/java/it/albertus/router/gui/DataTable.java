@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.TableItem;
 
 import it.albertus.jface.DisplayThreadExecutor;
 import it.albertus.jface.SwtUtils;
-import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.Threshold;
@@ -47,7 +46,7 @@ public class DataTable {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataTable.class);
 
-	private static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	private static final char SAMPLE_CHAR = '9';
 	private static final char FIELD_SEPARATOR = '\t';

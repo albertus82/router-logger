@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,9 +26,10 @@ import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 
-import it.albertus.router.RouterLogger;
+import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
+import it.albertus.util.Configured;
 import it.albertus.util.DaemonThreadFactory;
 import it.albertus.util.IOUtils;
 import it.albertus.util.logging.LoggerFactory;
@@ -36,7 +38,12 @@ public abstract class BaseHttpServer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseHttpServer.class);
 
-	protected static final Configuration configuration = RouterLogger.getConfiguration();
+	public static final String PASSWORD_HASH_ALGORITHM = "SHA-256";
+
+	private static final String CFG_KEY_SERVER_USERNAME = "server.username";
+	private static final String CFG_KEY_SERVER_PASSWORD = "server.password";
+
+	protected static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	public static class Defaults {
 		public static final int PORT = 8080;
@@ -58,7 +65,6 @@ public abstract class BaseHttpServer {
 
 	protected static final int STOP_DELAY = 0;
 
-	protected final Authenticator authenticator = new WebServerAuthenticator();
 	protected volatile HttpServer httpServer;
 	protected volatile boolean running = false;
 	protected volatile ExecutorService threadPool;
@@ -98,9 +104,34 @@ public abstract class BaseHttpServer {
 	}
 
 	protected void createContexts() {
+		final Authenticator authenticator;
+		if (configuration.getBoolean("server.authentication", Defaults.AUTHENTICATION)) {
+			try {
+				final Configured<String> username = new Configured<String>() {
+					@Override
+					public String getValue() {
+						return configuration.getString(CFG_KEY_SERVER_USERNAME);
+					}
+				};
+				final Configured<char[]> password = new Configured<char[]>() {
+					@Override
+					public char[] getValue() {
+						return configuration.getCharArray(CFG_KEY_SERVER_PASSWORD);
+					}
+				};
+				authenticator = new WebAuthenticator(username, password, PASSWORD_HASH_ALGORITHM);
+			}
+			catch (final NoSuchAlgorithmException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		else {
+			authenticator = null;
+		}
+
 		for (final BaseHttpHandler handler : createHandlers()) {
 			final HttpContext httpContext = httpServer.createContext(BaseHttpHandler.getPath(handler.getClass()), handler);
-			if (configuration.getBoolean("server.authentication", Defaults.AUTHENTICATION)) {
+			if (authenticator != null) {
 				httpContext.setAuthenticator(authenticator);
 			}
 		}

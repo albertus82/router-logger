@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import org.apache.commons.net.telnet.TelnetClient;
 
 import it.albertus.jface.JFaceMessages;
-import it.albertus.router.RouterLogger;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.ConfigurationException;
@@ -20,7 +19,7 @@ public abstract class Reader implements IReader {
 
 	private static final Logger logger = LoggerFactory.getLogger(Reader.class);
 
-	protected static final RouterLoggerConfiguration configuration = RouterLogger.getConfiguration();
+	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
 

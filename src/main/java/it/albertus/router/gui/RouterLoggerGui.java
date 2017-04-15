@@ -24,7 +24,6 @@ import it.albertus.jface.DisplayThreadExecutor;
 import it.albertus.jface.EnhancedErrorDialog;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.jface.console.StyledTextConsole;
-import it.albertus.router.RouterLogger.InitializationException;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.Status;
@@ -33,6 +32,7 @@ import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.preference.Preference;
 import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
+import it.albertus.router.util.InitializationException;
 import it.albertus.util.ConfigurationException;
 import it.albertus.util.Configured;
 import it.albertus.util.ExceptionUtils;
@@ -123,7 +123,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				shell.open();
 
 				// Fix invisible (transparent) shell bug with some Linux distibutions
-				if (Util.isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+				if (Util.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 					shell.setMinimized(true);
 				}
 
