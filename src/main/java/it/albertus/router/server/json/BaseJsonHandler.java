@@ -9,12 +9,12 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.server.BaseHttpHandler;
-import it.albertus.router.server.BaseHttpServer;
+import it.albertus.router.server.AbstractHttpHandler;
 import it.albertus.router.server.HttpException;
+import it.albertus.router.server.HttpServerConfiguration;
 import it.albertus.util.logging.LoggerFactory;
 
-public abstract class BaseJsonHandler extends BaseHttpHandler {
+public abstract class BaseJsonHandler extends AbstractHttpHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseJsonHandler.class);
 
@@ -36,6 +36,7 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 	protected final RouterLoggerEngine engine;
 
 	public BaseJsonHandler(final RouterLoggerEngine engine) {
+		super(new HttpServerConfiguration());
 		this.engine = engine;
 	}
 
@@ -63,15 +64,14 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 	}
 
 	/**
-	 * Adds {@code Content-Type: application/json} and {@code Date} headers to
-	 * the provided {@link HttpExchange} object.
+	 * Adds {@code Content-Type: application/json} header to the provided
+	 * {@link HttpExchange} object.
 	 * 
 	 * @param exchange the {@link HttpExchange} to be modified.
 	 */
 	@Override
-	protected void addCommonHeaders(final HttpExchange exchange) {
+	protected void addContentTypeHeader(HttpExchange exchange) {
 		exchange.getResponseHeaders().add("Content-Type", "application/json; charset=" + getCharset().name());
-		addDateHeader(exchange);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 	}
 
 	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
-		if (!configuration.getBoolean("server.enabled", BaseHttpServer.Defaults.ENABLED) || !isEnabled()) {
+		if (!httpServerConfiguration.isEnabled() || !isEnabled()) {
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, -1);
 			exchange.close();
 			return false;
@@ -103,6 +103,11 @@ public abstract class BaseJsonHandler extends BaseHttpHandler {
 	@Override
 	protected boolean canCompressResponse(final HttpExchange exchange) {
 		return configuration.getBoolean("server.compress.response.json", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
+	}
+
+	@Override
+	protected void log(final HttpExchange exchange) {
+		/* do nothing */
 	}
 
 }

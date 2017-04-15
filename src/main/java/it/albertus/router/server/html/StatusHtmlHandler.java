@@ -59,8 +59,8 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		}
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.status"))));
-		html.append("<h3>").append(escapeHtml(Messages.get("lbl.status"))).append(KEY_VALUE_SEPARATOR).append(' ').append(escapeHtml(engine.getCurrentStatus().getStatus().getDescription())).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.status"))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("lbl.status"))).append(KEY_VALUE_SEPARATOR).append(' ').append(HtmlUtils.escapeHtml(engine.getCurrentStatus().getStatus().getDescription())).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 		final RouterData currentData = engine.getCurrentData();
@@ -98,8 +98,8 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 		final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
 		final StringBuilder html = new StringBuilder();
 		html.append("<ul>").append(NewLine.CRLF);
-		html.append("<li><strong>").append(escapeHtml(Messages.get("lbl.column.timestamp.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(escapeHtml(dateFormat.get().format(currentData.getTimestamp()))).append("</li>").append(NewLine.CRLF);
-		html.append("<li><strong>").append(escapeHtml(Messages.get("lbl.column.response.time.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
+		html.append("<li><strong>").append(HtmlUtils.escapeHtml(Messages.get("lbl.column.timestamp.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(HtmlUtils.escapeHtml(dateFormat.get().format(currentData.getTimestamp()))).append("</li>").append(NewLine.CRLF);
+		html.append("<li><strong>").append(HtmlUtils.escapeHtml(Messages.get("lbl.column.response.time.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
 		for (final Entry<String, String> entry : currentData.getData().entrySet()) {
 			final String key = entry.getKey();
 
@@ -121,7 +121,7 @@ public class StatusHtmlHandler extends BaseHtmlHandler {
 				html.append("<span class=\"warning\">");
 			}
 
-			html.append("<strong>").append(escapeHtml(key)).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(escapeHtml(entry.getValue()));
+			html.append("<strong>").append(HtmlUtils.escapeHtml(key)).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(HtmlUtils.escapeHtml(entry.getValue()));
 
 			if (warning) {
 				html.append("</span>");

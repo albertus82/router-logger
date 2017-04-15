@@ -46,16 +46,16 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.configuration"))));
-		html.append("<h3>").append(escapeHtml(Messages.get("lbl.server.configuration"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))).append("</h3>").append(NewLine.CRLF);
 
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 
 		html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-		html.append("<input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
+		html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
 		html.append("<textarea rows=\"25\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">");
-		html.append(escapeHtml(getPropertiesAsString(configuration.getProperties())));
+		html.append(HtmlUtils.escapeHtml(getPropertiesAsString(configuration.getProperties())));
 		html.append("</textarea>");
 		html.append("</div></form>").append(NewLine.SYSTEM_LINE_SEPARATOR);
 
@@ -80,7 +80,7 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		}
 		final Properties updatedProperties = new Properties();
 		try {
-			updatedProperties.load(new StringReader(unescapeHtml(URLDecoder.decode(StringUtils.substringAfter(requestBody, prefix), getCharset().name()))));
+			updatedProperties.load(new StringReader(HtmlUtils.unescapeHtml(URLDecoder.decode(StringUtils.substringAfter(requestBody, prefix), getCharset().name()))));
 		}
 		catch (final IOException e) {
 			throw new HttpException(HttpURLConnection.HTTP_BAD_REQUEST, Messages.get("msg.server.bad.request"), e);
@@ -120,7 +120,7 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 	@Override
 	protected void log(final HttpExchange exchange) {
 		final Level level = Level.WARNING;
-		if (logger.isLoggable(level) && configuration.getBoolean("server.log.request", BaseHtmlHandler.Defaults.LOG_REQUEST)) {
+		if (logger.isLoggable(level)) {
 			final Object[] requestInfo = new Object[] { exchange.getRemoteAddress(), exchange.getRequestURI() };
 			if (!Arrays.equals(requestInfo, getLastRequestInfo())) {
 				setLastRequestInfo(requestInfo);

@@ -35,12 +35,12 @@ public class DisconnectHandler extends BaseHtmlHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.disconnect"))));
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.disconnect"))));
 		final boolean accepted = engine.canDisconnect();
 		if (accepted) {
 			engine.disconnect();
 		}
-		html.append("<h3>").append(accepted ? escapeHtml(Messages.get("msg.server.accepted")) : escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h3>").append(NewLine.CRLF);
+		html.append("<h3>").append(accepted ? HtmlUtils.escapeHtml(Messages.get("msg.server.accepted")) : HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());

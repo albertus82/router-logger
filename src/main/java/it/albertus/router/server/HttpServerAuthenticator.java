@@ -14,9 +14,9 @@ import it.albertus.util.Configured;
 import it.albertus.util.DigestUtils;
 import it.albertus.util.logging.LoggerFactory;
 
-public class WebAuthenticator extends BasicAuthenticator {
+public class HttpServerAuthenticator extends BasicAuthenticator {
 
-	private static final Logger logger = LoggerFactory.getLogger(WebAuthenticator.class);
+	private static final Logger logger = LoggerFactory.getLogger(HttpServerAuthenticator.class);
 
 	private static final int DEFAULT_FAIL_DELAY_IN_MILLIS = 3000;
 	private static final String DEFAULT_CHARSET_NAME = "UTF-8";
@@ -29,14 +29,14 @@ public class WebAuthenticator extends BasicAuthenticator {
 
 	private int failDelayInMillis = DEFAULT_FAIL_DELAY_IN_MILLIS;
 
-	public WebAuthenticator(final Configured<String> username, final Configured<char[]> password) {
+	public HttpServerAuthenticator(final Configured<String> username, final Configured<char[]> password) {
 		super(Messages.get("msg.application.name"));
 		this.username = username;
 		this.password = password;
 		this.messageDigest = null;
 	}
 
-	public WebAuthenticator(final Configured<String> username, final Configured<char[]> password, final String hashAlgorithm) throws NoSuchAlgorithmException {
+	public HttpServerAuthenticator(final Configured<String> username, final Configured<char[]> password, final String hashAlgorithm) throws NoSuchAlgorithmException {
 		super(Messages.get("msg.application.name"));
 		this.username = username;
 		this.password = password;

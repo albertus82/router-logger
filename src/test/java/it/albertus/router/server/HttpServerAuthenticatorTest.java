@@ -9,7 +9,7 @@ import org.junit.Test;
 import it.albertus.util.Configured;
 import it.albertus.util.NewLine;
 
-public class WebAuthenticatorTest {
+public class HttpServerAuthenticatorTest {
 
 	private static Configured<String> username;
 
@@ -31,7 +31,7 @@ public class WebAuthenticatorTest {
 				return "1234567890".toCharArray();
 			}
 		};
-		final WebAuthenticator authenticator = new WebAuthenticator(username, password);
+		final HttpServerAuthenticator authenticator = new HttpServerAuthenticator(username, password);
 		authenticator.setFailDelayInMillis(0);
 
 		Assert.assertTrue(authenticator.checkCredentials("qwertyuiop", "1234567890"));
@@ -52,7 +52,7 @@ public class WebAuthenticatorTest {
 				return "e807f1fcf82d132f9bb018ca6738a19f".toCharArray();
 			}
 		};
-		final WebAuthenticator authenticator = new WebAuthenticator(username, password, "MD5");
+		final HttpServerAuthenticator authenticator = new HttpServerAuthenticator(username, password, "MD5");
 		authenticator.setFailDelayInMillis(0);
 
 		Assert.assertTrue(authenticator.checkCredentials("qwertyuiop", "1234567890"));
@@ -73,7 +73,7 @@ public class WebAuthenticatorTest {
 				return "01b307acba4f54f55aafc33bb06bbbf6ca803e9a".toCharArray();
 			}
 		};
-		final WebAuthenticator authenticator = new WebAuthenticator(username, password, "SHA-1");
+		final HttpServerAuthenticator authenticator = new HttpServerAuthenticator(username, password, "SHA-1");
 		authenticator.setFailDelayInMillis(0);
 
 		Assert.assertTrue(authenticator.checkCredentials("qwertyuiop", "1234567890"));
@@ -94,7 +94,7 @@ public class WebAuthenticatorTest {
 				return "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646".toCharArray();
 			}
 		};
-		final WebAuthenticator authenticator = new WebAuthenticator(username, password, "SHA-256");
+		final HttpServerAuthenticator authenticator = new HttpServerAuthenticator(username, password, "SHA-256");
 		authenticator.setFailDelayInMillis(0);
 
 		Assert.assertTrue(authenticator.checkCredentials("qwertyuiop", "1234567890"));
@@ -115,7 +115,7 @@ public class WebAuthenticatorTest {
 				return "1234567890".toCharArray();
 			}
 		};
-		final WebAuthenticator authenticator = new WebAuthenticator(username, password);
+		final HttpServerAuthenticator authenticator = new HttpServerAuthenticator(username, password);
 
 		for (int i = 0; i < 10; i++) {
 			final int delay = (int) (Math.random() * 100);

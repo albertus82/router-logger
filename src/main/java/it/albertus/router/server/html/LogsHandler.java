@@ -151,20 +151,20 @@ public class LogsHandler extends BaseHtmlHandler {
 	private void notFound(final HttpExchange exchange) throws IOException {
 		addCommonHeaders(exchange);
 
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.error"))));
-		html.append("<h3>").append(escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.error"))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 
 		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND);
 	}
 
 	private void fileList(final HttpExchange exchange) throws IOException {
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.logs"))));
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs"))));
 
 		final File[] files = logFileManager.listFiles();
 		final Collection<File> lockedFiles = logFileManager.getLockedFiles();
 
-		html.append("<h3>").append(escapeHtml(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length))).append("</h3>").append(NewLine.CRLF);
+		html.append("<h3>").append(HtmlUtils.escapeHtml(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length))).append("</h3>").append(NewLine.CRLF);
 
 		// Button bar
 		html.append(buildHtmlHomeButton());
@@ -188,10 +188,10 @@ public class LogsHandler extends BaseHtmlHandler {
 		Arrays.sort(files);
 		final StringBuilder html = new StringBuilder();
 		html.append("<table><thead><tr>");
-		html.append("<th>").append(escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
-		html.append("<th>").append(escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
-		html.append("<th>").append(escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
-		html.append("<th>").append(escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
+		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
+		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
+		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
+		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
 		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
 		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
 		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
@@ -200,19 +200,19 @@ public class LogsHandler extends BaseHtmlHandler {
 			html.append("<tr>");
 			html.append("<td>");
 			html.append("<a href=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\">");
-			html.append(escapeHtml(file.getName()));
+			html.append(HtmlUtils.escapeHtml(file.getName()));
 			html.append("</a>");
 			html.append("</td>");
 			html.append("<td class=\"right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
-			html.append("<td class=\"right\">").append(escapeHtml(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file))))).append("</td>");
+			html.append("<td class=\"right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file))))).append("</td>");
 			html.append("<td class=\"center\">");
 			if (lockedFiles.contains(file)) {
 				html.append("<form action=\"?\"><div>");
-				html.append("<input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" disabled=\"disabled\" />");
+				html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" disabled=\"disabled\" />");
 			}
 			else {
 				html.append("<form action=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
+				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
 			}
 			html.append("</div></form>");
 			html.append("</td>");
@@ -225,10 +225,10 @@ public class LogsHandler extends BaseHtmlHandler {
 	private String buildHtmlDeleteAllButton(final boolean disabled) {
 		final StringBuilder html = new StringBuilder();
 		if (disabled) {
-			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
+			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
+			html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
 		}
 		return html.append(NewLine.CRLF).toString();
 	}

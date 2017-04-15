@@ -35,8 +35,8 @@ public class CloseHandler extends BaseHtmlHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.close"))));
-		html.append("<h3>").append(escapeHtml(Messages.get("msg.server.accepted"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.close"))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);

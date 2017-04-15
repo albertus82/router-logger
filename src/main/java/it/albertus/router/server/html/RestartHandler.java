@@ -35,8 +35,8 @@ public class RestartHandler extends BaseHtmlHandler {
 		addCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(escapeHtml(Messages.get("lbl.server.restart"))));
-		html.append("<h3>").append(escapeHtml(Messages.get("msg.server.accepted"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.restart"))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlFooter());
 

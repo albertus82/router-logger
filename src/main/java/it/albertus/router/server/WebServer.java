@@ -16,7 +16,7 @@ import it.albertus.router.server.json.DataJsonHandler;
 import it.albertus.router.server.json.StatusJsonHandler;
 import it.albertus.router.server.json.ThresholdsJsonHandler;
 
-public class WebServer extends BaseHttpServer {
+public class WebServer extends AbstractHttpServer {
 
 	private static class Singleton {
 		private static final WebServer instance = new WebServer();
@@ -28,7 +28,9 @@ public class WebServer extends BaseHttpServer {
 
 	private RouterLoggerEngine engine;
 
-	private WebServer() {}
+	private WebServer() {
+		super(new HttpServerConfiguration());
+	}
 
 	public static WebServer getInstance() {
 		return Singleton.instance;
@@ -39,8 +41,8 @@ public class WebServer extends BaseHttpServer {
 	}
 
 	@Override
-	protected Set<BaseHttpHandler> createHandlers() {
-		final Set<BaseHttpHandler> handlers = new HashSet<BaseHttpHandler>();
+	protected Set<AbstractHttpHandler> createHandlers() {
+		final Set<AbstractHttpHandler> handlers = new HashSet<AbstractHttpHandler>();
 
 		// HTML
 		handlers.add(new RootHtmlHandler());
