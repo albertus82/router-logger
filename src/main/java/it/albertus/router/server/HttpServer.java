@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.sun.net.httpserver.HttpHandler;
 
+import it.albertus.httpserver.AbstractHttpServer;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.server.html.CloseHandler;
 import it.albertus.router.server.html.ConfigurationHandler;

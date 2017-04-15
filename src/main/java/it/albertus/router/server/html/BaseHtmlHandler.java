@@ -7,11 +7,12 @@ import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import it.albertus.httpserver.AbstractHttpHandler;
+import it.albertus.httpserver.HttpException;
+import it.albertus.httpserver.HttpMethod;
+import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.server.AbstractHttpHandler;
-import it.albertus.router.server.HttpException;
-import it.albertus.router.server.HttpMethod;
 import it.albertus.router.server.HttpServerConfiguration;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;

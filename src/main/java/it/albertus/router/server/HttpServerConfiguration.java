@@ -1,6 +1,8 @@
 package it.albertus.router.server;
 
+import it.albertus.httpserver.DefaultHttpServerConfiguration;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 
 public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
@@ -15,6 +17,11 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	@Override
 	public boolean isAuthenticationRequired() {
 		return configuration.getBoolean("server.authentication", super.isAuthenticationRequired());
+	}
+
+	@Override
+	public String getRealm() {
+		return Messages.get("msg.application.name");
 	}
 
 	@Override
