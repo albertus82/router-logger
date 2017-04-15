@@ -456,7 +456,7 @@ public abstract class AbstractHttpHandler implements HttpHandler {
 			logger.log(Level.WARNING, e.toString(), e);
 		}
 
-		if (logger.isLoggable(level)) {
+		if (logger.isLoggable(level) && !Level.OFF.equals(level)) {
 			final Object[] requestInfo = new Object[] { exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() };
 			if (!Arrays.equals(requestInfo, getLastRequestInfo())) {
 				setLastRequestInfo(requestInfo);
