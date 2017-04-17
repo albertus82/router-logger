@@ -183,11 +183,11 @@ public abstract class BaseHtmlHandler extends AbstractHttpHandler {
 	 * @return the string containing the HTML code.
 	 */
 	protected String buildHtmlHeadTitle(final String title) {
-		final StringBuilder html = new StringBuilder("<title>").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name")));
+		final StringBuilder html = new StringBuilder("<title>");
 		if (title != null && !title.trim().isEmpty()) {
-			html.append(" - ").append(title.trim());
+			html.append(title.trim()).append(" - ");
 		}
-		return html.append("</title>").toString();
+		return html.append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</title>").toString();
 	}
 
 	/**
