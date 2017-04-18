@@ -11,10 +11,15 @@ import it.albertus.router.http.html.CloseHandler;
 import it.albertus.router.http.html.ConfigurationHandler;
 import it.albertus.router.http.html.ConnectHandler;
 import it.albertus.router.http.html.DisconnectHandler;
+import it.albertus.router.http.html.FaviconHandler;
 import it.albertus.router.http.html.LogsHandler;
 import it.albertus.router.http.html.RestartHandler;
 import it.albertus.router.http.html.RootHtmlHandler;
 import it.albertus.router.http.html.StatusHtmlHandler;
+import it.albertus.router.http.html.css.BootstrapCssHandler;
+import it.albertus.router.http.html.css.BootstrapThemeCssHandler;
+import it.albertus.router.http.html.js.BoostrapJsHandler;
+import it.albertus.router.http.html.js.JQueryJsHandler;
 import it.albertus.router.http.json.DataJsonHandler;
 import it.albertus.router.http.json.StatusJsonHandler;
 import it.albertus.router.http.json.ThresholdsJsonHandler;
@@ -64,6 +69,10 @@ public class HttpServer extends AbstractHttpServer {
 
 		// Static resources
 		handlers.add(new FaviconHandler());
+		handlers.add(new BootstrapCssHandler());
+		handlers.add(new BootstrapThemeCssHandler());
+		handlers.add(new JQueryJsHandler());
+		handlers.add(new BoostrapJsHandler());
 
 		return handlers;
 	}
