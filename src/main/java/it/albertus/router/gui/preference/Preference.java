@@ -35,6 +35,7 @@ import org.eclipse.jface.preference.FontFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 
+import it.albertus.httpserver.DefaultHttpServerConfiguration;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorDetails.FieldEditorDetailsBuilder;
@@ -235,7 +236,6 @@ public enum Preference implements IPreference {
 	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(HttpServerConfiguration.Defaults.AUTHENTICATION).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_USERNAME(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).hashAlgorithm(HttpServerConfiguration.Defaults.PASSWORD_HASH_ALGORITHM).build()),
-	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.Defaults.REQUEST_LOGGING_LEVEL.getName()).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(new Level[] { Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.CONFIG, Level.INFO, Level.WARNING })).build()),
 	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.Defaults.THREADS).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
 	SERVER_MAXREQTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.Defaults.MAX_REQ_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
@@ -249,6 +249,8 @@ public enum Preference implements IPreference {
 			return Messages.get("lbl.preferences.server.maxrsptime.infinite");
 		}
 	}, -1)).build()),
+	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).separate().defaultValue(HttpServerConfiguration.Defaults.REQUEST_LOGGING_LEVEL.getName()).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(new Level[] { Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.CONFIG, Level.INFO, Level.WARNING })).build()),
+	SERVER_COMPRESS_RESPONSE(new PreferenceDetailsBuilder(SERVER).defaultValue(DefaultHttpServerConfiguration.Defaults.COMPRESSION_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	SERVER_HANDLER_ROOT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_LOGS_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(LogsHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -273,8 +275,8 @@ public enum Preference implements IPreference {
 			return Messages.get("lbl.preferences.server.handler.refresh.auto");
 		}
 	}, 0)).build()),
-	SERVER_COMPRESS_RESPONSE(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseHtmlHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_ENABLED).separate().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_COMPRESS_RESPONSE_JSON(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_HANDLER_JSON_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_COMPRESS_RESPONSE_HTML(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(BaseHtmlHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_COMPRESS_RESPONSE_JSON(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	SERVER_SSL_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.Defaults.SSL_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_SSL_KEYSTORE_TYPE(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.Defaults.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),

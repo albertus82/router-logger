@@ -2,6 +2,7 @@ package it.albertus.router.http.json;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,9 +10,9 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.AbstractHttpHandler;
 import it.albertus.httpserver.HttpException;
+import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.http.HttpServerConfiguration;
 import it.albertus.util.logging.LoggerFactory;
 
 public abstract class BaseJsonHandler extends AbstractHttpHandler {
@@ -36,7 +37,6 @@ public abstract class BaseJsonHandler extends AbstractHttpHandler {
 	protected final RouterLoggerEngine engine;
 
 	public BaseJsonHandler(final RouterLoggerEngine engine) {
-		super(new HttpServerConfiguration());
 		this.engine = engine;
 	}
 
@@ -80,7 +80,7 @@ public abstract class BaseJsonHandler extends AbstractHttpHandler {
 	}
 
 	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
-		if (!httpServerConfiguration.isEnabled() || !isEnabled()) {
+		if (!getHttpServerConfiguration().isEnabled() || !isEnabled()) {
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, -1);
 			exchange.close();
 			return false;
@@ -107,7 +107,14 @@ public abstract class BaseJsonHandler extends AbstractHttpHandler {
 
 	@Override
 	protected void log(final HttpExchange exchange) {
-		/* do nothing */
+		final Level level = Level.FINE;
+		if (logger.isLoggable(level) && !Level.OFF.equals(level)) {
+			final Object[] requestInfo = new Object[] { exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() };
+			if (!Arrays.equals(requestInfo, getLastRequestInfo())) {
+				setLastRequestInfo(requestInfo);
+				logger.log(level, JFaceMessages.get("msg.httpserver.log.request"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() });
+			}
+		}
 	}
 
 }

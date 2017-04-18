@@ -12,7 +12,6 @@ import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterLoggerConfiguration;
-import it.albertus.router.http.HttpServerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
@@ -38,10 +37,6 @@ public abstract class BaseHtmlHandler extends AbstractHttpHandler {
 
 	private boolean found = true;
 
-	public BaseHtmlHandler() {
-		super(new HttpServerConfiguration());
-	}
-
 	public boolean isFound() {
 		return found;
 	}
@@ -51,7 +46,7 @@ public abstract class BaseHtmlHandler extends AbstractHttpHandler {
 	}
 
 	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
-		if (!httpServerConfiguration.isEnabled() || !isEnabled()) {
+		if (!getHttpServerConfiguration().isEnabled() || !isEnabled()) {
 			addCommonHeaders(exchange);
 
 			final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
@@ -89,11 +84,10 @@ public abstract class BaseHtmlHandler extends AbstractHttpHandler {
 	}
 
 	@Override
-	public final void handle(final HttpExchange exchange) throws IOException {
-		log(exchange);
+	protected void service(HttpExchange exchange) throws IOException {
 		if (isEnabled(exchange) && isFound(exchange)) {
 			try {
-				super.handle(exchange);
+				super.service(exchange);
 			}
 			catch (final HttpException e) {
 				logger.log(Level.WARNING, e.toString(), e);
@@ -242,7 +236,7 @@ public abstract class BaseHtmlHandler extends AbstractHttpHandler {
 
 	@Override
 	protected boolean canCompressResponse(final HttpExchange exchange) {
-		return configuration.getBoolean("server.compress.response", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
+		return configuration.getBoolean("server.compress.response.html", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
 	}
 
 }

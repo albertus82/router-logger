@@ -99,4 +99,9 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 		return configuration.getString("server.log.request", super.getRequestLoggingLevel());
 	}
 
+	@Override
+	public boolean isCompressionEnabled() {
+		return configuration.getBoolean("server.compress.response", super.isCompressionEnabled());
+	}
+
 }
