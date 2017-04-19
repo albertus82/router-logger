@@ -1,7 +1,5 @@
 package it.albertus.router.http.json;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,17 +49,6 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 	@Override
 	public boolean isEnabled() {
 		return configuration.getBoolean(CFG_KEY_SERVER_HANDLER_JSON_ENABLED, Defaults.ENABLED);
-	}
-
-	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
-		if (!getHttpServerConfiguration().isEnabled() || !isEnabled()) {
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, -1);
-			exchange.close();
-			return false;
-		}
-		else {
-			return true;
-		}
 	}
 
 	protected void addRefreshHeader(final HttpExchange exchange) {

@@ -1,11 +1,10 @@
 package it.albertus.router.http;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.albertus.httpserver.AbstractHttpHandler;
 import it.albertus.httpserver.AbstractHttpServer;
-import it.albertus.httpserver.StaticResourceHandler;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.html.CloseHandler;
 import it.albertus.router.http.html.ConfigurationHandler;
@@ -20,8 +19,6 @@ import it.albertus.router.http.json.StatusJsonHandler;
 import it.albertus.router.http.json.ThresholdsJsonHandler;
 
 public class HttpServer extends AbstractHttpServer {
-
-	private static final String BASE_PATH = '/' + HttpServer.class.getPackage().getName().toLowerCase().replace('.', '/');
 
 	private static class Singleton {
 		private static final HttpServer instance = new HttpServer();
@@ -46,8 +43,8 @@ public class HttpServer extends AbstractHttpServer {
 	}
 
 	@Override
-	protected Set<AbstractHttpHandler> createHandlers() {
-		final Set<AbstractHttpHandler> handlers = new HashSet<AbstractHttpHandler>();
+	protected List<AbstractHttpHandler> createHandlers() {
+		final List<AbstractHttpHandler> handlers = new ArrayList<AbstractHttpHandler>();
 
 		// HTML
 		handlers.add(new RootHtmlHandler());
@@ -63,13 +60,6 @@ public class HttpServer extends AbstractHttpServer {
 		handlers.add(new DataJsonHandler(engine));
 		handlers.add(new StatusJsonHandler(engine));
 		handlers.add(new ThresholdsJsonHandler(engine));
-
-		// Static resources
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/favicon.ico", "/favicon.ico"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/js/jquery.min.js", "/js/jquery.min.js"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/js/bootstrap.min.js", "/js/bootstrap.min.js"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/css/bootstrap.min.css", "/css/bootstrap.min.css"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/css/bootstrap-theme.min.css", "/css/bootstrap-theme.min.css"));
 
 		return handlers;
 	}

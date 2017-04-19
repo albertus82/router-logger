@@ -177,8 +177,8 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * @param exchange the {@link HttpExchange} to be modified.
 	 */
 	@Override
-	protected String getContentType(final String fileName) {
-		return "text/html; charset=" + getCharset().name().toLowerCase();
+	protected void addContentTypeHeader(final HttpExchange exchange) {
+		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + getCharset().name().toLowerCase());
 	}
 
 	@Override

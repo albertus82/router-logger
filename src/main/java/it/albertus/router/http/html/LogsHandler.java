@@ -149,7 +149,8 @@ public class LogsHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	private void notFound(final HttpExchange exchange) throws IOException {
+	@Override
+	protected void notFound(final HttpExchange exchange) throws IOException {
 		addCommonHeaders(exchange);
 
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.error"))));
