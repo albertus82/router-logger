@@ -65,11 +65,11 @@ public class HttpServer extends AbstractHttpServer {
 		handlers.add(new ThresholdsJsonHandler(engine));
 
 		// Static resources
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/html/favicon.ico", "/favicon.ico"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/html/js/jquery.min.js", "/js/jquery.min.js"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/html/js/bootstrap.min.js", "/js/bootstrap.min.js"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/html/css/bootstrap.min.css", "/css/bootstrap.min.css"));
-		handlers.add(new StaticResourceHandler(BASE_PATH + "/html/css/bootstrap-theme.min.css", "/css/bootstrap-theme.min.css"));
+		handlers.add(new StaticResourceHandler(BASE_PATH + "/favicon.ico", "/favicon.ico"));
+		handlers.add(new StaticResourceHandler(BASE_PATH + "/js/jquery.min.js", "/js/jquery.min.js"));
+		handlers.add(new StaticResourceHandler(BASE_PATH + "/js/bootstrap.min.js", "/js/bootstrap.min.js"));
+		handlers.add(new StaticResourceHandler(BASE_PATH + "/css/bootstrap.min.css", "/css/bootstrap.min.css"));
+		handlers.add(new StaticResourceHandler(BASE_PATH + "/css/bootstrap-theme.min.css", "/css/bootstrap-theme.min.css"));
 
 		return handlers;
 	}

@@ -12,7 +12,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 @Path("/disconnect")
-public class DisconnectHandler extends BaseHtmlHandler {
+public class DisconnectHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;

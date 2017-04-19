@@ -12,7 +12,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 @Path("/restart")
-public class RestartHandler extends BaseHtmlHandler {
+public class RestartHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;

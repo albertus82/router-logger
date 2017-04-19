@@ -2,8 +2,6 @@ package it.albertus.router.http.html;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -15,11 +13,8 @@ import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
-import it.albertus.util.logging.LoggerFactory;
 
-public abstract class BaseHtmlHandler extends AbstractHttpHandler {
-
-	private static final Logger logger = LoggerFactory.getLogger(BaseHtmlHandler.class);
+public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
 	public static class Defaults {
 		public static final boolean COMPRESS_RESPONSE = false;
@@ -33,93 +28,45 @@ public abstract class BaseHtmlHandler extends AbstractHttpHandler {
 
 	private static final String MSG_KEY_LBL_ERROR = "lbl.error";
 
-	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-	private boolean found = true;
+	@Override
+	protected void sendForbidden(final HttpExchange exchange) throws IOException {
+		addCommonHeaders(exchange);
 
-	public boolean isFound() {
-		return found;
-	}
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.forbidden"))).append("</h3>").append(NewLine.CRLF);
+		html.append(buildHtmlFooter());
 
-	public void setFound(final boolean found) {
-		this.found = found;
-	}
-
-	protected boolean isEnabled(final HttpExchange exchange) throws IOException {
-		if (!getHttpServerConfiguration().isEnabled() || !isEnabled()) {
-			addCommonHeaders(exchange);
-
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-			html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.forbidden"))).append("</h3>").append(NewLine.CRLF);
-			html.append(buildHtmlFooter());
-
-			final byte[] response = html.toString().getBytes(getCharset());
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
-			exchange.getResponseBody().write(response);
-			exchange.close();
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-
-	protected boolean isFound(final HttpExchange exchange) throws IOException {
-		if (!isFound()) {
-			addCommonHeaders(exchange);
-
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-			html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
-			html.append(buildHtmlFooter());
-
-			final byte[] response = html.toString().getBytes(getCharset());
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length);
-			exchange.getResponseBody().write(response);
-			exchange.close();
-			return false;
-		}
-		else {
-			return true;
-		}
+		final byte[] response = html.toString().getBytes(getCharset());
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
+		exchange.getResponseBody().write(response);
 	}
 
 	@Override
-	protected void service(HttpExchange exchange) throws IOException {
-		if (isEnabled(exchange) && isFound(exchange)) {
-			try {
-				super.service(exchange);
-			}
-			catch (final HttpException e) {
-				logger.log(Level.WARNING, e.toString(), e);
-				addCommonHeaders(exchange);
+	protected void sendInternalError(final HttpExchange exchange) throws IOException {
+		addCommonHeaders(exchange);
 
-				final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-				html.append("<h3>").append(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode())).append("</h3>").append(NewLine.CRLF);
-				html.append(buildHtmlFooter());
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("err.server.handler"))).append("</h3>").append(NewLine.CRLF);
+		html.append(buildHtmlFooter());
 
-				final byte[] response = html.toString().getBytes(getCharset());
-				exchange.sendResponseHeaders(e.getStatusCode(), response.length);
-				exchange.getResponseBody().write(response);
-			}
-			catch (final IOException e) {
-				logger.log(Level.FINE, e.toString(), e); // often caused by the client that interrupts the stream.
-			}
-			catch (final Exception e) {
-				logger.log(Level.SEVERE, e.toString(), e);
-				addCommonHeaders(exchange);
+		final byte[] response = html.toString().getBytes(getCharset());
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
+		exchange.getResponseBody().write(response);
+	}
 
-				final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-				html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("err.server.handler"))).append("</h3>").append(NewLine.CRLF);
-				html.append(buildHtmlFooter());
+	@Override
+	protected void sendError(final HttpExchange exchange, final HttpException e) throws IOException {
+		addCommonHeaders(exchange);
 
-				final byte[] response = html.toString().getBytes(getCharset());
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
-				exchange.getResponseBody().write(response);
-			}
-			finally {
-				exchange.close();
-			}
-		}
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
+		html.append("<h3>").append(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode())).append("</h3>").append(NewLine.CRLF);
+		html.append(buildHtmlFooter());
+
+		final byte[] response = html.toString().getBytes(getCharset());
+		exchange.sendResponseHeaders(e.getStatusCode(), response.length);
+		exchange.getResponseBody().write(response);
 	}
 
 	protected void sendResponse(final HttpExchange exchange, final String html) throws IOException {
@@ -230,8 +177,8 @@ public abstract class BaseHtmlHandler extends AbstractHttpHandler {
 	 * @param exchange the {@link HttpExchange} to be modified.
 	 */
 	@Override
-	protected void addContentTypeHeader(final HttpExchange exchange) {
-		exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + getCharset().name().toLowerCase());
+	protected String getContentType(final String fileName) {
+		return "text/html; charset=" + getCharset().name().toLowerCase();
 	}
 
 	@Override

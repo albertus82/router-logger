@@ -19,7 +19,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 @Path("/status")
-public class StatusHtmlHandler extends BaseHtmlHandler {
+public class StatusHtmlHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;

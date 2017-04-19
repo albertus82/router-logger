@@ -13,7 +13,7 @@ import it.albertus.util.NewLine;
 import it.albertus.util.Version;
 
 @Path("/")
-public class RootHtmlHandler extends BaseHtmlHandler {
+public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;

@@ -29,7 +29,7 @@ import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 @Path("/configuration")
-public class ConfigurationHandler extends BaseHtmlHandler {
+public class ConfigurationHandler extends AbstractHtmlHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationHandler.class);
 

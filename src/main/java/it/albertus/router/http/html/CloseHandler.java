@@ -12,7 +12,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 @Path("/close")
-public class CloseHandler extends BaseHtmlHandler {
+public class CloseHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;

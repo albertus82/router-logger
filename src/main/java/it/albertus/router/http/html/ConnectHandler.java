@@ -12,7 +12,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 @Path("/connect")
-public class ConnectHandler extends BaseHtmlHandler {
+public class ConnectHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;

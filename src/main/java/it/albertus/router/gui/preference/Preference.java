@@ -85,7 +85,7 @@ import it.albertus.router.gui.preference.page.ReaderPreferencePage;
 import it.albertus.router.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.router.gui.preference.page.WriterPreferencePage;
 import it.albertus.router.http.HttpServerConfiguration;
-import it.albertus.router.http.html.BaseHtmlHandler;
+import it.albertus.router.http.html.AbstractHtmlHandler;
 import it.albertus.router.http.html.CloseHandler;
 import it.albertus.router.http.html.ConfigurationHandler;
 import it.albertus.router.http.html.ConnectHandler;
@@ -94,7 +94,7 @@ import it.albertus.router.http.html.LogsHandler;
 import it.albertus.router.http.html.RestartHandler;
 import it.albertus.router.http.html.RootHtmlHandler;
 import it.albertus.router.http.html.StatusHtmlHandler;
-import it.albertus.router.http.json.BaseJsonHandler;
+import it.albertus.router.http.json.AbstractJsonHandler;
 import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
@@ -267,16 +267,16 @@ public enum Preference implements IPreference {
 	SERVER_HANDLER_CONNECT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(ConnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_DISCONNECT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(DisconnectHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_CLOSE_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(CloseHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_HANDLER_JSON_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(BaseJsonHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_HANDLER_JSON_REFRESH(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.REFRESH).parent(SERVER_HANDLER_JSON_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_HANDLER_JSON_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_JSON_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	SERVER_HANDLER_JSON_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(AbstractJsonHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_HANDLER_JSON_REFRESH(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(AbstractJsonHandler.Defaults.REFRESH).parent(SERVER_HANDLER_JSON_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_HANDLER_JSON_REFRESH_SECS(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(AbstractJsonHandler.Defaults.REFRESH_SECS).parent(SERVER_HANDLER_JSON_REFRESH).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.server.handler.refresh.auto");
 		}
 	}, 0)).build()),
-	SERVER_COMPRESS_RESPONSE_HTML(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(BaseHtmlHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_COMPRESS_RESPONSE_JSON(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(BaseJsonHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_COMPRESS_RESPONSE_HTML(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(AbstractHtmlHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_COMPRESS_RESPONSE_JSON(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(AbstractJsonHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	SERVER_SSL_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.Defaults.SSL_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_SSL_KEYSTORE_TYPE(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.Defaults.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),

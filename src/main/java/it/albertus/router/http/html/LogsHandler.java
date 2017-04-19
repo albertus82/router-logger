@@ -33,7 +33,7 @@ import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 @Path("/logs")
-public class LogsHandler extends BaseHtmlHandler {
+public class LogsHandler extends AbstractHtmlHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(LogsHandler.class);
 

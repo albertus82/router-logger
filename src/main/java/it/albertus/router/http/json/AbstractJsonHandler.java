@@ -2,22 +2,19 @@ package it.albertus.router.http.json;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.AbstractHttpHandler;
-import it.albertus.httpserver.HttpException;
-import it.albertus.jface.JFaceMessages;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.util.logging.LoggerFactory;
 
-public abstract class BaseJsonHandler extends AbstractHttpHandler {
+public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(BaseJsonHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractJsonHandler.class);
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;
@@ -36,31 +33,8 @@ public abstract class BaseJsonHandler extends AbstractHttpHandler {
 
 	protected final RouterLoggerEngine engine;
 
-	public BaseJsonHandler(final RouterLoggerEngine engine) {
+	public AbstractJsonHandler(final RouterLoggerEngine engine) {
 		this.engine = engine;
-	}
-
-	@Override
-	public final void handle(final HttpExchange exchange) throws IOException {
-		if (isEnabled(exchange)) {
-			try {
-				service(exchange);
-			}
-			catch (final HttpException e) {
-				logger.log(Level.WARNING, e.toString(), e);
-				exchange.sendResponseHeaders(e.getStatusCode(), -1);
-			}
-			catch (final IOException e) {
-				logger.log(Level.FINE, e.toString(), e); // often caused by the client that interrupts the stream.
-			}
-			catch (final Exception e) {
-				logger.log(Level.SEVERE, e.toString(), e);
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, -1);
-			}
-			finally {
-				exchange.close();
-			}
-		}
 	}
 
 	/**
@@ -70,8 +44,8 @@ public abstract class BaseJsonHandler extends AbstractHttpHandler {
 	 * @param exchange the {@link HttpExchange} to be modified.
 	 */
 	@Override
-	protected void addContentTypeHeader(HttpExchange exchange) {
-		exchange.getResponseHeaders().add("Content-Type", "application/json; charset=" + getCharset().name());
+	protected String getContentType(final String fileName) {
+		return "application/json; charset=" + getCharset().name();
 	}
 
 	@Override
@@ -107,14 +81,17 @@ public abstract class BaseJsonHandler extends AbstractHttpHandler {
 
 	@Override
 	protected void log(final HttpExchange exchange) {
-		final Level level = Level.FINE;
-		if (logger.isLoggable(level) && !Level.OFF.equals(level)) {
-			final Object[] requestInfo = new Object[] { exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() };
-			if (!Arrays.equals(requestInfo, getLastRequestInfo())) {
-				setLastRequestInfo(requestInfo);
-				logger.log(level, JFaceMessages.get("msg.httpserver.log.request"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() });
+		Level level = Level.OFF;
+		try {
+			level = Level.parse(getHttpServerConfiguration().getRequestLoggingLevel());
+			if (level.intValue() > Level.FINE.intValue()) {
+				level = Level.FINE;
 			}
 		}
+		catch (final RuntimeException e) {
+			logger.log(Level.WARNING, e.toString(), e);
+		}
+		doLog(exchange, level);
 	}
 
 }
