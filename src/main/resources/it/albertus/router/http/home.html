@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+ 	 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Home - RouterLogger</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="/css/routerlogger.css" />
+		<link rel="stylesheet" href="/fonts/fonts.css" />
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+    <div class="navbar navbar-default navbar-static-top"> <!-- nav -->
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand active" href="#">RouterLogger</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/status">Stato</a></li>
+            <li><a href="/logs">Registri</a></li>
+            <li><a href="/configuration">Configurazione</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comandi <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><form action="/connect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Connetti" /></div></form></li>
+                <li><form action="/disconnect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Disconnetti" onclick="return confirm('Effettuare la disconnessione da Telnet?');" /></div></form></li>
+                <li><form action="/restart" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Riavvia" onclick="return confirm('Riavviare RouterLogger?');" /></div></form></li>
+                <li><form action="/close" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Chiudi" onclick="return confirm('Chiudere RouterLogger?');" /></div></form></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div> <!-- nav -->
+
+		<div class="container" role="main">
+			<div class="page-header">
+				<h2>Stato</h2>
+				<h3><span class="label label-success">Tutto ok</span></h3>
+			</div>
+			<ul class="list-group">
+<li class="list-group-item"><strong>Data e ora:</strong> 18/04/2017 14:46:50.311</li>
+ <li class="list-group-item"><strong>Tempo di risposta (ms):</strong> 124</li>
+ <li class="list-group-item"><strong>enable:</strong> 1</li>
+ <li class="list-group-item"><strong>status:</strong> Up</li>
+ <li class="list-group-item"><strong>modulationType:</strong> ADSL_G.dmt</li>
+ <li class="list-group-item"><strong>lineEncoding:</strong> </li>
+ <li class="list-group-item"><strong>dataPath:</strong> </li>
+ <li class="list-group-item"><strong>interleaveDepth:</strong> 0</li>
+ <li class="list-group-item"><strong>lineNumber:</strong> 0</li>
+ <li class="list-group-item"><strong>upstreamCurrRate:</strong> 480</li>
+ <li class="list-group-item" style="background-color: #FCF8E3;"> <strong>downstreamCurrRate:</strong> 2848</li>
+ <li class="list-group-item"><strong>upstreamMaxRate:</strong> 896</li>
+ <li class="list-group-item"><strong>downstreamMaxRate:</strong> 3072</li>
+ <li class="list-group-item"><strong>upstreamNoiseMargin:</strong> 210</li>
+</ul>
+		</div>
+		
+
+
+    <div class="footer"> <!-- footer -->
+      <div class="container">
+        <p class="text-muted">RouterLogger 8.0.0 (17-apr-2017)</p>
+      </div>
+    </div> <!-- footer -->
+	</body>
+</html>
