@@ -81,7 +81,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doDelete(final HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath(this.getClass()) + '/');
+		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath() + '/');
 		if (pathInfo.trim().isEmpty()) { // Delete all log files
 			deleteAll(exchange);
 		}
@@ -201,7 +201,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			final String encodedFileName = URLEncoder.encode(file.getName(), getCharset().name());
 			html.append("<tr>");
 			html.append("<td>");
-			html.append("<a href=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\">");
+			html.append("<a href=\"").append(getPath()).append('/').append(encodedFileName).append("\">");
 			html.append(HtmlUtils.escapeHtml(file.getName()));
 			html.append("</a>");
 			html.append("</td>");
@@ -213,7 +213,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 				html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" disabled=\"disabled\" />");
 			}
 			else {
-				html.append("<form action=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+				html.append("<form action=\"").append(getPath()).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
 				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
 			}
 			html.append("</div></form>");
@@ -230,14 +230,14 @@ public class LogsHandler extends AbstractHtmlHandler {
 			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
+			html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
 		}
 		return html.append(NewLine.CRLF).toString();
 	}
 
 	private void refresh(final HttpExchange exchange) throws IOException {
 		addDateHeader(exchange);
-		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
+		exchange.getResponseHeaders().add("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close();
 		exchange.close();

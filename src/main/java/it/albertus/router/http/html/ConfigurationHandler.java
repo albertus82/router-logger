@@ -53,7 +53,7 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 		html.append(buildHtmlHomeButton());
 		html.append(buildHtmlRefreshButton());
 
-		html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+		html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
 		html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
 		html.append("<textarea rows=\"25\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">");
 		html.append(HtmlUtils.escapeHtml(getPropertiesAsString(configuration.getProperties())));
@@ -102,7 +102,7 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 
 		// Post/Redirect/Get
 		addDateHeader(exchange);
-		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
+		exchange.getResponseHeaders().add("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close(); // Needed when no write occurs.
 		exchange.close();
