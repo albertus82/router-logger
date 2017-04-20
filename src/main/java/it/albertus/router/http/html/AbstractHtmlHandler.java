@@ -44,6 +44,19 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	}
 
 	@Override
+	protected void sendNotFound(final HttpExchange exchange) throws IOException {
+		addCommonHeaders(exchange);
+
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
+		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
+		html.append(buildHtmlFooter());
+
+		final byte[] response = html.toString().getBytes(getCharset());
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length);
+		exchange.getResponseBody().write(response);
+	}
+
+	@Override
 	protected void sendInternalError(final HttpExchange exchange) throws IOException {
 		addCommonHeaders(exchange);
 

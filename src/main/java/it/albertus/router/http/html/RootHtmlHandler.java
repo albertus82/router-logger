@@ -26,10 +26,12 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServer.class.getPackage().getName().toLowerCase().replace('.', '/') + '/';
+
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
 		if (!exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
-			sendStaticResource(exchange, '/' + HttpServer.class.getPackage().getName().toLowerCase().replace('.', '/') + '/');
+			sendStaticResource(exchange, RESOURCE_BASE_PATH + getPathInfo(exchange));
 		}
 		else {
 			// Response...
@@ -67,11 +69,11 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void addContentTypeHeader(final HttpExchange exchange) {
-		if (!exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
-			exchange.getResponseHeaders().add("Content-Type", getContentType(exchange.getRequestURI().getPath()));
+		if (existsStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) && !exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
+			exchange.getResponseHeaders().add("Content-Type", getContentType(exchange.getRequestURI().getPath())); // extension based
 		}
 		else {
-			super.addContentTypeHeader(exchange);
+			super.addContentTypeHeader(exchange); // text/html
 		}
 	}
 
@@ -83,10 +85,10 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	@Override
 	public boolean isEnabled(final HttpExchange exchange) {
 		if (!exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
-			return true;
+			return true; // always serve static resources
 		}
 		else {
-			return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
+			return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED); // configuration based
 		}
 	}
 
