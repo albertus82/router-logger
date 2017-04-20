@@ -53,7 +53,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath(this.getClass()) + '/');
+		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath() + '/');
 		if (pathInfo == null || pathInfo.trim().isEmpty()) { // List log files (no file name present in URL)
 			fileList(exchange);
 		}
@@ -61,7 +61,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
 			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
-				notFound(exchange);
+				sendNotFound(exchange);
 			}
 			else {
 				download(exchange, file);
@@ -89,7 +89,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
 			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
-				notFound(exchange);
+				sendNotFound(exchange);
 			}
 			else {
 				delete(exchange, file);
@@ -141,7 +141,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 		}
 		catch (final FileNotFoundException e) {
 			logger.log(Level.WARNING, e.toString(), e);
-			notFound(exchange);
+			sendNotFound(exchange);
 		}
 		finally {
 			IOUtils.closeQuietly(output, input);
@@ -150,7 +150,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void notFound(final HttpExchange exchange) throws IOException {
+	protected void sendNotFound(final HttpExchange exchange) throws IOException {
 		addCommonHeaders(exchange);
 
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.error"))));
