@@ -35,3 +35,21 @@ body {
 	margin: 20px 0;
 	text-align: center;
 }
+
+span.badge-header, span.label-header {
+	font-size: 50%;
+	vertical-align: middle;
+}
+
+li.list-group-item-mark {
+	background-color: #FFA;
+}
+
+span.list-group-item-key {
+	font-weight: 900;
+}
+
+.glyphicon-refresh-header {
+	font-size: 50%;
+	color: gray;
+}

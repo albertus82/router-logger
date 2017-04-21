@@ -28,7 +28,7 @@
           <ul class="nav navbar-nav">
             <li><a href="/status">Stato</a></li>
             <li><a href="/logs">Registri</a></li>
-            <li><a href="/configuration">Configurazione</a></li>
+            <li><a href="/configuration" onclick="return confirm('Questa funzione pu\xF2 esporre dati sensibili. Procedere?');">Configurazione</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comandi <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -43,35 +43,43 @@
       </div>
     </div> <!-- nav -->
 
-		<div class="container" role="main">
-			<div class="page-header">
-				<h2>Stato</h2>
-				<h3><span class="label label-success">Tutto ok</span></h3>
-			</div>
-			<ul class="list-group">
-<li class="list-group-item"><strong>Data e ora:</strong> 18/04/2017 14:46:50.311</li>
- <li class="list-group-item"><strong>Tempo di risposta (ms):</strong> 124</li>
- <li class="list-group-item"><strong>enable:</strong> 1</li>
- <li class="list-group-item"><strong>status:</strong> Up</li>
- <li class="list-group-item"><strong>modulationType:</strong> ADSL_G.dmt</li>
- <li class="list-group-item"><strong>lineEncoding:</strong> </li>
- <li class="list-group-item"><strong>dataPath:</strong> </li>
- <li class="list-group-item"><strong>interleaveDepth:</strong> 0</li>
- <li class="list-group-item"><strong>lineNumber:</strong> 0</li>
- <li class="list-group-item"><strong>upstreamCurrRate:</strong> 480</li>
- <li class="list-group-item" style="background-color: #FCF8E3;"> <strong>downstreamCurrRate:</strong> 2848</li>
- <li class="list-group-item"><strong>upstreamMaxRate:</strong> 896</li>
- <li class="list-group-item"><strong>downstreamMaxRate:</strong> 3072</li>
- <li class="list-group-item"><strong>upstreamNoiseMargin:</strong> 210</li>
-</ul>
+	<div class="container" role="main">
+		<div class="page-header">
+			<h2>Registri <span class="badge badge-header">21</span> <a href="/logs"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>
 		</div>
-		
+		<div class="page-header">
+			<h2>Stato <span class="label label-success label-header">OK</span> <a href="/status"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>  
+		</div>
+		<div class="page-header">
+			<h2>Stato <span class="label label-warning label-header">Attenzione!</span> <a href="/status"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>  
+		</div>
+		<div class="page-header">
+			<h2>Configurazione <a href="/configuration"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>  
+		</div>		
+		<ul class="list-group">
+			<li class="list-group-item"><span class="list-group-item-key">Data e ora:</span> 18/04/2017 14:46:50.311</li>
+			<li class="list-group-item"><span class="list-group-item-key">Tempo di risposta (ms):</span> 124</li>
+			<li class="list-group-item"><span class="list-group-item-key">enable:</span> 1</li>
+			<li class="list-group-item"><span class="list-group-item-key">status:</span> Up</li>
+			<li class="list-group-item"><span class="list-group-item-key">modulationType:</span> ADSL_G.dmt</li>
+			<li class="list-group-item"><span class="list-group-item-key">lineEncoding:</span> </li>
+			<li class="list-group-item"><span class="list-group-item-key">dataPath:</span> </li>
+			<li class="list-group-item"><span class="list-group-item-key">interleaveDepth:</span> 0</li>
+			<li class="list-group-item"><span class="list-group-item-key">lineNumber:</span> 0</li>
+			<li class="list-group-item"><span class="list-group-item-key">upstreamCurrRate:</span> 480</li>
+			<li class="list-group-item list-group-item-mark"><span class="list-group-item-key">downstreamCurrRate:</span> 2848</li>
+			<li class="list-group-item"><span class="list-group-item-key">upstreamMaxRate:</span> 896</li>
+			<li class="list-group-item"><span class="list-group-item-key">downstreamMaxRate:</span> 3072</li>
+			<li class="list-group-item"><span class="list-group-item-key">upstreamNoiseMargin:</span> 210</li>
+		</ul>
+	</div>
 
-
-    <div class="footer"> <!-- footer -->
-      <div class="container">
-        <p class="text-muted">RouterLogger 8.0.0 (17-apr-2017)</p>
-      </div>
-    </div> <!-- footer -->
-	</body>
+	<div class="footer">
+		<!-- footer -->
+		<div class="container">
+			<p class="text-muted">RouterLogger 8.0.0 (17-apr-2017)</p>
+		</div>
+	</div>
+	<!-- footer -->
+</body>
 </html>
