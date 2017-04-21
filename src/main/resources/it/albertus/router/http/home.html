@@ -45,17 +45,17 @@
 
 	<div class="container" role="main">
 		<div class="page-header">
-			<h2>Registri <span class="badge badge-header">21</span> <a href="/logs"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>
+			<h2>Registri <span class="badge badge-header">21</span> <a href="/logs" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
 		</div>
 		<div class="page-header">
-			<h2>Stato <span class="label label-success label-header">OK</span> <a href="/status"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>  
+			<h2>Stato <span class="label label-success label-header">OK</span> <a href="/status" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
 		</div>
 		<div class="page-header">
-			<h2>Stato <span class="label label-warning label-header">Attenzione!</span> <a href="/status"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>  
+			<h2>Stato <span class="label label-warning label-header">Attenzione!</span> <a href="/status" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>  
 		</div>
 		<div class="page-header">
-			<h2>Configurazione <a href="/configuration"><span class="glyphicon glyphicon-refresh glyphicon-refresh-header pull-right" aria-label="Aggiorna"></span></a></h2>  
-		</div>		
+			<h2>Configurazione <a href="/configuration" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
+		</div>
 		<ul class="list-group">
 			<li class="list-group-item"><span class="list-group-item-key">Data e ora:</span> 18/04/2017 14:46:50.311</li>
 			<li class="list-group-item"><span class="list-group-item-key">Tempo di risposta (ms):</span> 124</li>
@@ -72,6 +72,10 @@
 			<li class="list-group-item"><span class="list-group-item-key">downstreamMaxRate:</span> 3072</li>
 			<li class="list-group-item"><span class="list-group-item-key">upstreamNoiseMargin:</span> 210</li>
 		</ul>
+		 
+		<form action="#" method="post">
+			<input class="btn btn-danger btn-md pull-right" style="margin-bottom: 2rem;" type="submit" value="Salva"  onclick="return confirm('Salvare la configurazione?');" />
+		</form>
 	</div>
 
 	<div class="footer">

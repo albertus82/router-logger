@@ -47,7 +47,7 @@ public class HttpServer extends AbstractHttpServer {
 		final List<AbstractHttpHandler> handlers = new ArrayList<AbstractHttpHandler>();
 
 		// HTML
-		handlers.add(new RootHtmlHandler());
+		handlers.add(new RootHtmlHandler()); // serves also static resources
 		handlers.add(new StatusHtmlHandler(engine));
 		handlers.add(new RestartHandler(engine));
 		handlers.add(new DisconnectHandler(engine));
