@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <html lang="it">
-	<head>
- 	 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Home - RouterLogger</title>
-		<link rel="stylesheet" href="/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
-		<link rel="stylesheet" href="/css/routerlogger.css" />
-		<link rel="stylesheet" href="/fonts/fonts.css" />
-		<script src="/js/jquery.min.js"></script>
-		<script src="/js/bootstrap.min.js"></script>
-	</head>
-	<body>
-    <div class="navbar navbar-default navbar-static-top"> <!-- nav -->
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand active" href="#">RouterLogger</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="/status">Stato</a></li>
-            <li><a href="/logs">Registri</a></li>
-            <li><a href="/configuration" onclick="return confirm('Questa funzione pu\xF2 esporre dati sensibili. Procedere?');">Configurazione</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comandi <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><form action="/connect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Connetti" /></div></form></li>
-                <li><form action="/disconnect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Disconnetti" onclick="return confirm('Effettuare la disconnessione da Telnet?');" /></div></form></li>
-                <li><form action="/restart" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Riavvia" onclick="return confirm('Riavviare RouterLogger?');" /></div></form></li>
-                <li><form action="/close" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Chiudi" onclick="return confirm('Chiudere RouterLogger?');" /></div></form></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div> <!-- nav -->
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="/css/routerlogger.css" />
+	<link rel="stylesheet" href="/fonts/fonts.css" />
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	<title>Home - RouterLogger</title>
+</head>
+
+<body>
+	<div class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand active" href="https://github.com/Albertus82/RouterLogger">RouterLogger</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/status">Stato</a></li>
+					<li><a href="/logs">Registri</a></li>
+					<li><a href="/configuration" onclick="return confirm('Questa funzione pu\xF2 esporre dati sensibili. Procedere?');">Configurazione</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comandi <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><form action="/connect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Connetti" /></div></form></li>
+							<li><form action="/disconnect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Disconnetti" onclick="return confirm('Effettuare la disconnessione da Telnet?');" /></div></form></li>
+							<li><form action="/restart" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Riavvia" onclick="return confirm('Riavviare RouterLogger?');" /></div></form></li>
+							<li><form action="/close" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Chiudi" onclick="return confirm('Chiudere RouterLogger?');" /></div></form></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 
 	<div class="container" role="main">
 		<div class="page-header">
@@ -76,7 +78,6 @@
 		<form action="#" method="post"><div>
 			<input type="hidden" name="_method" value="delete" /><input class="btn btn-danger btn-md pull-right btn-bottom" type="submit" value="Elimina tutti" onclick="return confirm('Eliminare tutti i file registro?');" />
 		</div></form>
-
 
 
 
@@ -122,9 +123,13 @@ server.handler.connect.enabled=true
 
 
 
+
+
 		<div class="page-header" style="margin-top:10em;">
 			<h2>Stato <span class="label label-success label-header">OK</span> <a href="/status" class="btn btn-default btn-sm pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
 		</div>
+
+
 
 
 
@@ -151,11 +156,9 @@ server.handler.connect.enabled=true
 	</div>
 
 	<div class="footer">
-		<!-- footer -->
 		<div class="container">
 			<p class="text-muted">RouterLogger 8.0.0 (17-apr-2017)</p>
 		</div>
 	</div>
-	<!-- footer -->
 </body>
 </html>
