@@ -43,6 +43,7 @@ body {
 span.badge-header, span.label-header {
 	font-size: 1.4rem;
 	vertical-align: middle;
+	margin-left: 0.6rem;
 }
 
 li.list-group-item-mark {
@@ -50,5 +51,14 @@ li.list-group-item-mark {
 }
 
 span.list-group-item-key {
-	font-weight: 900;
+	font-weight: bold;
+}
+
+.btn-bottom {
+	margin-bottom: 2rem;
+}
+
+.textarea-properties {
+	font-family: 'Ubuntu Mono', monospace; 
+	font-weight: bold;
 }

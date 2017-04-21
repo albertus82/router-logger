@@ -45,16 +45,91 @@
 
 	<div class="container" role="main">
 		<div class="page-header">
-			<h2>Registri <span class="badge badge-header">21</span> <a href="/logs" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
+			<h2>Registri <span class="badge badge-header">21</span> <a href="/logs" class="btn btn-default btn-sm pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
 		</div>
-		<div class="page-header">
-			<h2>Stato <span class="label label-success label-header">OK</span> <a href="/status" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
+		<table class="table table-striped">
+			<thead><tr><th class="table-heading">Nome</th><th class="table-heading text-right">Ultima modifica</th><th class="table-heading text-right">Dimensione</th><th class="table-heading text-right">Operazione</th></tr></thead>
+			<tbody>
+				<tr><td><a href="/logs/20170322.log">20170322.log</a></td><td class="text-right">22-mar-2017 22.34.52</td><td class="text-right">198 KiB</td><td class="text-right"><form action="/logs/20170322.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170322.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170323.log">20170323.log</a></td><td class="text-right">23-mar-2017 22.04.50</td><td class="text-right">78 KiB</td><td class="text-right"><form action="/logs/20170323.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170323.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170324.log">20170324.log</a></td><td class="text-right">24-mar-2017 21.40.25</td><td class="text-right">6 KiB</td><td class="text-right"><form action="/logs/20170324.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170324.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170325.log">20170325.log</a></td><td class="text-right">25-mar-2017 22.13.55</td><td class="text-right">16 KiB</td><td class="text-right"><form action="/logs/20170325.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170325.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170326.log">20170326.log</a></td><td class="text-right">26-mar-2017 16.27.16</td><td class="text-right">11 KiB</td><td class="text-right"><form action="/logs/20170326.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170326.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170327.log">20170327.log</a></td><td class="text-right">27-mar-2017 0.00.15</td><td class="text-right">3 KiB</td><td class="text-right"><form action="/logs/20170327.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170327.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170328.log">20170328.log</a></td><td class="text-right">28-mar-2017 14.12.54</td><td class="text-right">4 KiB</td><td class="text-right"><form action="/logs/20170328.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170328.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170329.log">20170329.log</a></td><td class="text-right">29-mar-2017 19.02.52</td><td class="text-right">10 KiB</td><td class="text-right"><form action="/logs/20170329.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170329.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170330.log">20170330.log</a></td><td class="text-right">30-mar-2017 0.00.15</td><td class="text-right">3 KiB</td><td class="text-right"><form action="/logs/20170330.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170330.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170331.log">20170331.log</a></td><td class="text-right">31-mar-2017 16.43.38</td><td class="text-right">6 KiB</td><td class="text-right"><form action="/logs/20170331.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170331.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170401.log">20170401.log</a></td><td class="text-right">1-apr-2017 22.07.51</td><td class="text-right">21 KiB</td><td class="text-right"><form action="/logs/20170401.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170401.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170402.log">20170402.log</a></td><td class="text-right">2-apr-2017 17.30.31</td><td class="text-right">8 KiB</td><td class="text-right"><form action="/logs/20170402.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170402.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170403.log">20170403.log</a></td><td class="text-right">3-apr-2017 0.00.15</td><td class="text-right">3 KiB</td><td class="text-right"><form action="/logs/20170403.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170403.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170404.log">20170404.log</a></td><td class="text-right">4-apr-2017 22.05.44</td><td class="text-right">18 KiB</td><td class="text-right"><form action="/logs/20170404.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170404.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170405.log">20170405.log</a></td><td class="text-right">5-apr-2017 18.20.40</td><td class="text-right">12 KiB</td><td class="text-right"><form action="/logs/20170405.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170405.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170406.log">20170406.log</a></td><td class="text-right">6-apr-2017 22.03.49</td><td class="text-right">268 KiB</td><td class="text-right"><form action="/logs/20170406.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170406.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170407.log">20170407.log</a></td><td class="text-right">7-apr-2017 5.55.37</td><td class="text-right">4 KiB</td><td class="text-right"><form action="/logs/20170407.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170407.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170408.log">20170408.log</a></td><td class="text-right">8-apr-2017 23.20.27</td><td class="text-right">14 KiB</td><td class="text-right"><form action="/logs/20170408.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170408.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170409.log">20170409.log</a></td><td class="text-right">9-apr-2017 20.33.22</td><td class="text-right">16 KiB</td><td class="text-right"><form action="/logs/20170409.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170409.log?');" /></div></form></td></tr>
+				<tr><td><a href="/logs/20170410.log">20170410.log</a></td><td class="text-right">10-apr-2017 21.47.32</td><td class="text-right">97 KiB</td><td class="text-right"><form action="/logs/20170410.log" method="post"><div><input type="hidden" name="_method" value="delete" /><input class="btn btn-xs btn-danger" type="submit" value="Elimina" onclick="return confirm('Eliminare il file 20170410.log?');" /></div></form></td></tr>
+			</tbody>
+		</table>
+		<hr />
+		<form action="#" method="post"><div>
+			<input type="hidden" name="_method" value="delete" /><input class="btn btn-danger btn-md pull-right btn-bottom" type="submit" value="Elimina tutti" onclick="return confirm('Eliminare tutti i file registro?');" />
+		</div></form>
+
+
+
+
+
+
+		<div class="page-header" style="margin-top:10em;">
+			<h2>Configurazione <a href="/configuration" class="btn btn-default btn-sm pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
 		</div>
-		<div class="page-header">
-			<h2>Stato <span class="label label-warning label-header">Attenzione!</span> <a href="/status" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>  
+		<form action="#" method="post"><div>
+			<textarea class="form-control textarea-properties" rows="13" cols="80" name="properties">console.show.configuration=true
+csv.email=true
+debug=true
+email.from.name=TEST
+email.host=smtp.googlemail.com
+email.max.queue.size=10
+email.max.sendings.per.cycle=2
+email.retry.interval.secs=30
+email.ssl.connect=true
+email.ssl.identity=true
+email.starttls.enabled=true
+email.starttls.required=true
+gui.console.font=1|Consolas|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Consolas;
+gui.console.max.chars=999999
+gui.start.minimized=false
+language=it
+log.email=true
+logger.interval.normal.ms=5000
+logging.email.enabled=true
+logging.email.level=WARNING
+reader.log.connected=true
+reader.wait.disconnected.interval.threshold.ms=1000
+server.authentication=false
+server.compress.response.html=true
+server.compress.response.json=true
+server.compress.response=true
+server.enabled=true
+server.handler.close.enabled=true
+server.handler.configuration.enabled=true
+server.handler.connect.enabled=true
+</textarea><hr />
+			<input class="btn btn-danger btn-md pull-right btn-bottom" type="submit" value="Salva"  onclick="return confirm('Salvare la configurazione?');" />
+		</div></form>
+
+
+
+		<div class="page-header" style="margin-top:10em;">
+			<h2>Stato <span class="label label-success label-header">OK</span> <a href="/status" class="btn btn-default btn-sm pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
 		</div>
-		<div class="page-header">
-			<h2>Configurazione <a href="/configuration" class="btn btn-default pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>
+
+
+
+		<div class="page-header" style="margin-top:10em;">
+			<h2>Stato <span class="label label-warning label-header">Attenzione!</span> <a href="/status" class="btn btn-default btn-sm pull-right"><span class="glyphicon glyphicon-refresh" aria-label="Aggiorna"></span> Aggiorna</a></h2>  
 		</div>
 		<ul class="list-group">
 			<li class="list-group-item"><span class="list-group-item-key">Data e ora:</span> 18/04/2017 14:46:50.311</li>
@@ -72,10 +147,7 @@
 			<li class="list-group-item"><span class="list-group-item-key">downstreamMaxRate:</span> 3072</li>
 			<li class="list-group-item"><span class="list-group-item-key">upstreamNoiseMargin:</span> 210</li>
 		</ul>
-		 
-		<form action="#" method="post">
-			<input class="btn btn-danger btn-md pull-right" style="margin-bottom: 2rem;" type="submit" value="Salva"  onclick="return confirm('Salvare la configurazione?');" />
-		</form>
+
 	</div>
 
 	<div class="footer">
