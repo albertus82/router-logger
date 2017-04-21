@@ -102,25 +102,26 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 */
 	protected final String buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF);
-		html.append("<html lang=\"").append(Messages.getLanguage().getLocale().getLanguage()).append("\">");
+		html.append("<html lang=\"").append(Messages.getLanguage().getLocale().getLanguage()).append("\">").append(NewLine.CRLF);
 		html.append(buildHtmlHead(title));
 		html.append("<body>").append(NewLine.CRLF);
 		html.append(buildHtmlNavigationBar());
+		html.append("<div class=\"container\" role=\"main\">").append(NewLine.CRLF);
 		return html.toString();
 	}
 
 	private String buildHtmlNavigationBar() {
 		final StringBuilder html = new StringBuilder();
-		html.append("<div class=\"navbar navbar-default navbar-static-top\">").append(NewLine.CRLF.toString());
-		html.append("<div class=\"container\">").append(NewLine.CRLF.toString());
-		html.append("<div class=\"navbar-header\">").append(NewLine.CRLF.toString());
-		html.append("<button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">").append(NewLine.CRLF.toString());
-		html.append("<span class=\"sr-only\">").append(Messages.get("lbl.server.navigation.toggle")).append("</span>").append(NewLine.CRLF.toString());
+		html.append("<div class=\"navbar navbar-default navbar-static-top\">").append(NewLine.CRLF);
+		html.append("<div class=\"container\">").append(NewLine.CRLF);
+		html.append("<div class=\"navbar-header\">").append(NewLine.CRLF);
+		html.append("<button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">").append(NewLine.CRLF);
+		html.append("<span class=\"sr-only\">").append(Messages.get("lbl.server.navigation.toggle")).append("</span>").append(NewLine.CRLF);
 		for (byte i = 0; i < 3; i++) { // hamburger button
-			html.append("<span class=\"icon-bar\"></span>").append(NewLine.CRLF.toString());
+			html.append("<span class=\"icon-bar\"></span>").append(NewLine.CRLF);
 		}
-		html.append("</button>").append(NewLine.CRLF.toString());
-		html.append("<a class=\"navbar-brand active\" href=\"").append(HtmlUtils.escapeHtml(Messages.get("msg.website"))).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a>").append(NewLine.CRLF.toString());
+		html.append("</button>").append(NewLine.CRLF);
+		html.append("<a class=\"navbar-brand active\" href=\"").append(getAnnotatedPath(RootHtmlHandler.class)).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a>").append(NewLine.CRLF);
 		html.append("</div><div id=\"navbar\" class=\"navbar-collapse collapse\"><ul class=\"nav navbar-nav\">");
 		if (configuration.getBoolean(StatusHtmlHandler.CFG_KEY_ENABLED, StatusHtmlHandler.Defaults.ENABLED)) {
 			html.append("<li><a href=\"").append(getAnnotatedPath(StatusHtmlHandler.class)).append("\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.status"))).append("</a></li>").append(NewLine.CRLF);
@@ -137,8 +138,8 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		final boolean closeEnabled = configuration.getBoolean(CloseHandler.CFG_KEY_ENABLED, CloseHandler.Defaults.ENABLED);
 		if (restartEnabled || connectEnabled || disconnectEnabled || closeEnabled) {
 			html.append("<li class=\"dropdown\">");
-			html.append("<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">").append(Messages.get("lbl.server.commands")).append(" <span class=\"caret\"></span></a>").append(NewLine.CRLF.toString());
-			html.append("<ul class=\"dropdown-menu\">").append(NewLine.CRLF.toString());
+			html.append("<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">").append(Messages.get("lbl.server.commands")).append(" <span class=\"caret\"></span></a>").append(NewLine.CRLF);
+			html.append("<ul class=\"dropdown-menu\">").append(NewLine.CRLF);
 			if (connectEnabled) {
 				html.append("<li><form action=\"").append(getAnnotatedPath(ConnectHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input class=\"btn-md btn-link dropdown-menu-item\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.connect"))).append("\" /></div></form></li>").append(NewLine.CRLF);
 			}
@@ -151,9 +152,9 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 			if (closeEnabled) {
 				html.append("<li><form action=\"").append(getAnnotatedPath(CloseHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input class=\"btn-md btn-link dropdown-menu-item\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.close"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.confirm.close.message"))).append("');\" /></div></form></li>").append(NewLine.CRLF);
 			}
-			html.append("</ul>").append(NewLine.CRLF.toString()).append("</li>").append(NewLine.CRLF.toString());
+			html.append("</ul>").append(NewLine.CRLF).append("</li>").append(NewLine.CRLF);
 		}
-		html.append("</ul>").append(NewLine.CRLF.toString()).append("</div>").append(NewLine.CRLF.toString()).append("</div>").append(NewLine.CRLF.toString()).append("</div>");
+		html.append("</ul>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF);
 		return html.toString();
 	}
 
@@ -168,12 +169,12 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * @return the string containing the HTML code.
 	 */
 	private String buildHtmlHead(final String title) {
-		final StringBuilder html = new StringBuilder("<head>").append(NewLine.CRLF.toString());
+		final StringBuilder html = new StringBuilder("<head>").append(NewLine.CRLF);
 		html.append(buildHtmlHeadMeta());
 		html.append(buildHtmlHeadLink());
 		html.append(buildHtmlHeadScript());
 		html.append(buildHtmlHeadTitle(title));
-		html.append("</head>").append(NewLine.CRLF.toString());
+		html.append("</head>").append(NewLine.CRLF);
 		return html.toString();
 	}
 
@@ -190,7 +191,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		if (title != null && !title.trim().isEmpty()) {
 			html.append(title.trim()).append(" - ");
 		}
-		return html.append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</title>").append(NewLine.CRLF.toString()).toString();
+		return html.append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</title>").append(NewLine.CRLF).toString();
 	}
 
 	/**
@@ -201,25 +202,25 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 */
 	private String buildHtmlHeadLink() {
 		final StringBuilder html = new StringBuilder();
-		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap.min.css\" />").append(NewLine.CRLF.toString());
-		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap-theme.min.css\" />").append(NewLine.CRLF.toString());
-		html.append("<link rel=\"stylesheet\" href=\"/css/routerlogger.css\" />").append(NewLine.CRLF.toString());
-		html.append("<link rel=\"stylesheet\" href=\"/fonts/fonts.css\" />").append(NewLine.CRLF.toString());
+		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap.min.css\" />").append(NewLine.CRLF);
+		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap-theme.min.css\" />").append(NewLine.CRLF);
+		html.append("<link rel=\"stylesheet\" href=\"/css/routerlogger.css\" />").append(NewLine.CRLF);
+		html.append("<link rel=\"stylesheet\" href=\"/fonts/fonts.css\" />").append(NewLine.CRLF);
 		return html.toString();
 	}
 
 	private String buildHtmlHeadScript() {
 		final StringBuilder html = new StringBuilder();
-		html.append("<script type=\"text/javascript\" src=\"/js/jquery.min.js\"></script>").append(NewLine.CRLF.toString());
-		html.append("<script type=\"text/javascript\" src=\"/js/bootstrap.min.js\"></script>").append(NewLine.CRLF.toString());
+		html.append("<script type=\"text/javascript\" src=\"/js/jquery.min.js\"></script>").append(NewLine.CRLF);
+		html.append("<script type=\"text/javascript\" src=\"/js/bootstrap.min.js\"></script>").append(NewLine.CRLF);
 		return html.toString();
 	}
 
 	private String buildHtmlHeadMeta() {
 		final StringBuilder html = new StringBuilder();
-		html.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />").append(NewLine.CRLF.toString()); // responsive
-		html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=").append(getCharset().name().toLowerCase()).append("\" />").append(NewLine.CRLF.toString()); // XHTML
-		html.append("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />").append(NewLine.CRLF.toString());
+		html.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />").append(NewLine.CRLF); // responsive
+		html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=").append(getCharset().name().toLowerCase()).append("\" />").append(NewLine.CRLF); // XHTML
+		html.append("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />").append(NewLine.CRLF);
 		return html.toString();
 	}
 
@@ -229,11 +230,14 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * @return the string containing the HTML code.
 	 */
 	protected final String buildHtmlFooter() {
-		final StringBuilder html = new StringBuilder("<div class=\"footer\"><div class=\"container\"><p class=\"text-muted\">");
-		html.append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append(' ');
+		final StringBuilder html = new StringBuilder("</div>").append(NewLine.CRLF);
+		html.append("<div class=\"footer\"><div class=\"container\"><p class=\"text-muted\">");
+		html.append("<a href=\"").append(HtmlUtils.escapeHtml(Messages.get("msg.website"))).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a> ");
 		final Version version = Version.getInstance();
 		html.append(Messages.get("msg.version", version.getNumber(), DateFormat.getDateInstance(DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(version.getDate())));
-		html.append("</p></div></div>");
+		html.append("</p></div></div>").append(NewLine.CRLF);
+		html.append("</body>").append(NewLine.CRLF);
+		html.append("</html>");
 		return html.toString();
 	}
 
@@ -248,7 +252,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	}
 
 	protected String buildHtmlRefreshButton() {
-		return new StringBuilder("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.refresh"))).append("\" /></div></form>").append(NewLine.CRLF).toString();
+		return new StringBuilder("<a href=\"").append(getPath()).append("\" class=\"btn btn-default btn-sm pull-right\"><span class=\"glyphicon glyphicon-refresh\"></span> ").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.refresh"))).append("</a>").append(NewLine.CRLF).toString();
 	}
 
 	/**

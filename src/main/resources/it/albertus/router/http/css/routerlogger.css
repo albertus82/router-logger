@@ -54,6 +54,10 @@ span.list-group-item-key {
 	font-weight: bold;
 }
 
+li.list-group-item-warning {
+	color: red;
+}
+
 .btn-bottom {
 	margin-bottom: 2rem;
 }

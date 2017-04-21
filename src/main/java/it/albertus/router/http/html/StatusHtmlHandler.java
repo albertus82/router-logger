@@ -14,6 +14,7 @@ import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.engine.Status;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
@@ -61,9 +62,24 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.status"))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("lbl.status"))).append(KEY_VALUE_SEPARATOR).append(' ').append(HtmlUtils.escapeHtml(engine.getCurrentStatus().getStatus().getDescription())).append("</h3>").append(NewLine.CRLF);
-		html.append(buildHtmlHomeButton());
-		html.append(buildHtmlRefreshButton());
+		html.append("<div class=\"page-header\">");
+		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.status"))).append(" <span class=\"label ");
+		final Status status = engine.getCurrentStatus().getStatus();
+		final String labelClass;
+		switch (status) {
+		case OK:
+			labelClass = "label-success";
+			break;
+		case WARNING:
+			labelClass = "label-warning";
+			break;
+		default:
+			labelClass = "label-default";
+			break;
+		}
+		html.append(labelClass);
+		html.append(" label-header\">").append(HtmlUtils.escapeHtml(status.getDescription())).append("</span> ").append(buildHtmlRefreshButton()).append("</h2>").append(NewLine.CRLF);
+		html.append("</div>");
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
 			html.append(buildList(currentData));
@@ -98,40 +114,23 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 	private String buildList(final RouterData currentData) {
 		final Set<Threshold> thresholdsReached = configuration.getThresholds().getReached(currentData).keySet();
 		final StringBuilder html = new StringBuilder();
-		html.append("<ul>").append(NewLine.CRLF);
-		html.append("<li><strong>").append(HtmlUtils.escapeHtml(Messages.get("lbl.column.timestamp.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(HtmlUtils.escapeHtml(dateFormat.get().format(currentData.getTimestamp()))).append("</li>").append(NewLine.CRLF);
-		html.append("<li><strong>").append(HtmlUtils.escapeHtml(Messages.get("lbl.column.response.time.text"))).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
+		html.append("<ul class=\"list-group\">").append(NewLine.CRLF);
+		html.append("<li class=\"list-group-item\"><span class=\"list-group-item-key\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.column.timestamp.text"))).append(KEY_VALUE_SEPARATOR).append("</span>").append(' ').append(HtmlUtils.escapeHtml(dateFormat.get().format(currentData.getTimestamp()))).append("</li>").append(NewLine.CRLF);
+		html.append("<li class=\"list-group-item\"><span class=\"list-group-item-key\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.column.response.time.text"))).append(KEY_VALUE_SEPARATOR).append("</span>").append(' ').append(currentData.getResponseTime()).append("</li>").append(NewLine.CRLF);
 		for (final Entry<String, String> entry : currentData.getData().entrySet()) {
 			final String key = entry.getKey();
-
-			html.append("<li>");
-
-			final boolean highlight = key != null && configuration.getGuiImportantKeys().contains(key.trim());
-			if (highlight) {
-				html.append("<mark>");
+			html.append("<li class=\"list-group-item");
+			if (key != null && configuration.getGuiImportantKeys().contains(key.trim())) {
+				html.append(" list-group-item-mark");
 			}
-
-			boolean warning = false;
 			for (final Threshold threshold : thresholdsReached) {
 				if (key != null && key.equals(threshold.getKey())) {
-					warning = true;
+					html.append(" list-group-item-warning");
 					break;
 				}
 			}
-			if (warning) {
-				html.append("<span class=\"warning\">");
-			}
-
-			html.append("<strong>").append(HtmlUtils.escapeHtml(key)).append(KEY_VALUE_SEPARATOR).append("</strong>").append(' ').append(HtmlUtils.escapeHtml(entry.getValue()));
-
-			if (warning) {
-				html.append("</span>");
-			}
-
-			if (highlight) {
-				html.append("</mark>");
-			}
-
+			html.append("\">");
+			html.append("<span class=\"list-group-item-key\">").append(HtmlUtils.escapeHtml(key)).append(KEY_VALUE_SEPARATOR).append("</span>").append(' ').append(HtmlUtils.escapeHtml(entry.getValue()));
 			html.append("</li>").append(NewLine.CRLF);
 		}
 		html.append("</ul>").append(NewLine.CRLF);
