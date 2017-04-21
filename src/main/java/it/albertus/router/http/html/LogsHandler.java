@@ -47,8 +47,6 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 
-	private static final int BUFFER_SIZE = 4 * 1024;
-
 	private static final LogFileManager logFileManager = LogFileManager.getInstance();
 
 	@Override
@@ -150,14 +148,14 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void sendNotFound(final HttpExchange exchange) throws IOException {
+	protected void sendNotFound(final HttpExchange exchange) throws IOException { // FIXME probabilmente basta il super
 		addCommonHeaders(exchange);
 
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.error"))));
 		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 
-		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND);
+		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND); 
 	}
 
 	private void fileList(final HttpExchange exchange) throws IOException {
@@ -166,18 +164,17 @@ public class LogsHandler extends AbstractHtmlHandler {
 		final File[] files = logFileManager.listFiles();
 		final Collection<File> lockedFiles = logFileManager.getLockedFiles();
 
-		html.append("<h3>").append(HtmlUtils.escapeHtml(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length))).append("</h3>").append(NewLine.CRLF);
-
-		// Button bar
-		html.append(buildHtmlHomeButton());
-		html.append(buildHtmlRefreshButton());
-		if (files != null && files.length > 0) {
-			html.append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
+		html.append("<div class=\"page-header\">").append(NewLine.CRLF);
+		html.append("<h2>").append(Messages.get("lbl.server.logs"));
+		if (files != null) {
+			html.append(" <span class=\"badge badge-header\">").append(files.length).append("</span>");
 		}
+		html.append(buildHtmlRefreshButton()).append("</h2>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF);
 
-		// Table
 		if (files != null && files.length > 0) {
 			html.append(buildHtmlTable(files, lockedFiles));
+			html.append("<hr />").append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
 		}
 
 		// Footer
@@ -189,11 +186,11 @@ public class LogsHandler extends AbstractHtmlHandler {
 	private String buildHtmlTable(final File[] files, final Collection<File> lockedFiles) throws UnsupportedEncodingException {
 		Arrays.sort(files);
 		final StringBuilder html = new StringBuilder();
-		html.append("<table><thead><tr>");
-		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
-		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
-		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
-		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
+		html.append("<table class=\"table table-striped\"><thead><tr>");
+		html.append("<th class=\"table-heading\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
+		html.append("<th class=\"table-heading text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
+		html.append("<th class=\"table-heading text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
+		html.append("<th class=\"table-heading text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
 		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
 		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
 		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
@@ -205,16 +202,16 @@ public class LogsHandler extends AbstractHtmlHandler {
 			html.append(HtmlUtils.escapeHtml(file.getName()));
 			html.append("</a>");
 			html.append("</td>");
-			html.append("<td class=\"right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
-			html.append("<td class=\"right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file))))).append("</td>");
-			html.append("<td class=\"center\">");
+			html.append("<td class=\"text-right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
+			html.append("<td class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file))))).append("</td>");
+			html.append("<td class=\"text-right\">");
 			if (lockedFiles.contains(file)) {
 				html.append("<form action=\"?\"><div>");
-				html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" disabled=\"disabled\" />");
+				html.append("<input class=\"btn btn-xs btn-danger\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" disabled=\"disabled\" />");
 			}
 			else {
 				html.append("<form action=\"").append(getPath()).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
+				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-xs btn-danger\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
 			}
 			html.append("</div></form>");
 			html.append("</td>");
@@ -227,10 +224,11 @@ public class LogsHandler extends AbstractHtmlHandler {
 	private String buildHtmlDeleteAllButton(final boolean disabled) {
 		final StringBuilder html = new StringBuilder();
 		if (disabled) {
-			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
+			html.append("<form action=\"?\"><div><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
+			html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"")
+					.append(" /></div></form>");
 		}
 		return html.append(NewLine.CRLF).toString();
 	}

@@ -40,7 +40,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
-		exchange.getResponseBody().write(response);
+		exchange.getResponseBody().write(response); // FIXME
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length);
-		exchange.getResponseBody().write(response);
+		exchange.getResponseBody().write(response); // FIXME
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
-		exchange.getResponseBody().write(response);
+		exchange.getResponseBody().write(response); // FIXME
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(e.getStatusCode(), response.length);
-		exchange.getResponseBody().write(response);
+		exchange.getResponseBody().write(response); // FIXME
 	}
 
 	protected void sendResponse(final HttpExchange exchange, final String html) throws IOException {
