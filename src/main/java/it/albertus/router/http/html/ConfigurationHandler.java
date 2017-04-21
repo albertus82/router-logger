@@ -109,11 +109,6 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} textarea {display: block; margin-top: 1.75em;}</style>";
-	}
-
-	@Override
 	public boolean isEnabled() {
 		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
 	}

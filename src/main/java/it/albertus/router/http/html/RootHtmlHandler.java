@@ -78,11 +78,6 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} div {display: inline;}</style>";
-	}
-
-	@Override
 	public boolean isEnabled(final HttpExchange exchange) {
 		if (!exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
 			return true; // always serve static resources

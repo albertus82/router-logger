@@ -244,11 +244,6 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} table {margin-top: 1em; margin-bottom: 1em;} td.center {text-align: center;} td.right {text-align: right;}</style>";
-	}
-
-	@Override
 	public boolean isEnabled() {
 		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
 	}
