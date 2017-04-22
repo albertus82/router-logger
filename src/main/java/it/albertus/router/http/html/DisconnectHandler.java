@@ -32,21 +32,26 @@ public class DisconnectHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doPost(final HttpExchange exchange) throws IOException {
-		// Headers...
-		addCommonHeaders(exchange);
-
-		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.disconnect"))));
 		final boolean accepted = engine.canDisconnect();
 		if (accepted) {
 			engine.disconnect();
 		}
-		html.append("<h3>").append(accepted ? HtmlUtils.escapeHtml(Messages.get("msg.server.accepted")) : HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h3>").append(NewLine.CRLF);
-		html.append(buildHtmlHomeButton());
+
+		// Headers...
+		addCommonHeaders(exchange);
+
+		// Response...
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.disconnect")));
+		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.disconnect"))).append("</h2></div>").append(NewLine.CRLF);
+		if (accepted) {
+			html.append("<h4 class=\"alert alert-success\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h4>").append(NewLine.CRLF);
+		}
+		else {
+			html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h4>").append(NewLine.CRLF);
+		}
 		html.append(buildHtmlFooter());
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_PRECON_FAILED, response.length);
-		exchange.getResponseBody().write(response);
+
+		sendResponse(exchange, html.toString(), accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_PRECON_FAILED);
 	}
 
 	@Override

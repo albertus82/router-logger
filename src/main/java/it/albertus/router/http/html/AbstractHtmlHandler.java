@@ -226,16 +226,6 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		return html.toString();
 	}
 
-	@Deprecated
-	protected String buildHtmlHomeButton() {
-		if (configuration.getBoolean(RootHtmlHandler.CFG_KEY_ENABLED, RootHtmlHandler.Defaults.ENABLED)) {
-			return new StringBuilder("<form action=\"").append(getAnnotatedPath(RootHtmlHandler.class)).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.home"))).append("\" /></div></form>").append(NewLine.CRLF).toString();
-		}
-		else {
-			return "";
-		}
-	}
-
 	protected String buildHtmlRefreshButton() {
 		return new StringBuilder("<a href=\"").append(getPath()).append("\" class=\"btn btn-default btn-sm pull-right\"><span class=\"glyphicon glyphicon-refresh\"></span> ").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.refresh"))).append("</a>").append(NewLine.CRLF).toString();
 	}
