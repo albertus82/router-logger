@@ -82,7 +82,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 *        application name. If null or empty, nothing but the application
 	 *        name will be used.
 	 * 
-	 * @return the string containing the HTML code.
+	 * @return the {@link StringBuilder} containing the HTML code.
 	 */
 	protected final StringBuilder buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF);
@@ -106,7 +106,8 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		}
 		html.append("</button>").append(NewLine.CRLF);
 		html.append("<a class=\"navbar-brand active\" href=\"").append(getAnnotatedPath(RootHtmlHandler.class)).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a>").append(NewLine.CRLF);
-		html.append("</div><div id=\"navbar\" class=\"navbar-collapse collapse\"><ul class=\"nav navbar-nav\">");
+		html.append("</div><div id=\"navbar\" class=\"navbar-collapse collapse\">");
+		html.append("<ul class=\"nav navbar-nav\">");
 		if (configuration.getBoolean(StatusHtmlHandler.CFG_KEY_ENABLED, StatusHtmlHandler.Defaults.ENABLED)) {
 			html.append("<li><a href=\"").append(getAnnotatedPath(StatusHtmlHandler.class)).append("\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.status"))).append("</a></li>").append(NewLine.CRLF);
 		}
@@ -138,7 +139,8 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 			}
 			html.append("</ul>").append(NewLine.CRLF).append("</li>").append(NewLine.CRLF);
 		}
-		html.append("</ul>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF);
+		html.append("</ul>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF);
 		return html;
 	}
 
@@ -150,7 +152,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 *        application name. If null or empty, nothing but the application
 	 *        name will be used.
 	 * 
-	 * @return the StringBuilder containing the HTML code.
+	 * @return the {@link StringBuilder} containing the HTML code.
 	 */
 	private StringBuilder buildHtmlHead(final String title) {
 		final StringBuilder html = new StringBuilder("<head>").append(NewLine.CRLF);
@@ -183,7 +185,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * Override this method to create {@code <style>} element. The default
 	 * implementation returns an empty string.
 	 * 
-	 * @return the StringBuilder containing the HTML code.
+	 * @return the {@link StringBuilder} containing the HTML code.
 	 */
 	private StringBuilder buildHtmlHeadLink() {
 		final StringBuilder html = new StringBuilder();
@@ -212,7 +214,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	/**
 	 * Closes {@code <body>} and {@code <html>} tags.
 	 * 
-	 * @return the string containing the HTML code.
+	 * @return the {@link StringBuilder} containing the HTML code.
 	 */
 	protected final StringBuilder buildHtmlFooter() {
 		final StringBuilder html = new StringBuilder("</div>").append(NewLine.CRLF); // container
