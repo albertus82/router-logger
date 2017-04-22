@@ -108,8 +108,9 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		}
 		html.append("</button>").append(NewLine.CRLF);
 		html.append("<a class=\"navbar-brand active\" href=\"").append(getAnnotatedPath(RootHtmlHandler.class)).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a>").append(NewLine.CRLF);
-		html.append("</div><div id=\"navbar\" class=\"navbar-collapse collapse\">");
-		html.append("<ul class=\"nav navbar-nav\">");
+		html.append("</div>").append(NewLine.CRLF);
+		html.append("<div id=\"navbar\" class=\"navbar-collapse collapse\">").append(NewLine.CRLF);
+		html.append("<ul class=\"nav navbar-nav\">").append(NewLine.CRLF);
 		if (configuration.getBoolean(StatusHtmlHandler.CFG_KEY_ENABLED, StatusHtmlHandler.Defaults.ENABLED)) {
 			html.append("<li><a href=\"").append(getAnnotatedPath(StatusHtmlHandler.class)).append("\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.status"))).append("</a></li>").append(NewLine.CRLF);
 		}

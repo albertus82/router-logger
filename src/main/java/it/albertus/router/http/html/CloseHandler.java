@@ -52,9 +52,11 @@ public class CloseHandler extends AbstractHtmlHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_SERVER_CLOSE)));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_SERVER_CLOSE))).append("</h2></div>").append(NewLine.CRLF);
 		html.append("<form class=\"form-inline\" action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\">").append(NewLine.CRLF);
-		html.append("<div>").append(NewLine.CRLF);
+		html.append("<div class=\"form-group\">").append(NewLine.CRLF);
 		html.append("<label for=\"timeout\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.close.timeout"))).append("</label>").append(NewLine.CRLF);
 		html.append("<input class=\"form-control\" type=\"number\" name=\"").append(REQUEST_PARAM_NAME).append("\" min=\"0\" max=\"99999999\" value=\"60\" />").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF);
+		html.append("<div class=\"form-group\">").append(NewLine.CRLF);
 		html.append("<input class=\"btn btn-danger btn-md\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.close.confirm"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.confirm.close.message"))).append("');\" />").append(NewLine.CRLF);
 		html.append("</div>").append(NewLine.CRLF);
 		html.append("</form>").append(NewLine.CRLF);

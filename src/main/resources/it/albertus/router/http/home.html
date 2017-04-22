@@ -46,6 +46,16 @@
 	</div>
 
 	<div class="container" role="main">
+	
+	<form class="form-inline" action="/close" method="post">
+ <div class="form-group">
+<label for="timeout">Periodo di timeout prima dell&#39;arresto (in secondi): </label>
+ 
+<input class="form-control" type="number" name="timeout" min="0" max="99999999" value="60" />
+</div> <div class="form-group">
+<input class="btn btn-danger btn-md" type="submit" value="Conferma" onclick="return confirm('Chiudere RouterLogger?');" />
+</div>
+</form>
 
 		<div class="alert alert-success alert-h4" role="alert"> 
 			<strong>Well done!</strong> You successfully read this important alert message.
