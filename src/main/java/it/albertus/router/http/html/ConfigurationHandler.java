@@ -50,14 +50,14 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.configuration")));
 
 		html.append("<div class=\"page-header\">").append(NewLine.CRLF);
-		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration")));
-		html.append(buildHtmlRefreshButton());
-		html.append("</h2>").append(NewLine.CRLF);
+		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))).append(buildHtmlRefreshButton()).append("</h2>").append(NewLine.CRLF);
 		html.append("</div>").append(NewLine.CRLF); // page-header
 
-		html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+		// Form
+		html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div class=\"form-group\">");
 		html.append("<textarea class=\"form-control textarea-properties\" rows=\"13\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">").append(HtmlUtils.escapeHtml(getPropertiesAsString(configuration.getProperties()))).append("</textarea>").append(NewLine.CRLF);
-		html.append("<hr />").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF);
+		html.append("<div class=\"form-group\">").append(NewLine.CRLF);
 		html.append("<input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
 		html.append("</div></form>").append(NewLine.CRLF);
 
