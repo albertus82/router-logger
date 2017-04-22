@@ -163,7 +163,11 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 		if (files != null && files.length > 0) {
 			html.append(buildHtmlTable(files, lockedFiles));
-			html.append("<hr />").append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
+			html.append("<hr />");
+			html.append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
+		}
+		else {
+			html.append("<div class=\"alert alert-info\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.title.empty"))).append("</div>");
 		}
 
 		// Footer
