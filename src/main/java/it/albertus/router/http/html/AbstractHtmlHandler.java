@@ -222,11 +222,15 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 */
 	protected final StringBuilder buildHtmlFooter() {
 		final StringBuilder html = new StringBuilder("</div>").append(NewLine.CRLF); // container
-		html.append("<div class=\"footer\"><div class=\"container\"><p class=\"text-muted\">");
+		html.append("<div class=\"footer\">").append(NewLine.CRLF);
+		html.append("<div class=\"container\">").append(NewLine.CRLF);
+		html.append("<p class=\"text-muted\">");
 		html.append("<a href=\"").append(HtmlUtils.escapeHtml(Messages.get("msg.website"))).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a> ");
 		final Version version = Version.getInstance();
 		html.append(Messages.get("msg.version", version.getNumber(), DateFormat.getDateInstance(DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(version.getDate())));
-		html.append("</p></div></div>").append(NewLine.CRLF);
+		html.append("</p>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF);
 		html.append("</body>").append(NewLine.CRLF);
 		html.append("</html>");
 		return html;

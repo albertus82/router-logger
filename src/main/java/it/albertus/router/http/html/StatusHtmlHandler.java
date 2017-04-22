@@ -73,15 +73,15 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 			break;
 		}
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.status")));
-		html.append("<div class=\"page-header\">");
+		html.append("<div class=\"page-header\">").append(NewLine.CRLF);
 		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.status"))).append(" <span class=\"label ").append(labelClass).append(" label-header\">").append(HtmlUtils.escapeHtml(status.getDescription())).append("</span> ").append(buildHtmlRefreshButton()).append("</h2>").append(NewLine.CRLF);
-		html.append("</div>");
+		html.append("</div>").append(NewLine.CRLF);
 		final RouterData currentData = engine.getCurrentData();
 		if (currentData != null) {
 			html.append(buildList(currentData));
 		}
 		else {
-			html.append("<div class=\"alert alert-info\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.status.list.empty"))).append("</div>");
+			html.append("<div class=\"alert alert-info\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.status.list.empty"))).append("</div>").append(NewLine.CRLF);
 		}
 		html.append(buildHtmlFooter());
 
