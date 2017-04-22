@@ -233,7 +233,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	}
 
 	protected final StringBuilder buildHtmlRefreshButton() {
-		return new StringBuilder("<a href=\"").append(getPath()).append("\" class=\"btn btn-default btn-sm pull-right\"><span class=\"glyphicon glyphicon-refresh\"></span> ").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.refresh"))).append("</a>").append(NewLine.CRLF);
+		return new StringBuilder("<a href=\"").append(getPath()).append("\" class=\"btn btn-default btn-sm pull-right\"><span class=\"glyphicon glyphicon-refresh\"></span> ").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.refresh"))).append("</a>");
 	}
 
 	/**
