@@ -3,9 +3,11 @@ package it.albertus.router.engine;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.ConnectException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -70,6 +72,7 @@ public abstract class RouterLoggerEngine {
 	private volatile boolean interruptible = false;
 	protected volatile boolean exit = false;
 	private Thread shutdownHook;
+	private Thread shutdownDaemon;
 
 	private RouterData currentData;
 	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(Collections.<Threshold, String> emptyMap(), new Date());
@@ -608,6 +611,43 @@ public abstract class RouterLoggerEngine {
 
 	public abstract void close();
 
+	private class ShutdownDaemon extends Thread {
+
+		private final int timeoutInSecs;
+		private final Date shutdownTime;
+		private final Date creationDate = new Date();
+
+		public ShutdownDaemon(final int timeoutInSecs) {
+			setDaemon(true);
+			this.timeoutInSecs = timeoutInSecs;
+			final Calendar shutdownCalendar = Calendar.getInstance();
+			shutdownCalendar.add(Calendar.SECOND, timeoutInSecs);
+			this.shutdownTime = shutdownCalendar.getTime();
+		}
+
+		@Override
+		public void run() {
+			try {
+				logger.log(Level.WARNING, Messages.get("msg.close.schedule"), new Serializable[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), timeoutInSecs });
+				TimeUnit.SECONDS.sleep(timeoutInSecs);
+				logger.log(Level.INFO, Messages.get("msg.close.schedule.execute"), DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(creationDate));
+				close();
+			}
+			catch (final InterruptedException e) {
+				logger.log(Level.INFO, Messages.get("msg.close.schedule.canceled"), new Serializable[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), timeoutInSecs });
+				Thread.currentThread().interrupt();
+			}
+		}
+	}
+
+	public void scheduleShutdown(final int timeoutInSecs) {
+		if (shutdownDaemon != null) {
+			shutdownDaemon.interrupt();
+		}
+		shutdownDaemon = new ShutdownDaemon(timeoutInSecs);
+		shutdownDaemon.start();
+	}
+
 	protected void joinPollingThread() {
 		if (pollingThread != null) {
 			try {
@@ -663,6 +703,10 @@ public abstract class RouterLoggerEngine {
 
 	protected boolean isInterruptible() {
 		return interruptible;
+	}
+
+	protected Thread getShutdownDaemon() {
+		return shutdownDaemon;
 	}
 
 }

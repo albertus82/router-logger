@@ -75,14 +75,16 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	}
 
 	/**
-	 * Creates HTML5 doctype, {@code <html>} opening tag, full {@code <head>}
-	 * with {@code <title>}, {@code <style>} and {@code <body>} opening tag.
+	 * Creates HTML 5 doctype, {@code <html>} opening tag, full {@code <head>}
+	 * element, the {@code <body>} opening tag, the navigation bar {@code <div>}
+	 * and eventually the "container" {@code <div>} opening tag.
 	 * 
-	 * @param title the title to be included in {@code <title>} tag, after the
-	 *        application name. If null or empty, nothing but the application
-	 *        name will be used.
+	 * @param title the title to be included in {@code <title>} tag inside
+	 *        {@code <head>}, before the application name. If null or empty,
+	 *        nothing but the application name will be included. Any required
+	 *        HTML escaping will be applied automatically.
 	 * 
-	 * @return the {@link StringBuilder} containing the HTML code.
+	 * @return the {@link StringBuilder} containing the generated HTML code.
 	 */
 	protected final StringBuilder buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF);
@@ -152,7 +154,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 *        application name. If null or empty, nothing but the application
 	 *        name will be used.
 	 * 
-	 * @return the {@link StringBuilder} containing the HTML code.
+	 * @return the {@link StringBuilder} containing the generated HTML code.
 	 */
 	private StringBuilder buildHtmlHead(final String title) {
 		final StringBuilder html = new StringBuilder("<head>").append(NewLine.CRLF);
@@ -170,7 +172,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * @param title the title to be included after the application name. If null
 	 *        or empty, nothing but the application name will be used.
 	 * 
-	 * @return the StringBuilder containing the HTML code.
+	 * @return the StringBuilder containing the generated HTML code.
 	 */
 	private StringBuilder buildHtmlHeadTitle(final String title) {
 		final StringBuilder html = new StringBuilder("<title>");
@@ -185,7 +187,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * Override this method to create {@code <style>} element. The default
 	 * implementation returns an empty string.
 	 * 
-	 * @return the {@link StringBuilder} containing the HTML code.
+	 * @return the {@link StringBuilder} containing the generated HTML code.
 	 */
 	private StringBuilder buildHtmlHeadLink() {
 		final StringBuilder html = new StringBuilder();
@@ -212,9 +214,10 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	}
 
 	/**
-	 * Closes {@code <body>} and {@code <html>} tags.
+	 * Closes the "container" {@code <div>}, creates the footer {@code <div>}
+	 * and eventually closes {@code <body>} and {@code <html>} elements.
 	 * 
-	 * @return the {@link StringBuilder} containing the HTML code.
+	 * @return the {@link StringBuilder} containing the generated HTML code.
 	 */
 	protected final StringBuilder buildHtmlFooter() {
 		final StringBuilder html = new StringBuilder("</div>").append(NewLine.CRLF); // container

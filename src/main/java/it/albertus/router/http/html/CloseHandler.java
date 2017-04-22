@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,14 +24,6 @@ public class CloseHandler extends AbstractHtmlHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(CloseHandler.class);
 
-	static final String CFG_KEY_ENABLED = "server.handler.close.enabled";
-
-	private static final int DEFAULT_TIMEOUT = 60;
-
-	private static final String REQUEST_PARAM_NAME = "timeout";
-
-	private static final String MSG_KEY_SERVER_CLOSE = "lbl.server.close";
-
 	public static class Defaults {
 		public static final boolean ENABLED = false;
 
@@ -42,36 +32,15 @@ public class CloseHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	private class CloseDaemon extends Thread {
+	static final String CFG_KEY_ENABLED = "server.handler.close.enabled";
 
-		private final int timeoutInSecs;
-		private final Date shutdownTime;
-		private final Date creationDate = new Date();
+	private static final int DEFAULT_TIMEOUT = 60;
 
-		public CloseDaemon(final int timeoutInSecs, final Date shutdownTime) {
-			setDaemon(true);
-			this.timeoutInSecs = timeoutInSecs;
-			this.shutdownTime = shutdownTime;
-		}
+	private static final String REQUEST_PARAM_NAME = "timeout";
 
-		@Override
-		public void run() {
-			try {
-				logger.log(Level.WARNING, Messages.get("msg.close.schedule"), new Object[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), timeoutInSecs });
-				TimeUnit.SECONDS.sleep(timeoutInSecs);
-				logger.log(Level.INFO, Messages.get("msg.close.schedule.execute"), DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(creationDate));
-				engine.close();
-			}
-			catch (final InterruptedException e) {
-				logger.log(Level.INFO, Messages.get("msg.close.schedule.canceled"), new Object[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), timeoutInSecs });
-				Thread.currentThread().interrupt();
-			}
-		}
-	}
+	private static final String MSG_KEY_SERVER_CLOSE = "lbl.server.close";
 
 	private final RouterLoggerEngine engine;
-
-	private Thread closeDaemon;
 
 	public CloseHandler(final RouterLoggerEngine engine) {
 		this.engine = engine;
@@ -96,16 +65,14 @@ public class CloseHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doPost(final HttpExchange exchange) throws IOException {
-		int timeout;
+		int timeoutInSecs;
 		try {
-			timeout = Integer.parseInt(new RequestParameterExtractor(exchange).getParameter(REQUEST_PARAM_NAME));
+			timeoutInSecs = Math.max(0, Integer.parseInt(new RequestParameterExtractor(exchange).getParameter(REQUEST_PARAM_NAME)));
 		}
 		catch (final Exception e) {
-			logger.log(Level.WARNING, e.toString(), e);
-			timeout = DEFAULT_TIMEOUT;
+			logger.log(Level.INFO, e.toString(), e);
+			timeoutInSecs = DEFAULT_TIMEOUT;
 		}
-		final Calendar shutdownCalendar = Calendar.getInstance();
-		shutdownCalendar.add(Calendar.SECOND, timeout);
 
 		// Headers...
 		addCommonHeaders(exchange);
@@ -114,7 +81,9 @@ public class CloseHandler extends AbstractHtmlHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_SERVER_CLOSE)));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_SERVER_CLOSE))).append("</h2></div>").append(NewLine.CRLF);
 		html.append("<h4 class=\"alert alert-success\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h4>").append(NewLine.CRLF);
-		html.append("<h4 class=\"alert alert-warning\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.close.schedule", DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownCalendar.getTime()), timeout))).append("</h4>").append(NewLine.CRLF);
+		final Calendar shutdownCalendar = Calendar.getInstance();
+		shutdownCalendar.add(Calendar.SECOND, timeoutInSecs);
+		html.append("<p class=\"alert alert-warning\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.close.schedule", DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownCalendar.getTime()), timeoutInSecs))).append("</p>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 
 		final byte[] response = html.toString().getBytes(getCharset());
@@ -123,11 +92,7 @@ public class CloseHandler extends AbstractHtmlHandler {
 		exchange.getResponseBody().close();
 		exchange.close();
 
-		if (closeDaemon != null) {
-			closeDaemon.interrupt();
-		}
-		closeDaemon = new CloseDaemon(timeout, shutdownCalendar.getTime());
-		closeDaemon.start();
+		engine.scheduleShutdown(timeoutInSecs);
 	}
 
 	@Override

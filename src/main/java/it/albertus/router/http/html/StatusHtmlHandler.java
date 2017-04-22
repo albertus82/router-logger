@@ -95,19 +95,22 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 		}
 		else {
 			addCommonHeaders(exchange);
-			if (currentData != null && currentData.getTimestamp() != null) {
-				exchange.getResponseHeaders().add("Last-Modified", httpDateGenerator.format(currentData.getTimestamp()));
-			}
-			final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
-			if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
-				exchange.getResponseHeaders().set("Content-Length", Integer.toString(response.length));
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
-				exchange.getResponseBody().close(); // no body
+			if (currentData != null && currentData.getTimestamp() != null && currentData.getTimestamp().after(engine.getCurrentStatus().getTimestamp())) {
+				addLastModifiedHeader(exchange, currentData.getTimestamp());
 			}
 			else {
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-				exchange.getResponseBody().write(response);
+				addLastModifiedHeader(exchange, engine.getCurrentStatus().getTimestamp());
 			}
+		}
+		final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
+		if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
+			exchange.getResponseHeaders().set("Content-Length", Integer.toString(response.length));
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
+			exchange.getResponseBody().close(); // no body
+		}
+		else {
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
+			exchange.getResponseBody().write(response);
 		}
 	}
 
