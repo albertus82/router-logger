@@ -19,7 +19,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
 	private static final String RESOURCE_BASE_PATH = '/' + HttpServer.class.getPackage().getName().toLowerCase().replace('.', '/') + '/';
 

@@ -25,8 +25,6 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_SERVER_HANDLER_JSON_ENABLED = "server.handler.json.enabled";
-
 	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	protected final RouterLoggerEngine engine;
@@ -48,7 +46,7 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean(CFG_KEY_SERVER_HANDLER_JSON_ENABLED, Defaults.ENABLED);
+		return configuration.getBoolean("server.handler.json.enabled", Defaults.ENABLED);
 	}
 
 	protected void addRefreshHeader(final HttpExchange exchange) {

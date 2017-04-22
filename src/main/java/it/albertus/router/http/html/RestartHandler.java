@@ -22,7 +22,7 @@ public class RestartHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
 
 	private final RouterLoggerEngine engine;
 

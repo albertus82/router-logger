@@ -41,7 +41,7 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
 
 	private static final String REQUEST_PARAM_NAME = "properties";
 

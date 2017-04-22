@@ -32,7 +32,7 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.status.enabled";
 
 	protected static final char KEY_VALUE_SEPARATOR = ':';
 

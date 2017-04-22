@@ -84,14 +84,14 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * 
 	 * @return the string containing the HTML code.
 	 */
-	protected final String buildHtmlHeader(final String title) {
+	protected final StringBuilder buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF);
 		html.append("<html lang=\"").append(HtmlUtils.escapeHtml(Messages.getLanguage().getLocale().getLanguage())).append("\">").append(NewLine.CRLF);
 		html.append(buildHtmlHead(title));
 		html.append("<body>").append(NewLine.CRLF);
 		html.append(buildHtmlNavigationBar());
 		html.append("<div class=\"container\" role=\"main\">").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
 	private StringBuilder buildHtmlNavigationBar() {
@@ -134,7 +134,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 				html.append("<li><form action=\"").append(getAnnotatedPath(RestartHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input class=\"btn-md btn-link dropdown-menu-item\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.restart"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.confirm.restart.message"))).append("');\" /></div></form></li>").append(NewLine.CRLF);
 			}
 			if (closeEnabled) {
-				html.append("<li><form action=\"").append(getAnnotatedPath(CloseHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input class=\"btn-md btn-link dropdown-menu-item\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.close"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.confirm.close.message"))).append("');\" /></div></form></li>").append(NewLine.CRLF);
+				html.append("<li><form action=\"").append(getAnnotatedPath(CloseHandler.class)).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input class=\"btn-md btn-link dropdown-menu-item\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.close"))).append("\" /></div></form></li>").append(NewLine.CRLF);
 			}
 			html.append("</ul>").append(NewLine.CRLF).append("</li>").append(NewLine.CRLF);
 		}
@@ -214,7 +214,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * 
 	 * @return the string containing the HTML code.
 	 */
-	protected final String buildHtmlFooter() {
+	protected final StringBuilder buildHtmlFooter() {
 		final StringBuilder html = new StringBuilder("</div>").append(NewLine.CRLF); // container
 		html.append("<div class=\"footer\"><div class=\"container\"><p class=\"text-muted\">");
 		html.append("<a href=\"").append(HtmlUtils.escapeHtml(Messages.get("msg.website"))).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a> ");
@@ -223,11 +223,11 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		html.append("</p></div></div>").append(NewLine.CRLF);
 		html.append("</body>").append(NewLine.CRLF);
 		html.append("</html>");
-		return html.toString();
+		return html;
 	}
 
-	protected String buildHtmlRefreshButton() {
-		return new StringBuilder("<a href=\"").append(getPath()).append("\" class=\"btn btn-default btn-sm pull-right\"><span class=\"glyphicon glyphicon-refresh\"></span> ").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.refresh"))).append("</a>").append(NewLine.CRLF).toString();
+	protected final StringBuilder buildHtmlRefreshButton() {
+		return new StringBuilder("<a href=\"").append(getPath()).append("\" class=\"btn btn-default btn-sm pull-right\"><span class=\"glyphicon glyphicon-refresh\"></span> ").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.refresh"))).append("</a>").append(NewLine.CRLF);
 	}
 
 	/**

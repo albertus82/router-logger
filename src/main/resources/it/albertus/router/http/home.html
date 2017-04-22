@@ -37,7 +37,7 @@
 							<li><form action="/connect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Connetti" /></div></form></li>
 							<li><form action="/disconnect" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Disconnetti" onclick="return confirm('Effettuare la disconnessione da Telnet?');" /></div></form></li>
 							<li><form action="/restart" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Riavvia" onclick="return confirm('Riavviare RouterLogger?');" /></div></form></li>
-							<li><form action="/close" method="post"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Chiudi" onclick="return confirm('Chiudere RouterLogger?');" /></div></form></li>
+							<li><form action="/close" method="get"><div><input class="btn-md btn-link dropdown-menu-item" type="submit" value="Chiudi" onclick="return confirm('Chiudere RouterLogger?');" /></div></form></li>
 						</ul>
 					</li>
 				</ul>
@@ -130,7 +130,9 @@ server.handler.connect.enabled=true
 		</div>
 
 
-
+<div class="container" role="main">
+<div class="page-header"><h2>Chiudi</h2></div>
+<form class="form-inline" action="/close" method="post"><div><label for="timeout">Shutdown timeout (secs):</label> <input class="form-control" type="number" name="timeout" min="0" value="60" /> <input class="btn btn-danger btn-md" type="submit" value="Conferma" onclick="return confirm('Chiudere RouterLogger?');" /></div></form></div>
 
 
 		<div class="page-header" style="margin-top:10em;">

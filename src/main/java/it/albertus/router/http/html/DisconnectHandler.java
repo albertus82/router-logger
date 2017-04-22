@@ -22,7 +22,7 @@ public class DisconnectHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
 
 	private final RouterLoggerEngine engine;
 

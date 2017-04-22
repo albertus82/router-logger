@@ -22,7 +22,7 @@ public class ConnectHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.connect.enabled";
 
 	private final RouterLoggerEngine engine;
 

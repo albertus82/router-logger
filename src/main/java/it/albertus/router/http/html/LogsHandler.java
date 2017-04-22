@@ -45,7 +45,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 
 	private static final LogFileManager logFileManager = LogFileManager.getInstance();
 
