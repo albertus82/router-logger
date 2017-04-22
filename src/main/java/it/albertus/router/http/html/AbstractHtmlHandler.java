@@ -192,10 +192,10 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 */
 	private StringBuilder buildHtmlHeadLink() {
 		final StringBuilder html = new StringBuilder();
-		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap.min.css\" />").append(NewLine.CRLF);
-		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap-theme.min.css\" />").append(NewLine.CRLF);
-		html.append("<link rel=\"stylesheet\" href=\"/css/routerlogger.css\" />").append(NewLine.CRLF);
-		html.append("<link rel=\"stylesheet\" href=\"/fonts/fonts.css\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/css/bootstrap.min.css\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/css/bootstrap-theme.min.css\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/css/routerlogger.css\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/fonts/fonts.css\" />").append(NewLine.CRLF);
 		return html;
 	}
 
