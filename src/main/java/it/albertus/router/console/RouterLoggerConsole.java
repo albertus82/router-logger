@@ -150,7 +150,7 @@ public class RouterLoggerConsole extends RouterLoggerEngine {
 			@Override
 			public void run() {
 				httpServer.stop();
-				getShutdownDaemon().interrupt();
+				scheduleShutdown(-1);
 				joinPollingThread();
 				try {
 					configuration.reload();

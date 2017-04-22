@@ -644,8 +644,10 @@ public abstract class RouterLoggerEngine {
 		if (shutdownDaemon != null) {
 			shutdownDaemon.interrupt();
 		}
-		shutdownDaemon = new ShutdownDaemon(timeoutInSecs);
-		shutdownDaemon.start();
+		if (timeoutInSecs >= 0) {
+			shutdownDaemon = new ShutdownDaemon(timeoutInSecs);
+			shutdownDaemon.start();
+		}
 	}
 
 	protected void joinPollingThread() {
@@ -703,10 +705,6 @@ public abstract class RouterLoggerEngine {
 
 	protected boolean isInterruptible() {
 		return interruptible;
-	}
-
-	protected Thread getShutdownDaemon() {
-		return shutdownDaemon;
 	}
 
 }

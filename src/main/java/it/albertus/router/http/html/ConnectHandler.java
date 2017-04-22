@@ -44,10 +44,10 @@ public class ConnectHandler extends AbstractHtmlHandler {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.connect")));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.connect"))).append("</h2></div>").append(NewLine.CRLF);
 		if (accepted) {
-			html.append("<h4 class=\"alert alert-success\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h4>").append(NewLine.CRLF);
+			html.append("<div class=\"alert alert-success alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</div>").append(NewLine.CRLF);
 		}
 		else {
-			html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h4>").append(NewLine.CRLF);
+			html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</div>").append(NewLine.CRLF);
 		}
 		html.append(buildHtmlFooter());
 

@@ -66,3 +66,8 @@ li.list-group-item-warning {
 	font-family: 'Ubuntu Mono', monospace; 
 	font-weight: bold;
 }
+
+.alert-h4 {
+	font-size: 18px;
+	line-height: 1.1;
+}

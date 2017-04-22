@@ -80,10 +80,10 @@ public class CloseHandler extends AbstractHtmlHandler {
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_SERVER_CLOSE)));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_SERVER_CLOSE))).append("</h2></div>").append(NewLine.CRLF);
-		html.append("<h4 class=\"alert alert-success\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h4>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-success alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</div>").append(NewLine.CRLF);
 		final Calendar shutdownCalendar = Calendar.getInstance();
 		shutdownCalendar.add(Calendar.SECOND, timeoutInSecs);
-		html.append("<p class=\"alert alert-warning\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.close.schedule", DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownCalendar.getTime()), timeoutInSecs))).append("</p>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-warning\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.close.schedule", DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownCalendar.getTime()), timeoutInSecs))).append("</div>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 
 		final byte[] response = html.toString().getBytes(getCharset());

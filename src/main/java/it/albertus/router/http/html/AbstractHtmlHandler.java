@@ -34,7 +34,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	protected void sendForbidden(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_FORBIDDEN)));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_FORBIDDEN))).append("</h2></div>").append(NewLine.CRLF);
-		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.forbidden"))).append("</h4>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.forbidden"))).append("</div>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_FORBIDDEN);
 	}
@@ -43,7 +43,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	protected void sendNotFound(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_NOT_FOUND)));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_NOT_FOUND))).append("</h2></div>").append(NewLine.CRLF);
-		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h4>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</div>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND);
 	}
@@ -52,7 +52,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	protected void sendInternalError(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_INTERNAL_ERROR)));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_INTERNAL_ERROR))).append("</h2></div>").append(NewLine.CRLF);
-		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("err.server.handler"))).append("</h4>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("err.server.handler"))).append("</div>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
 	}
@@ -61,7 +61,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	protected void sendError(final HttpExchange exchange, final HttpException e) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, e.getStatusCode())));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, e.getStatusCode()))).append("</h2></div>").append(NewLine.CRLF);
-		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode()))).append("</h4>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode()))).append("</div>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 		sendResponse(exchange, html.toString(), e.getStatusCode());
 	}

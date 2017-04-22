@@ -270,7 +270,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			public void run() {
 				try {
 					httpServer.stop();
-					getShutdownDaemon().interrupt();
+					scheduleShutdown(-1);
 					joinPollingThread();
 					configuration.reload();
 					mqttClient.disconnect();
