@@ -148,17 +148,18 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	private void fileList(final HttpExchange exchange) throws IOException {
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs"))));
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.logs")));
 
 		final File[] files = logFileManager.listFiles();
 		final Collection<File> lockedFiles = logFileManager.getLockedFiles();
 
 		html.append("<div class=\"page-header\">").append(NewLine.CRLF);
-		html.append("<h2>").append(Messages.get("lbl.server.logs"));
+		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs")));
 		if (files != null) {
 			html.append(" <span class=\"badge badge-header\">").append(files.length).append("</span>");
 		}
-		html.append(buildHtmlRefreshButton()).append("</h2>").append(NewLine.CRLF);
+		html.append(buildHtmlRefreshButton());
+		html.append("</h2>").append(NewLine.CRLF);
 		html.append("</div>").append(NewLine.CRLF);
 
 		if (files != null && files.length > 0) {

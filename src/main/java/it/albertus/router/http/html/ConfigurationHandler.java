@@ -47,18 +47,19 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.configuration")));
 
-		html.append(buildHtmlHomeButton());
+		html.append("<div class=\"page-header\">").append(NewLine.CRLF);
+		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration")));
 		html.append(buildHtmlRefreshButton());
+		html.append("</h2>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF); // page-header
 
 		html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-		html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
-		html.append("<textarea rows=\"25\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">");
-		html.append(HtmlUtils.escapeHtml(getPropertiesAsString(configuration.getProperties())));
-		html.append("</textarea>");
-		html.append("</div></form>").append(NewLine.SYSTEM_LINE_SEPARATOR);
+		html.append("<textarea class=\"form-control textarea-properties\" rows=\"13\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">").append(HtmlUtils.escapeHtml(getPropertiesAsString(configuration.getProperties()))).append("</textarea>").append(NewLine.CRLF);
+		html.append("<hr />").append(NewLine.CRLF);
+		html.append("<input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
+		html.append("</div></form>").append(NewLine.CRLF);
 
 		html.append(buildHtmlFooter());
 
