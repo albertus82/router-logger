@@ -1,7 +1,6 @@
 package it.albertus.router.http.html;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map.Entry;
@@ -9,7 +8,6 @@ import java.util.Set;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterData;
@@ -86,32 +84,7 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 		}
 		html.append(buildHtmlFooter());
 
-		// If-Modified-Since...
-		final String ifModifiedSince = exchange.getRequestHeaders().getFirst("If-Modified-Since");
-		if (ifModifiedSince != null && currentData != null && currentData.getTimestamp() != null && httpDateGenerator.format(currentData.getTimestamp()).equals(ifModifiedSince)) {
-			addDateHeader(exchange);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_MODIFIED, -1);
-			exchange.getResponseBody().close(); // Needed when no write occurs.
-		}
-		else {
-			addCommonHeaders(exchange);
-			if (currentData != null && currentData.getTimestamp() != null && currentData.getTimestamp().after(engine.getCurrentStatus().getTimestamp())) {
-				addLastModifiedHeader(exchange, currentData.getTimestamp());
-			}
-			else {
-				addLastModifiedHeader(exchange, engine.getCurrentStatus().getTimestamp());
-			}
-		}
-		final byte[] response = compressResponse(html.toString().getBytes(getCharset()), exchange);
-		if (HttpMethod.HEAD.equalsIgnoreCase(exchange.getRequestMethod())) {
-			exchange.getResponseHeaders().set("Content-Length", Integer.toString(response.length));
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
-			exchange.getResponseBody().close(); // no body
-		}
-		else {
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.length);
-			exchange.getResponseBody().write(response);
-		}
+		sendResponse(exchange, html.toString());
 	}
 
 	private String buildList(final RouterData currentData) {
