@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.httpserver.annotation.Path;
 import it.albertus.router.http.HttpServer;
 import it.albertus.router.resources.Messages;
+import it.albertus.util.NewLine;
 
 @Path("/")
 public class RootHtmlHandler extends AbstractHtmlHandler {
@@ -31,9 +32,9 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 		else {
 			// Response...
 			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.home")));
-			html.append("<div class=\"row\"><div class=\"col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2\">");
-			html.append("<img class=\"img-responsive img-hp\" src=\"img/61uIpBXY7nL._SL1280_.jpg\" alt=\"Router\" />");
-			html.append("</div></div>");
+			html.append("<div class=\"row\"><div class=\"col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2\">").append(NewLine.CRLF);
+			html.append("<img class=\"img-responsive img-hp\" src=\"img/61uIpBXY7nL._SL1280_.jpg\" alt=\"Router\" />").append(NewLine.CRLF);
+			html.append("</div></div>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 			sendResponse(exchange, html.toString());
 		}
