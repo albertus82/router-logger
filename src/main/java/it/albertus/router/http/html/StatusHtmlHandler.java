@@ -61,7 +61,7 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 		}
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.status"))));
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.status")));
 		html.append("<div class=\"page-header\">");
 		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.status"))).append(" <span class=\"label ");
 		final Status status = engine.getCurrentStatus().getStatus();

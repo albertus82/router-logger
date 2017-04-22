@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
-import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.http.HttpServer;
 import it.albertus.router.resources.Messages;
 
@@ -31,7 +30,8 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 		}
 		else {
 			// Response...
-			final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.home"))));
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.home")));
+			// TODO add some contents
 			html.append(buildHtmlFooter());
 			sendResponse(exchange, html.toString());
 		}
