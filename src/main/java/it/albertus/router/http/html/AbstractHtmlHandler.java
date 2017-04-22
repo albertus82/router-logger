@@ -26,60 +26,44 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		}
 	}
 
-	private static final String MSG_KEY_LBL_ERROR = "lbl.error";
+	private static final String MSG_KEY_LBL_ERROR = "lbl.server.error";
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
 	@Override
 	protected void sendForbidden(final HttpExchange exchange) throws IOException {
-		addCommonHeaders(exchange);
-
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.forbidden"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_FORBIDDEN)));
+		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_FORBIDDEN))).append("</h2></div>").append(NewLine.CRLF);
+		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.forbidden"))).append("</h4>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
-
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_FORBIDDEN, response.length);
-		exchange.getResponseBody().write(response); // FIXME
+		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_FORBIDDEN);
 	}
 
 	@Override
 	protected void sendNotFound(final HttpExchange exchange) throws IOException {
-		addCommonHeaders(exchange);
-
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_NOT_FOUND)));
+		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_NOT_FOUND))).append("</h2></div>").append(NewLine.CRLF);
+		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h4>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
-
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, response.length);
-		exchange.getResponseBody().write(response); // FIXME
+		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND);
 	}
 
 	@Override
 	protected void sendInternalError(final HttpExchange exchange) throws IOException {
-		addCommonHeaders(exchange);
-
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("err.server.handler"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_INTERNAL_ERROR)));
+		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, HttpURLConnection.HTTP_INTERNAL_ERROR))).append("</h2></div>").append(NewLine.CRLF);
+		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("err.server.handler"))).append("</h4>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
-
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, response.length);
-		exchange.getResponseBody().write(response); // FIXME
+		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
 	}
 
 	@Override
 	protected void sendError(final HttpExchange exchange, final HttpException e) throws IOException {
-		addCommonHeaders(exchange);
-
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR))));
-		html.append("<h3>").append(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode())).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, e.getStatusCode())));
+		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, e.getStatusCode()))).append("</h2></div>").append(NewLine.CRLF);
+		html.append("<h4 class=\"alert alert-danger\" role=\"alert\">").append(HtmlUtils.escapeHtml(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode()))).append("</h4>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
-
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(e.getStatusCode(), response.length);
-		exchange.getResponseBody().write(response); // FIXME
+		sendResponse(exchange, html.toString(), e.getStatusCode());
 	}
 
 	protected void sendResponse(final HttpExchange exchange, final String html) throws IOException {
@@ -102,7 +86,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 */
 	protected final String buildHtmlHeader(final String title) {
 		final StringBuilder html = new StringBuilder("<!DOCTYPE html>").append(NewLine.CRLF);
-		html.append("<html lang=\"").append(Messages.getLanguage().getLocale().getLanguage()).append("\">").append(NewLine.CRLF);
+		html.append("<html lang=\"").append(HtmlUtils.escapeHtml(Messages.getLanguage().getLocale().getLanguage())).append("\">").append(NewLine.CRLF);
 		html.append(buildHtmlHead(title));
 		html.append("<body>").append(NewLine.CRLF);
 		html.append(buildHtmlNavigationBar());
@@ -110,7 +94,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 		return html.toString();
 	}
 
-	private String buildHtmlNavigationBar() {
+	private StringBuilder buildHtmlNavigationBar() {
 		final StringBuilder html = new StringBuilder();
 		html.append("<div class=\"navbar navbar-default navbar-static-top\">").append(NewLine.CRLF);
 		html.append("<div class=\"container\">").append(NewLine.CRLF);
@@ -155,7 +139,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 			html.append("</ul>").append(NewLine.CRLF).append("</li>").append(NewLine.CRLF);
 		}
 		html.append("</ul>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF).append("</div>").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
 	/**
@@ -166,16 +150,16 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 *        application name. If null or empty, nothing but the application
 	 *        name will be used.
 	 * 
-	 * @return the string containing the HTML code.
+	 * @return the StringBuilder containing the HTML code.
 	 */
-	private String buildHtmlHead(final String title) {
+	private StringBuilder buildHtmlHead(final String title) {
 		final StringBuilder html = new StringBuilder("<head>").append(NewLine.CRLF);
 		html.append(buildHtmlHeadMeta());
 		html.append(buildHtmlHeadLink());
 		html.append(buildHtmlHeadScript());
 		html.append(buildHtmlHeadTitle(title));
 		html.append("</head>").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
 	/**
@@ -184,44 +168,45 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * @param title the title to be included after the application name. If null
 	 *        or empty, nothing but the application name will be used.
 	 * 
-	 * @return the string containing the HTML code.
+	 * @return the StringBuilder containing the HTML code.
 	 */
-	private String buildHtmlHeadTitle(final String title) {
+	private StringBuilder buildHtmlHeadTitle(final String title) {
 		final StringBuilder html = new StringBuilder("<title>");
 		if (title != null && !title.trim().isEmpty()) {
 			html.append(title.trim()).append(" - ");
 		}
-		return html.append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</title>").append(NewLine.CRLF).toString();
+		html.append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</title>").append(NewLine.CRLF);
+		return html;
 	}
 
 	/**
 	 * Override this method to create {@code <style>} element. The default
 	 * implementation returns an empty string.
 	 * 
-	 * @return the string containing the HTML code.
+	 * @return the StringBuilder containing the HTML code.
 	 */
-	private String buildHtmlHeadLink() {
+	private StringBuilder buildHtmlHeadLink() {
 		final StringBuilder html = new StringBuilder();
 		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap.min.css\" />").append(NewLine.CRLF);
 		html.append("<link rel=\"stylesheet\" href=\"/css/bootstrap-theme.min.css\" />").append(NewLine.CRLF);
 		html.append("<link rel=\"stylesheet\" href=\"/css/routerlogger.css\" />").append(NewLine.CRLF);
 		html.append("<link rel=\"stylesheet\" href=\"/fonts/fonts.css\" />").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
-	private String buildHtmlHeadScript() {
+	private StringBuilder buildHtmlHeadScript() {
 		final StringBuilder html = new StringBuilder();
 		html.append("<script type=\"text/javascript\" src=\"/js/jquery.min.js\"></script>").append(NewLine.CRLF);
 		html.append("<script type=\"text/javascript\" src=\"/js/bootstrap.min.js\"></script>").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
-	private String buildHtmlHeadMeta() {
+	private StringBuilder buildHtmlHeadMeta() {
 		final StringBuilder html = new StringBuilder();
 		html.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />").append(NewLine.CRLF); // responsive
 		html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=").append(getCharset().name().toLowerCase()).append("\" />").append(NewLine.CRLF); // XHTML
 		html.append("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
 	/**
@@ -230,7 +215,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 * @return the string containing the HTML code.
 	 */
 	protected final String buildHtmlFooter() {
-		final StringBuilder html = new StringBuilder("</div>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder("</div>").append(NewLine.CRLF); // container
 		html.append("<div class=\"footer\"><div class=\"container\"><p class=\"text-muted\">");
 		html.append("<a href=\"").append(HtmlUtils.escapeHtml(Messages.get("msg.website"))).append("\">").append(HtmlUtils.escapeHtml(Messages.get("msg.application.name"))).append("</a> ");
 		final Version version = Version.getInstance();

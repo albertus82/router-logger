@@ -147,17 +147,6 @@ public class LogsHandler extends AbstractHtmlHandler {
 		}
 	}
 
-	@Override
-	protected void sendNotFound(final HttpExchange exchange) throws IOException { // FIXME probabilmente basta il super
-		addCommonHeaders(exchange);
-
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.error"))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
-		html.append(buildHtmlFooter());
-
-		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND); 
-	}
-
 	private void fileList(final HttpExchange exchange) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs"))));
 
@@ -183,7 +172,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 		sendResponse(exchange, html.toString());
 	}
 
-	private String buildHtmlTable(final File[] files, final Collection<File> lockedFiles) throws UnsupportedEncodingException {
+	private StringBuilder buildHtmlTable(final File[] files, final Collection<File> lockedFiles) throws UnsupportedEncodingException {
 		Arrays.sort(files);
 		final StringBuilder html = new StringBuilder();
 		html.append("<table class=\"table table-striped\"><thead><tr>");
@@ -218,19 +207,21 @@ public class LogsHandler extends AbstractHtmlHandler {
 			html.append("</tr>").append(NewLine.CRLF);
 		}
 		html.append("</tbody></table>").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
-	private String buildHtmlDeleteAllButton(final boolean disabled) {
+	private StringBuilder buildHtmlDeleteAllButton(final boolean disabled) {
 		final StringBuilder html = new StringBuilder();
 		if (disabled) {
 			html.append("<form action=\"?\"><div><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"")
-					.append(" /></div></form>");
+			html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+			html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" />");
+			html.append("</div></form>");
 		}
-		return html.append(NewLine.CRLF).toString();
+		html.append(NewLine.CRLF);
+		return html;
 	}
 
 	private void refresh(final HttpExchange exchange) throws IOException {
