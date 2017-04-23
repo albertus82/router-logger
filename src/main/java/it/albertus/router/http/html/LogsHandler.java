@@ -114,11 +114,11 @@ public class LogsHandler extends AbstractHtmlHandler {
 			if (!headMethod) {
 				input = new FileInputStream(file);
 			}
-			addDateHeader(exchange);
-			exchange.getResponseHeaders().add("Content-Type", getContentType(".log"));
-			exchange.getResponseHeaders().add("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+			setDateHeader(exchange);
+			setContentTypeHeader(exchange, getContentType(".log"));
+			exchange.getResponseHeaders().set("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 			if (canCompressResponse(exchange)) {
-				addGzipHeader(exchange);
+				setGzipHeader(exchange);
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0); // Transfer-Encoding: chunked
 				if (!headMethod) {
 					output = new GZIPOutputStream(exchange.getResponseBody(), BUFFER_SIZE);
@@ -231,8 +231,8 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	private void refresh(final HttpExchange exchange) throws IOException {
-		addDateHeader(exchange);
-		exchange.getResponseHeaders().add("Location", getPath());
+		setDateHeader(exchange);
+		exchange.getResponseHeaders().set("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close();
 		exchange.close();

@@ -55,7 +55,7 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 			if (refresh <= 0) { // Auto
 				refresh = Math.max(1, (int) (engine.getWaitTimeInMillis() / 1000) - 1);
 			}
-			exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
+			setRefreshHeader(exchange, refresh);
 		}
 
 		// Response...

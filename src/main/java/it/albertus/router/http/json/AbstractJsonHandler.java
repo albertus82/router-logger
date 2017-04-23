@@ -33,12 +33,6 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 		this.engine = engine;
 	}
 
-	/**
-	 * Adds {@code Content-Type: application/json} header to the provided
-	 * {@link HttpExchange} object.
-	 * 
-	 * @param exchange the {@link HttpExchange} to be modified.
-	 */
 	@Override
 	protected String getContentType(final String fileName) {
 		return "application/json; charset=" + getCharset().name();
@@ -55,7 +49,7 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 			if (refresh <= 0) { // Auto
 				refresh = Math.max(1, (int) (engine.getWaitTimeInMillis() / 1000) - 1);
 			}
-			exchange.getResponseHeaders().add("Refresh", Integer.toString(refresh));
+			setRefreshHeader(exchange, refresh);
 		}
 	}
 

@@ -48,12 +48,12 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void addContentTypeHeader(final HttpExchange exchange) {
+	protected void setContentTypeHeader(final HttpExchange exchange) {
 		if (existsStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) && !exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
-			exchange.getResponseHeaders().add("Content-Type", getContentType(exchange.getRequestURI().getPath())); // extension based
+			setContentTypeHeader(exchange, getContentType(exchange.getRequestURI().getPath())); // extension based
 		}
 		else {
-			super.addContentTypeHeader(exchange); // text/html
+			super.setContentTypeHeader(exchange); // text/html
 		}
 	}
 

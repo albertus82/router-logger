@@ -38,7 +38,7 @@ public class DisconnectHandler extends AbstractHtmlHandler {
 		}
 
 		// Headers...
-		addCommonHeaders(exchange);
+		setCommonHeaders(exchange);
 
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.disconnect")));

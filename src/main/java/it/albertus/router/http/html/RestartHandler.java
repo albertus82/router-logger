@@ -33,7 +33,7 @@ public class RestartHandler extends AbstractHtmlHandler {
 	@Override
 	public void doPost(final HttpExchange exchange) throws IOException {
 		// Headers...
-		addCommonHeaders(exchange);
+		setCommonHeaders(exchange);
 
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.restart")));

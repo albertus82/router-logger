@@ -102,8 +102,8 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 		}
 
 		// Post/Redirect/Get
-		addDateHeader(exchange);
-		exchange.getResponseHeaders().add("Location", getPath());
+		setDateHeader(exchange);
+		exchange.getResponseHeaders().set("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close(); // Needed when no write occurs.
 		exchange.close();
