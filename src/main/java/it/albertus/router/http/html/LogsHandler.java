@@ -29,7 +29,6 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
-import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 @Path("/logs")
@@ -53,8 +52,8 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath() + '/');
-		if (pathInfo == null || pathInfo.trim().isEmpty()) { // List log files (no file name present in URL)
+		final String pathInfo = getPathInfo(exchange).trim();
+		if (pathInfo.isEmpty() || "/".equals(pathInfo)) { // List log files (no file name present in URL)
 			fileList(exchange);
 		}
 		else {
@@ -81,8 +80,8 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doDelete(final HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath() + '/');
-		if (pathInfo.trim().isEmpty()) { // Delete all log files
+		final String pathInfo = getPathInfo(exchange).trim();
+		if (pathInfo.isEmpty() || "/".equals(pathInfo)) { // Delete all log files
 			deleteAll(exchange);
 		}
 		else {
@@ -116,7 +115,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 				input = new FileInputStream(file);
 			}
 			addDateHeader(exchange);
-			exchange.getResponseHeaders().add("Content-Type", "text/x-log");
+			exchange.getResponseHeaders().add("Content-Type", getContentType(".log"));
 			exchange.getResponseHeaders().add("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 			if (canCompressResponse(exchange)) {
 				addGzipHeader(exchange);

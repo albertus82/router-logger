@@ -1,6 +1,8 @@
 package it.albertus.router.http.html;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -8,9 +10,12 @@ import it.albertus.httpserver.annotation.Path;
 import it.albertus.router.http.HttpServer;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
+import it.albertus.util.logging.LoggerFactory;
 
 @Path("/")
 public class RootHtmlHandler extends AbstractHtmlHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(RootHtmlHandler.class);
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;
@@ -26,8 +31,8 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		if (!exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
-			sendStaticResource(exchange, RESOURCE_BASE_PATH + getPathInfo(exchange));
+		if (requestedStaticResource(exchange)) {
+			sendStaticResource(exchange, RESOURCE_BASE_PATH + getPathInfo(exchange), "no-transform, public, max-age=86400, s-maxage=259200");
 		}
 		else {
 			// Response...
@@ -53,13 +58,37 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
+	protected void log(final HttpExchange exchange) {
+		if (requestedStaticResource(exchange)) {
+			Level level = Level.OFF;
+			try {
+				level = Level.parse(getHttpServerConfiguration().getRequestLoggingLevel());
+			}
+			catch (final RuntimeException e) {
+				logger.log(Level.WARNING, e.toString(), e);
+			}
+			if (level.intValue() > Level.FINE.intValue()) {
+				level = Level.FINE;
+			}
+			doLog(exchange, level);
+		}
+		else {
+			super.log(exchange);
+		}
+	}
+
+	@Override
 	public boolean isEnabled(final HttpExchange exchange) {
-		if (!exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
+		if (requestedStaticResource(exchange)) {
 			return true; // always serve static resources
 		}
 		else {
 			return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED); // configuration based
 		}
+	}
+
+	private boolean requestedStaticResource(final HttpExchange exchange) {
+		return !exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath());
 	}
 
 }
