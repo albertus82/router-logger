@@ -47,6 +47,8 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 
+	private static final String METHOD_PARAM = "_method";
+
 	private static final LogFileManager logFileManager = LogFileManager.getInstance();
 
 	@Override
@@ -69,11 +71,11 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void doPost(final HttpExchange exchange) throws IOException, HttpException {
-		if (HttpMethod.DELETE.equalsIgnoreCase(new RequestParameterExtractor(exchange, getCharset()).getParameter("_method"))) {
+		if (HttpMethod.DELETE.equalsIgnoreCase(new RequestParameterExtractor(exchange, getCharset()).getParameter(METHOD_PARAM))) {
 			doDelete(exchange);
 		}
 		else {
-			super.doPost(exchange);
+			super.doPost(exchange); // Reject
 		}
 	}
 
@@ -181,10 +183,10 @@ public class LogsHandler extends AbstractHtmlHandler {
 		Arrays.sort(files);
 		final StringBuilder html = new StringBuilder();
 		html.append("<table class=\"table table-striped\"><thead><tr>");
-		html.append("<th class=\"table-heading\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
-		html.append("<th class=\"table-heading text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
-		html.append("<th class=\"table-heading text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
-		html.append("<th class=\"table-heading text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
+		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
+		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
+		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
+		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
 		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
 		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
 		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
@@ -196,7 +198,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			html.append(HtmlUtils.escapeHtml(file.getName()));
 			html.append("</a>");
 			html.append("</td>");
-			html.append("<td class=\"text-right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
+			html.append("<td class=\"text-right\">").append(HtmlUtils.escapeHtml(dateFormatFileList.format(new Date(file.lastModified())))).append("</td>");
 			html.append("<td class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file))))).append("</td>");
 			html.append("<td class=\"text-right\">");
 			if (lockedFiles.contains(file)) {
@@ -205,7 +207,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			}
 			else {
 				html.append("<form action=\"").append(getPath()).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-xs btn-danger\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
+				html.append("<input type=\"hidden\" name=\"").append(METHOD_PARAM).append("\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-xs btn-danger\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
 			}
 			html.append("</div></form>");
 			html.append("</td>");
@@ -222,7 +224,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 		}
 		else {
 			html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-			html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" />");
+			html.append("<input type=\"hidden\" name=\"").append(METHOD_PARAM).append("\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" />");
 			html.append("</div></form>");
 		}
 		html.append(NewLine.CRLF);
