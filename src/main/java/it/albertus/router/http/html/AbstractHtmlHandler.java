@@ -19,7 +19,7 @@ import it.albertus.util.Version;
 public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
 	public static class Defaults {
-		public static final boolean COMPRESS_RESPONSE = false;
+		public static final boolean COMPRESS_RESPONSE = true;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");

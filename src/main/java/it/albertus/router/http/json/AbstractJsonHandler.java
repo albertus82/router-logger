@@ -18,7 +18,7 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 		public static final boolean ENABLED = true;
 		public static final boolean REFRESH = true;
 		public static final int REFRESH_SECS = 0;
-		public static final boolean COMPRESS_RESPONSE = false;
+		public static final boolean COMPRESS_RESPONSE = true;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
