@@ -14,7 +14,8 @@ html, body {
 
 .dropdown-menu-item {
 	display: block;
-	padding: .22em 1.4em;
+	font-size: 1.05em;
+	padding: .45em 1.4em;
 	clear: both;
 	text-decoration: none !important;
 	white-space: nowrap;
