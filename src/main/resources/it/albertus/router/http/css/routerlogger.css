@@ -81,3 +81,8 @@ li.list-group-item-warning {
 .img-hp {
 	margin-top: 1em;
 }
+
+.btn-alert {
+	margin-left: .4em;
+	vertical-align: initial;
+}
