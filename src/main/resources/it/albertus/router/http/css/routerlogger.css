@@ -21,6 +21,10 @@ html, body {
 	white-space: nowrap;
 }
 
+.dropdown-menu-item:focus {
+	outline: 0;
+}
+
 .dropdown-menu-item:hover {
 	color: #333;
 }
