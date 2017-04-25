@@ -11,9 +11,9 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
+import it.albertus.httpserver.DefaultHttpServerConfiguration;
 import it.albertus.jface.preference.StaticLabelsAndValues;
 import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
-import it.albertus.router.http.HttpServerConfiguration;
 
 public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 
@@ -25,8 +25,8 @@ public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 	private static final Set<String> sslContextAlgorithms = new TreeSet<String>();
 
 	static {
-		keyStoreAlgorithms.add(HttpServerConfiguration.Defaults.SSL_KEYSTORE_TYPE);
-		sslContextAlgorithms.add(HttpServerConfiguration.Defaults.SSL_PROTOCOL);
+		keyStoreAlgorithms.add(DefaultHttpServerConfiguration.Defaults.SSL_KEYSTORE_TYPE);
+		sslContextAlgorithms.add(DefaultHttpServerConfiguration.Defaults.SSL_PROTOCOL);
 
 		final String keyManagerFactoryClassName = KeyManagerFactory.class.getSimpleName();
 		final String trustManagerFactoryClassName = TrustManagerFactory.class.getSimpleName();

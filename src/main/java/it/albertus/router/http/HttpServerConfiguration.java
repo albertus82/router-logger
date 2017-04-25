@@ -9,6 +9,15 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 
 	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
+	public static class Defaults {
+		public static final long MAX_REQ_TIME = 10; // seconds
+		public static final long MAX_RSP_TIME = 600; // seconds
+
+		private Defaults() {
+			throw new IllegalAccessError("Constants class");
+		}
+	}
+
 	@Override
 	public boolean isEnabled() {
 		return configuration.getBoolean("server.enabled", super.isEnabled());
@@ -40,13 +49,13 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	}
 
 	@Override
-	public short getMaxReqTime() {
-		return configuration.getShort("server.maxreqtime", super.getMaxReqTime());
+	public long getMaxReqTime() {
+		return configuration.getLong("server.maxreqtime", Defaults.MAX_REQ_TIME);
 	}
 
 	@Override
-	public short getMaxRspTime() {
-		return configuration.getShort("server.maxrsptime", super.getMaxRspTime());
+	public long getMaxRspTime() {
+		return configuration.getLong("server.maxrsptime", Defaults.MAX_RSP_TIME);
 	}
 
 	@Override
@@ -90,8 +99,8 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	}
 
 	@Override
-	public byte getThreadCount() {
-		return configuration.getByte("server.threads", super.getThreadCount());
+	public int getMaxThreadCount() {
+		return configuration.getInt("server.threads", super.getMaxThreadCount());
 	}
 
 	@Override
