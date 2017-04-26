@@ -112,7 +112,7 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 		for (final String cipherSuite : params.getCipherSuites()) {
 			final String cipherSuiteUpperCase = cipherSuite.toUpperCase();
 			// Excluding unsafe suites (3DES is slow and weak, avoid the RSA key exchange unless absolutely necessary). See https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices and https://weakdh.org
-			if (!cipherSuiteUpperCase.contains("_3DES_") && !cipherSuiteUpperCase.contains("_DHE_") && !cipherSuiteUpperCase.startsWith("TLS_RSA_")) {
+			if (!cipherSuiteUpperCase.contains("_DHE_") && !cipherSuiteUpperCase.startsWith("TLS_RSA_")) {
 				cipherSuites.add(cipherSuite);
 			}
 		}
