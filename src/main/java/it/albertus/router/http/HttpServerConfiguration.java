@@ -120,8 +120,8 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	}
 
 	@Override
-	public int getMaxThreadCount() {
-		return configuration.getInt("server.threads", super.getMaxThreadCount());
+	public int getThreadCount() {
+		return configuration.getInt("server.threads", super.getThreadCount());
 	}
 
 	@Override

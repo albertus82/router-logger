@@ -236,7 +236,7 @@ public enum Preference implements IPreference {
 	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(DefaultHttpServerConfiguration.Defaults.AUTHENTICATION).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_USERNAME(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).hashAlgorithm(DefaultHttpServerConfiguration.Defaults.PASSWORD_HASH_ALGORITHM).build()),
-	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(DefaultHttpServerConfiguration.Defaults.MAX_THREAD_COUNT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
+	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(DefaultHttpServerConfiguration.Defaults.THREAD_COUNT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
 	SERVER_MAXREQTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.Defaults.MAX_REQ_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
