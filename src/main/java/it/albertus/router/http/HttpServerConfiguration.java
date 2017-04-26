@@ -18,6 +18,7 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	public static class Defaults {
 		public static final long MAX_REQ_TIME = 10; // seconds
 		public static final long MAX_RSP_TIME = 600; // seconds
+		public static final int MAX_THREAD_COUNT = 12;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -120,8 +121,8 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	}
 
 	@Override
-	public int getThreadCount() {
-		return configuration.getInt("server.threads", super.getThreadCount());
+	public int getMaxThreadCount() {
+		return configuration.getInt("server.threads", Defaults.MAX_THREAD_COUNT);
 	}
 
 	@Override
