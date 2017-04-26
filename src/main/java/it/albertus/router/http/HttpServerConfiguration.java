@@ -1,5 +1,11 @@
 package it.albertus.router.http;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
+
 import it.albertus.httpserver.DefaultHttpServerConfiguration;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
@@ -96,6 +102,21 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	@Override
 	public String getSslProtocol() {
 		return configuration.getString("server.ssl.protocol", super.getSslProtocol());
+	}
+
+	@Override
+	public SSLParameters getSslParameters(final SSLContext context) {
+		final SSLParameters params = super.getSslParameters(context);
+		final Set<String> cipherSuites = new LinkedHashSet<String>();
+		for (final String cipherSuite : params.getCipherSuites()) {
+			final String cipherSuiteUpperCase = cipherSuite.toUpperCase();
+			// Excluding unsafe suites (3DES is slow and weak, avoid the RSA key exchange unless absolutely necessary). See https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices and https://weakdh.org
+			if (!cipherSuiteUpperCase.contains("_3DES_") && !cipherSuiteUpperCase.contains("_DHE_") && !cipherSuiteUpperCase.startsWith("TLS_RSA_")) {
+				cipherSuites.add(cipherSuite);
+			}
+		}
+		params.setCipherSuites(cipherSuites.toArray(new String[0]));
+		return params;
 	}
 
 	@Override
