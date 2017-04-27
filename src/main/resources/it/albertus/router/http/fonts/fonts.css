@@ -1,0 +1,36 @@
+@font-face {
+	font-family: 'Bree Serif';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Bree Serif'), local('BreeSerif-Regular'), url(breeserif/v5/LQ7WLTaITDg4OSRuOZCpsxsxEYwM7FgeyaSgU71cLG0.woff) format('woff');
+}
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Lato Regular'), local('Lato-Regular'), url(lato/v13/9k-RPmcnxYEPm8CNFsH2gg.woff) format('woff');
+}
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Lato Bold'), local('Lato-Bold'), url(lato/v13/wkfQbvfT_02e2IWO3yYueQ.woff) format('woff');
+}
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 900;
+	src: local('Lato Black'), local('Lato-Black'), url(lato/v13/BVtM30trf7q_jfqYeHfjtA.woff) format('woff');
+}
+@font-face {
+	font-family: 'Ubuntu Mono';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ubuntumono/v6/ViZhet7Ak-LRXZMXzuAfkYbN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+@font-face {
+	font-family: 'Ubuntu Mono';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ubuntumono/v6/ceqTZGKHipo8pJj4molytjqR_3kx9_hJXbbyU8S6IN0.woff) format('woff');
+}

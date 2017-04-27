@@ -29,7 +29,7 @@ import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 @Path("/configuration")
-public class ConfigurationHandler extends BaseHtmlHandler {
+public class ConfigurationHandler extends AbstractHtmlHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationHandler.class);
 
@@ -41,24 +41,25 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
 
 	private static final String REQUEST_PARAM_NAME = "properties";
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))).append("</h3>").append(NewLine.CRLF);
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.configuration")));
 
-		html.append(buildHtmlHomeButton());
-		html.append(buildHtmlRefreshButton());
+		html.append("<div class=\"page-header\">").append(NewLine.CRLF);
+		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))).append(buildHtmlRefreshButton()).append("</h2>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF); // page-header
 
-		html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-		html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
-		html.append("<textarea rows=\"25\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">");
-		html.append(HtmlUtils.escapeHtml(getPropertiesAsString(configuration.getProperties())));
-		html.append("</textarea>");
-		html.append("</div></form>").append(NewLine.SYSTEM_LINE_SEPARATOR);
+		// Form
+		html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div class=\"form-group\">");
+		html.append("<textarea class=\"form-control textarea-properties\" rows=\"14\" cols=\"80\" name=\"").append(REQUEST_PARAM_NAME).append("\">").append(HtmlUtils.escapeHtml(getPropertiesAsString(configuration.getProperties()))).append("</textarea>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF);
+		html.append("<div class=\"form-group\">").append(NewLine.CRLF);
+		html.append("<input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.save"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.save"))).append("');\" />").append(NewLine.CRLF);
+		html.append("</div></form>").append(NewLine.CRLF);
 
 		html.append(buildHtmlFooter());
 
@@ -101,16 +102,11 @@ public class ConfigurationHandler extends BaseHtmlHandler {
 		}
 
 		// Post/Redirect/Get
-		addDateHeader(exchange);
-		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
+		setDateHeader(exchange);
+		exchange.getResponseHeaders().set("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close(); // Needed when no write occurs.
 		exchange.close();
-	}
-
-	@Override
-	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} textarea {display: block; margin-top: 1.75em;}</style>";
 	}
 
 	@Override

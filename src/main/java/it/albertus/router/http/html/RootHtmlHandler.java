@@ -1,19 +1,21 @@
 package it.albertus.router.http.html;
 
 import java.io.IOException;
-import java.text.DateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.annotation.Path;
-import it.albertus.httpserver.html.HtmlUtils;
+import it.albertus.router.http.HttpServerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
-import it.albertus.util.Version;
+import it.albertus.util.logging.LoggerFactory;
 
 @Path("/")
-public class RootHtmlHandler extends BaseHtmlHandler {
+public class RootHtmlHandler extends AbstractHtmlHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(RootHtmlHandler.class);
 
 	public static class Defaults {
 		public static final boolean ENABLED = true;
@@ -23,50 +25,70 @@ public class RootHtmlHandler extends BaseHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
+
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfiguration.class.getPackage().getName().toLowerCase().replace('.', '/') + '/';
 
 	@Override
-	protected void doGet(HttpExchange exchange) throws IOException {
-		// Response...
-		final Version version = Version.getInstance();
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.home"))));
-		html.append("<h3>").append('v').append(version.getNumber()).append(" (").append(DateFormat.getDateInstance(DateFormat.MEDIUM, Messages.getLanguage().getLocale()).format(version.getDate())).append(")</h3>").append(NewLine.CRLF);
-
-		if (configuration.getBoolean(StatusHtmlHandler.CFG_KEY_ENABLED, StatusHtmlHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(getPath(StatusHtmlHandler.class)).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.status"))).append("\" /></div></form>").append(NewLine.CRLF);
+	protected void doGet(final HttpExchange exchange) throws IOException {
+		if (requestedStaticResource(exchange)) {
+			sendStaticResource(exchange, RESOURCE_BASE_PATH + getPathInfo(exchange), "no-transform, public, max-age=86400, s-maxage=259200");
 		}
-		if (configuration.getBoolean(LogsHandler.CFG_KEY_ENABLED, LogsHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(getPath(LogsHandler.class)).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs"))).append("\" /></div></form>").append(NewLine.CRLF);
+		else {
+			// Response...
+			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.home")));
+			html.append("<div class=\"row\">").append(NewLine.CRLF);
+			html.append("<div class=\"col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2\">").append(NewLine.CRLF);
+			html.append("<img class=\"img-responsive img-hp\" src=\"img/61uIpBXY7nL._SL1280_.jpg\" alt=\"Router\" />").append(NewLine.CRLF);
+			html.append("</div>").append(NewLine.CRLF);
+			html.append("</div>").append(NewLine.CRLF);
+			html.append(buildHtmlFooter());
+			sendResponse(exchange, html.toString());
 		}
-		if (configuration.getBoolean(ConfigurationHandler.CFG_KEY_ENABLED, ConfigurationHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(getPath(ConfigurationHandler.class)).append("\" method=\"").append(HttpMethod.GET).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.configuration"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.configuration.confirm.open"))).append("');\" /></div></form>").append(NewLine.CRLF);
-		}
-		if (configuration.getBoolean(RestartHandler.CFG_KEY_ENABLED, RestartHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(getPath(RestartHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.restart"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.confirm.restart.message"))).append("');\" /></div></form>").append(NewLine.CRLF);
-		}
-		if (configuration.getBoolean(ConnectHandler.CFG_KEY_ENABLED, ConnectHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(getPath(ConnectHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.connect"))).append("\" /></div></form>").append(NewLine.CRLF);
-		}
-		if (configuration.getBoolean(DisconnectHandler.CFG_KEY_ENABLED, DisconnectHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(getPath(DisconnectHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.disconnect"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.confirm.disconnect.message"))).append("');\" /></div></form>").append(NewLine.CRLF);
-		}
-		if (configuration.getBoolean(CloseHandler.CFG_KEY_ENABLED, CloseHandler.Defaults.ENABLED)) {
-			html.append("<form action=\"").append(getPath(CloseHandler.class)).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.close"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.confirm.close.message"))).append("');\" /></div></form>").append(NewLine.CRLF);
-		}
-
-		html.append(buildHtmlFooter());
-
-		sendResponse(exchange, html.toString());
 	}
 
 	@Override
-	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} div {display: inline;}</style>";
+	protected void setContentTypeHeader(final HttpExchange exchange) {
+		if (existsStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) && !exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
+			setContentTypeHeader(exchange, getContentType(exchange.getRequestURI().getPath())); // extension based
+		}
+		else {
+			super.setContentTypeHeader(exchange); // text/html
+		}
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
+	protected void log(final HttpExchange exchange) {
+		if (requestedStaticResource(exchange)) {
+			Level level = Level.OFF;
+			try {
+				level = Level.parse(getHttpServerConfiguration().getRequestLoggingLevel());
+			}
+			catch (final RuntimeException e) {
+				logger.log(Level.WARNING, e.toString(), e);
+			}
+			if (level.intValue() > Level.FINE.intValue()) {
+				level = Level.FINE;
+			}
+			doLog(exchange, level);
+		}
+		else {
+			super.log(exchange);
+		}
+	}
+
+	@Override
+	public boolean isEnabled(final HttpExchange exchange) {
+		if (requestedStaticResource(exchange)) {
+			return true; // always serve static resources
+		}
+		else {
+			return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED); // configuration based
+		}
+	}
+
+	private boolean requestedStaticResource(final HttpExchange exchange) {
+		return !exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath());
 	}
 
 }

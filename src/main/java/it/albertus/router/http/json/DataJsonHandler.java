@@ -10,7 +10,7 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Payload;
 
 @Path("/json/data")
-public class DataJsonHandler extends BaseJsonHandler {
+public class DataJsonHandler extends AbstractJsonHandler {
 
 	public DataJsonHandler(final RouterLoggerEngine engine) {
 		super(engine);

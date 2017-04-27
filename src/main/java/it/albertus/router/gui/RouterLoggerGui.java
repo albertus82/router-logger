@@ -34,7 +34,7 @@ import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.InitializationException;
 import it.albertus.util.ConfigurationException;
-import it.albertus.util.Configured;
+import it.albertus.util.Supplier;
 import it.albertus.util.ExceptionUtils;
 import it.albertus.util.Version;
 import it.albertus.util.logging.LoggerFactory;
@@ -91,9 +91,9 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		if (!fontDataString.isEmpty()) {
 			console.setFont(PreferenceConverter.readFontData(fontDataString));
 		}
-		console.setLimit(new Configured<Integer>() {
+		console.setLimit(new Supplier<Integer>() {
 			@Override
-			public Integer getValue() {
+			public Integer get() {
 				return configuration.getInt("gui.console.max.chars");
 			}
 		});
@@ -270,6 +270,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			public void run() {
 				try {
 					httpServer.stop();
+					scheduleShutdown(-1);
 					joinPollingThread();
 					configuration.reload();
 					mqttClient.disconnect();

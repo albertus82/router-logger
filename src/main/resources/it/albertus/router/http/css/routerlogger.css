@@ -1,0 +1,92 @@
+html, body {
+	font-family: 'Lato', sans-serif;
+} 
+
+.navbar-brand {
+	font-family: 'Bree Serif', serif;
+	font-size: 1.55em;
+	margin-top: -.09em;
+}
+
+#navbar {
+	font-size: 1.15em; 
+}
+
+.dropdown-menu-item {
+	display: block;
+	font-size: 1.05em;
+	padding: .45em 1.4em;
+	clear: both;
+	text-decoration: none !important;
+	white-space: nowrap;
+}
+
+.dropdown-menu-item:focus {
+	outline: 0;
+}
+
+.dropdown-menu-item:hover {
+	color: #333;
+}
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	margin-bottom: 60px;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 60px;
+	background-color: #eee;
+}
+
+.container .text-muted {
+	margin: 20px 0;
+	text-align: center;
+}
+
+span.badge-header, span.label-header {
+	font-size: 1.4rem;
+	vertical-align: middle;
+	margin-left: 0.6rem;
+}
+
+li.list-group-item-mark {
+	background-color: #FFA;
+}
+
+span.list-group-item-key {
+	font-weight: bold;
+}
+
+li.list-group-item-warning {
+	color: red;
+}
+
+.btn-bottom {
+	margin-bottom: 2rem;
+}
+
+.textarea-properties {
+	font-family: 'Ubuntu Mono', monospace;
+}
+
+.alert-h4 {
+	font-size: 18px;
+	line-height: 1.1;
+}
+
+.img-hp {
+	margin-top: 1em;
+}
+
+.btn-alert {
+	margin-left: .4em;
+	vertical-align: initial;
+}

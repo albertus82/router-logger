@@ -10,7 +10,7 @@ import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Payload;
 
 @Path("/json/thresholds")
-public class ThresholdsJsonHandler extends BaseJsonHandler {
+public class ThresholdsJsonHandler extends AbstractJsonHandler {
 
 	public ThresholdsJsonHandler(final RouterLoggerEngine engine) {
 		super(engine);

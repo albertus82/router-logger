@@ -29,11 +29,10 @@ import it.albertus.router.resources.Messages;
 import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
-import it.albertus.util.StringUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 @Path("/logs")
-public class LogsHandler extends BaseHtmlHandler {
+public class LogsHandler extends AbstractHtmlHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(LogsHandler.class);
 
@@ -45,23 +44,23 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.logs.enabled";
 
-	private static final int BUFFER_SIZE = 4 * 1024;
+	private static final String METHOD_PARAM = "_method";
 
 	private static final LogFileManager logFileManager = LogFileManager.getInstance();
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath(this.getClass()) + '/');
-		if (pathInfo == null || pathInfo.trim().isEmpty()) { // List log files (no file name present in URL)
+		final String pathInfo = getPathInfo(exchange).trim();
+		if (pathInfo.isEmpty() || "/".equals(pathInfo)) { // List log files (no file name present in URL)
 			fileList(exchange);
 		}
 		else {
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
 			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
-				notFound(exchange);
+				sendNotFound(exchange);
 			}
 			else {
 				download(exchange, file);
@@ -71,25 +70,25 @@ public class LogsHandler extends BaseHtmlHandler {
 
 	@Override
 	protected void doPost(final HttpExchange exchange) throws IOException, HttpException {
-		if (HttpMethod.DELETE.equalsIgnoreCase(new RequestParameterExtractor(exchange, getCharset()).getParameter("_method"))) {
+		if (HttpMethod.DELETE.equalsIgnoreCase(new RequestParameterExtractor(exchange, getCharset()).getParameter(METHOD_PARAM))) {
 			doDelete(exchange);
 		}
 		else {
-			super.doPost(exchange);
+			super.doPost(exchange); // Reject
 		}
 	}
 
 	@Override
 	protected void doDelete(final HttpExchange exchange) throws IOException, HttpException {
-		final String pathInfo = StringUtils.substringAfter(exchange.getRequestURI().toString(), getPath(this.getClass()) + '/');
-		if (pathInfo.trim().isEmpty()) { // Delete all log files
+		final String pathInfo = getPathInfo(exchange).trim();
+		if (pathInfo.isEmpty() || "/".equals(pathInfo)) { // Delete all log files
 			deleteAll(exchange);
 		}
 		else {
 			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
 			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
 			if (!file.exists() || file.isDirectory()) {
-				notFound(exchange);
+				sendNotFound(exchange);
 			}
 			else {
 				delete(exchange, file);
@@ -115,11 +114,11 @@ public class LogsHandler extends BaseHtmlHandler {
 			if (!headMethod) {
 				input = new FileInputStream(file);
 			}
-			addDateHeader(exchange);
-			exchange.getResponseHeaders().add("Content-Type", "text/x-log");
-			exchange.getResponseHeaders().add("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+			setDateHeader(exchange);
+			setContentTypeHeader(exchange, getContentType(".log"));
+			exchange.getResponseHeaders().set("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 			if (canCompressResponse(exchange)) {
-				addGzipHeader(exchange);
+				setGzipHeader(exchange);
 				exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0); // Transfer-Encoding: chunked
 				if (!headMethod) {
 					output = new GZIPOutputStream(exchange.getResponseBody(), BUFFER_SIZE);
@@ -141,7 +140,7 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 		catch (final FileNotFoundException e) {
 			logger.log(Level.WARNING, e.toString(), e);
-			notFound(exchange);
+			sendNotFound(exchange);
 		}
 		finally {
 			IOUtils.closeQuietly(output, input);
@@ -149,34 +148,28 @@ public class LogsHandler extends BaseHtmlHandler {
 		}
 	}
 
-	private void notFound(final HttpExchange exchange) throws IOException {
-		addCommonHeaders(exchange);
-
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.error"))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.found"))).append("</h3>").append(NewLine.CRLF);
-		html.append(buildHtmlFooter());
-
-		sendResponse(exchange, html.toString(), HttpURLConnection.HTTP_NOT_FOUND);
-	}
-
 	private void fileList(final HttpExchange exchange) throws IOException {
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs"))));
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.logs")));
 
 		final File[] files = logFileManager.listFiles();
 		final Collection<File> lockedFiles = logFileManager.getLockedFiles();
 
-		html.append("<h3>").append(HtmlUtils.escapeHtml(files == null || files.length == 0 ? Messages.get("lbl.server.logs.title.empty") : Messages.get("lbl.server.logs.title", files.length))).append("</h3>").append(NewLine.CRLF);
-
-		// Button bar
-		html.append(buildHtmlHomeButton());
-		html.append(buildHtmlRefreshButton());
-		if (files != null && files.length > 0) {
-			html.append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
+		html.append("<div class=\"page-header\">").append(NewLine.CRLF);
+		html.append("<h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs")));
+		if (files != null) {
+			html.append(" <span class=\"badge badge-header\">").append(files.length).append("</span>");
 		}
+		html.append(buildHtmlRefreshButton());
+		html.append("</h2>").append(NewLine.CRLF);
+		html.append("</div>").append(NewLine.CRLF);
 
-		// Table
 		if (files != null && files.length > 0) {
 			html.append(buildHtmlTable(files, lockedFiles));
+			html.append("<hr />");
+			html.append(buildHtmlDeleteAllButton(lockedFiles.containsAll(Arrays.asList(files))));
+		}
+		else {
+			html.append("<div class=\"alert alert-info\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.empty"))).append("</div>");
 		}
 
 		// Footer
@@ -185,14 +178,14 @@ public class LogsHandler extends BaseHtmlHandler {
 		sendResponse(exchange, html.toString());
 	}
 
-	private String buildHtmlTable(final File[] files, final Collection<File> lockedFiles) throws UnsupportedEncodingException {
+	private StringBuilder buildHtmlTable(final File[] files, final Collection<File> lockedFiles) throws UnsupportedEncodingException {
 		Arrays.sort(files);
 		final StringBuilder html = new StringBuilder();
-		html.append("<table><thead><tr>");
+		html.append("<table class=\"table table-striped\"><thead><tr>");
 		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
-		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
-		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
-		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
+		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
+		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
+		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
 		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
 		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
 		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());
@@ -200,51 +193,49 @@ public class LogsHandler extends BaseHtmlHandler {
 			final String encodedFileName = URLEncoder.encode(file.getName(), getCharset().name());
 			html.append("<tr>");
 			html.append("<td>");
-			html.append("<a href=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\">");
+			html.append("<a href=\"").append(getPath()).append('/').append(encodedFileName).append("\">");
 			html.append(HtmlUtils.escapeHtml(file.getName()));
 			html.append("</a>");
 			html.append("</td>");
-			html.append("<td class=\"right\">").append(dateFormatFileList.format(new Date(file.lastModified()))).append("</td>");
-			html.append("<td class=\"right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file))))).append("</td>");
-			html.append("<td class=\"center\">");
+			html.append("<td class=\"text-right\">").append(HtmlUtils.escapeHtml(dateFormatFileList.format(new Date(file.lastModified())))).append("</td>");
+			html.append("<td class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size.kb", numberFormatFileList.format(getKibLength(file))))).append("</td>");
+			html.append("<td class=\"text-right\">");
 			if (lockedFiles.contains(file)) {
 				html.append("<form action=\"?\"><div>");
-				html.append("<input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" disabled=\"disabled\" />");
+				html.append("<input class=\"btn btn-xs btn-danger\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" disabled=\"disabled\" />");
 			}
 			else {
-				html.append("<form action=\"").append(getPath(this.getClass())).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
-				html.append("<input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
+				html.append("<form action=\"").append(getPath()).append('/').append(encodedFileName).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+				html.append("<input type=\"hidden\" name=\"").append(METHOD_PARAM).append("\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-xs btn-danger\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.delete"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete", file.getName()))).append("');\"").append(" />");
 			}
 			html.append("</div></form>");
 			html.append("</td>");
 			html.append("</tr>").append(NewLine.CRLF);
 		}
 		html.append("</tbody></table>").append(NewLine.CRLF);
-		return html.toString();
+		return html;
 	}
 
-	private String buildHtmlDeleteAllButton(final boolean disabled) {
+	private StringBuilder buildHtmlDeleteAllButton(final boolean disabled) {
 		final StringBuilder html = new StringBuilder();
 		if (disabled) {
-			html.append("<form action=\"?\"><div><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
+			html.append("<form action=\"?\"><div><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" disabled=\"disabled\" /></div></form>");
 		}
 		else {
-			html.append("<form action=\"").append(getPath(this.getClass())).append("\" method=\"").append(HttpMethod.POST).append("\"><div><input type=\"hidden\" name=\"_method\" value=\"").append(HttpMethod.DELETE).append("\" /><input type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" /></div></form>");
+			html.append("<form action=\"").append(getPath()).append("\" method=\"").append(HttpMethod.POST).append("\"><div>");
+			html.append("<input type=\"hidden\" name=\"").append(METHOD_PARAM).append("\" value=\"").append(HttpMethod.DELETE).append("\" /><input class=\"btn btn-danger btn-md pull-right btn-bottom\" type=\"submit\" value=\"").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.delete.all"))).append("\" onclick=\"return confirm('").append(HtmlUtils.escapeEcmaScript(Messages.get("msg.server.logs.delete.all"))).append("');\"").append(" />");
+			html.append("</div></form>");
 		}
-		return html.append(NewLine.CRLF).toString();
+		html.append(NewLine.CRLF);
+		return html;
 	}
 
 	private void refresh(final HttpExchange exchange) throws IOException {
-		addDateHeader(exchange);
-		exchange.getResponseHeaders().add("Location", getPath(this.getClass()));
+		setDateHeader(exchange);
+		exchange.getResponseHeaders().set("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close();
 		exchange.close();
-	}
-
-	@Override
-	protected String buildHtmlHeadStyle() {
-		return "<style type=\"text/css\">form {display: inline;} div {display: inline;} table {margin-top: 1em; margin-bottom: 1em;} td.center {text-align: center;} td.right {text-align: right;}</style>";
 	}
 
 	@Override

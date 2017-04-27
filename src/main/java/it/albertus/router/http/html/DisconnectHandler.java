@@ -12,7 +12,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 @Path("/disconnect")
-public class DisconnectHandler extends BaseHtmlHandler {
+public class DisconnectHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;
@@ -22,7 +22,7 @@ public class DisconnectHandler extends BaseHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.disconnect.enabled";
 
 	private final RouterLoggerEngine engine;
 
@@ -32,21 +32,26 @@ public class DisconnectHandler extends BaseHtmlHandler {
 
 	@Override
 	protected void doPost(final HttpExchange exchange) throws IOException {
-		// Headers...
-		addCommonHeaders(exchange);
-
-		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.disconnect"))));
 		final boolean accepted = engine.canDisconnect();
 		if (accepted) {
 			engine.disconnect();
 		}
-		html.append("<h3>").append(accepted ? HtmlUtils.escapeHtml(Messages.get("msg.server.accepted")) : HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</h3>").append(NewLine.CRLF);
-		html.append(buildHtmlHomeButton());
+
+		// Headers...
+		setCommonHeaders(exchange);
+
+		// Response...
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.disconnect")));
+		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.disconnect"))).append("</h2></div>").append(NewLine.CRLF);
+		if (accepted) {
+			html.append("<div class=\"alert alert-success alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</div>").append(NewLine.CRLF);
+		}
+		else {
+			html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.not.acceptable"))).append("</div>").append(NewLine.CRLF);
+		}
 		html.append(buildHtmlFooter());
-		final byte[] response = html.toString().getBytes(getCharset());
-		exchange.sendResponseHeaders(accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_PRECON_FAILED, response.length);
-		exchange.getResponseBody().write(response);
+
+		sendResponse(exchange, html.toString(), accepted ? HttpURLConnection.HTTP_ACCEPTED : HttpURLConnection.HTTP_PRECON_FAILED);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 
 @Path("/restart")
-public class RestartHandler extends BaseHtmlHandler {
+public class RestartHandler extends AbstractHtmlHandler {
 
 	public static class Defaults {
 		public static final boolean ENABLED = false;
@@ -22,7 +22,7 @@ public class RestartHandler extends BaseHtmlHandler {
 		}
 	}
 
-	protected static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
+	static final String CFG_KEY_ENABLED = "server.handler.restart.enabled";
 
 	private final RouterLoggerEngine engine;
 
@@ -33,17 +33,18 @@ public class RestartHandler extends BaseHtmlHandler {
 	@Override
 	public void doPost(final HttpExchange exchange) throws IOException {
 		// Headers...
-		addCommonHeaders(exchange);
+		setCommonHeaders(exchange);
 
 		// Response...
-		final StringBuilder html = new StringBuilder(buildHtmlHeader(HtmlUtils.escapeHtml(Messages.get("lbl.server.restart"))));
-		html.append("<h3>").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</h3>").append(NewLine.CRLF);
-		html.append(buildHtmlHomeButton());
+		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.restart")));
+		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.restart"))).append("</h2></div>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-success alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(Messages.get("msg.server.accepted"))).append("</div>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 
 		final byte[] response = html.toString().getBytes(getCharset());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
 		exchange.getResponseBody().write(response);
+		exchange.getResponseBody().close();
 		exchange.close();
 
 		engine.restart();
