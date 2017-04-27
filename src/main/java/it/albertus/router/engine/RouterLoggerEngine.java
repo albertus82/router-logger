@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.albertus.httpserver.EnhancedHttpServer;
+import it.albertus.httpserver.LightweightHttpServer;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.ThresholdsEmailSender;
 import it.albertus.router.http.HttpServerConfiguration;
@@ -61,7 +61,7 @@ public abstract class RouterLoggerEngine {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-	protected final EnhancedHttpServer httpServer = new EnhancedHttpServer(new HttpServerConfiguration(this));
+	protected final LightweightHttpServer httpServer = new LightweightHttpServer(new HttpServerConfiguration(this));
 	protected final MqttClient mqttClient = MqttClient.getInstance();
 
 	private IReader reader;
