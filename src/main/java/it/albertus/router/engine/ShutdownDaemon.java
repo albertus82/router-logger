@@ -43,13 +43,13 @@ public class ShutdownDaemon extends Thread {
 	@Override
 	public void run() {
 		try {
-			logger.log(Level.WARNING, Messages.get("msg.close.schedule"), new Object[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), timeoutInSecs });
+			logger.log(Level.WARNING, Messages.get("msg.close.schedule"), new String[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), Integer.toString(timeoutInSecs) });
 			TimeUnit.SECONDS.sleep(timeoutInSecs);
 			logger.log(Level.INFO, Messages.get("msg.close.schedule.execute"), DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(creationDate));
 			engine.close();
 		}
 		catch (final InterruptedException e) {
-			logger.log(Level.INFO, Messages.get("msg.close.schedule.canceled"), new Object[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), timeoutInSecs });
+			logger.log(Level.INFO, Messages.get("msg.close.schedule.canceled"), new String[] { DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Messages.getLanguage().getLocale()).format(shutdownTime), Integer.toString(timeoutInSecs) });
 			Thread.currentThread().interrupt();
 		}
 	}
