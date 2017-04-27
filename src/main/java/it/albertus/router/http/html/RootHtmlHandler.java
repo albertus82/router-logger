@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
-import it.albertus.router.http.HttpServer;
+import it.albertus.router.http.HttpServerConfiguration;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 import it.albertus.util.logging.LoggerFactory;
@@ -27,7 +27,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
-	private static final String RESOURCE_BASE_PATH = '/' + HttpServer.class.getPackage().getName().toLowerCase().replace('.', '/') + '/';
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfiguration.class.getPackage().getName().toLowerCase().replace('.', '/') + '/';
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {

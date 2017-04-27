@@ -1,19 +1,32 @@
 package it.albertus.router.http;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 
+import it.albertus.httpserver.AbstractHttpHandler;
 import it.albertus.httpserver.DefaultHttpServerConfiguration;
 import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerEngine;
+import it.albertus.router.http.html.CloseHandler;
+import it.albertus.router.http.html.ConfigurationHandler;
+import it.albertus.router.http.html.ConnectHandler;
+import it.albertus.router.http.html.DisconnectHandler;
+import it.albertus.router.http.html.LogsHandler;
+import it.albertus.router.http.html.RestartHandler;
+import it.albertus.router.http.html.RootHtmlHandler;
+import it.albertus.router.http.html.StatusHtmlHandler;
+import it.albertus.router.http.json.DataJsonHandler;
+import it.albertus.router.http.json.StatusJsonHandler;
+import it.albertus.router.http.json.ThresholdsJsonHandler;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 
 public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
-
-	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
 	public static class Defaults {
 		public static final long MAX_REQ_TIME = 10; // seconds
@@ -23,6 +36,36 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
 		}
+	}
+
+	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+
+	private final RouterLoggerEngine engine; // Injected
+
+	public HttpServerConfiguration(final RouterLoggerEngine engine) {
+		this.engine = engine;
+	}
+
+	@Override
+	public AbstractHttpHandler[] getHandlers() {
+		final List<AbstractHttpHandler> handlers = new ArrayList<AbstractHttpHandler>();
+
+		// HTML
+		handlers.add(new RootHtmlHandler()); // serves also static resources
+		handlers.add(new StatusHtmlHandler(engine));
+		handlers.add(new RestartHandler(engine));
+		handlers.add(new DisconnectHandler(engine));
+		handlers.add(new ConnectHandler(engine));
+		handlers.add(new CloseHandler(engine));
+		handlers.add(new LogsHandler());
+		handlers.add(new ConfigurationHandler());
+
+		// JSON
+		handlers.add(new DataJsonHandler(engine));
+		handlers.add(new StatusJsonHandler(engine));
+		handlers.add(new ThresholdsJsonHandler(engine));
+
+		return handlers.toArray(new AbstractHttpHandler[0]);
 	}
 
 	@Override

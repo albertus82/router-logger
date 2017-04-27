@@ -13,9 +13,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import it.albertus.httpserver.EnhancedHttpServer;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.ThresholdsEmailSender;
-import it.albertus.router.http.HttpServer;
+import it.albertus.router.http.HttpServerConfiguration;
 import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
@@ -60,7 +61,7 @@ public abstract class RouterLoggerEngine {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-	protected final HttpServer httpServer = HttpServer.getInstance();
+	protected final EnhancedHttpServer httpServer = new EnhancedHttpServer(new HttpServerConfiguration(this));
 	protected final MqttClient mqttClient = MqttClient.getInstance();
 
 	private IReader reader;
@@ -81,11 +82,6 @@ public abstract class RouterLoggerEngine {
 	private volatile int iteration = FIRST_ITERATION;
 	private boolean connected = false;
 	private boolean loggedIn = false;
-
-	public RouterLoggerEngine() {
-		// Inizializzazione dell'HttpServer...
-		httpServer.init(this);
-	}
 
 	public RouterLoggerStatus getCurrentStatus() {
 		return currentStatus;
