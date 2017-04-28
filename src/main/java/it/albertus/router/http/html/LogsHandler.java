@@ -26,9 +26,9 @@ import it.albertus.httpserver.RequestParameterExtractor;
 import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.resources.Messages;
-import it.albertus.router.util.logging.LogFileManager;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
+import it.albertus.util.logging.LogFileManager;
 import it.albertus.util.logging.LoggerFactory;
 
 @Path("/logs")
@@ -48,7 +48,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 
 	private static final String METHOD_PARAM = "_method";
 
-	private static final LogFileManager logFileManager = LogFileManager.getInstance();
+	private final LogFileManager logFileManager = configuration.getLogFileManager();
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
