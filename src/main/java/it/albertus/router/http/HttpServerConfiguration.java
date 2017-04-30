@@ -28,15 +28,11 @@ import it.albertus.util.Configuration;
 
 public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 
-	public static class Defaults {
-		public static final long MAX_REQ_TIME = 10; // seconds
-		public static final long MAX_RSP_TIME = 600; // seconds
-		public static final int MAX_THREAD_COUNT = 12;
-
-		private Defaults() {
-			throw new IllegalAccessError("Constants class");
-		}
-	}
+	public static final boolean DEFAULT_ENABLED = false;
+	public static final boolean DEFAULT_AUTHENTICATION_REQUIRED = true;
+	public static final short DEFAULT_MAX_REQ_TIME = 10; // seconds
+	public static final short DEFAULT_MAX_RSP_TIME = 900; // seconds
+	public static final byte DEFAULT_MAX_THREAD_COUNT = 12;
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
@@ -75,7 +71,7 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 
 	@Override
 	public boolean isAuthenticationRequired() {
-		return configuration.getBoolean("server.authentication", super.isAuthenticationRequired());
+		return configuration.getBoolean("server.authentication", DEFAULT_AUTHENTICATION_REQUIRED);
 	}
 
 	@Override
@@ -100,12 +96,12 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 
 	@Override
 	public long getMaxReqTime() {
-		return configuration.getLong("server.maxreqtime", Defaults.MAX_REQ_TIME);
+		return configuration.getLong("server.maxreqtime", DEFAULT_MAX_REQ_TIME);
 	}
 
 	@Override
 	public long getMaxRspTime() {
-		return configuration.getLong("server.maxrsptime", Defaults.MAX_RSP_TIME);
+		return configuration.getLong("server.maxrsptime", DEFAULT_MAX_RSP_TIME);
 	}
 
 	@Override
@@ -165,7 +161,7 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 
 	@Override
 	public int getMaxThreadCount() {
-		return configuration.getInt("server.threads", Defaults.MAX_THREAD_COUNT);
+		return configuration.getInt("server.threads", DEFAULT_MAX_THREAD_COUNT);
 	}
 
 	@Override
