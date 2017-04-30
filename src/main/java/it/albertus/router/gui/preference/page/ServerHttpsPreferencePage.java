@@ -25,8 +25,8 @@ public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 	private static final Set<String> sslContextAlgorithms = new TreeSet<String>();
 
 	static {
-		keyStoreAlgorithms.add(DefaultHttpServerConfiguration.Defaults.SSL_KEYSTORE_TYPE);
-		sslContextAlgorithms.add(DefaultHttpServerConfiguration.Defaults.SSL_PROTOCOL);
+		keyStoreAlgorithms.add(DefaultHttpServerConfiguration.DEFAULT_SSL_KEYSTORE_TYPE);
+		sslContextAlgorithms.add(DefaultHttpServerConfiguration.DEFAULT_SSL_PROTOCOL);
 
 		final String keyManagerFactoryClassName = KeyManagerFactory.class.getSimpleName();
 		final String trustManagerFactoryClassName = TrustManagerFactory.class.getSimpleName();

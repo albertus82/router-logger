@@ -61,7 +61,7 @@ public class RouterLoggerConfiguration extends Configuration {
 	public static final String CFG_FILE_NAME = "routerlogger.cfg";
 
 	public static final String LOG_FILE_DATE_PATTERN = "yyyyMMdd";
-	public static final String LOG_FILE_NAME = "%d" + LogFileManager.Defaults.LOG_FILE_EXTENSION;
+	public static final String LOG_FILE_NAME = "%d" + LogFileManager.DEFAULT_LOG_FILE_EXTENSION;
 
 	private static final String MSG_KEY_ERR_THRESHOLD_MISCFG_NAME = "err.threshold.miscfg.name";
 	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
