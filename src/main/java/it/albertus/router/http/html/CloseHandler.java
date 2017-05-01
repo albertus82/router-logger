@@ -103,7 +103,7 @@ public class CloseHandler extends AbstractHtmlHandler {
 		}
 		html.append(buildHtmlFooter());
 
-		final byte[] response = html.toString().getBytes(getCharset());
+		final byte[] response = html.toString().getBytes(getCharset()); // TODO GZIP
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_ACCEPTED, response.length);
 		exchange.getResponseBody().write(response);
 		exchange.getResponseBody().close();
