@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
@@ -75,17 +76,17 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	}
 
 	@Override
-	public String getRealm() {
+	public String getAuthenticationRealm() {
 		return Messages.get("msg.application.name");
 	}
 
 	@Override
-	public String getUsername() {
+	public String getAuthenticationUsername() {
 		return configuration.getString("server.username");
 	}
 
 	@Override
-	public char[] getPassword() {
+	public char[] getAuthenticationPassword() {
 		return configuration.getCharArray("server.password");
 	}
 
@@ -172,6 +173,11 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	@Override
 	public boolean isCompressionEnabled() {
 		return configuration.getBoolean("server.compress.response", super.isCompressionEnabled());
+	}
+
+	@Override
+	public String getAuthenticationFailureLoggingLevel() {
+		return Level.WARNING.getName();
 	}
 
 }
