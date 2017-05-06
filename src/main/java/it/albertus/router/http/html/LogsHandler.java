@@ -114,7 +114,6 @@ public class LogsHandler extends AbstractHtmlHandler {
 			if (!headMethod) {
 				input = new FileInputStream(file);
 			}
-			setDateHeader(exchange);
 			setContentTypeHeader(exchange, getContentType(".log"));
 			exchange.getResponseHeaders().set("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 			if (canCompressResponse(exchange)) {
@@ -231,7 +230,6 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	private void refresh(final HttpExchange exchange) throws IOException {
-		setDateHeader(exchange);
 		exchange.getResponseHeaders().set("Location", getPath());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 		exchange.getResponseBody().close();

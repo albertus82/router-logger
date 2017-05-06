@@ -38,7 +38,7 @@ public class ConnectHandler extends AbstractHtmlHandler {
 		}
 
 		// Headers...
-		setCommonHeaders(exchange);
+		setContentTypeHeader(exchange);
 
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.connect")));
