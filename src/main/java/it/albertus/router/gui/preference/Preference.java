@@ -233,7 +233,7 @@ public enum Preference implements IPreference {
 
 	SERVER_ENABLED(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_ENABLED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_PORT(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_PORT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
-	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(HttpServerConfiguration.DEFAULT_AUTHENTICATION).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(HttpServerConfiguration.DEFAULT_AUTHENTICATION_REQUIRED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_USERNAME(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).hashAlgorithm(HttpServerConfiguration.DEFAULT_PASSWORD_HASH_ALGORITHM).build()),
 	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_MAX_THREAD_COUNT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
