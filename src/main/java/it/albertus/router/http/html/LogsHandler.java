@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -57,8 +56,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			fileList(exchange);
 		}
 		else {
-			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
-			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
+			final File file = new File(logFileManager.getPath() + File.separator + pathInfo);
 			if (!file.exists() || file.isDirectory()) {
 				sendNotFound(exchange);
 			}
@@ -85,8 +83,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			deleteAll(exchange);
 		}
 		else {
-			final String decodedFileName = URLDecoder.decode(pathInfo, getCharset().name());
-			final File file = new File(logFileManager.getPath() + File.separator + decodedFileName);
+			final File file = new File(logFileManager.getPath() + File.separator + pathInfo);
 			if (!file.exists() || file.isDirectory()) {
 				sendNotFound(exchange);
 			}
