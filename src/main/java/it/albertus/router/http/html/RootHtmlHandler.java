@@ -32,7 +32,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
 		if (requestedStaticResource(exchange)) {
-			sendStaticResource(exchange, RESOURCE_BASE_PATH + getPathInfo(exchange), false, "no-transform, public, max-age=86400, s-maxage=259200");
+			sendStaticResource(exchange, RESOURCE_BASE_PATH + getPathInfo(exchange), false, "no-transform, public, max-age=2592000");
 		}
 		else {
 			// Response...

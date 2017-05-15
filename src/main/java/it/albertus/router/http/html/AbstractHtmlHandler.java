@@ -3,6 +3,7 @@ package it.albertus.router.http.html;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -27,6 +28,10 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	}
 
 	private static final String MSG_KEY_LBL_ERROR = "lbl.server.error";
+
+	private static final String BOOTSTRAP_VERSION = "3.3.7";
+
+	protected static final String CACHE_BUSTING_SUFFIX = "?ver=" + new SimpleDateFormat("yyyyMMdd").format(Version.getInstance().getDate());
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
@@ -192,17 +197,17 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	 */
 	private StringBuilder buildHtmlHeadLink() {
 		final StringBuilder html = new StringBuilder();
-		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/css/bootstrap.min.css\" />").append(NewLine.CRLF);
-		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/css/bootstrap-theme.min.css\" />").append(NewLine.CRLF);
-		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/css/routerlogger.css\" />").append(NewLine.CRLF);
-		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/fonts/fonts.css\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/bootstrap/").append(BOOTSTRAP_VERSION).append("/css/bootstrap.min.css\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/bootstrap/").append(BOOTSTRAP_VERSION).append("/css/bootstrap-theme.min.css\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/fonts/fonts.css").append(CACHE_BUSTING_SUFFIX).append("\" />").append(NewLine.CRLF);
+		html.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"/css/style.css").append(CACHE_BUSTING_SUFFIX).append("\" />").append(NewLine.CRLF);
 		return html;
 	}
 
 	private StringBuilder buildHtmlHeadScript() {
 		final StringBuilder html = new StringBuilder();
-		html.append("<script type=\"text/javascript\" src=\"/js/jquery.min.js\"></script>").append(NewLine.CRLF);
-		html.append("<script type=\"text/javascript\" src=\"/js/bootstrap.min.js\"></script>").append(NewLine.CRLF);
+		html.append("<script type=\"text/javascript\" src=\"/bootstrap/").append(BOOTSTRAP_VERSION).append("/js/jquery.min.js\"></script>").append(NewLine.CRLF);
+		html.append("<script type=\"text/javascript\" src=\"/bootstrap/").append(BOOTSTRAP_VERSION).append("/js/bootstrap.min.js\"></script>").append(NewLine.CRLF);
 		return html;
 	}
 
