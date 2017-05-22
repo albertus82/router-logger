@@ -18,7 +18,7 @@ public class RootHtmlHandlerTest {
 		Assert.assertEquals("asus_dsl_n14u.png", h.getImageFileName(new AsusDslN14UReader()));
 		Assert.assertEquals("dlink_dsl_2750b.png", h.getImageFileName(new DLinkDsl2750Reader()));
 		Assert.assertEquals("tplink_td_w8970v1.png", h.getImageFileName(new TpLink8970Reader()));
-		Assert.assertEquals("tplink_td_w8970v1.png", h.getImageFileName(new DummyReader()));
+		Assert.assertEquals("applications-internet.png", h.getImageFileName(new DummyReader()));
 	}
 
 }
