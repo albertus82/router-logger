@@ -32,7 +32,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
-	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfiguration.class.getPackage().getName().toLowerCase().replace('.', '/') + '/';
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfiguration.class.getPackage().getName().toLowerCase().replace('.', '/') + "/static/";
 
 	private final RouterLoggerEngine engine;
 
