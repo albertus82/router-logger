@@ -7,7 +7,12 @@ import java.util.logging.Logger;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.HttpServerConfiguration;
+import it.albertus.router.reader.AsusDslN12EReader;
+import it.albertus.router.reader.AsusDslN14UReader;
+import it.albertus.router.reader.DLinkDsl2750Reader;
+import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 import it.albertus.util.logging.LoggerFactory;
@@ -29,6 +34,12 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfiguration.class.getPackage().getName().toLowerCase().replace('.', '/') + '/';
 
+	private final RouterLoggerEngine engine;
+
+	public RootHtmlHandler(final RouterLoggerEngine engine) {
+		this.engine = engine;
+	}
+
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
 		if (requestedStaticResource(exchange)) {
@@ -39,11 +50,26 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 			final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get("lbl.server.home")));
 			html.append("<div class=\"row\">").append(NewLine.CRLF);
 			html.append("<div class=\"col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2\">").append(NewLine.CRLF);
-			html.append("<img class=\"img-responsive img-hp\" src=\"img/61uIpBXY7nL._SL1280_.jpg\" alt=\"Router\" />").append(NewLine.CRLF);
+			html.append("<img class=\"img-responsive img-hp\" src=\"img/").append(getImageFileName(engine.getReader())).append("\" alt=\"Router\" />").append(NewLine.CRLF);
 			html.append("</div>").append(NewLine.CRLF);
 			html.append("</div>").append(NewLine.CRLF);
 			html.append(buildHtmlFooter());
 			sendResponse(exchange, html.toString());
+		}
+	}
+
+	String getImageFileName(final IReader reader) {
+		if (reader instanceof AsusDslN12EReader) {
+			return "asus_dsl_n12e.png";
+		}
+		else if (reader instanceof AsusDslN14UReader) {
+			return "asus_dsl_n14u.png";
+		}
+		else if (reader instanceof DLinkDsl2750Reader) {
+			return "dlink_dsl_2750b.png";
+		}
+		else {
+			return "tplink_td_w8970v1.png";
 		}
 	}
 
