@@ -13,6 +13,7 @@ import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
 import it.albertus.router.reader.IReader;
+import it.albertus.router.reader.TpLink8970Reader;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 import it.albertus.util.logging.LoggerFactory;
@@ -62,15 +63,16 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 		if (reader instanceof AsusDslN12EReader) {
 			return "asus_dsl_n12e.png";
 		}
-		else if (reader instanceof AsusDslN14UReader) {
+		if (reader instanceof AsusDslN14UReader) {
 			return "asus_dsl_n14u.png";
 		}
-		else if (reader instanceof DLinkDsl2750Reader) {
+		if (reader instanceof DLinkDsl2750Reader) {
 			return "dlink_dsl_2750b.png";
 		}
-		else {
+		if (reader instanceof TpLink8970Reader) {
 			return "tplink_td_w8970v1.png";
 		}
+		return "applications-internet.png";
 	}
 
 	@Override
