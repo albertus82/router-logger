@@ -7,7 +7,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -64,6 +63,8 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 		html.append(buildHtmlFooter());
 
 		sendResponse(exchange, html.toString());
+
+		logger.log(Level.WARNING, Messages.get("msg.server.configuration.open"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() });
 	}
 
 	@Override
@@ -111,18 +112,6 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 	@Override
 	public boolean isEnabled() {
 		return configuration.getBoolean(CFG_KEY_ENABLED, Defaults.ENABLED);
-	}
-
-	@Override
-	protected void log(final HttpExchange exchange) {
-		final Level level = Level.WARNING;
-		if (logger.isLoggable(level)) {
-			final Object[] requestInfo = new Object[] { exchange.getRemoteAddress(), exchange.getRequestURI() };
-			if (!Arrays.equals(requestInfo, getLastRequestInfo())) {
-				setLastRequestInfo(requestInfo);
-				logger.log(level, Messages.get("msg.server.configuration.open"), new Object[] { Thread.currentThread().getName(), exchange.getRemoteAddress(), exchange.getRequestMethod(), exchange.getRequestURI() });
-			}
-		}
 	}
 
 	private static String getPropertiesAsString(final Properties properties) {
