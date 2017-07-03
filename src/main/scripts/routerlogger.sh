@@ -12,8 +12,8 @@ done
 PRGDIR=`dirname "$PRG"`
 if [ "$1" = "" ]
   then if [ "$JAVA_HOME" != "" ]
-  then nice "$JAVA_HOME/bin/java" -Xms8m -Xmx64m -classpath "$PRGDIR/routerlogger.jar:$PRGDIR/lib/*" it.albertus.router.RouterLogger
-  else nice java -Xms8m -Xmx64m -classpath "$PRGDIR/routerlogger.jar:$PRGDIR/lib/*" it.albertus.router.RouterLogger
+  then nice "$JAVA_HOME/bin/java" -DSWT_GTK3=0 -Xms8m -Xmx64m -classpath "$PRGDIR/routerlogger.jar:$PRGDIR/lib/*" it.albertus.router.RouterLogger
+  else nice java -DSWT_GTK3=0 -Xms8m -Xmx64m -classpath "$PRGDIR/routerlogger.jar:$PRGDIR/lib/*" it.albertus.router.RouterLogger
   fi
 else
   if [ "$JAVA_HOME" != "" ]
