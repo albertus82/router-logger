@@ -409,14 +409,14 @@ public enum Preference implements IPreference {
 	}
 
 	@Override
-	public Set<? extends IPreference> getChildren() {
+	public Preference[] getChildren() {
 		final Set<Preference> preferences = EnumSet.noneOf(Preference.class);
 		for (final Preference item : Preference.values()) {
 			if (this.equals(item.getParent())) {
 				preferences.add(item);
 			}
 		}
-		return preferences;
+		return preferences.toArray(new Preference[] {});
 	}
 
 	@Override
