@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
+import it.albertus.util.IOUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 /**
@@ -66,12 +67,18 @@ public class TpLink8970Reader extends Reader {
 		writeToTelnet(configuration.getString("tplink.8970.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("{", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 		final LinkedHashMap<String, String> info = new LinkedHashMap<String, String>();
-		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+			}
 		}
-		reader.close();
+		finally {
+			IOUtils.closeQuietly(reader);
+		}
 		readFromTelnet(COMMAND_PROMPT, true); // Avanzamento del reader fino al prompt dei comandi.
 
 		// Informazioni sulla connessione ad Internet...
@@ -79,11 +86,16 @@ public class TpLink8970Reader extends Reader {
 		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
 			writeToTelnet(commandInfoWan);
 			readFromTelnet("{", true);
-			reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
-			while ((line = reader.readLine()) != null) {
-				info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+			try {
+				reader = new BufferedReader(new StringReader(readFromTelnet("}", false).trim()));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					info.put(line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+				}
 			}
-			reader.close();
+			finally {
+				IOUtils.closeQuietly(reader);
+			}
 			readFromTelnet(COMMAND_PROMPT, true);
 		}
 
