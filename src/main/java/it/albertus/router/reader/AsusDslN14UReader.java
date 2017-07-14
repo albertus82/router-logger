@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,16 +68,28 @@ public class AsusDslN14UReader extends Reader {
 		final LinkedHashMap<String, String> info = new LinkedHashMap<String, String>();
 
 		// Informazioni sulla portante ADSL...
-		final String commandInfoAdsl = configuration.getString("asus.dsln14u.command.info.adsl", Defaults.COMMAND_INFO_ADSL);
-		writeToTelnet(commandInfoAdsl);
-		readFromTelnet(commandInfoAdsl, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
+		info.putAll(execute(configuration.getString("asus.dsln14u.command.info.adsl", Defaults.COMMAND_INFO_ADSL)));
+
+		// Informazioni sulla connessione ad Internet...
+		final String command = configuration.getString("asus.dsln14u.command.info.wan");
+		if (command != null && !command.trim().isEmpty()) {
+			info.putAll(execute(command));
+		}
+
+		return info;
+	}
+
+	private Map<String, String> execute(final String command) throws IOException {
+		final Map<String, String> info = new LinkedHashMap<String, String>();
+		writeToTelnet(command);
+		readFromTelnet(command, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
 			String line;
 			String prefix = "";
 			while ((line = reader.readLine()) != null) {
-				if (line.trim().length() != 0) {
+				if (!line.trim().isEmpty()) {
 					if (line.startsWith(NODE_PREFIX)) {
 						prefix = line.substring(NODE_PREFIX.length()).trim() + '_';
 					}
@@ -89,32 +102,6 @@ public class AsusDslN14UReader extends Reader {
 		finally {
 			IOUtils.closeQuietly(reader);
 		}
-
-		// Informazioni sulla connessione ad Internet...
-		final String commandInfoWan = configuration.getString("asus.dsln14u.command.info.wan");
-		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
-			writeToTelnet(commandInfoWan);
-			readFromTelnet(commandInfoWan, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
-			try {
-				reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
-				String line;
-				String prefix = "";
-				while ((line = reader.readLine()) != null) {
-					if (line.trim().length() != 0) {
-						if (line.startsWith(NODE_PREFIX)) {
-							prefix = line.substring(NODE_PREFIX.length()).trim() + '_';
-						}
-						else if (line.indexOf('=') != -1) {
-							info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
-						}
-					}
-				}
-			}
-			finally {
-				IOUtils.closeQuietly(reader);
-			}
-		}
-
 		return info;
 	}
 
