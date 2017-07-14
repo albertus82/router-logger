@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
+import it.albertus.util.IOUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 /**
@@ -69,28 +70,11 @@ public class AsusDslN14UReader extends Reader {
 		final String commandInfoAdsl = configuration.getString("asus.dsln14u.command.info.adsl", Defaults.COMMAND_INFO_ADSL);
 		writeToTelnet(commandInfoAdsl);
 		readFromTelnet(commandInfoAdsl, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
-		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
-		String line;
-		String prefix = "";
-		while ((line = reader.readLine()) != null) {
-			if (line.trim().length() != 0) {
-				if (line.startsWith(NODE_PREFIX)) {
-					prefix = line.substring(NODE_PREFIX.length()).trim() + '_';
-				}
-				else if (line.indexOf('=') != -1) {
-					info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
-				}
-			}
-		}
-		reader.close();
-
-		// Informazioni sulla connessione ad Internet...
-		final String commandInfoWan = configuration.getString("asus.dsln14u.command.info.wan");
-		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
-			writeToTelnet(commandInfoWan);
-			readFromTelnet(commandInfoWan, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
+		BufferedReader reader = null;
+		try {
 			reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
-			prefix = "";
+			String line;
+			String prefix = "";
 			while ((line = reader.readLine()) != null) {
 				if (line.trim().length() != 0) {
 					if (line.startsWith(NODE_PREFIX)) {
@@ -101,7 +85,34 @@ public class AsusDslN14UReader extends Reader {
 					}
 				}
 			}
-			reader.close();
+		}
+		finally {
+			IOUtils.closeQuietly(reader);
+		}
+
+		// Informazioni sulla connessione ad Internet...
+		final String commandInfoWan = configuration.getString("asus.dsln14u.command.info.wan");
+		if (commandInfoWan != null && commandInfoWan.trim().length() != 0) {
+			writeToTelnet(commandInfoWan);
+			readFromTelnet(commandInfoWan, false); // Avanzamento del reader fino all'inizio dei dati di interesse.
+			try {
+				reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
+				String line;
+				String prefix = "";
+				while ((line = reader.readLine()) != null) {
+					if (line.trim().length() != 0) {
+						if (line.startsWith(NODE_PREFIX)) {
+							prefix = line.substring(NODE_PREFIX.length()).trim() + '_';
+						}
+						else if (line.indexOf('=') != -1) {
+							info.put(prefix + line.substring(0, line.indexOf('=')).trim(), line.substring(line.indexOf('=') + 1).trim());
+						}
+					}
+				}
+			}
+			finally {
+				IOUtils.closeQuietly(reader);
+			}
 		}
 
 		return info;

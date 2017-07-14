@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import it.albertus.router.resources.Messages;
+import it.albertus.util.IOUtils;
 import it.albertus.util.logging.LoggerFactory;
 
 /**
@@ -65,25 +66,30 @@ public class AsusDslN12EReader extends Reader {
 		writeToTelnet(configuration.getString("asus.dsln12e.command.info.adsl", Defaults.COMMAND_INFO_ADSL));
 		readFromTelnet("wan adsl", true); // Avanzamento del reader fino all'inizio dei dati di interesse.
 		final LinkedHashMap<String, String> info = new LinkedHashMap<String, String>();
-		BufferedReader reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			if (line.trim().length() > 2) {
-				int splitIndex = -1;
-				for (int i = 1; i < line.length(); i++) {
-					if (line.charAt(i) == ' ' && line.charAt(i - 1) == ' ') {
-						splitIndex = i;
-						break;
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new StringReader(readFromTelnet(COMMAND_PROMPT, false).trim()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.trim().length() > 2) {
+					int splitIndex = -1;
+					for (int i = 1; i < line.length(); i++) {
+						if (line.charAt(i) == ' ' && line.charAt(i - 1) == ' ') {
+							splitIndex = i;
+							break;
+						}
 					}
-				}
-				if (splitIndex != -1) {
-					String key = line.substring(0, splitIndex).trim();
-					String value = line.substring(splitIndex).trim();
-					info.put(key, value);
+					if (splitIndex != -1) {
+						String key = line.substring(0, splitIndex).trim();
+						String value = line.substring(splitIndex).trim();
+						info.put(key, value);
+					}
 				}
 			}
 		}
-		reader.close();
+		finally {
+			IOUtils.closeQuietly(reader);
+		}
 
 		// Informazioni sulla connessione ad Internet...
 		writeToTelnet(configuration.getString("asus.dsln12e.command.info.wan", Defaults.COMMAND_INFO_WAN));
