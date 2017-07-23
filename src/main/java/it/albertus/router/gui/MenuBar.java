@@ -16,12 +16,12 @@ import it.albertus.router.gui.listener.ClearConsoleSelectionListener;
 import it.albertus.router.gui.listener.ClearDataTableSelectionListener;
 import it.albertus.router.gui.listener.CloseListener;
 import it.albertus.router.gui.listener.ConnectSelectionListener;
-import it.albertus.router.gui.listener.ConnectionMenuBarArmListener;
+import it.albertus.router.gui.listener.ConnectionMenuListener;
 import it.albertus.router.gui.listener.CopyMenuBarSelectionListener;
 import it.albertus.router.gui.listener.DeleteDataTableSelectionListener;
 import it.albertus.router.gui.listener.DisconnectSelectionListener;
-import it.albertus.router.gui.listener.EditClearSubMenuArmListener;
-import it.albertus.router.gui.listener.EditMenuBarArmListener;
+import it.albertus.router.gui.listener.EditClearSubMenuListener;
+import it.albertus.router.gui.listener.EditMenuListener;
 import it.albertus.router.gui.listener.PreferencesListener;
 import it.albertus.router.gui.listener.RestartSelectionListener;
 import it.albertus.router.gui.listener.SelectAllMenuBarSelectionListener;
@@ -111,7 +111,9 @@ public class MenuBar {
 		editMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		editMenuHeader.setText(Messages.get("lbl.menu.header.edit"));
 		editMenuHeader.setMenu(editMenu);
-		editMenuHeader.addArmListener(new EditMenuBarArmListener(gui));
+		final EditMenuListener editMenuListener = new EditMenuListener(gui);
+		editMenu.addMenuListener(editMenuListener);
+		editMenuHeader.addArmListener(editMenuListener);
 
 		editCopyMenuItem = new MenuItem(editMenu, SWT.PUSH);
 		editCopyMenuItem.setText(Messages.get("lbl.menu.item.copy") + SwtUtils.getMod1ShortcutLabel(SwtUtils.KEY_COPY));
@@ -137,7 +139,9 @@ public class MenuBar {
 
 		editClearSubMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		editClearSubMenuItem.setMenu(editClearSubMenu);
-		editClearSubMenuItem.addArmListener(new EditClearSubMenuArmListener(gui));
+		final EditClearSubMenuListener editClearSubMenuListener = new EditClearSubMenuListener(gui);
+		editClearSubMenu.addMenuListener(editClearSubMenuListener);
+		editClearSubMenuItem.addArmListener(editClearSubMenuListener);
 
 		editClearDataTableMenuItem = new MenuItem(editClearSubMenu, SWT.PUSH);
 		editClearDataTableMenuItem.setText(Messages.get("lbl.menu.item.clear.table"));
@@ -152,7 +156,9 @@ public class MenuBar {
 		connectionMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		connectionMenuHeader.setText(Messages.get("lbl.menu.header.connection"));
 		connectionMenuHeader.setMenu(connectionMenu);
-		connectionMenuHeader.addArmListener(new ConnectionMenuBarArmListener(gui));
+		final ConnectionMenuListener connectionMenuListener = new ConnectionMenuListener(gui);
+		connectionMenu.addMenuListener(connectionMenuListener);
+		connectionMenuHeader.addArmListener(connectionMenuListener);
 
 		connectionConnectItem = new MenuItem(connectionMenu, SWT.PUSH);
 		connectionConnectItem.setText(Messages.get("lbl.menu.item.connect"));
