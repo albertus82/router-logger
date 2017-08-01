@@ -81,13 +81,13 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	}
 
 	@Override
-	public String getAuthenticationUsername() {
-		return configuration.getString("server.username");
-	}
-
-	@Override
-	public char[] getAuthenticationPassword() {
-		return configuration.getCharArray("server.password");
+	public char[] getAuthenticationPassword(final String username) {
+		if (username != null && username.equalsIgnoreCase(configuration.getString("server.username"))) {
+			return configuration.getCharArray("server.password");
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
