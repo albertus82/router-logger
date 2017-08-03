@@ -8,7 +8,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.http.HttpServerConfiguration;
+import it.albertus.router.http.HttpServerConfig;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -33,7 +33,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
-	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfiguration.class.getPackage().getName().toLowerCase().replace('.', '/') + "/static/";
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfig.class.getPackage().getName().toLowerCase().replace('.', '/') + "/static/";
 
 	private final RouterLoggerEngine engine;
 
@@ -90,7 +90,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 		if (requestedStaticResource(exchange)) {
 			Level level = Level.OFF;
 			try {
-				level = Level.parse(getHttpServerConfiguration().getRequestLoggingLevel());
+				level = Level.parse(getHttpServerConfig().getRequestLoggingLevel());
 			}
 			catch (final RuntimeException e) {
 				logger.log(Level.WARNING, e.toString(), e);

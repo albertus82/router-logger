@@ -62,7 +62,7 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 	protected void log(final HttpExchange exchange) {
 		Level level = Level.OFF;
 		try {
-			level = Level.parse(getHttpServerConfiguration().getRequestLoggingLevel());
+			level = Level.parse(getHttpServerConfig().getRequestLoggingLevel());
 			if (level.intValue() > Level.FINE.intValue()) {
 				level = Level.FINE;
 			}

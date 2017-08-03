@@ -9,8 +9,12 @@ import java.util.logging.Level;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 
+import com.sun.net.httpserver.Authenticator;
+
 import it.albertus.httpserver.AbstractHttpHandler;
-import it.albertus.httpserver.DefaultHttpServerConfiguration;
+import it.albertus.httpserver.auth.SingleUserAuthenticator;
+import it.albertus.httpserver.auth.config.SingleUserAuthenticatorDefaultConfig;
+import it.albertus.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.html.CloseHandler;
@@ -27,7 +31,7 @@ import it.albertus.router.http.json.ThresholdsJsonHandler;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 
-public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
+public class HttpServerConfig extends HttpServerDefaultConfig {
 
 	public static final boolean DEFAULT_ENABLED = false;
 	public static final boolean DEFAULT_AUTHENTICATION_REQUIRED = true;
@@ -39,7 +43,7 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 
 	private final RouterLoggerEngine engine; // Injected
 
-	public HttpServerConfiguration(final RouterLoggerEngine engine) {
+	public HttpServerConfig(final RouterLoggerEngine engine) {
 		this.engine = engine;
 	}
 
@@ -71,23 +75,33 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	}
 
 	@Override
-	public boolean isAuthenticationRequired() {
-		return configuration.getBoolean("server.authentication", DEFAULT_AUTHENTICATION_REQUIRED);
-	}
+	public Authenticator getAuthenticator() {
+		if (configuration.getBoolean("server.authentication", DEFAULT_AUTHENTICATION_REQUIRED)) {
+			return new SingleUserAuthenticator(new SingleUserAuthenticatorDefaultConfig() {
+				@Override
+				public String getUsername() {
+					return configuration.getString("server.username");
+				}
 
-	@Override
-	public String getAuthenticationRealm() {
-		return Messages.get("msg.application.name");
-	}
+				@Override
+				public char[] getPassword() {
+					return configuration.getCharArray("server.password");
+				}
 
-	@Override
-	public String getAuthenticationUsername() {
-		return configuration.getString("server.username");
-	}
+				@Override
+				public String getRealm() {
+					return Messages.get("msg.application.name");
+				}
 
-	@Override
-	public char[] getAuthenticationPassword() {
-		return configuration.getCharArray("server.password");
+				@Override
+				public String getFailureLoggingLevel() {
+					return Level.WARNING.getName();
+				}
+			});
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
@@ -173,11 +187,6 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	@Override
 	public boolean isCompressionEnabled() {
 		return configuration.getBoolean("server.compress.response", super.isCompressionEnabled());
-	}
-
-	@Override
-	public String getAuthenticationFailureLoggingLevel() {
-		return Level.WARNING.getName();
 	}
 
 }

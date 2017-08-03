@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import it.albertus.httpserver.LightweightHttpServer;
 import it.albertus.jface.JFaceMessages;
 import it.albertus.router.email.ThresholdsEmailSender;
-import it.albertus.router.http.HttpServerConfiguration;
+import it.albertus.router.http.HttpServerConfig;
 import it.albertus.router.mqtt.MqttClient;
 import it.albertus.router.reader.IReader;
 import it.albertus.router.resources.Messages;
@@ -61,7 +61,7 @@ public abstract class RouterLoggerEngine {
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
 
-	protected final LightweightHttpServer httpServer = new LightweightHttpServer(new HttpServerConfiguration(this));
+	protected final LightweightHttpServer httpServer = new LightweightHttpServer(new HttpServerConfig(this));
 	protected final MqttClient mqttClient = MqttClient.getInstance();
 
 	private IReader reader;
