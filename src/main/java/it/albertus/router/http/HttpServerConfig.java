@@ -66,7 +66,7 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 		handlers.add(new StatusJsonHandler(engine));
 		handlers.add(new ThresholdsJsonHandler(engine));
 
-		return handlers.toArray(new AbstractHttpHandler[0]);
+		return handlers.toArray(new AbstractHttpHandler[handlers.size()]);
 	}
 
 	@Override
@@ -170,7 +170,7 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 				cipherSuites.add(cipherSuite);
 			}
 		}
-		params.setCipherSuites(cipherSuites.toArray(new String[0]));
+		params.setCipherSuites(cipherSuites.toArray(new String[cipherSuites.size()]));
 		return params;
 	}
 

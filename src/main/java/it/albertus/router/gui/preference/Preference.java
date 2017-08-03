@@ -417,7 +417,7 @@ public enum Preference implements IPreference {
 				preferences.add(item);
 			}
 		}
-		return preferences.toArray(new Preference[] {});
+		return preferences.toArray(new Preference[preferences.size()]);
 	}
 
 	@Override
