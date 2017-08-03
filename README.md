@@ -1,6 +1,7 @@
 RouterLogger
 ============
 
+[![Latest release](https://img.shields.io/github/release/Albertus82/RouterLogger.svg)](https://github.com/Albertus82/RouterLogger/releases/latest)
 [![Build Status](https://travis-ci.org/Albertus82/RouterLogger.svg?branch=master)](https://travis-ci.org/Albertus82/RouterLogger)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/Albertus82/RouterLogger?branch=master&svg=true)](https://ci.appveyor.com/project/Albertus82/RouterLogger)
 
