@@ -12,9 +12,9 @@ import javax.net.ssl.SSLParameters;
 import com.sun.net.httpserver.Authenticator;
 
 import it.albertus.httpserver.AbstractHttpHandler;
-import it.albertus.httpserver.auth.SingleUserAuthenticator;
-import it.albertus.httpserver.auth.config.SingleUserAuthenticatorDefaultConfig;
+import it.albertus.httpserver.HttpServerAuthenticator;
 import it.albertus.httpserver.config.HttpServerDefaultConfig;
+import it.albertus.httpserver.config.SingleUserAuthenticatorDefaultConfig;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.html.CloseHandler;
@@ -77,7 +77,7 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	@Override
 	public Authenticator getAuthenticator() {
 		if (configuration.getBoolean("server.authentication", DEFAULT_AUTHENTICATION_REQUIRED)) {
-			return new SingleUserAuthenticator(new SingleUserAuthenticatorDefaultConfig() {
+			return new HttpServerAuthenticator(new SingleUserAuthenticatorDefaultConfig() {
 				@Override
 				public String getUsername() {
 					return configuration.getString("server.username");

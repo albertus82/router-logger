@@ -35,7 +35,7 @@ import org.eclipse.jface.preference.FontFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 
-import it.albertus.httpserver.auth.config.SingleUserAuthenticatorDefaultConfig;
+import it.albertus.httpserver.config.SingleUserAuthenticatorDefaultConfig;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorDetails.FieldEditorDetailsBuilder;
