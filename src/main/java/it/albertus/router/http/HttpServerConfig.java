@@ -11,7 +11,7 @@ import javax.net.ssl.SSLParameters;
 
 import com.sun.net.httpserver.Authenticator;
 
-import it.albertus.httpserver.AbstractHttpHandler;
+import it.albertus.httpserver.HttpPathHandler;
 import it.albertus.httpserver.HttpServerAuthenticator;
 import it.albertus.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.httpserver.config.SingleUserAuthenticatorDefaultConfig;
@@ -48,25 +48,25 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	}
 
 	@Override
-	public AbstractHttpHandler[] getHandlers() {
-		final List<AbstractHttpHandler> handlers = new ArrayList<AbstractHttpHandler>();
+	public HttpPathHandler[] getHandlers() {
+		final List<HttpPathHandler> handlers = new ArrayList<HttpPathHandler>();
 
 		// HTML
-		handlers.add(new RootHtmlHandler(engine)); // serves also static resources
-		handlers.add(new StatusHtmlHandler(engine));
-		handlers.add(new RestartHandler(engine));
-		handlers.add(new DisconnectHandler(engine));
-		handlers.add(new ConnectHandler(engine));
-		handlers.add(new CloseHandler(engine));
-		handlers.add(new LogsHandler());
-		handlers.add(new ConfigurationHandler());
+		handlers.add(new RootHtmlHandler(this, engine)); // serves also static resources
+		handlers.add(new StatusHtmlHandler(this, engine));
+		handlers.add(new RestartHandler(this, engine));
+		handlers.add(new DisconnectHandler(this, engine));
+		handlers.add(new ConnectHandler(this, engine));
+		handlers.add(new CloseHandler(this, engine));
+		handlers.add(new LogsHandler(this));
+		handlers.add(new ConfigurationHandler(this));
 
 		// JSON
-		handlers.add(new DataJsonHandler(engine));
-		handlers.add(new StatusJsonHandler(engine));
-		handlers.add(new ThresholdsJsonHandler(engine));
+		handlers.add(new DataJsonHandler(this, engine));
+		handlers.add(new StatusJsonHandler(this, engine));
+		handlers.add(new ThresholdsJsonHandler(this, engine));
 
-		return handlers.toArray(new AbstractHttpHandler[handlers.size()]);
+		return handlers.toArray(new HttpPathHandler[handlers.size()]);
 	}
 
 	@Override

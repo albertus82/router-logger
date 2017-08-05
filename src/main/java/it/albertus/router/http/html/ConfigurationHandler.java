@@ -18,6 +18,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.IOUtils;
@@ -43,6 +44,10 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 	static final String CFG_KEY_ENABLED = "server.handler.configuration.enabled";
 
 	private static final String REQUEST_PARAM_NAME = "properties";
+
+	public ConfigurationHandler(final IHttpServerConfig config) {
+		super(config);
+	}
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {

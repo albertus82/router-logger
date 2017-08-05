@@ -13,6 +13,7 @@ import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.RequestParameterExtractor;
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.engine.ShutdownDaemon;
@@ -44,7 +45,8 @@ public class CloseHandler extends AbstractHtmlHandler {
 
 	private final RouterLoggerEngine engine;
 
-	public CloseHandler(final RouterLoggerEngine engine) {
+	public CloseHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config);
 		this.engine = engine;
 	}
 

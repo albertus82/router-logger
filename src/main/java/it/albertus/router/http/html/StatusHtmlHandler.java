@@ -9,6 +9,7 @@ import java.util.Set;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
@@ -43,7 +44,8 @@ public class StatusHtmlHandler extends AbstractHtmlHandler {
 
 	private final RouterLoggerEngine engine;
 
-	public StatusHtmlHandler(final RouterLoggerEngine engine) {
+	public StatusHtmlHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config);
 		this.engine = engine;
 	}
 

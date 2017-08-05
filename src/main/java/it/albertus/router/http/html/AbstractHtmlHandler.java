@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.httpserver.AbstractHttpHandler;
 import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.resources.Messages;
@@ -34,6 +35,10 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	protected static final String CACHE_BUSTING_SUFFIX = "?ver=" + new SimpleDateFormat("yyyyMMdd").format(Version.getInstance().getDate());
 
 	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+
+	public AbstractHtmlHandler(final IHttpServerConfig config) {
+		super(config);
+	}
 
 	@Override
 	protected void sendForbidden(final HttpExchange exchange) throws IOException {

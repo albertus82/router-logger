@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.resources.Messages;
@@ -26,7 +27,8 @@ public class RestartHandler extends AbstractHtmlHandler {
 
 	private final RouterLoggerEngine engine;
 
-	public RestartHandler(final RouterLoggerEngine engine) {
+	public RestartHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config);
 		this.engine = engine;
 	}
 

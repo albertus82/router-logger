@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.HttpServerConfig;
 import it.albertus.router.reader.AsusDslN12EReader;
@@ -37,7 +38,8 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	private final RouterLoggerEngine engine;
 
-	public RootHtmlHandler(final RouterLoggerEngine engine) {
+	public RootHtmlHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config);
 		this.engine = engine;
 	}
 

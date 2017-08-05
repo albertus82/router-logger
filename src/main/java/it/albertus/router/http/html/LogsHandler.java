@@ -23,6 +23,7 @@ import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.RequestParameterExtractor;
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.IOUtils;
@@ -48,6 +49,10 @@ public class LogsHandler extends AbstractHtmlHandler {
 	private static final String METHOD_PARAM = "_method";
 
 	private final LogFileManager logFileManager = configuration.getLogFileManager();
+
+	public LogsHandler(final IHttpServerConfig config) {
+		super(config);
+	}
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {

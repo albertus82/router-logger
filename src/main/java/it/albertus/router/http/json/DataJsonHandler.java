@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Payload;
@@ -12,8 +13,8 @@ import it.albertus.router.util.Payload;
 @Path("/json/data")
 public class DataJsonHandler extends AbstractJsonHandler {
 
-	public DataJsonHandler(final RouterLoggerEngine engine) {
-		super(engine);
+	public DataJsonHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config, engine);
 	}
 
 	@Override
