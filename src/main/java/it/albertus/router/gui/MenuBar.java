@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import it.albertus.jface.SwtUtils;
 import it.albertus.jface.cocoa.CocoaEnhancerException;
 import it.albertus.jface.cocoa.CocoaUIEnhancer;
-import it.albertus.jface.listener.SystemPropertiesListener;
+import it.albertus.jface.listener.SystemInformationListener;
 import it.albertus.router.gui.listener.AboutListener;
 import it.albertus.router.gui.listener.ClearConsoleSelectionListener;
 import it.albertus.router.gui.listener.ClearDataTableSelectionListener;
@@ -57,7 +57,7 @@ public class MenuBar {
 	private static final String LBL_MENU_ITEM_PREFERENCES = "lbl.menu.item.preferences";
 	private static final String LBL_MENU_HEADER_HELP = "lbl.menu.header.help";
 	private static final String LBL_MENU_HEADER_HELP_COCOA = "lbl.menu.header.help.cocoa";
-	private static final String LBL_MENU_ITEM_SYSTEM_PROPERTIES = "lbl.menu.item.system.properties";
+	private static final String LBL_MENU_ITEM_SYSTEM_INFO = "lbl.menu.item.system.info";
 	private static final String LBL_MENU_ITEM_ABOUT = "lbl.menu.item.about";
 
 	private static final Logger logger = LoggerFactory.getLogger(MenuBar.class);
@@ -91,7 +91,7 @@ public class MenuBar {
 
 	private final Menu helpMenu;
 	private final MenuItem helpMenuHeader;
-	private final MenuItem helpSystemPropertiesItem;
+	private final MenuItem helpSystemInfoItem;
 	private MenuItem helpAboutItem;
 
 	protected MenuBar(final RouterLoggerGui gui) {
@@ -212,9 +212,9 @@ public class MenuBar {
 		helpMenuHeader.setText(Messages.get(Util.isCocoa() ? LBL_MENU_HEADER_HELP_COCOA : LBL_MENU_HEADER_HELP));
 		helpMenuHeader.setMenu(helpMenu);
 
-		helpSystemPropertiesItem = new MenuItem(helpMenu, SWT.PUSH);
-		helpSystemPropertiesItem.setText(Messages.get(LBL_MENU_ITEM_SYSTEM_PROPERTIES));
-		helpSystemPropertiesItem.addSelectionListener(new SystemPropertiesListener(gui));
+		helpSystemInfoItem = new MenuItem(helpMenu, SWT.PUSH);
+		helpSystemInfoItem.setText(Messages.get(LBL_MENU_ITEM_SYSTEM_INFO));
+		helpSystemInfoItem.addSelectionListener(new SystemInformationListener(gui));
 
 		if (!cocoaMenuCreated) {
 			new MenuItem(helpMenu, SWT.SEPARATOR);
@@ -224,7 +224,7 @@ public class MenuBar {
 			helpAboutItem.addSelectionListener(new AboutListener(gui));
 		}
 
-		final HelpMenuListener helpMenuListener = new HelpMenuListener(helpSystemPropertiesItem);
+		final HelpMenuListener helpMenuListener = new HelpMenuListener(helpSystemInfoItem);
 		helpMenu.addMenuListener(helpMenuListener);
 		helpMenuHeader.addArmListener(helpMenuListener);
 
@@ -254,7 +254,7 @@ public class MenuBar {
 			toolsPreferencesMenuItem.setText(Messages.get(LBL_MENU_ITEM_PREFERENCES));
 		}
 		helpMenuHeader.setText(Messages.get(Util.isCocoa() ? LBL_MENU_HEADER_HELP_COCOA : LBL_MENU_HEADER_HELP));
-		helpSystemPropertiesItem.setText(Messages.get(LBL_MENU_ITEM_SYSTEM_PROPERTIES));
+		helpSystemInfoItem.setText(Messages.get(LBL_MENU_ITEM_SYSTEM_INFO));
 		if (helpAboutItem != null && !helpAboutItem.isDisposed()) {
 			helpAboutItem.setText(Messages.get(LBL_MENU_ITEM_ABOUT));
 		}
