@@ -64,39 +64,31 @@ public class MenuBar {
 
 	private static final Logger logger = LoggerFactory.getLogger(MenuBar.class);
 
-	private final Menu bar;
-
-	private final Menu fileMenu;
 	private final MenuItem fileMenuHeader;
 	private final MenuItem fileRestartItem;
 	private MenuItem fileExitItem;
 
-	private final Menu editMenu;
 	private final MenuItem editMenuHeader;
 	private final MenuItem editCopyMenuItem;
 	private final MenuItem editDeleteMenuItem;
 	private final MenuItem editSelectAllMenuItem;
 
-	private final Menu editClearSubMenu;
 	private final MenuItem editClearSubMenuItem;
 	private final MenuItem editClearDataTableMenuItem;
 	private final MenuItem editClearConsoleMenuItem;
 
-	private final Menu connectionMenu;
 	private final MenuItem connectionMenuHeader;
 	private final MenuItem connectionConnectItem;
 	private final MenuItem connectionDisconnectItem;
 
-	private Menu toolsMenu;
 	private MenuItem toolsMenuHeader;
 	private MenuItem toolsPreferencesMenuItem;
 
-	private final Menu helpMenu;
 	private final MenuItem helpMenuHeader;
 	private final MenuItem helpSystemInfoItem;
 	private MenuItem helpAboutItem;
 
-	protected MenuBar(final RouterLoggerGui gui) {
+	MenuBar(final RouterLoggerGui gui) {
 		final CloseListener closeListener = new CloseListener(gui);
 		final AboutListener aboutListener = new AboutListener(gui);
 		final PreferencesListener preferencesListener = new PreferencesListener(gui);
@@ -112,10 +104,10 @@ public class MenuBar {
 			}
 		}
 
-		bar = new Menu(gui.getShell(), SWT.BAR); // Barra
+		final Menu bar = new Menu(gui.getShell(), SWT.BAR); // Barra
 
 		// File
-		fileMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		final Menu fileMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		fileMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		fileMenuHeader.setText(Messages.get(LBL_MENU_HEADER_FILE));
 		fileMenuHeader.setMenu(fileMenu);
@@ -133,7 +125,7 @@ public class MenuBar {
 		}
 
 		// Edit
-		editMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		final Menu editMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		editMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		editMenuHeader.setText(Messages.get(LBL_MENU_HEADER_EDIT));
 		editMenuHeader.setMenu(editMenu);
@@ -163,7 +155,7 @@ public class MenuBar {
 		editClearSubMenuItem = new MenuItem(editMenu, SWT.CASCADE);
 		editClearSubMenuItem.setText(Messages.get(LBL_MENU_ITEM_CLEAR));
 
-		editClearSubMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		final Menu editClearSubMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		editClearSubMenuItem.setMenu(editClearSubMenu);
 		final EditClearSubMenuListener editClearSubMenuListener = new EditClearSubMenuListener(gui);
 		editClearSubMenu.addMenuListener(editClearSubMenuListener);
@@ -178,7 +170,7 @@ public class MenuBar {
 		editClearConsoleMenuItem.addSelectionListener(new ClearConsoleSelectionListener(gui));
 
 		// Connection
-		connectionMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		final Menu connectionMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		connectionMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		connectionMenuHeader.setText(Messages.get(LBL_MENU_HEADER_CONNECTION));
 		connectionMenuHeader.setMenu(connectionMenu);
@@ -198,7 +190,7 @@ public class MenuBar {
 
 		// Tools
 		if (!cocoaMenuCreated) {
-			toolsMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+			final Menu toolsMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 			toolsMenuHeader = new MenuItem(bar, SWT.CASCADE);
 			toolsMenuHeader.setText(Messages.get(LBL_MENU_HEADER_TOOLS));
 			toolsMenuHeader.setMenu(toolsMenu);
@@ -209,7 +201,7 @@ public class MenuBar {
 		}
 
 		// Help
-		helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+		final Menu helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
 		helpMenuHeader = new MenuItem(bar, SWT.CASCADE);
 		helpMenuHeader.setText(Messages.get(Util.isWindows() ? LBL_MENU_HEADER_HELP_WINDOWS : LBL_MENU_HEADER_HELP));
 		helpMenuHeader.setMenu(helpMenu);
