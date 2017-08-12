@@ -115,13 +115,13 @@ public class TrayIcon {
 					toolTip.setText(Messages.get("lbl.tray.tooltip.thresholds.reached"));
 					toolTip.setVisible(false);
 					toolTip.setAutoHide(true);
-					toolTip.addListener(SWT.Selection, trayRestoreListener);
+					toolTip.addSelectionListener(trayRestoreListener);
 					trayItem.setToolTip(toolTip);
 
 					trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
 					showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
 					showMenuItem.setText(Messages.get("lbl.tray.show"));
-					showMenuItem.addListener(SWT.Selection, trayRestoreListener);
+					showMenuItem.addSelectionListener(trayRestoreListener);
 					trayMenu.setDefaultItem(showMenuItem);
 
 					new MenuItem(trayMenu, SWT.SEPARATOR);
@@ -136,7 +136,7 @@ public class TrayIcon {
 						}
 					});
 
-					trayItem.addListener(SWT.Selection, trayRestoreListener);
+					trayItem.addSelectionListener(trayRestoreListener);
 					if (!Util.isLinux()) {
 						gui.getShell().addShellListener(trayRestoreListener);
 					}
