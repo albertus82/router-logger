@@ -71,7 +71,7 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean("server.enabled", super.isEnabled());
+		return configuration.getBoolean("server.enabled", DEFAULT_ENABLED);
 	}
 
 	@Override
