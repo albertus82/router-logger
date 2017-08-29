@@ -67,7 +67,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		shell = new Shell(display);
 
 		// Fix invisible (transparent) shell bug with some Linux distibutions
-		if (!SwtUtils.isGtk3() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+		if (SwtUtils.isGtk3() != null && !SwtUtils.isGtk3() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 			shell.setMinimized(true);
 		}
 
@@ -123,7 +123,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				shell.open();
 
 				// Fix invisible (transparent) shell bug with some Linux distibutions
-				if (SwtUtils.isGtk3() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+				if ((SwtUtils.isGtk3() == null || SwtUtils.isGtk3()) && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 					shell.setMinimized(true);
 				}
 
