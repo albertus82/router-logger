@@ -42,7 +42,7 @@ Di norma i file generati vengono salvati in una sottocartella `RouterLogger` all
 #### Salvataggio su database relazionale
 
 L'applicazione crea una tabella per memorizzare i dati (se non presente), e a ogni iterazione corrisponde una riga nella tabella.
-Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `lib` dell'applicazione, quindi accedere alla configurazione  (men&ugrave; **Strumenti**) e compilare le seguenti opzioni nella scheda **Salvataggio > Database**:
+Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la libreria JDBC del proprio database (ad es. `ojdbc6.jar` nel caso di Oracle) all'interno della directory `dropins` dell'applicazione, quindi accedere alla configurazione  (men&ugrave; **Strumenti**) e compilare le seguenti opzioni nella scheda **Salvataggio > Database**:
 
 * **Nome classe driver**: nome completo della classe del driver JDBC (ad es.: `oracle.jdbc.OracleDriver`).
 * **URL di connessione JDBC**: URL per il collegamento al database (ad es.: `jdbc:oracle:thin:@localhost:1521:XE`).
@@ -402,7 +402,7 @@ All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi
 
 >Per maggiori informazioni &egrave; possibile consultare la documentazione Javadoc inclusa nel codice sorgente.
 
-Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
+Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `reader.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `dropins` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che sia aggiunta automaticamente al *classpath*.
 
 #### Modalit&agrave; di salvataggio alternative
 
@@ -412,7 +412,7 @@ Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o
 
 >&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/main/config/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Writer`](src/main/java/it/albertus/router/writer/Writer.java).
 
-Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `lib` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che quest'ultima sia aggiunta automaticamente al *classpath*.
+Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `dropins` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che quest'ultima sia aggiunta automaticamente al *classpath*.
 
 
 ## Riconoscimenti
