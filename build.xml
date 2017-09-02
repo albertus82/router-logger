@@ -48,7 +48,7 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-		<copy todir="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/lib/${appId.x64}">
+		<copy todir="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/lib">
 			<fileset refid="lib" />
 			<fileset dir="${dependencies.directory}/platform/win32-win32-x86_64">
 				<include name="*.jar" />
@@ -89,7 +89,7 @@
 		</manifestclasspath>
 		<manifestclasspath property="classpath.win32-win32-x86_64" jarfile="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/${ant.project.name}.jar" maxParentLevels="0">
 			<classpath>
-				<fileset dir="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/lib/${appId.x64}">
+				<fileset dir="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/lib">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
@@ -429,7 +429,7 @@
 			<config outfile="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/${ant.project.name}.exe" jarpath="${ant.project.name}.jar" headertype="${launch4j.headerType}" dontwrapjar="${launch4j.dontWrapJar}" stayalive="${launch4j.stayAlive}" restartoncrash="${launch4j.restartOnCrash}" priority="${launch4j.priority}" errtitle="${launch4j.errTitle}" chdir="." icon="${icons.directory}/main.ico">
 				<singleInstance mutexname="${build.jar.archive.manifest.mainClass}" windowtitle="${name}" />
 				<jre runtimebits="64" minversion="${build.compiler.target}.0" jdkpreference="${launch4j.jdkPreference}" initialheapsize="${vm.initialHeapSize}" maxheapsize="${vm.maxHeapSize}" />
-				<classPath mainclass="${build.jar.archive.manifest.mainClass}" cp="dropins/*.jar;lib/${appId.x64}/*.jar" />
+				<classPath mainclass="${build.jar.archive.manifest.mainClass}" cp="dropins/*.jar;lib/*.jar" />
 				<versionInfo fileversion="${version.number}.0" txtfileversion="${version.number}" filedescription="${name}" copyright="${name}" productversion="${version.number}.0" txtproductversion="${version.number}" productname="${name}" internalname="${ant.project.name}" originalfilename="${ant.project.name}.exe" />
 			</config>
 		</launch4j>
@@ -455,9 +455,6 @@
 			Name: "English"; MessagesFile: "compiler:Default.isl"; LicenseFile: "${artifactId}\LICENSE.txt"
 			Name: "Italiano"; MessagesFile: "compiler:Languages\Italian.isl"; LicenseFile: "${artifactId}\LICENSE.txt"
 
-			[InstallDelete]
-			Type: files; Name: {app}\lib\${innosetup.AppId.x64}\*.jar
-
 			[Run]
 			Filename: "{app}\${ant.project.name}.exe"; Description: "{cm:LaunchProgram,${name}}"; Flags: nowait postinstall skipifsilent
 
@@ -472,11 +469,52 @@
 			Name: "{commonstartup}\${name}"; Filename: "{app}\${ant.project.name}.exe"; Tasks: startupicon
 
 			[Files]
-			Source: "${artifactId}\*"; Excludes: "*.cfg"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+			Source: "${artifactId}\*"; Excludes: "*.cfg"; DestDir: "{app}"; Flags: ignoreversion
 			Source: "${artifactId}\*.cfg"; DestDir: "{userappdata}\${name}"; Flags: onlyifdoesntexist
+			Source: "${artifactId}\lib\*.jar"; DestDir: "{app}\lib"; Flags: ignoreversion
+
+			#define ProcessFile(Source, FindResult, FindHandle) \
+			    Local[0] = FindGetFileName(FindHandle), \
+			    Local[1] = Source + "\\" + Local[0], \
+			    Local[2] = FindNext(FindHandle), \
+			    "'" + Local[0] + "'#13#10" + \
+			        (Local[2] ? ProcessFile(Source, Local[2], FindHandle) : "")
+
+			#define ProcessFolder(Source) \
+			    Local[0] = FindFirst(Source + "\\*.jar", faAnyFile), \
+			    ProcessFile(Source, Local[0], Local[0])
+
+			#define DepedenciesToInstall ProcessFolder("${artifactId}\\lib")
+			#define DependenciesLog "{app}\lib\dependencies.log"
+
+			[UninstallDelete]
+			Type: files; Name: "{#DependenciesLog}"
 
 			[Dirs]
 			Name: "{app}\dropins"
+
+			[Code]
+			procedure CurStepChanged(CurStep: TSetupStep);
+			var
+			  DependenciesLogPath: string;
+			  Dependencies: TArrayOfString;
+			  I: Integer;
+			begin
+			  DependenciesLogPath := ExpandConstant('{#DependenciesLog}');
+			  if CurStep = ssInstall then
+			  begin
+			    { If dependencies log already exist, remove the previously installed dependencies }
+			    if LoadStringsFromFile(DependenciesLogPath, Dependencies) then
+			    begin
+			      for I := 0 to GetArrayLength(Dependencies) - 1 do
+			        DeleteFile(ExpandConstant('{app}\lib\' + Dependencies[I]));
+			    end;
+			  end;
+			  if CurStep = ssPostInstall then
+			  begin
+			    SaveStringToFile(DependenciesLogPath, {#DepedenciesToInstall}, False);
+			  end;
+			end;
 		</echo>
 
 		<exec osfamily="windows" executable="${innosetup.dir}/ISCC.exe">
