@@ -510,23 +510,6 @@
 			Source: "${artifactId}\*"; Excludes: "*.cfg"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 			Source: "${artifactId}\*.cfg"; DestDir: "{userappdata}\${name}"; Flags: onlyifdoesntexist
 
-			#define ProcessFile(Source, FindResult, FindHandle) \
-			    Local[0] = FindGetFileName(FindHandle), \
-			    Local[1] = Source + "\\" + Local[0], \
-			    Local[2] = FindNext(FindHandle), \
-			    "'" + Local[0] + "'#13#10" + \
-			        (Local[2] ? ProcessFile(Source, Local[2], FindHandle) : "")
-
-			#define ProcessFolder(Source) \
-			    Local[0] = FindFirst(Source + "\\*.jar", faAnyFile), \
-			    ProcessFile(Source, Local[0], Local[0])
-
-			#define DepedenciesToInstall ProcessFolder("${artifactId}\\lib")
-			#define DependenciesLog "{app}\lib\dependencies.log"
-
-			[UninstallDelete]
-			Type: files; Name: "{#DependenciesLog}"
-
 			[Dirs]
 			Name: "{app}\dropins"
 
@@ -537,23 +520,28 @@
 			  Dependencies: TArrayOfString;
 			  I: Integer;
 			begin
-			  DependenciesLogPath := ExpandConstant('{#DependenciesLog}');
+			  DependenciesLogPath := ExpandConstant('{app}\lib\dependencies.log');
 			  if CurStep = ssInstall then
 			  begin
-			    { If dependencies log already exist, remove the previously installed dependencies }
 			    if LoadStringsFromFile(DependenciesLogPath, Dependencies) then
 			    begin
 			      for I := 0 to GetArrayLength(Dependencies) - 1 do
 			        DeleteFile(ExpandConstant('{app}\lib\' + Dependencies[I]));
 			    end;
 			  end;
-			  if CurStep = ssPostInstall then
-			  begin
-			    { Save dependencies log to be processed by future upgrade }
-			    SaveStringToFile(DependenciesLogPath, {#DepedenciesToInstall}, False);
-			  end;
 			end;
 		</echo>
+
+		<pathconvert pathsep="&#13;&#10;" property="DepedenciesToInstall">
+			<fileset dir="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/lib">
+				<include name="*.jar" />
+			</fileset>
+			<mapper>
+				<flattenmapper />
+			</mapper>
+		</pathconvert>
+
+		<echo file="${build.assemblyDirectory}/dist/win32-win32-x86_64/${artifactId}/lib/dependencies.log">${DepedenciesToInstall}</echo>
 
 		<exec osfamily="windows" executable="${innosetup.dir}/ISCC.exe">
 			<arg value="${build.assemblyDirectory}/dist/win32-win32-x86_64/setup.iss" />
