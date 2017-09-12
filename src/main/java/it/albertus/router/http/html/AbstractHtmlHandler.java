@@ -262,6 +262,11 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	}
 
 	@Override
+	protected void setContentLanguageHeader(final HttpExchange exchange) {
+		setContentLanguageHeader(exchange, Messages.getLanguage().getLocale().getLanguage());
+	}
+
+	@Override
 	protected boolean canCompressResponse(final HttpExchange exchange) {
 		return configuration.getBoolean("server.compress.response.html", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
 	}
