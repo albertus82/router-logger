@@ -28,7 +28,6 @@ import it.albertus.router.http.html.StatusHtmlHandler;
 import it.albertus.router.http.json.DataJsonHandler;
 import it.albertus.router.http.json.StatusJsonHandler;
 import it.albertus.router.http.json.ThresholdsJsonHandler;
-import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 
 public class HttpServerConfig extends HttpServerDefaultConfig {
@@ -38,6 +37,7 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	public static final short DEFAULT_MAX_REQ_TIME = 10; // seconds
 	public static final short DEFAULT_MAX_RSP_TIME = 900; // seconds
 	public static final byte DEFAULT_MAX_THREAD_COUNT = 12;
+	public static final String DEFAULT_FAILURE_LOGGING_LEVEL = Level.WARNING.getName();
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
@@ -90,12 +90,12 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 
 				@Override
 				public String getRealm() {
-					return Messages.get("msg.application.name");
+					return "Restricted area";
 				}
 
 				@Override
 				public String getFailureLoggingLevel() {
-					return Level.WARNING.getName();
+					return configuration.getString("server.log.auth.failed", DEFAULT_FAILURE_LOGGING_LEVEL);
 				}
 			});
 		}
