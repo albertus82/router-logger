@@ -34,7 +34,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
-	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfig.class.getPackage().getName().toLowerCase().replace('.', '/') + "/static/";
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfig.class.getPackage().getName().replace('.', '/') + "/static/";
 
 	private final RouterLoggerEngine engine;
 
@@ -79,11 +79,18 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void setContentTypeHeader(final HttpExchange exchange) {
-		if (getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) != null && !exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
+		if (requestedStaticResource(exchange) && getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) != null) {
 			setContentTypeHeader(exchange, getContentType(exchange.getRequestURI().getPath())); // extension based
 		}
 		else {
 			super.setContentTypeHeader(exchange); // text/html
+		}
+	}
+
+	@Override
+	protected void setContentLanguageHeader(final HttpExchange exchange) {
+		if (!requestedStaticResource(exchange) || getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) == null) {
+			super.setContentLanguageHeader(exchange);
 		}
 	}
 
