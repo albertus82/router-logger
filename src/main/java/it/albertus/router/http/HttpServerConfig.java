@@ -4,17 +4,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 
-import com.sun.net.httpserver.Authenticator;
-
 import it.albertus.httpserver.HttpPathHandler;
 import it.albertus.httpserver.HttpServerAuthenticator;
 import it.albertus.httpserver.config.HttpServerDefaultConfig;
-import it.albertus.httpserver.config.SingleUserAuthenticatorDefaultConfig;
 import it.albertus.router.engine.RouterLoggerConfiguration;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.html.CloseHandler;
@@ -37,7 +33,6 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	public static final short DEFAULT_MAX_REQ_TIME = 10; // seconds
 	public static final short DEFAULT_MAX_RSP_TIME = 900; // seconds
 	public static final byte DEFAULT_MAX_THREAD_COUNT = 12;
-	public static final String DEFAULT_FAILURE_LOGGING_LEVEL = Level.WARNING.getName();
 
 	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
 
@@ -75,29 +70,9 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	}
 
 	@Override
-	public Authenticator getAuthenticator() {
+	public HttpServerAuthenticator getAuthenticator() {
 		if (configuration.getBoolean("server.authentication", DEFAULT_AUTHENTICATION_REQUIRED)) {
-			return new HttpServerAuthenticator(new SingleUserAuthenticatorDefaultConfig() {
-				@Override
-				public String getUsername() {
-					return configuration.getString("server.username");
-				}
-
-				@Override
-				public char[] getPassword() {
-					return configuration.getCharArray("server.password");
-				}
-
-				@Override
-				public String getRealm() {
-					return "Restricted area";
-				}
-
-				@Override
-				public String getFailureLoggingLevel() {
-					return configuration.getString("server.log.auth.failed", DEFAULT_FAILURE_LOGGING_LEVEL);
-				}
-			});
+			return new HttpServerAuthenticator(new AuthenticatorConfig());
 		}
 		else {
 			return null;
