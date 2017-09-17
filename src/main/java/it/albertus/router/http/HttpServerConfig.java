@@ -11,7 +11,7 @@ import javax.net.ssl.SSLParameters;
 import it.albertus.httpserver.HttpPathHandler;
 import it.albertus.httpserver.HttpServerAuthenticator;
 import it.albertus.httpserver.config.HttpServerDefaultConfig;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.html.CloseHandler;
 import it.albertus.router.http.html.ConfigurationHandler;
@@ -34,7 +34,7 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	public static final short DEFAULT_MAX_RSP_TIME = 900; // seconds
 	public static final byte DEFAULT_MAX_THREAD_COUNT = 12;
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLoggerConfig.getInstance();
 
 	private final RouterLoggerEngine engine; // Injected
 

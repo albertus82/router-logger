@@ -7,7 +7,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.AbstractHttpHandler;
 import it.albertus.httpserver.config.IHttpServerConfig;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.util.logging.LoggerFactory;
 
@@ -26,7 +26,7 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 		}
 	}
 
-	protected static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected static final RouterLoggerConfig configuration = RouterLoggerConfig.getInstance();
 
 	protected final RouterLoggerEngine engine;
 

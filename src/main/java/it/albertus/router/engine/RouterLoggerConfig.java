@@ -35,9 +35,9 @@ import it.albertus.util.logging.LoggingSupport;
 import it.albertus.util.logging.TimeBasedRollingFileHandler;
 import it.albertus.util.logging.TimeBasedRollingFileHandlerBuilder;
 
-public class RouterLoggerConfiguration extends Configuration {
+public class RouterLoggerConfig extends Configuration {
 
-	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerConfiguration.class);
+	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerConfig.class);
 
 	public static class Defaults {
 		public static final boolean LOGGING_FILES_ENABLED = true;
@@ -77,9 +77,9 @@ public class RouterLoggerConfiguration extends Configuration {
 
 	private final LogFileManager logFileManager;
 
-	private static RouterLoggerConfiguration instance;
+	private static RouterLoggerConfig instance;
 
-	private RouterLoggerConfiguration() throws IOException {
+	private RouterLoggerConfig() throws IOException {
 		super(Messages.get("msg.application.name") + File.separator + CFG_FILE_NAME, true);
 		this.logFileManager = new LogFileManager(new Supplier<String>() {
 			@Override
@@ -90,10 +90,10 @@ public class RouterLoggerConfiguration extends Configuration {
 		init();
 	}
 
-	public static synchronized RouterLoggerConfiguration getInstance() throws InitializationException {
+	public static synchronized RouterLoggerConfig getInstance() throws InitializationException {
 		if (instance == null) {
 			try {
-				instance = new RouterLoggerConfiguration();
+				instance = new RouterLoggerConfig();
 			}
 			catch (final IOException e) {
 				final String message = Messages.get("err.open.cfg", CFG_FILE_NAME);
@@ -278,7 +278,7 @@ public class RouterLoggerConfiguration extends Configuration {
 				throw ite;
 			}
 			catch (final RuntimeException re) {
-				throw new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, RouterLoggerConfiguration.this.getFileName()), re);
+				throw new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, RouterLoggerConfig.this.getFileName()), re);
 			}
 		}
 
@@ -334,7 +334,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		@Override
 		protected void load() {
-			final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.this;
+			final RouterLoggerConfig configuration = RouterLoggerConfig.this;
 			final Set<String> thresholdsAdded = new HashSet<String>();
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
@@ -368,7 +368,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		@Override
 		protected void load() {
-			final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.this;
+			final RouterLoggerConfig configuration = RouterLoggerConfig.this;
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
 				if (key != null && key.startsWith(CFG_PREFIX + '.')) {

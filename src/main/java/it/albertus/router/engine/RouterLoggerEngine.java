@@ -59,7 +59,7 @@ public abstract class RouterLoggerEngine {
 	private static final String MSG_KEY_ERR_CONFIGURATION_INVALID = "err.configuration.invalid";
 	private static final String MSG_KEY_ERR_CONFIGURATION_REVIEW = "err.configuration.review";
 
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfig configuration = RouterLoggerConfig.getInstance();
 
 	protected final LightweightHttpServer httpServer = new LightweightHttpServer(new HttpServerConfig(this));
 	protected final MqttClient mqttClient = MqttClient.getInstance();

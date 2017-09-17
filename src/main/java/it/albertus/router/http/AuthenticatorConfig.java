@@ -3,14 +3,14 @@ package it.albertus.router.http;
 import java.util.logging.Level;
 
 import it.albertus.httpserver.config.SingleUserAuthenticatorDefaultConfig;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.util.Configuration;
 
 public class AuthenticatorConfig extends SingleUserAuthenticatorDefaultConfig {
 
 	public static final String DEFAULT_FAILURE_LOGGING_LEVEL = Level.WARNING.getName();
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLoggerConfig.getInstance();
 
 	@Override
 	public String getUsername() {

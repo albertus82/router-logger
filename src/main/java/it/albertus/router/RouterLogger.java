@@ -5,7 +5,7 @@ import java.util.logging.Handler;
 
 import it.albertus.router.console.ConsoleFormatter;
 import it.albertus.router.console.RouterLoggerConsole;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.gui.RouterLoggerGui;
 import it.albertus.router.util.InitializationException;
 import it.albertus.util.logging.LoggingSupport;
@@ -26,7 +26,7 @@ public class RouterLogger {
 		}
 
 		try {
-			RouterLoggerConfiguration.getInstance();
+			RouterLoggerConfig.getInstance();
 		}
 		catch (final InitializationException e) {
 			initializationException = e;
