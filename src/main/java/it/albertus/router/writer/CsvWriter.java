@@ -36,8 +36,19 @@ public class CsvWriter extends Writer {
 	protected static final String CSV_FILENAME_REGEX = "[0-9]{8}\\.(csv|CSV)";
 	protected static final String CSV_FILE_EXTENSION = ".csv";
 
-	protected static final DateFormat dateFormatColumn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-	protected static final DateFormat dateFormatFileName = new SimpleDateFormat("yyyyMMdd");
+	protected static final ThreadLocal<DateFormat> dateFormatsColumn = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		}
+	};
+
+	protected static final ThreadLocal<DateFormat> dateFormatsFileName = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue() {
+			return new SimpleDateFormat("yyyyMMdd");
+		}
+	};
 
 	public static class Defaults {
 		public static final NewLine NEWLINE = LINE_SEPARATOR != null ? NewLine.getEnum(LINE_SEPARATOR) : NewLine.CRLF;
@@ -97,7 +108,7 @@ public class CsvWriter extends Writer {
 			String formattedDate;
 			try {
 				final String zipFileName = zipFile.getName();
-				formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Messages.getLanguage().getLocale()).format(CsvWriter.dateFormatFileName.parse(zipFileName.substring(0, zipFileName.indexOf('.'))));
+				formattedDate = DateFormat.getDateInstance(DateFormat.LONG, Messages.getLanguage().getLocale()).format(dateFormatsFileName.get().parse(zipFileName.substring(0, zipFileName.indexOf('.'))));
 			}
 			catch (final Exception e) {
 				logger.log(Level.SEVERE, e.toString(), e);
@@ -161,7 +172,7 @@ public class CsvWriter extends Writer {
 		final String csvDestinationDir = configuration.getString("csv.destination.path", true).trim();
 		final File file;
 		if (!csvDestinationDir.isEmpty()) {
-			file = new File(csvDestinationDir + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
+			file = new File(csvDestinationDir + File.separator + dateFormatsFileName.get().format(new Date()) + CSV_FILE_EXTENSION);
 		}
 		else {
 			file = getDefaultFile();
@@ -190,7 +201,7 @@ public class CsvWriter extends Writer {
 		final String fieldSeparator = getFieldSeparator();
 		final String fieldSeparatorReplacement = getFieldSeparatorReplacement();
 
-		final StringBuilder row = new StringBuilder(dateFormatColumn.format(info.getTimestamp())).append(fieldSeparator);
+		final StringBuilder row = new StringBuilder(dateFormatsColumn.get().format(info.getTimestamp())).append(fieldSeparator);
 		row.append(info.getResponseTime()).append(fieldSeparator); // Response time
 		for (String field : info.getData().values()) {
 			row.append(field.replace(fieldSeparator, fieldSeparatorReplacement)).append(fieldSeparator);
@@ -257,7 +268,7 @@ public class CsvWriter extends Writer {
 	}
 
 	protected static File getDefaultFile() {
-		return new File(getDefaultDirectory() + File.separator + dateFormatFileName.format(new Date()) + CSV_FILE_EXTENSION);
+		return new File(getDefaultDirectory() + File.separator + dateFormatsFileName.get().format(new Date()) + CSV_FILE_EXTENSION);
 	}
 
 	protected static String getDefaultDirectory() {
