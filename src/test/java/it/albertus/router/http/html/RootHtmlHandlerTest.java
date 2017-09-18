@@ -13,7 +13,7 @@ public class RootHtmlHandlerTest {
 
 	@Test
 	public void testImageFileName() {
-		final RootHtmlHandler h = new RootHtmlHandler(null);
+		final RootHtmlHandler h = new RootHtmlHandler(null, null);
 		Assert.assertEquals("asus_dsl_n12e.png", h.getImageFileName(new AsusDslN12EReader()));
 		Assert.assertEquals("asus_dsl_n14u.png", h.getImageFileName(new AsusDslN14UReader()));
 		Assert.assertEquals("dlink_dsl_2750b.png", h.getImageFileName(new DLinkDsl2750Reader()));

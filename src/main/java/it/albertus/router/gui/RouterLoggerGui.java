@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.util.Util;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -23,6 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import it.albertus.jface.DisplayThreadExecutor;
 import it.albertus.jface.EnhancedErrorDialog;
 import it.albertus.jface.JFaceMessages;
+import it.albertus.jface.SwtUtils;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.router.engine.RouterData;
 import it.albertus.router.engine.RouterLoggerEngine;
@@ -34,8 +34,8 @@ import it.albertus.router.gui.preference.RouterLoggerPreferences;
 import it.albertus.router.resources.Messages;
 import it.albertus.router.util.InitializationException;
 import it.albertus.util.ConfigurationException;
-import it.albertus.util.Supplier;
 import it.albertus.util.ExceptionUtils;
+import it.albertus.util.Supplier;
 import it.albertus.util.Version;
 import it.albertus.util.logging.LoggerFactory;
 
@@ -67,7 +67,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 		shell = new Shell(display);
 
 		// Fix invisible (transparent) shell bug with some Linux distibutions
-		if (!Util.isGtk() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+		if (SwtUtils.isGtk3() != null && !SwtUtils.isGtk3() && configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 			shell.setMinimized(true);
 		}
 
@@ -123,7 +123,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				shell.open();
 
 				// Fix invisible (transparent) shell bug with some Linux distibutions
-				if (Util.isGtk() && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
+				if ((SwtUtils.isGtk3() == null || SwtUtils.isGtk3()) && routerLogger.configuration.getBoolean("gui.start.minimized", Defaults.GUI_START_MINIMIZED)) {
 					shell.setMinimized(true);
 				}
 
@@ -308,7 +308,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, e);
-				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName((e).getKey()).getPageDefinition()) != Window.OK) {
+				if (buttonId == SWT.OK || buttonId == SWT.NO || new RouterLoggerPreferences().openDialog(shell, Preference.forName(e.getKey()).getPageDefinition()) != Window.OK) {
 					logger.log(Level.SEVERE, e.toString(), e);
 					return;
 				}

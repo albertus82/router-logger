@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 
-import it.albertus.httpserver.AbstractHttpHandler;
-import it.albertus.httpserver.DefaultHttpServerConfiguration;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.httpserver.HttpPathHandler;
+import it.albertus.httpserver.HttpServerAuthenticator;
+import it.albertus.httpserver.config.HttpServerDefaultConfig;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.http.html.CloseHandler;
 import it.albertus.router.http.html.ConfigurationHandler;
@@ -24,10 +24,9 @@ import it.albertus.router.http.html.StatusHtmlHandler;
 import it.albertus.router.http.json.DataJsonHandler;
 import it.albertus.router.http.json.StatusJsonHandler;
 import it.albertus.router.http.json.ThresholdsJsonHandler;
-import it.albertus.router.resources.Messages;
 import it.albertus.util.Configuration;
 
-public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
+public class HttpServerConfig extends HttpServerDefaultConfig {
 
 	public static final boolean DEFAULT_ENABLED = false;
 	public static final boolean DEFAULT_AUTHENTICATION_REQUIRED = true;
@@ -35,59 +34,49 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	public static final short DEFAULT_MAX_RSP_TIME = 900; // seconds
 	public static final byte DEFAULT_MAX_THREAD_COUNT = 12;
 
-	private final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private final Configuration configuration = RouterLoggerConfig.getInstance();
 
 	private final RouterLoggerEngine engine; // Injected
 
-	public HttpServerConfiguration(final RouterLoggerEngine engine) {
+	public HttpServerConfig(final RouterLoggerEngine engine) {
 		this.engine = engine;
 	}
 
 	@Override
-	public AbstractHttpHandler[] getHandlers() {
-		final List<AbstractHttpHandler> handlers = new ArrayList<AbstractHttpHandler>();
+	public HttpPathHandler[] getHandlers() {
+		final List<HttpPathHandler> handlers = new ArrayList<HttpPathHandler>();
 
 		// HTML
-		handlers.add(new RootHtmlHandler(engine)); // serves also static resources
-		handlers.add(new StatusHtmlHandler(engine));
-		handlers.add(new RestartHandler(engine));
-		handlers.add(new DisconnectHandler(engine));
-		handlers.add(new ConnectHandler(engine));
-		handlers.add(new CloseHandler(engine));
-		handlers.add(new LogsHandler());
-		handlers.add(new ConfigurationHandler());
+		handlers.add(new RootHtmlHandler(this, engine)); // serves also static resources
+		handlers.add(new StatusHtmlHandler(this, engine));
+		handlers.add(new RestartHandler(this, engine));
+		handlers.add(new DisconnectHandler(this, engine));
+		handlers.add(new ConnectHandler(this, engine));
+		handlers.add(new CloseHandler(this, engine));
+		handlers.add(new LogsHandler(this));
+		handlers.add(new ConfigurationHandler(this));
 
 		// JSON
-		handlers.add(new DataJsonHandler(engine));
-		handlers.add(new StatusJsonHandler(engine));
-		handlers.add(new ThresholdsJsonHandler(engine));
+		handlers.add(new DataJsonHandler(this, engine));
+		handlers.add(new StatusJsonHandler(this, engine));
+		handlers.add(new ThresholdsJsonHandler(this, engine));
 
-		return handlers.toArray(new AbstractHttpHandler[0]);
+		return handlers.toArray(new HttpPathHandler[handlers.size()]);
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return configuration.getBoolean("server.enabled", super.isEnabled());
+		return configuration.getBoolean("server.enabled", DEFAULT_ENABLED);
 	}
 
 	@Override
-	public boolean isAuthenticationRequired() {
-		return configuration.getBoolean("server.authentication", DEFAULT_AUTHENTICATION_REQUIRED);
-	}
-
-	@Override
-	public String getAuthenticationRealm() {
-		return Messages.get("msg.application.name");
-	}
-
-	@Override
-	public String getAuthenticationUsername() {
-		return configuration.getString("server.username");
-	}
-
-	@Override
-	public char[] getAuthenticationPassword() {
-		return configuration.getCharArray("server.password");
+	public HttpServerAuthenticator getAuthenticator() {
+		if (configuration.getBoolean("server.authentication", DEFAULT_AUTHENTICATION_REQUIRED)) {
+			return new HttpServerAuthenticator(new AuthenticatorConfig());
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
@@ -156,7 +145,7 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 				cipherSuites.add(cipherSuite);
 			}
 		}
-		params.setCipherSuites(cipherSuites.toArray(new String[0]));
+		params.setCipherSuites(cipherSuites.toArray(new String[cipherSuites.size()]));
 		return params;
 	}
 
@@ -173,11 +162,6 @@ public class HttpServerConfiguration extends DefaultHttpServerConfiguration {
 	@Override
 	public boolean isCompressionEnabled() {
 		return configuration.getBoolean("server.compress.response", super.isCompressionEnabled());
-	}
-
-	@Override
-	public String getAuthenticationFailureLoggingLevel() {
-		return Level.WARNING.getName();
 	}
 
 }

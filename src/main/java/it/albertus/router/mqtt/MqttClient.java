@@ -14,7 +14,7 @@ import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.dto.StatusDto;
 import it.albertus.router.dto.ThresholdsDto;
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.engine.RouterLoggerStatus;
 import it.albertus.router.engine.Status;
 import it.albertus.router.engine.ThresholdsReached;
@@ -29,7 +29,7 @@ public class MqttClient extends BaseMqttClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(MqttClient.class);
 
-	private static final Configuration configuration = RouterLoggerConfiguration.getInstance();
+	private static final Configuration configuration = RouterLoggerConfig.getInstance();
 
 	private static final String CFG_KEY_MQTT_CLEAN_SESSION = "mqtt.clean.session";
 	private static final String CFG_KEY_MQTT_MAX_INFLIGHT = "mqtt.max.inflight";

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.TrayItem;
 
 import it.albertus.jface.listener.TrayRestoreListener;
 import it.albertus.router.engine.RouterData;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.engine.Status;
 import it.albertus.router.engine.Threshold;
 import it.albertus.router.gui.listener.CloseListener;
@@ -33,7 +33,7 @@ public class TrayIcon {
 
 	private static final Logger logger = LoggerFactory.getLogger(TrayIcon.class);
 
-	private static final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	private static final RouterLoggerConfig configuration = RouterLoggerConfig.getInstance();
 
 	public static class Defaults {
 		public static final boolean GUI_MINIMIZE_TRAY = true;
@@ -115,13 +115,13 @@ public class TrayIcon {
 					toolTip.setText(Messages.get("lbl.tray.tooltip.thresholds.reached"));
 					toolTip.setVisible(false);
 					toolTip.setAutoHide(true);
-					toolTip.addListener(SWT.Selection, trayRestoreListener);
+					toolTip.addSelectionListener(trayRestoreListener);
 					trayItem.setToolTip(toolTip);
 
 					trayMenu = new Menu(gui.getShell(), SWT.POP_UP);
 					showMenuItem = new MenuItem(trayMenu, SWT.PUSH);
 					showMenuItem.setText(Messages.get("lbl.tray.show"));
-					showMenuItem.addListener(SWT.Selection, trayRestoreListener);
+					showMenuItem.addSelectionListener(trayRestoreListener);
 					trayMenu.setDefaultItem(showMenuItem);
 
 					new MenuItem(trayMenu, SWT.SEPARATOR);
@@ -136,7 +136,7 @@ public class TrayIcon {
 						}
 					});
 
-					trayItem.addListener(SWT.Selection, trayRestoreListener);
+					trayItem.addSelectionListener(trayRestoreListener);
 					if (!Util.isLinux()) {
 						gui.getShell().addShellListener(trayRestoreListener);
 					}

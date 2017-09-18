@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.router.dto.ThresholdsDto;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Payload;
@@ -12,8 +13,8 @@ import it.albertus.router.util.Payload;
 @Path("/json/thresholds")
 public class ThresholdsJsonHandler extends AbstractJsonHandler {
 
-	public ThresholdsJsonHandler(final RouterLoggerEngine engine) {
-		super(engine);
+	public ThresholdsJsonHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config, engine);
 	}
 
 	@Override

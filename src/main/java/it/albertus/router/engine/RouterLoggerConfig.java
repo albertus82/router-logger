@@ -33,11 +33,11 @@ import it.albertus.util.logging.LogFileManager;
 import it.albertus.util.logging.LoggerFactory;
 import it.albertus.util.logging.LoggingSupport;
 import it.albertus.util.logging.TimeBasedRollingFileHandler;
-import it.albertus.util.logging.TimeBasedRollingFileHandlerBuilder;
+import it.albertus.util.logging.TimeBasedRollingFileHandlerConfig;
 
-public class RouterLoggerConfiguration extends Configuration {
+public class RouterLoggerConfig extends Configuration {
 
-	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerConfiguration.class);
+	private static final Logger logger = LoggerFactory.getLogger(RouterLoggerConfig.class);
 
 	public static class Defaults {
 		public static final boolean LOGGING_FILES_ENABLED = true;
@@ -70,16 +70,14 @@ public class RouterLoggerConfiguration extends Configuration {
 	private final Set<String> guiImportantKeys = new LinkedHashSet<String>();
 	private final Set<String> consoleKeysToShow = new LinkedHashSet<String>();
 
-	private TimeBasedRollingFileHandlerBuilder fileHandlerBuilder;
-
 	private TimeBasedRollingFileHandler fileHandler;
 	private EmailHandler emailHandler;
 
 	private final LogFileManager logFileManager;
 
-	private static RouterLoggerConfiguration instance;
+	private static RouterLoggerConfig instance;
 
-	private RouterLoggerConfiguration() throws IOException {
+	private RouterLoggerConfig() throws IOException {
 		super(Messages.get("msg.application.name") + File.separator + CFG_FILE_NAME, true);
 		this.logFileManager = new LogFileManager(new Supplier<String>() {
 			@Override
@@ -90,10 +88,10 @@ public class RouterLoggerConfiguration extends Configuration {
 		init();
 	}
 
-	public static synchronized RouterLoggerConfiguration getInstance() throws InitializationException {
+	public static synchronized RouterLoggerConfig getInstance() throws InitializationException {
 		if (instance == null) {
 			try {
-				instance = new RouterLoggerConfiguration();
+				instance = new RouterLoggerConfig();
 			}
 			catch (final IOException e) {
 				final String message = Messages.get("err.open.cfg", CFG_FILE_NAME);
@@ -178,36 +176,45 @@ public class RouterLoggerConfiguration extends Configuration {
 	}
 
 	private void enableLoggingFileHandler() {
-		final String loggingPath = this.getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
+		final String loggingPath = getString("logging.files.path", Defaults.LOGGING_FILES_PATH);
 		if (loggingPath != null && !loggingPath.isEmpty()) {
-			final TimeBasedRollingFileHandlerBuilder builder = new TimeBasedRollingFileHandlerBuilder();
-			builder.fileNamePattern(loggingPath + File.separator + LOG_FILE_NAME);
-			builder.limit(this.getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024);
-			builder.count(this.getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT));
-			builder.append(true);
-			builder.datePattern(LOG_FILE_DATE_PATTERN);
-			builder.formatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
-			if (this.getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED)) {
-				final HousekeepingFilter hf = new HousekeepingFilter(logFileManager, this.getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP), LOG_FILE_DATE_PATTERN);
+			final TimeBasedRollingFileHandlerConfig newConfig = new TimeBasedRollingFileHandlerConfig();
+			newConfig.setFileNamePattern(loggingPath + File.separator + LOG_FILE_NAME);
+			newConfig.setLimit(getInt("logging.files.limit", Defaults.LOGGING_FILES_LIMIT) * 1024);
+			newConfig.setCount(getInt("logging.files.count", Defaults.LOGGING_FILES_COUNT));
+			newConfig.setAppend(true);
+			newConfig.setDatePattern(LOG_FILE_DATE_PATTERN);
+			newConfig.setFormatter(new CustomFormatter("%1$td/%1$tm/%1$tY %1$tH:%1$tM:%1$tS.%tL %4$s %3$s - %5$s%6$s%n"));
+
+			if (getBoolean("logging.files.autoclean.enabled", Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED)) {
+				final HousekeepingFilter hf = new HousekeepingFilter(logFileManager, getShort("logging.files.autoclean.keep", Defaults.LOGGING_FILES_AUTOCLEAN_KEEP), LOG_FILE_DATE_PATTERN);
 				hf.addObserver(new Observer() {
 					@Override
 					public void update(final Observable o, final Object deletedFile) {
 						LoggerFactory.getLogger(o.getClass()).log(Level.INFO, Messages.get("msg.logging.housekeeping.deleted"), deletedFile);
 					}
 				});
-				builder.filter(hf);
+				newConfig.setFilter(hf);
 			}
-			if (fileHandlerBuilder == null || !builder.equals(fileHandlerBuilder)) {
-				if (fileHandler != null) {
+
+			if (fileHandler != null) {
+				final TimeBasedRollingFileHandlerConfig oldConfig = TimeBasedRollingFileHandlerConfig.fromHandler(fileHandler);
+				if (!oldConfig.getFileNamePattern().equals(newConfig.getFileNamePattern()) || oldConfig.getLimit() != newConfig.getLimit() || oldConfig.getCount() != newConfig.getCount() || !equals(oldConfig.getFilter(), newConfig.getFilter())) {
+					logger.log(Level.FINE, "Logging configuration has changed; closing and removing old {0}...", fileHandler.getClass().getSimpleName());
 					LoggingSupport.getRootLogger().removeHandler(fileHandler);
 					fileHandler.close();
 					fileHandler = null;
+					logger.log(Level.FINE, "Old FileHandler closed and removed.");
 				}
+			}
+
+			if (fileHandler == null) {
+				logger.log(Level.FINE, "FileHandler not found; creating one...");
 				try {
 					new File(loggingPath).mkdirs();
-					fileHandlerBuilder = builder;
-					fileHandler = builder.build();
+					fileHandler = new TimeBasedRollingFileHandler(newConfig);
 					LoggingSupport.getRootLogger().addHandler(fileHandler);
+					logger.log(Level.FINE, "{0} created successfully.", fileHandler.getClass().getSimpleName());
 				}
 				catch (final IOException e) {
 					logger.log(Level.SEVERE, e.toString(), e);
@@ -221,7 +228,7 @@ public class RouterLoggerConfiguration extends Configuration {
 			LoggingSupport.getRootLogger().removeHandler(fileHandler);
 			fileHandler.close();
 			fileHandler = null;
-			fileHandlerBuilder = null;
+			logger.log(Level.FINE, "FileHandler closed and removed.");
 		}
 	}
 
@@ -278,7 +285,7 @@ public class RouterLoggerConfiguration extends Configuration {
 				throw ite;
 			}
 			catch (final RuntimeException re) {
-				throw new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, RouterLoggerConfiguration.this.getFileName()), re);
+				throw new IllegalThresholdException(Messages.get("err.threshold.miscfg") + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, RouterLoggerConfig.this.getFileName()), re);
 			}
 		}
 
@@ -334,7 +341,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		@Override
 		protected void load() {
-			final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.this;
+			final RouterLoggerConfig configuration = RouterLoggerConfig.this;
 			final Set<String> thresholdsAdded = new HashSet<String>();
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
@@ -368,7 +375,7 @@ public class RouterLoggerConfiguration extends Configuration {
 
 		@Override
 		protected void load() {
-			final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.this;
+			final RouterLoggerConfig configuration = RouterLoggerConfig.this;
 			for (Object objectKey : configuration.getProperties().keySet()) {
 				String key = (String) objectKey;
 				if (key != null && key.startsWith(CFG_PREFIX + '.')) {
@@ -412,7 +419,10 @@ public class RouterLoggerConfiguration extends Configuration {
 		private IllegalThresholdException(String message, Throwable cause) {
 			super(message, cause);
 		}
+	}
 
+	private static boolean equals(final Object a, final Object b) {
+		return (a == b) || (a != null && a.equals(b));
 	}
 
 //	public static void main(String... args) throws IOException {

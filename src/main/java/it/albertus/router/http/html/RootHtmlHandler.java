@@ -7,8 +7,9 @@ import java.util.logging.Logger;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.http.HttpServerConfiguration;
+import it.albertus.router.http.HttpServerConfig;
 import it.albertus.router.reader.AsusDslN12EReader;
 import it.albertus.router.reader.AsusDslN14UReader;
 import it.albertus.router.reader.DLinkDsl2750Reader;
@@ -33,11 +34,12 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
-	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfiguration.class.getPackage().getName().toLowerCase().replace('.', '/') + "/static/";
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfig.class.getPackage().getName().replace('.', '/') + "/static/";
 
 	private final RouterLoggerEngine engine;
 
-	public RootHtmlHandler(final RouterLoggerEngine engine) {
+	public RootHtmlHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config);
 		this.engine = engine;
 	}
 
@@ -77,7 +79,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void setContentTypeHeader(final HttpExchange exchange) {
-		if (getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) != null && !exchange.getRequestURI().getPath().equals(getPath()) && !exchange.getRequestURI().getRawPath().equals(getPath())) {
+		if (requestedStaticResource(exchange) && getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) != null) {
 			setContentTypeHeader(exchange, getContentType(exchange.getRequestURI().getPath())); // extension based
 		}
 		else {
@@ -86,11 +88,18 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
+	protected void setContentLanguageHeader(final HttpExchange exchange) {
+		if (!requestedStaticResource(exchange) || getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) == null) {
+			super.setContentLanguageHeader(exchange);
+		}
+	}
+
+	@Override
 	protected void log(final HttpExchange exchange) {
 		if (requestedStaticResource(exchange)) {
 			Level level = Level.OFF;
 			try {
-				level = Level.parse(getHttpServerConfiguration().getRequestLoggingLevel());
+				level = Level.parse(getHttpServerConfig().getRequestLoggingLevel());
 			}
 			catch (final RuntimeException e) {
 				logger.log(Level.WARNING, e.toString(), e);

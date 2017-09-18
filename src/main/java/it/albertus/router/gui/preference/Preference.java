@@ -35,6 +35,8 @@ import org.eclipse.jface.preference.FontFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 
+import it.albertus.httpserver.config.AuthenticatorDefaultConfig;
+import it.albertus.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorDetails.FieldEditorDetailsBuilder;
@@ -64,7 +66,7 @@ import it.albertus.jface.preference.page.IPageDefinition;
 import it.albertus.router.console.RouterLoggerConsole;
 import it.albertus.router.email.EmailSender;
 import it.albertus.router.email.ThresholdsEmailSender;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.gui.CloseDialog;
 import it.albertus.router.gui.DataTable;
@@ -83,7 +85,8 @@ import it.albertus.router.gui.preference.page.MqttPreferencePage;
 import it.albertus.router.gui.preference.page.ReaderPreferencePage;
 import it.albertus.router.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.router.gui.preference.page.WriterPreferencePage;
-import it.albertus.router.http.HttpServerConfiguration;
+import it.albertus.router.http.AuthenticatorConfig;
+import it.albertus.router.http.HttpServerConfig;
 import it.albertus.router.http.html.AbstractHtmlHandler;
 import it.albertus.router.http.html.CloseHandler;
 import it.albertus.router.http.html.ConfigurationHandler;
@@ -161,7 +164,7 @@ public enum Preference implements IPreference {
 
 	GUI_TABLE_ITEMS_MAX(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(DataTable.Defaults.MAX_ITEMS).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).textLimit(4).build()),
 	GUI_IMPORTANT_KEYS(new PreferenceDetailsBuilder(APPEARANCE_TABLE).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).height(4).build()),
-	GUI_IMPORTANT_KEYS_SEPARATOR(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(RouterLoggerConfiguration.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
+	GUI_IMPORTANT_KEYS_SEPARATOR(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(RouterLoggerConfig.Defaults.GUI_IMPORTANT_KEYS_SEPARATOR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
 	GUI_IMPORTANT_KEYS_COLOR_BACKGROUND(new PreferenceDetailsBuilder(APPEARANCE_TABLE).defaultValue(DataTable.Defaults.IMPORTANT_KEYS_COLOR_BACKGROUND).build(), new FieldEditorDetailsBuilder(ColorFieldEditor.class).build()),
 	GUI_TABLE_COLUMNS_PACK(new PreferenceDetailsBuilder(APPEARANCE_TABLE).separate().restartRequired().defaultValue(DataTable.Defaults.COLUMNS_PACK).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	GUI_TABLE_COLUMNS_PADDING_RIGHT(new PreferenceDetailsBuilder(APPEARANCE_TABLE).restartRequired().defaultValue(DataTable.Defaults.COLUMNS_PADDING_RIGHT).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(10).build()),
@@ -169,7 +172,7 @@ public enum Preference implements IPreference {
 
 	CONSOLE_ANIMATION(new PreferenceDetailsBuilder(CONSOLE).defaultValue(RouterLoggerConsole.Defaults.CONSOLE_ANIMATION).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	CONSOLE_SHOW_KEYS(new PreferenceDetailsBuilder(CONSOLE).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).build()),
-	CONSOLE_SHOW_KEYS_SEPARATOR(new PreferenceDetailsBuilder(CONSOLE).defaultValue(RouterLoggerConfiguration.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
+	CONSOLE_SHOW_KEYS_SEPARATOR(new PreferenceDetailsBuilder(CONSOLE).defaultValue(RouterLoggerConfig.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
 
 	WRITER_CLASS_NAME(new PreferenceDetailsBuilder(WRITER).defaultValue(RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()).build(), new FieldEditorDetailsBuilder(WriterComboFieldEditor.class).labelsAndValues(WriterPreferencePage.getWriterComboOptions()).build()),
 
@@ -197,12 +200,12 @@ public enum Preference implements IPreference {
 	DATABASE_COLUMN_NAME_MAX_LENGTH(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).textLimit(2).build()),
 
 	THRESHOLDS_EXPRESSIONS(new PreferenceDetailsBuilder(THRESHOLDS).build(), new FieldEditorDetailsBuilder(ThresholdsListEditor.class).build()),
-	THRESHOLDS_SPLIT(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfiguration.Defaults.THRESHOLDS_SPLIT).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	THRESHOLDS_SPLIT(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfig.Defaults.THRESHOLDS_SPLIT).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	THRESHOLDS_EMAIL(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerEngine.Defaults.THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	THRESHOLDS_EMAIL_SEND_INTERVAL_SECS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.THRESHOLDS_EMAIL_SEND_INTERVAL_SECS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),
 	THRESHOLDS_EMAIL_MAX_ITEMS(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(ThresholdsEmailSender.Defaults.MAX_ITEMS).parent(THRESHOLDS_EMAIL).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 1000).build()),
 	THRESHOLDS_EXCLUDED(new PreferenceDetailsBuilder(THRESHOLDS).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).build()),
-	THRESHOLDS_EXCLUDED_SEPARATOR(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfiguration.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
+	THRESHOLDS_EXCLUDED_SEPARATOR(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfig.Defaults.THRESHOLDS_EXCLUDED_SEPARATOR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
 
 	EMAIL_HOST(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	EMAIL_USERNAME(new PreferenceDetailsBuilder(EMAIL).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
@@ -231,26 +234,27 @@ public enum Preference implements IPreference {
 	EMAIL_CC_ADDRESSES(new PreferenceDetailsBuilder(EMAIL_CC_BCC).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(0).icons(Images.getMainIcons()).build()),
 	EMAIL_BCC_ADDRESSES(new PreferenceDetailsBuilder(EMAIL_CC_BCC).build(), new FieldEditorDetailsBuilder(EmailAddressesListEditor.class).horizontalSpan(0).icons(Images.getMainIcons()).build()),
 
-	SERVER_ENABLED(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_ENABLED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_PORT(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_PORT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
-	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(HttpServerConfiguration.DEFAULT_AUTHENTICATION_REQUIRED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_ENABLED(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfig.DEFAULT_ENABLED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_PORT(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerDefaultConfig.PORT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
+	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(HttpServerConfig.DEFAULT_AUTHENTICATION_REQUIRED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_USERNAME(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
-	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).hashAlgorithm(HttpServerConfiguration.DEFAULT_PASSWORD_HASH_ALGORITHM).build()),
-	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_MAX_THREAD_COUNT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
-	SERVER_MAXREQTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_MAX_REQ_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).hashAlgorithm(AuthenticatorDefaultConfig.PASSWORD_HASH_ALGORITHM).build()),
+	SERVER_LOG_AUTH_FAILED(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).defaultValue(AuthenticatorConfig.DEFAULT_FAILURE_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(new Level[] { Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING })).build()),
+	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfig.DEFAULT_MAX_THREAD_COUNT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
+	SERVER_MAXREQTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfig.DEFAULT_MAX_REQ_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.server.maxreqtime.infinite");
 		}
 	}, -1)).build()),
-	SERVER_MAXRSPTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_MAX_RSP_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
+	SERVER_MAXRSPTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfig.DEFAULT_MAX_RSP_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("lbl.preferences.server.maxrsptime.infinite");
 		}
 	}, -1)).build()),
-	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).separate().defaultValue(HttpServerConfiguration.DEFAULT_REQUEST_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(new Level[] { Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.CONFIG, Level.INFO, Level.WARNING })).build()),
-	SERVER_COMPRESS_RESPONSE(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfiguration.DEFAULT_COMPRESSION_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).separate().defaultValue(HttpServerDefaultConfig.REQUEST_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(new Level[] { Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING })).build()),
+	SERVER_COMPRESS_RESPONSE(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerDefaultConfig.COMPRESSION_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	SERVER_HANDLER_ROOT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_LOGS_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(LogsHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -278,14 +282,14 @@ public enum Preference implements IPreference {
 	SERVER_COMPRESS_RESPONSE_HTML(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(AbstractHtmlHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_COMPRESS_RESPONSE_JSON(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(AbstractJsonHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
-	SERVER_SSL_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.DEFAULT_SSL_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_SSL_KEYSTORE_TYPE(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.DEFAULT_SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_SSL_KEYSTORE_TYPE(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
 	SERVER_SSL_KEYSTORE_FILE(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedFileFieldEditor.class).fileExtensions(ServerHttpsPreferencePage.getKeyStoreFileExtensions()).build()),
 	SERVER_SSL_STOREPASS(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
 	SERVER_SSL_KEYPASS(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).build()),
-	SERVER_SSL_PROTOCOL(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.DEFAULT_SSL_PROTOCOL).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getSslContextAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
-	SERVER_SSL_KMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.DEFAULT_SSL_KMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
-	SERVER_SSL_TMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfiguration.DEFAULT_SSL_TMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_PROTOCOL(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_PROTOCOL).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getSslContextAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_KMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_KMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
+	SERVER_SSL_TMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_TMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
 
 	MQTT_ENABLED(new PreferenceDetailsBuilder(MQTT).defaultValue(MqttClient.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_SERVER_URI(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(UriListEditor.class).horizontalSpan(2).icons(Images.getMainIcons()).build()),
@@ -336,16 +340,16 @@ public enum Preference implements IPreference {
 		}
 	}).build()),
 
-	LOGGING_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_LEVEL.getName()).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions()).build()),
-	LOGGING_FILES_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	LOGGING_FILES_PATH(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_ENABLED).defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_PATH).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryMustExist(false).directoryDialogMessage(new Localized() {
+	LOGGING_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(RouterLoggerConfig.Defaults.LOGGING_LEVEL.getName()).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions()).build()),
+	LOGGING_FILES_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	LOGGING_FILES_PATH(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_ENABLED).defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_PATH).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryMustExist(false).directoryDialogMessage(new Localized() {
 		@Override
 		public String getString() {
 			return Messages.get("msg.preferences.directory.dialog.message.log");
 		}
 	}).build()),
-	LOGGING_FILES_AUTOCLEAN_ENABLED(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_ENABLED).defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	LOGGING_FILES_AUTOCLEAN_KEEP(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_AUTOCLEAN_ENABLED).defaultValue(RouterLoggerConfiguration.Defaults.LOGGING_FILES_AUTOCLEAN_KEEP).build(), new FieldEditorDetailsBuilder(ShortFieldEditor.class).numberMinimum(HousekeepingFilter.MIN_HISTORY).build()),
+	LOGGING_FILES_AUTOCLEAN_ENABLED(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_ENABLED).defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	LOGGING_FILES_AUTOCLEAN_KEEP(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_AUTOCLEAN_ENABLED).defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_AUTOCLEAN_KEEP).build(), new FieldEditorDetailsBuilder(ShortFieldEditor.class).numberMinimum(HousekeepingFilter.MIN_HISTORY).build()),
 	LOGGING_EMAIL_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(EmailHandler.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	LOGGING_EMAIL_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.LEVEL.getName()).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(EmailHandler.MIN_LEVEL, EmailHandler.MAX_LEVEL)).build()),
 	LOGGING_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.IGNORE_DUPLICATES).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build());
@@ -416,7 +420,7 @@ public enum Preference implements IPreference {
 				preferences.add(item);
 			}
 		}
-		return preferences.toArray(new Preference[] {});
+		return preferences.toArray(new Preference[preferences.size()]);
 	}
 
 	@Override

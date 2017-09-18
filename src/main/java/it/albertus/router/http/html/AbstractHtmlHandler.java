@@ -10,8 +10,9 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.httpserver.AbstractHttpHandler;
 import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
-import it.albertus.router.engine.RouterLoggerConfiguration;
+import it.albertus.router.engine.RouterLoggerConfig;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
@@ -33,7 +34,11 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
 	protected static final String CACHE_BUSTING_SUFFIX = "?ver=" + new SimpleDateFormat("yyyyMMdd").format(Version.getInstance().getDate());
 
-	protected final RouterLoggerConfiguration configuration = RouterLoggerConfiguration.getInstance();
+	protected final RouterLoggerConfig configuration = RouterLoggerConfig.getInstance();
+
+	public AbstractHtmlHandler(final IHttpServerConfig config) {
+		super(config);
+	}
 
 	@Override
 	protected void sendForbidden(final HttpExchange exchange) throws IOException {
@@ -254,6 +259,11 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	@Override
 	protected void setContentTypeHeader(final HttpExchange exchange) {
 		setContentTypeHeader(exchange, "text/html; charset=" + getCharset().name().toLowerCase());
+	}
+
+	@Override
+	protected void setContentLanguageHeader(final HttpExchange exchange) {
+		setContentLanguageHeader(exchange, Messages.getLanguage().getLocale().getLanguage());
 	}
 
 	@Override

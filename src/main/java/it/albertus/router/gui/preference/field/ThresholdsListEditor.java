@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import it.albertus.jface.preference.field.EnhancedListEditor;
-import it.albertus.router.engine.RouterLoggerConfiguration.Thresholds;
+import it.albertus.router.engine.RouterLoggerConfig.Thresholds;
 import it.albertus.router.gui.Images;
 import it.albertus.router.resources.Messages;
 import it.albertus.util.StringUtils;

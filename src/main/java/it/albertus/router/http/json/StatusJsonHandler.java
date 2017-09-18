@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
+import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.router.dto.StatusDto;
 import it.albertus.router.engine.RouterLoggerEngine;
 import it.albertus.router.util.Payload;
@@ -12,8 +13,8 @@ import it.albertus.router.util.Payload;
 @Path("/json/status")
 public class StatusJsonHandler extends AbstractJsonHandler {
 
-	public StatusJsonHandler(final RouterLoggerEngine engine) {
-		super(engine);
+	public StatusJsonHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+		super(config, engine);
 	}
 
 	@Override
