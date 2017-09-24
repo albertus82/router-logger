@@ -88,7 +88,7 @@ public class RouterLoggerConfig extends Configuration {
 		init();
 	}
 
-	public static synchronized RouterLoggerConfig getInstance() throws InitializationException {
+	public static synchronized RouterLoggerConfig getInstance() {
 		if (instance == null) {
 			try {
 				instance = new RouterLoggerConfig();
