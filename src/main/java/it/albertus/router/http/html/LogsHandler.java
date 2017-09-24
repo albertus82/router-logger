@@ -19,7 +19,6 @@ import java.util.zip.GZIPOutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.RequestParameterExtractor;
 import it.albertus.httpserver.annotation.Path;
@@ -55,7 +54,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
+	protected void doGet(final HttpExchange exchange) throws IOException {
 		final String pathInfo = getPathInfo(exchange).trim();
 		if (pathInfo.isEmpty() || "/".equals(pathInfo)) { // List log files (no file name present in URL)
 			fileList(exchange);
@@ -72,7 +71,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void doPost(final HttpExchange exchange) throws IOException, HttpException {
+	protected void doPost(final HttpExchange exchange) throws IOException {
 		if (HttpMethod.DELETE.equalsIgnoreCase(new RequestParameterExtractor(exchange, getCharset()).getParameter(METHOD_PARAM))) {
 			doDelete(exchange);
 		}
@@ -82,7 +81,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void doDelete(final HttpExchange exchange) throws IOException, HttpException {
+	protected void doDelete(final HttpExchange exchange) throws IOException {
 		final String pathInfo = getPathInfo(exchange).trim();
 		if (pathInfo.isEmpty() || "/".equals(pathInfo)) { // Delete all log files
 			deleteAll(exchange);
@@ -184,9 +183,9 @@ public class LogsHandler extends AbstractHtmlHandler {
 		final StringBuilder html = new StringBuilder();
 		html.append("<table class=\"table table-striped\"><thead><tr>");
 		html.append("<th>").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.name"))).append("</th>");
-		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.date"))).append("</th>");
-		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.size"))).append("</th>");
-		html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get("lbl.server.logs.list.action"))).append("</th>");
+		for (final String key : new String[] { "lbl.server.logs.list.date", "lbl.server.logs.list.size", "lbl.server.logs.list.action" }) {
+			html.append("<th class=\"text-right\">").append(HtmlUtils.escapeHtml(Messages.get(key))).append("</th>");
+		}
 		html.append("</tr></thead><tbody>").append(NewLine.CRLF);
 		final DateFormat dateFormatFileList = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Messages.getLanguage().getLocale());
 		final NumberFormat numberFormatFileList = NumberFormat.getIntegerInstance(Messages.getLanguage().getLocale());

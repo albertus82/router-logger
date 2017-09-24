@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.httpserver.HttpException;
 import it.albertus.httpserver.HttpMethod;
 import it.albertus.httpserver.RequestParameterExtractor;
 import it.albertus.httpserver.annotation.Path;
@@ -51,7 +50,7 @@ public class CloseHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void doGet(final HttpExchange exchange) throws IOException, HttpException {
+	protected void doGet(final HttpExchange exchange) throws IOException {
 		// Response...
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_SERVER_CLOSE)));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_SERVER_CLOSE))).append("</h2></div>").append(NewLine.CRLF);

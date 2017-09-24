@@ -73,12 +73,12 @@ public class ConfigurationHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void doPut(final HttpExchange exchange) throws IOException, HttpException {
+	protected void doPut(final HttpExchange exchange) throws IOException {
 		doPost(exchange);
 	}
 
 	@Override
-	protected void doPost(final HttpExchange exchange) throws IOException, HttpException {
+	protected void doPost(final HttpExchange exchange) throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		IOUtils.copy(exchange.getRequestBody(), baos, 1024);
 		final String requestBody = baos.toString(getCharset().name());
