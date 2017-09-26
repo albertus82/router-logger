@@ -29,7 +29,7 @@ public class GeneralPreferencePage extends BasePreferencePage {
 					return locale.getDisplayLanguage(locale);
 				}
 			};
-			options.put(name, value);
+			options.add(name, value);
 		}
 		return options;
 	}

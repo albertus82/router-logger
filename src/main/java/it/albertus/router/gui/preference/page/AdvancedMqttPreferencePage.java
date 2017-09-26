@@ -17,21 +17,21 @@ public class AdvancedMqttPreferencePage extends RestartHeaderPreferencePage {
 				return Messages.get("lbl.mqtt.version.default");
 			}
 		};
-		options.put(name, MqttConnectOptions.MQTT_VERSION_DEFAULT);
+		options.add(name, MqttConnectOptions.MQTT_VERSION_DEFAULT);
 		name = new Localized() {
 			@Override
 			public String getString() {
 				return "3.1";
 			}
 		};
-		options.put(name, MqttConnectOptions.MQTT_VERSION_3_1);
+		options.add(name, MqttConnectOptions.MQTT_VERSION_3_1);
 		name = new Localized() {
 			@Override
 			public String getString() {
 				return "3.1.1";
 			}
 		};
-		options.put(name, MqttConnectOptions.MQTT_VERSION_3_1_1);
+		options.add(name, MqttConnectOptions.MQTT_VERSION_3_1_1);
 		return options;
 	}
 

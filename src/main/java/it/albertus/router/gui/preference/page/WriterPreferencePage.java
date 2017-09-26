@@ -44,7 +44,7 @@ public class WriterPreferencePage extends RestartHeaderPreferencePage {
 					return Messages.get(comboData.resourceKey);
 				}
 			};
-			options.put(name, value);
+			options.add(name, value);
 		}
 		return options;
 	}

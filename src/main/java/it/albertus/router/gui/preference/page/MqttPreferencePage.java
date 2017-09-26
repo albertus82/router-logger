@@ -18,7 +18,7 @@ public class MqttPreferencePage extends RestartHeaderPreferencePage {
 					return qos.getDescription();
 				}
 			};
-			options.put(name, value);
+			options.add(name, value);
 		}
 		return options;
 	}

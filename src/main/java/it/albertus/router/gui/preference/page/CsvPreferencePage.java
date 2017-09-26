@@ -34,7 +34,7 @@ public class CsvPreferencePage extends BasePreferencePage {
 					return Messages.get(separator.resourceKey);
 				}
 			};
-			options.put(name, value);
+			options.add(name, value);
 		}
 		return options;
 	}
