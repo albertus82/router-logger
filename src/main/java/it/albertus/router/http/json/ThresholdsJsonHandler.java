@@ -8,7 +8,6 @@ import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.router.dto.ThresholdsDto;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.util.Payload;
 
 @Path("/json/thresholds")
 public class ThresholdsJsonHandler extends AbstractJsonHandler {

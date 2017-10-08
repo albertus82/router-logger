@@ -1,4 +1,4 @@
-package it.albertus.router.util;
+package it.albertus.router.http.json;
 
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
@@ -6,17 +6,17 @@ import java.util.logging.Logger;
 
 import it.albertus.util.logging.LoggerFactory;
 
-public class Payload {
+class Payload {
 
 	private static final Logger logger = LoggerFactory.getLogger(Payload.class);
 
-	public static final String PREFERRED_CHARSET = "UTF-8";
+	private static final String PREFERRED_CHARSET = "UTF-8";
 
 	private Payload() {
 		throw new IllegalAccessError("Utility class");
 	}
 
-	public static byte[] createPayload(final String string) {
+	static byte[] createPayload(final String string) {
 		byte[] payload;
 		if (string != null) {
 			try {

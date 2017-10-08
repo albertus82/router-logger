@@ -325,6 +325,7 @@ public enum Preference implements IPreference {
 	}, 0)).build()),
 	MQTT_THRESHOLDS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_RETAINED).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
+	MQTT_COMPRESSION_ENABLED(new PreferenceDetailsBuilder(MQTT_ADVANCED).defaultValue(MqttClient.Defaults.COMPRESSION_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_CLEAN_SESSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_AUTOMATIC_RECONNECT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.AUTOMATIC_RECONNECT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_CONNECTION_TIMEOUT(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.CONNECTION_TIMEOUT).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).build()),

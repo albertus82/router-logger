@@ -8,7 +8,6 @@ import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.engine.RouterLoggerEngine;
-import it.albertus.router.util.Payload;
 
 @Path("/json/data")
 public class DataJsonHandler extends AbstractJsonHandler {
