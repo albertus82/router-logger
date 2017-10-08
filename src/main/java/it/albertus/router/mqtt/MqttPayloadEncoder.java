@@ -2,24 +2,17 @@ package it.albertus.router.mqtt;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 import it.albertus.httpserver.HttpDateGenerator;
-import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
-import it.albertus.util.logging.LoggerFactory;
 
-public class MqttPayload implements Serializable {
-
-	private static final long serialVersionUID = -6295841307108552836L;
+public class MqttPayloadEncoder {
 
 	private static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
 	private static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -37,8 +30,6 @@ public class MqttPayload implements Serializable {
 		}
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(MqttPayload.class);
-
 	private static final ThreadLocal<HttpDateGenerator> httpDateGenerator = new ThreadLocal<HttpDateGenerator>() {
 		@Override
 		protected HttpDateGenerator initialValue() {
@@ -46,50 +37,45 @@ public class MqttPayload implements Serializable {
 		}
 	};
 
-	private final Map<String, String> headers = new TreeMap<String, String>();
-	private final byte[] body;
-
-	public MqttPayload(final String body, final boolean compress) {
-		if (body == null) {
-			throw new NullPointerException("body cannot be null");
-		}
-		this.body = createBody(body, compress);
-	}
-
-	private byte[] createBody(final String str, final boolean compress) {
+	public byte[] encode(final String str) {
 		try {
-			return createBody(str.getBytes(CHARSET), compress);
+			return encode(str.getBytes(CHARSET));
 		}
 		catch (final UnsupportedEncodingException e) {
 			throw new IllegalStateException(e); // UTF-8 must be supported by any JVM
 		}
 	}
 
-	private byte[] createBody(final byte[] bytes, final boolean compress) {
-		if (compress) {
-			GZIPOutputStream gzos = null;
-			try {
-				final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				gzos = new GZIPOutputStream(baos);
-				gzos.write(bytes);
-				gzos.close();
-				headers.put(HEADER_CONTENT_ENCODING, "gzip");
-				return baos.toByteArray();
-			}
-			catch (final IOException e) {
-				logger.log(Level.WARNING, e.toString(), e);
-				return bytes;
-			}
-			finally {
-				IOUtils.closeQuietly(gzos);
-			}
+	public byte[] encode(final String str, final boolean compress) throws IOException {
+		try {
+			return encode(str.getBytes(CHARSET), compress);
 		}
-		else {
-			return bytes;
+		catch (final UnsupportedEncodingException e) {
+			throw new IllegalStateException(e); // UTF-8 must be supported by any JVM
 		}
 	}
 
-	public byte[] getBytes() {
+	public byte[] encode(final byte[] payloadToSend) {
+		final Map<String, String> headers = new TreeMap<String, String>();
+		return buildPayload(headers, payloadToSend);
+	}
+
+	public byte[] encode(final byte[] payloadToSend, final boolean compress) throws IOException {
+		final Map<String, String> headers = new TreeMap<String, String>();
+		final byte[] body;
+
+		if (compress) {
+			body = compress(payloadToSend);
+			headers.put(HEADER_CONTENT_ENCODING, "gzip");
+		}
+		else {
+			body = payloadToSend;
+		}
+
+		return buildPayload(headers, body);
+	}
+
+	protected byte[] buildPayload(final Map<String, String> headers, final byte[] body) {
 		headers.put(HEADER_CONTENT_LENGTH, Integer.toString(body.length));
 		headers.put(HEADER_DATE, httpDateGenerator.get().format(new Date()));
 
@@ -106,6 +92,21 @@ public class MqttPayload implements Serializable {
 		catch (final IOException e) {
 			throw new IllegalStateException(e); // UTF-8 must be supported by any JVM
 		}
+	}
+
+	protected byte[] compress(final byte[] payloadToSend) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		GZIPOutputStream gzos = null;
+		try {
+			gzos = new GZIPOutputStream(baos);
+			gzos.write(payloadToSend);
+		}
+		finally {
+			if (gzos != null) {
+				gzos.close();
+			}
+		}
+		return baos.toByteArray();
 	}
 
 }
