@@ -11,6 +11,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import it.albertus.jface.preference.field.UriListEditor;
+import it.albertus.mqtt.MqttPayloadEncoder;
 import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.dto.StatusDto;
 import it.albertus.router.dto.ThresholdsDto;
