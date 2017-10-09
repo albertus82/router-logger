@@ -12,6 +12,8 @@ import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import it.albertus.jface.preference.field.UriListEditor;
 import it.albertus.mqtt.MqttPayloadEncoder;
+import it.albertus.mqtt.MqttQos;
+import it.albertus.mqtt.MqttUtils;
 import it.albertus.router.dto.RouterDataDto;
 import it.albertus.router.dto.StatusDto;
 import it.albertus.router.dto.ThresholdsDto;
@@ -239,11 +241,11 @@ public class MqttClient extends BaseMqttClient {
 	private byte[] buildPayload(final String json) {
 		byte[] payload;
 		try {
-			payload = encoder.encode(json, configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED));
+			payload = encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED));
 		}
-		catch (final IOException e) {
+		catch (final IOException e) { // disable compression
 			logger.log(Level.WARNING, e.toString(), e);
-			payload = encoder.encode(json);
+			payload = encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8));
 		}
 		return payload;
 	}
