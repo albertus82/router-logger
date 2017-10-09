@@ -1,6 +1,5 @@
 package it.albertus.router.mqtt;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -239,15 +238,7 @@ public class MqttClient extends BaseMqttClient {
 	}
 
 	private byte[] buildPayload(final String json) {
-		byte[] payload;
-		try {
-			payload = encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED));
-		}
-		catch (final IOException e) { // disable compression
-			logger.log(Level.WARNING, e.toString(), e);
-			payload = encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8));
-		}
-		return payload;
+		return encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED)).toByteArray();
 	}
 
 }
