@@ -238,7 +238,7 @@ public class MqttClient extends BaseMqttClient {
 	}
 
 	private byte[] buildPayload(final String json) {
-		return encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED)).toByteArray();
+		return encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED)).toPayload();
 	}
 
 }
