@@ -52,7 +52,7 @@ Per attivare il salvataggio su database, occorre innanzi tutto aggiungere la lib
 
 Infine, impostare la seguente opzione nella scheda **Salvataggio**:
 
-* **Destinazione/Classe Writer**: [**Database**](src/main/java/it/albertus/router/writer/DatabaseWriter.java)
+* **Destinazione/Classe Writer**: [**Database**](src/main/java/it/albertus/routerlogger/writer/DatabaseWriter.java)
 
 
 ## Interfaccia a riga di comando
@@ -64,7 +64,7 @@ Infine, impostare la seguente opzione nella scheda **Salvataggio**:
 * OS X: **`routerlogger.command -c`**
 
 In questo caso, prima del primo avvio, occorre modificare manualmente il file di configurazione [**`routerlogger.cfg`**](src/main/config/routerlogger.cfg) con un editor di testo per attivare (rimuovendo il `#` a inizio riga) e impostare le seguenti propriet&agrave;:
-* **`reader.class.name`**= Uno tra [`TpLink8970Reader`](src/main/java/it/albertus/router/reader/TpLink8970Reader.java), [`AsusDslN12EReader`](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java), [`AsusDslN14UReader`](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java) e [`DLinkDsl2750Reader`](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare;
+* **`reader.class.name`**= Uno tra [`TpLink8970Reader`](src/main/java/it/albertus/routerlogger/reader/TpLink8970Reader.java), [`AsusDslN12EReader`](src/main/java/it/albertus/routerlogger/reader/AsusDslN12EReader.java), [`AsusDslN14UReader`](src/main/java/it/albertus/routerlogger/reader/AsusDslN14UReader.java) e [`DLinkDsl2750Reader`](src/main/java/it/albertus/routerlogger/reader/DLinkDsl2750Reader.java), a seconda del modello di dispositivo da monitorare;
 * **`router.address`**= indirizzo IP del router (solitamente `192.168.0.1` oppure `192.168.1.1` che &egrave; il valore predefinito);
 * **`router.port`**= porta Telnet del router (predefinita: `23`);
 * **`router.username`**= nome utente per accedere al router (normalmente &egrave; lo stesso usato per accedere all'interfaccia grafica tramite browser);
@@ -136,12 +136,12 @@ Segue una disamina di tutte le impostazioni disponibili, in aggiunta a quelle gi
 La selezione del modello di modem router da interrogare si effettua configurando nel [`routerlogger.cfg`](src/main/config/routerlogger.cfg) la seguente propriet&agrave;:
 
 * **`reader.class.name`**= identifica la classe che si occupa di ricavare dallo specifico modello di modem router le informazioni sullo stato della connessione tramite Telnet, e pu&ograve; assumere i valori seguenti:
-	* [**`TpLink8970Reader`**](src/main/java/it/albertus/router/reader/TpLink8970Reader.java): lettura informazioni dal router **TP-Link TD-W8970 V1**.
-	* [**`AsusDslN12EReader`**](src/main/java/it/albertus/router/reader/AsusDslN12EReader.java): lettura informazioni dal router **ASUS DSL-N12E**.
-	* [**`AsusDslN14UReader`**](src/main/java/it/albertus/router/reader/AsusDslN14UReader.java): lettura informazioni dal router **ASUS DSL-N14U**.
-	* [**`DLinkDsl2750Reader`**](src/main/java/it/albertus/router/reader/DLinkDsl2750Reader.java): lettura informazioni dal router **D-Link DSL-2750B**.
-	* [**`DummyReader`**](src/main/java/it/albertus/router/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
-	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
+	* [**`TpLink8970Reader`**](src/main/java/it/albertus/routerlogger/reader/TpLink8970Reader.java): lettura informazioni dal router **TP-Link TD-W8970 V1**.
+	* [**`AsusDslN12EReader`**](src/main/java/it/albertus/routerlogger/reader/AsusDslN12EReader.java): lettura informazioni dal router **ASUS DSL-N12E**.
+	* [**`AsusDslN14UReader`**](src/main/java/it/albertus/routerlogger/reader/AsusDslN14UReader.java): lettura informazioni dal router **ASUS DSL-N14U**.
+	* [**`DLinkDsl2750Reader`**](src/main/java/it/albertus/routerlogger/reader/DLinkDsl2750Reader.java): lettura informazioni dal router **D-Link DSL-2750B**.
+	* [**`DummyReader`**](src/main/java/it/albertus/routerlogger/reader/DummyReader.java): generazione di dati casuali (nessuna connessione n&eacute; lettura da alcun dispositivo), da usarsi solo a scopo di test.
+	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Reader`**](src/main/java/it/albertus/routerlogger/reader/Reader.java). Per maggiori informazioni, vedere il paragrafo [**Supporto di altri modelli di router**](#supporto-di-altri-modelli-di-router).
 
 ##### TP-Link TD-W8970 V1
 
@@ -168,10 +168,10 @@ La selezione del modello di modem router da interrogare si effettua configurando
 
 La selezione della modalit&agrave; di salvataggio delle informazioni si effettua configurando la seguente propriet&agrave;:
 * **`writer.class.name`**: identifica la classe che si occupa del salvataggio delle informazioni, e pu&ograve; assumere i valori seguenti:
-	* [**`CsvWriter`**](src/main/java/it/albertus/router/writer/CsvWriter.java): scrittura su file **CSV** (default).
-	* [**`DatabaseWriter`**](src/main/java/it/albertus/router/writer/DatabaseWriter.java): scrittura su **database**.
-	* [**`DummyWriter`**](src/main/java/it/albertus/router/writer/DummyWriter.java): nessuna scrittura (utile a scopo di test).
-	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/main/java/it/albertus/router/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
+	* [**`CsvWriter`**](src/main/java/it/albertus/routerlogger/writer/CsvWriter.java): scrittura su file **CSV** (default).
+	* [**`DatabaseWriter`**](src/main/java/it/albertus/routerlogger/writer/DatabaseWriter.java): scrittura su **database**.
+	* [**`DummyWriter`**](src/main/java/it/albertus/routerlogger/writer/DummyWriter.java): nessuna scrittura (utile a scopo di test).
+	* nome completo (inclusi tutti i package separati da `.`) di una classe concreta che estenda [**`Writer`**](src/main/java/it/albertus/routerlogger/writer/Writer.java). Per maggiori informazioni, vedere il paragrafo [**Modalit&agrave; di salvataggio alternative**](#modalit%C3%A0-di-salvataggio-alternative).
 
 ##### CSV
 
@@ -384,22 +384,22 @@ RouterLogger pu&ograve; collegarsi ad un server (broker) MQTT per inviare messag
 
 #### Supporto di altri modelli di router
 
-&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java).
+&Egrave; possibile estendere l'applicazione in modo da farla lavorare con qualsiasi modem router disponga di un'interfaccia **Telnet** che permetta di recuperare informazioni sullo stato della connessione. Per farlo, &egrave; sufficiente implementare una classe personalizzata che estenda la classe astratta [**`Reader`**](src/main/java/it/albertus/routerlogger/reader/Reader.java).
 
 I metodi da implementare tassativamente sono i seguenti:
 * **`login`**: effettua l'autenticazione al server Telnet comunicando le credenziali di accesso che, per semplicit&agrave;, vengono preventivamente lette dal file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e rese disponibili direttamente nel metodo sotto forma di parametri `username` e `password`.
 * **`readInfo`**: interagisce con il server in modo da ottenere le informazioni sulla connessione ADSL e le restituisce sotto forma di mappa chiave-valore.
 
-All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/main/java/it/albertus/router/reader/Reader.java):
+All'occorrenza pu&ograve; essere opportuno sovrascrivere anche i seguenti metodi, che non sono dichiarati `abstract` in [`Reader`](src/main/java/it/albertus/routerlogger/reader/Reader.java):
 * **`logout`**: invia il comando di logout al server; l'implementazione predefinita invia `exit`, ma alcuni router possono richiedere un comando diverso, ad esempio `logout`, pertanto in questi casi il metodo deve essere opportunamente sovrascritto.
 * **`getDeviceModel`**: restituisce una stringa contenente marca e modello del router (utile solo in visualizzazione); l'implementazione predefinita restituisce il nome della classe in esecuzione (senza package).
-* **`release`**: libera risorse eventualmente allocate dal [`Reader`](src/main/java/it/albertus/router/reader/Reader.java), ad esempio file o connessioni a database. Normalmente non necessario.
+* **`release`**: libera risorse eventualmente allocate dal [`Reader`](src/main/java/it/albertus/routerlogger/reader/Reader.java), ad esempio file o connessioni a database. Normalmente non necessario.
 
->La classe astratta [**`Reader`**](src/main/java/it/albertus/router/reader/Reader.java) dispone di alcuni metodi di utilit&agrave; che permettono di interagire agevolmente con il server Telnet e che possono essere quindi utilizzati, oltre che sovrascritti, in caso di necessit&agrave;; in particolare:
+>La classe astratta [**`Reader`**](src/main/java/it/albertus/routerlogger/reader/Reader.java) dispone di alcuni metodi di utilit&agrave; che permettono di interagire agevolmente con il server Telnet e che possono essere quindi utilizzati, oltre che sovrascritti, in caso di necessit&agrave;; in particolare:
 * **`readFromTelnet(...)`**: legge l'output del server Telnet e lo restituisce come stringa.
 * **`writeToTelnet(...)`**: invia comandi al server Telnet.
 
->&Egrave; inoltre possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/main/config/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Reader`](src/main/java/it/albertus/router/reader/Reader.java).
+>&Egrave; inoltre possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/main/config/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Reader`](src/main/java/it/albertus/routerlogger/reader/Reader.java).
 
 >Per maggiori informazioni &egrave; possibile consultare la documentazione Javadoc inclusa nel codice sorgente.
 
@@ -407,11 +407,11 @@ Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della 
 
 #### Modalit&agrave; di salvataggio alternative
 
-Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o database SQL, si pu&ograve; estendere la classe astratta [**`Writer`**](src/main/java/it/albertus/router/writer/Writer.java) e sar&agrave; ovviamente necessario implementare i due metodi seguenti:
+Nel caso in cui si volessero salvare le informazioni in formato diverso da CSV o database SQL, si pu&ograve; estendere la classe astratta [**`Writer`**](src/main/java/it/albertus/routerlogger/writer/Writer.java) e sar&agrave; ovviamente necessario implementare i due metodi seguenti:
 * **`saveInfo`**: effettua il salvataggio delle informazioni ottenute, con le modalit&agrave; desiderate.
-* **`release`**: libera risorse eventualmente allocate dal [`Writer`](src/main/java/it/albertus/router/writer/Writer.java), ad esempio file o connessioni a database.
+* **`release`**: libera risorse eventualmente allocate dal [`Writer`](src/main/java/it/albertus/routerlogger/writer/Writer.java), ad esempio file o connessioni a database.
 
->&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/main/config/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Writer`](src/main/java/it/albertus/router/writer/Writer.java).
+>&Egrave; possibile accedere alle propriet&agrave; di configurazione ([`routerlogger.cfg`](src/main/config/routerlogger.cfg)) tramite la variabile **`configuration`** dichiarata `protected` nella classe [`Writer`](src/main/java/it/albertus/routerlogger/writer/Writer.java).
 
 Occorrer&agrave; quindi configurare l'applicazione in modo che faccia uso della classe realizzata modificando il file [`routerlogger.cfg`](src/main/config/routerlogger.cfg) e specificando come propriet&agrave; `writer.class.name` il nome completo della classe (inclusi tutti i package separati da `.`). Sar&agrave; inoltre necessario copiare nella directory `dropins` dell'applicazione il JAR aggiuntivo contenente la classe esterna, in modo che quest'ultima sia aggiunta automaticamente al *classpath*.
 
