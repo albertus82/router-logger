@@ -75,11 +75,6 @@ public class ThresholdDto implements Serializable, Jsonable {
 	}
 
 	@Override
-	public String toString() {
-		return "ThresholdDto [name=" + name + ", key=" + key + ", type=" + type + ", value=" + value + ", excluded=" + excluded + ", detected=" + detected + "]";
-	}
-
-	@Override
 	public String toJson() {
 		final StringBuilder json = new StringBuilder();
 		json.append("{\"name\":\"").append(name).append("\",\"key\":\"").append(key).append("\",\"type\":\"").append(type).append("\",\"value\":\"").append(value).append('"');

@@ -18,7 +18,7 @@ public class DataJsonHandler extends AbstractJsonHandler {
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		final byte[] payload = Payload.createPayload(new RouterDataDto(engine.getCurrentData()).toJson());
+		final byte[] payload = Payload.createPayload(new RouterDataDto(engine.getCurrentData(), engine.getCurrentThresholdsReached()).toJson());
 		addRefreshHeader(exchange);
 		sendResponse(exchange, payload);
 	}

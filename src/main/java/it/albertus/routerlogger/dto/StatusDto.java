@@ -1,13 +1,13 @@
 package it.albertus.routerlogger.dto;
 
-import it.albertus.routerlogger.engine.RouterLoggerStatus;
-import it.albertus.routerlogger.engine.Status;
-import it.albertus.util.Jsonable;
-
 import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
+
+import it.albertus.routerlogger.engine.RouterLoggerStatus;
+import it.albertus.routerlogger.engine.Status;
+import it.albertus.util.Jsonable;
 
 public class StatusDto implements Serializable, Jsonable {
 
@@ -33,11 +33,6 @@ public class StatusDto implements Serializable, Jsonable {
 			this.description = null;
 			this.timestamp = null;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "StatusDto [timestamp=" + timestamp + ", status=" + status + ", description=" + description + "]";
 	}
 
 	@Override

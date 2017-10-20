@@ -459,8 +459,7 @@ public abstract class RouterLoggerEngine {
 			showInfo(currentData, thresholdsReached);
 
 			// Pubblica via MQTT
-			mqttClient.publishData(currentData);
-			mqttClient.publishThresholds(currentThresholdsReached);
+			mqttClient.publishData(currentData, currentThresholdsReached);
 
 			if (exit) {
 				break;
