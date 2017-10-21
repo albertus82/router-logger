@@ -37,7 +37,7 @@ public class AppStatus implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -47,11 +47,8 @@ public class AppStatus implements Serializable {
 		if (!(obj instanceof AppStatus)) {
 			return false;
 		}
-		AppStatus other = (AppStatus) obj;
-		if (status != other.status) {
-			return false;
-		}
-		return true;
+		final AppStatus other = (AppStatus) obj;
+		return status == other.status;
 	}
 
 }
