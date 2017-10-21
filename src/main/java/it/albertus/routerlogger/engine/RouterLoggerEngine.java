@@ -111,7 +111,7 @@ public abstract class RouterLoggerEngine {
 
 		final IReader rdr;
 		try {
-			rdr = (IReader) Class.forName(readerClassName).newInstance();
+			rdr = (IReader) Class.forName(readerClassName).getConstructor().newInstance();
 		}
 		catch (final Exception e) {
 			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), e, configurationKey);
@@ -128,7 +128,7 @@ public abstract class RouterLoggerEngine {
 
 		final IWriter wrt;
 		try {
-			wrt = (IWriter) Class.forName(writerClassName).newInstance();
+			wrt = (IWriter) Class.forName(writerClassName).getConstructor().newInstance();
 		}
 		catch (final Exception e) {
 			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), e, configurationKey);
