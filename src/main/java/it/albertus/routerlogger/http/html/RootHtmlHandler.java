@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.config.IHttpServerConfig;
+import it.albertus.net.MimeTypes;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 import it.albertus.routerlogger.http.HttpServerConfig;
 import it.albertus.routerlogger.reader.AsusDslN12EReader;
@@ -80,7 +81,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	@Override
 	protected void setContentTypeHeader(final HttpExchange exchange) {
 		if (requestedStaticResource(exchange) && getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) != null) {
-			setContentTypeHeader(exchange, getContentType(exchange.getRequestURI().getPath())); // extension based
+			setContentTypeHeader(exchange, MimeTypes.getContentType(exchange.getRequestURI().getPath())); // extension based
 		}
 		else {
 			super.setContentTypeHeader(exchange); // text/html

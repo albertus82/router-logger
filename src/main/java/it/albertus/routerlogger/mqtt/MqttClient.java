@@ -10,9 +10,11 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import it.albertus.jface.preference.field.UriListEditor;
+import it.albertus.mqtt.MqttPayload;
 import it.albertus.mqtt.MqttPayloadEncoder;
 import it.albertus.mqtt.MqttQos;
 import it.albertus.mqtt.MqttUtils;
+import it.albertus.net.MimeTypes;
 import it.albertus.routerlogger.dto.RouterDataDto;
 import it.albertus.routerlogger.dto.StatusDto;
 import it.albertus.routerlogger.engine.RouterData;
@@ -208,7 +210,9 @@ public class MqttClient extends BaseMqttClient {
 	}
 
 	private byte[] buildPayload(final String json) {
-		return encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED)).toPayload();
+		final MqttPayload mqttPayload = encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED));
+		mqttPayload.getHeaders().set("Content-Type", MimeTypes.getContentType(".json"));
+		return mqttPayload.toPayload();
 	}
 
 }

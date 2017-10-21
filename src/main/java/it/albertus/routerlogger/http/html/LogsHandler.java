@@ -24,6 +24,7 @@ import it.albertus.httpserver.RequestParameterExtractor;
 import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.httpserver.html.HtmlUtils;
+import it.albertus.net.MimeTypes;
 import it.albertus.routerlogger.resources.Messages;
 import it.albertus.util.IOUtils;
 import it.albertus.util.NewLine;
@@ -115,7 +116,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			if (!headMethod) {
 				input = new FileInputStream(file);
 			}
-			setContentTypeHeader(exchange, getContentType(".log"));
+			setContentTypeHeader(exchange, MimeTypes.getContentType(".log"));
 			exchange.getResponseHeaders().set("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 			if (canCompressResponse(exchange)) {
 				setGzipHeader(exchange);
