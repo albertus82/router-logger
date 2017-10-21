@@ -10,11 +10,11 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import it.albertus.jface.preference.field.UriListEditor;
-import it.albertus.mqtt.MqttPayload;
-import it.albertus.mqtt.MqttPayloadEncoder;
-import it.albertus.mqtt.MqttQos;
-import it.albertus.mqtt.MqttUtils;
 import it.albertus.net.MimeTypes;
+import it.albertus.net.mqtt.MqttPayload;
+import it.albertus.net.mqtt.MqttPayloadEncoder;
+import it.albertus.net.mqtt.MqttQos;
+import it.albertus.net.mqtt.MqttUtils;
 import it.albertus.routerlogger.dto.AppStatusDto;
 import it.albertus.routerlogger.dto.DeviceStatusDto;
 import it.albertus.routerlogger.engine.AppStatus;

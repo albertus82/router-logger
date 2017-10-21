@@ -8,9 +8,9 @@ import java.util.Set;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 
-import it.albertus.httpserver.HttpPathHandler;
-import it.albertus.httpserver.HttpServerAuthenticator;
-import it.albertus.httpserver.config.HttpServerDefaultConfig;
+import it.albertus.net.httpserver.HttpPathHandler;
+import it.albertus.net.httpserver.HttpServerAuthenticator;
+import it.albertus.net.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 import it.albertus.routerlogger.http.html.CloseHandler;

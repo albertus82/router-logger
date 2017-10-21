@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.httpserver.annotation.Path;
-import it.albertus.httpserver.config.IHttpServerConfig;
+import it.albertus.net.httpserver.annotation.Path;
+import it.albertus.net.httpserver.config.IHttpServerConfig;
 import it.albertus.routerlogger.dto.DeviceStatusDto;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 

@@ -2,7 +2,7 @@ package it.albertus.routerlogger.http;
 
 import java.util.logging.Level;
 
-import it.albertus.httpserver.config.SingleUserAuthenticatorDefaultConfig;
+import it.albertus.net.httpserver.config.SingleUserAuthenticatorDefaultConfig;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
 import it.albertus.util.Configuration;
 

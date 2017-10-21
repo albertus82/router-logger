@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.albertus.httpserver.LightweightHttpServer;
 import it.albertus.jface.JFaceMessages;
+import it.albertus.net.httpserver.LightweightHttpServer;
 import it.albertus.routerlogger.email.ThresholdsEmailSender;
 import it.albertus.routerlogger.http.HttpServerConfig;
 import it.albertus.routerlogger.mqtt.MqttClient;

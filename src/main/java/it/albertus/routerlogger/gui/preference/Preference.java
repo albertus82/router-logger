@@ -35,8 +35,6 @@ import org.eclipse.jface.preference.FontFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 
-import it.albertus.httpserver.config.AuthenticatorDefaultConfig;
-import it.albertus.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorDetails.FieldEditorDetailsBuilder;
@@ -63,6 +61,8 @@ import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.jface.preference.page.IPageDefinition;
+import it.albertus.net.httpserver.config.AuthenticatorDefaultConfig;
+import it.albertus.net.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.routerlogger.console.RouterLoggerConsole;
 import it.albertus.routerlogger.email.EmailSender;
 import it.albertus.routerlogger.email.ThresholdsEmailSender;

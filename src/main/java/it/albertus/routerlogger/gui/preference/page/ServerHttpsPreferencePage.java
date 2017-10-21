@@ -11,9 +11,9 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import it.albertus.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.jface.preference.StaticLabelsAndValues;
 import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
+import it.albertus.net.httpserver.config.HttpServerDefaultConfig;
 
 public class ServerHttpsPreferencePage extends RestartHeaderPreferencePage {
 

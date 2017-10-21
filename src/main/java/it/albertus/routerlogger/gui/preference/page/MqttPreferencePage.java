@@ -2,7 +2,7 @@ package it.albertus.routerlogger.gui.preference.page;
 
 import it.albertus.jface.preference.LocalizedLabelsAndValues;
 import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
-import it.albertus.mqtt.MqttQos;
+import it.albertus.net.mqtt.MqttQos;
 import it.albertus.util.Localized;
 
 public class MqttPreferencePage extends RestartHeaderPreferencePage {
