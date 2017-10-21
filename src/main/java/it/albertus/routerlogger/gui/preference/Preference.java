@@ -87,7 +87,6 @@ import it.albertus.routerlogger.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.WriterPreferencePage;
 import it.albertus.routerlogger.http.AuthenticatorConfig;
 import it.albertus.routerlogger.http.HttpServerConfig;
-import it.albertus.routerlogger.http.html.AbstractHtmlHandler;
 import it.albertus.routerlogger.http.html.CloseHandler;
 import it.albertus.routerlogger.http.html.ConfigurationHandler;
 import it.albertus.routerlogger.http.html.ConnectHandler;
@@ -279,8 +278,6 @@ public enum Preference implements IPreference {
 			return Messages.get("lbl.preferences.server.handler.refresh.auto");
 		}
 	}, 0)).build()),
-	SERVER_COMPRESS_RESPONSE_HTML(new PreferenceDetailsBuilder(SERVER_HANDLER).separate().defaultValue(AbstractHtmlHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_COMPRESS_RESPONSE_JSON(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(AbstractJsonHandler.Defaults.COMPRESS_RESPONSE).parent(SERVER_COMPRESS_RESPONSE).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	SERVER_SSL_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_SSL_KEYSTORE_TYPE(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_KEYSTORE_TYPE).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyStoreAlgorithmsComboOptions()).emptyStringAllowed(false).build()),

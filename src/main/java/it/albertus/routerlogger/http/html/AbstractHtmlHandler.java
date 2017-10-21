@@ -20,14 +20,6 @@ import it.albertus.util.Version;
 
 public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 
-	public static class Defaults {
-		public static final boolean COMPRESS_RESPONSE = true;
-
-		private Defaults() {
-			throw new IllegalAccessError("Constants class");
-		}
-	}
-
 	private static final String MSG_KEY_LBL_ERROR = "lbl.server.error";
 
 	private static final String BOOTSTRAP_VERSION = "3.3.7";
@@ -264,11 +256,6 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	@Override
 	protected void setContentLanguageHeader(final HttpExchange exchange) {
 		setContentLanguageHeader(exchange, Messages.getLanguage().getLocale().getLanguage());
-	}
-
-	@Override
-	protected boolean canCompressResponse(final HttpExchange exchange) {
-		return configuration.getBoolean("server.compress.response.html", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
 	}
 
 }

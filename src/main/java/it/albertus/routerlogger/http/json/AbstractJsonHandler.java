@@ -19,7 +19,6 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 		public static final boolean ENABLED = true;
 		public static final boolean REFRESH = true;
 		public static final int REFRESH_SECS = 0;
-		public static final boolean COMPRESS_RESPONSE = true;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -56,13 +55,8 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 	}
 
 	@Override
-	protected boolean canCompressResponse(final HttpExchange exchange) {
-		return configuration.getBoolean("server.compress.response.json", Defaults.COMPRESS_RESPONSE) && super.canCompressResponse(exchange);
-	}
-
-	@Override
 	protected void log(final HttpExchange exchange) {
-		Level level = Level.OFF;
+		Level level = Level.FINEST;
 		try {
 			level = Level.parse(getHttpServerConfig().getRequestLoggingLevel());
 			if (level.intValue() > Level.FINE.intValue()) {
