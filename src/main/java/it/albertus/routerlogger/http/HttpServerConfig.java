@@ -8,9 +8,9 @@ import java.util.Set;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 
-import it.albertus.httpserver.HttpPathHandler;
-import it.albertus.httpserver.HttpServerAuthenticator;
-import it.albertus.httpserver.config.HttpServerDefaultConfig;
+import it.albertus.net.httpserver.HttpPathHandler;
+import it.albertus.net.httpserver.HttpServerAuthenticator;
+import it.albertus.net.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 import it.albertus.routerlogger.http.html.CloseHandler;
@@ -21,9 +21,8 @@ import it.albertus.routerlogger.http.html.LogsHandler;
 import it.albertus.routerlogger.http.html.RestartHandler;
 import it.albertus.routerlogger.http.html.RootHtmlHandler;
 import it.albertus.routerlogger.http.html.StatusHtmlHandler;
-import it.albertus.routerlogger.http.json.DataJsonHandler;
-import it.albertus.routerlogger.http.json.StatusJsonHandler;
-import it.albertus.routerlogger.http.json.ThresholdsJsonHandler;
+import it.albertus.routerlogger.http.json.DeviceStatusJsonHandler;
+import it.albertus.routerlogger.http.json.AppStatusJsonHandler;
 import it.albertus.util.Configuration;
 
 public class HttpServerConfig extends HttpServerDefaultConfig {
@@ -57,9 +56,8 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 		handlers.add(new ConfigurationHandler(this));
 
 		// JSON
-		handlers.add(new DataJsonHandler(this, engine));
-		handlers.add(new StatusJsonHandler(this, engine));
-		handlers.add(new ThresholdsJsonHandler(this, engine));
+		handlers.add(new DeviceStatusJsonHandler(this, engine));
+		handlers.add(new AppStatusJsonHandler(this, engine));
 
 		return handlers.toArray(new HttpPathHandler[handlers.size()]);
 	}

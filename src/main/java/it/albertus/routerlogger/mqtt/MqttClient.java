@@ -10,15 +10,16 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
 import it.albertus.jface.preference.field.UriListEditor;
-import it.albertus.mqtt.MqttPayloadEncoder;
-import it.albertus.mqtt.MqttQos;
-import it.albertus.mqtt.MqttUtils;
-import it.albertus.routerlogger.dto.RouterDataDto;
-import it.albertus.routerlogger.dto.StatusDto;
-import it.albertus.routerlogger.dto.ThresholdsDto;
+import it.albertus.net.MimeTypes;
+import it.albertus.net.mqtt.MqttPayload;
+import it.albertus.net.mqtt.MqttPayloadEncoder;
+import it.albertus.net.mqtt.MqttQos;
+import it.albertus.net.mqtt.MqttUtils;
+import it.albertus.routerlogger.dto.AppStatusDto;
+import it.albertus.routerlogger.dto.DeviceStatusDto;
+import it.albertus.routerlogger.engine.AppStatus;
 import it.albertus.routerlogger.engine.RouterData;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
-import it.albertus.routerlogger.engine.RouterLoggerStatus;
 import it.albertus.routerlogger.engine.Status;
 import it.albertus.routerlogger.engine.ThresholdsReached;
 import it.albertus.routerlogger.resources.Messages;
@@ -56,12 +57,6 @@ public class MqttClient extends BaseMqttClient {
 	private static final String CFG_KEY_MQTT_DATA_RETAINED = "mqtt.data.retained";
 	private static final String CFG_KEY_MQTT_DATA_THROTTLING_MS = "mqtt.data.throttling.ms";
 
-	private static final String CFG_KEY_MQTT_THRESHOLDS_ENABLED = "mqtt.thresholds.enabled";
-	private static final String CFG_KEY_MQTT_THRESHOLDS_TOPIC = "mqtt.thresholds.topic";
-	private static final String CFG_KEY_MQTT_THRESHOLDS_QOS = "mqtt.thresholds.qos";
-	private static final String CFG_KEY_MQTT_THRESHOLDS_RETAINED = "mqtt.thresholds.retained";
-	private static final String CFG_KEY_MQTT_THRESHOLDS_THROTTLING_MS = "mqtt.thresholds.throttling.ms";
-
 	private static final String CFG_KEY_MQTT_STATUS_ENABLED = "mqtt.status.enabled";
 	private static final String CFG_KEY_MQTT_STATUS_TOPIC = "mqtt.status.topic";
 	private static final String CFG_KEY_MQTT_STATUS_QOS = "mqtt.status.qos";
@@ -82,19 +77,13 @@ public class MqttClient extends BaseMqttClient {
 		public static final boolean COMPRESSION_ENABLED = false;
 
 		public static final boolean DATA_ENABLED = true;
-		public static final String DATA_TOPIC = "router/logger/data";
+		public static final String DATA_TOPIC = "routerlogger/status/device";
 		public static final byte DATA_QOS = MqttQos.AT_MOST_ONCE.getValue();
 		public static final boolean DATA_RETAINED = true;
 		public static final long DATA_THROTTLING_IN_MILLIS = 0;
 
-		public static final boolean THRESHOLDS_ENABLED = true;
-		public static final String THRESHOLDS_TOPIC = "router/logger/thresholds";
-		public static final byte THRESHOLDS_QOS = MqttQos.AT_MOST_ONCE.getValue();
-		public static final boolean THRESHOLDS_RETAINED = true;
-		public static final long THRESHOLDS_THROTTLING_IN_MILLIS = 0;
-
 		public static final boolean STATUS_ENABLED = true;
-		public static final String STATUS_TOPIC = "router/logger/status";
+		public static final String STATUS_TOPIC = "routerlogger/status/app";
 		public static final byte STATUS_QOS = MqttQos.EXACTLY_ONCE.getValue();
 		public static final boolean STATUS_RETAINED = true;
 
@@ -106,7 +95,6 @@ public class MqttClient extends BaseMqttClient {
 	private final MqttPayloadEncoder encoder = new MqttPayloadEncoder();
 
 	private long lastDataMessageTime;
-	private long lastThresholdsMessageTime;
 
 	private MqttClient() {}
 
@@ -148,7 +136,7 @@ public class MqttClient extends BaseMqttClient {
 			if (configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
 				final String lwtTopic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
 				if (lwtTopic != null && !lwtTopic.isEmpty()) {
-					options.setWill(lwtTopic, buildPayload(new StatusDto(new RouterLoggerStatus(Status.ABEND)).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
+					options.setWill(lwtTopic, buildPayload(new AppStatusDto(new AppStatus(Status.ABEND)).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
 				}
 			}
 
@@ -190,10 +178,10 @@ public class MqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publishData(final RouterData data) {
+	public void publishDeviceStatus(final RouterData data, final ThresholdsReached thresholdsReached) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastDataMessageTime >= configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_DATA_TOPIC, Defaults.DATA_TOPIC);
-			final MqttMessage message = new MqttMessage(buildPayload(new RouterDataDto(data).toJson()));
+			final MqttMessage message = new MqttMessage(buildPayload(new DeviceStatusDto(data, thresholdsReached).toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_DATA_RETAINED, Defaults.DATA_RETAINED));
 			message.setQos(configuration.getByte(CFG_KEY_MQTT_DATA_QOS, Defaults.DATA_QOS));
 			try {
@@ -206,10 +194,10 @@ public class MqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publishStatus(final RouterLoggerStatus status) {
+	public void publishAppStatus(final AppStatus status) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
-			final MqttMessage message = new MqttMessage(buildPayload(new StatusDto(status).toJson()));
+			final MqttMessage message = new MqttMessage(buildPayload(new AppStatusDto(status).toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
 			message.setQos(configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS));
 			try {
@@ -221,24 +209,10 @@ public class MqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publishThresholds(final ThresholdsReached thresholdsReached) {
-		if (thresholdsReached != null && thresholdsReached.getReached() != null && !thresholdsReached.getReached().isEmpty() && configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_THRESHOLDS_ENABLED, Defaults.THRESHOLDS_ENABLED) && System.currentTimeMillis() - lastThresholdsMessageTime >= configuration.getLong(CFG_KEY_MQTT_THRESHOLDS_THROTTLING_MS, Defaults.THRESHOLDS_THROTTLING_IN_MILLIS)) {
-			final String topic = configuration.getString(CFG_KEY_MQTT_THRESHOLDS_TOPIC, Defaults.THRESHOLDS_TOPIC);
-			final MqttMessage message = new MqttMessage(buildPayload(new ThresholdsDto(thresholdsReached).toJson()));
-			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_THRESHOLDS_RETAINED, Defaults.THRESHOLDS_RETAINED));
-			message.setQos(configuration.getByte(CFG_KEY_MQTT_THRESHOLDS_QOS, Defaults.THRESHOLDS_QOS));
-			try {
-				doPublish(topic, message);
-			}
-			catch (final Exception e) {
-				logger.log(Level.SEVERE, e.toString(), e);
-			}
-			lastThresholdsMessageTime = System.currentTimeMillis();
-		}
-	}
-
 	private byte[] buildPayload(final String json) {
-		return encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED)).toPayload();
+		final MqttPayload mqttPayload = encoder.encode(json.getBytes(MqttUtils.CHARSET_UTF8), configuration.getBoolean(CFG_KEY_MQTT_COMPRESSION_ENABLED, Defaults.COMPRESSION_ENABLED));
+		mqttPayload.getHeaders().set("Content-Type", MimeTypes.getContentType(".json") + "; charset=" + MqttUtils.CHARSET_UTF8.name());
+		return mqttPayload.toPayload();
 	}
 
 }

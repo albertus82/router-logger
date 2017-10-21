@@ -35,8 +35,6 @@ import org.eclipse.jface.preference.FontFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 
-import it.albertus.httpserver.config.AuthenticatorDefaultConfig;
-import it.albertus.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.jface.console.StyledTextConsole;
 import it.albertus.jface.preference.FieldEditorDetails;
 import it.albertus.jface.preference.FieldEditorDetails.FieldEditorDetailsBuilder;
@@ -63,6 +61,8 @@ import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.jface.preference.page.IPageDefinition;
+import it.albertus.net.httpserver.config.AuthenticatorDefaultConfig;
+import it.albertus.net.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.routerlogger.console.RouterLoggerConsole;
 import it.albertus.routerlogger.email.EmailSender;
 import it.albertus.routerlogger.email.ThresholdsEmailSender;
@@ -313,17 +313,6 @@ public enum Preference implements IPreference {
 	MQTT_STATUS_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(MqttClient.Defaults.STATUS_TOPIC).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
 	MQTT_STATUS_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(MqttClient.Defaults.STATUS_QOS).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
 	MQTT_STATUS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).restartRequired().defaultValue(MqttClient.Defaults.STATUS_RETAINED).parent(MQTT_STATUS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-
-	MQTT_THRESHOLDS_ENABLED(new PreferenceDetailsBuilder(MQTT_MESSAGES).separate().defaultValue(MqttClient.Defaults.THRESHOLDS_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	MQTT_THRESHOLDS_TOPIC(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_TOPIC).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
-	MQTT_THRESHOLDS_QOS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_QOS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(MqttPreferencePage.getMqttQosComboOptions()).build()),
-	MQTT_THRESHOLDS_THROTTLING_MS(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_THROTTLING_IN_MILLIS).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(IntegerComboFieldEditor.class).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
-		@Override
-		public String getString() {
-			return Messages.get("lbl.preferences.mqtt.thresholds.throttling.disabled");
-		}
-	}, 0)).build()),
-	MQTT_THRESHOLDS_RETAINED(new PreferenceDetailsBuilder(MQTT_MESSAGES).defaultValue(MqttClient.Defaults.THRESHOLDS_RETAINED).parent(MQTT_THRESHOLDS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	MQTT_COMPRESSION_ENABLED(new PreferenceDetailsBuilder(MQTT_ADVANCED).defaultValue(MqttClient.Defaults.COMPRESSION_ENABLED).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_CLEAN_SESSION(new PreferenceDetailsBuilder(MQTT_ADVANCED).restartRequired().defaultValue(MqttClient.Defaults.CLEAN_SESSION).parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),

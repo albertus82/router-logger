@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.albertus.httpserver.LightweightHttpServer;
 import it.albertus.jface.JFaceMessages;
+import it.albertus.net.httpserver.LightweightHttpServer;
 import it.albertus.routerlogger.email.ThresholdsEmailSender;
 import it.albertus.routerlogger.http.HttpServerConfig;
 import it.albertus.routerlogger.mqtt.MqttClient;
@@ -75,19 +75,19 @@ public abstract class RouterLoggerEngine {
 
 	private RouterData currentData;
 	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(Collections.<Threshold, String> emptyMap(), new Date());
-	private RouterLoggerStatus currentStatus = new RouterLoggerStatus(Status.STARTING);
-	private RouterLoggerStatus previousStatus = null;
+	private AppStatus currentStatus = new AppStatus(Status.STARTING);
+	private AppStatus previousStatus = null;
 	private long waitTimeInMillis = configuration.getLong(CFG_KEY_LOGGER_INTERVAL_NORMAL_MS, Defaults.INTERVAL_NORMAL_IN_MILLIS);
 
 	private volatile int iteration = FIRST_ITERATION;
 	private boolean connected = false;
 	private boolean loggedIn = false;
 
-	public RouterLoggerStatus getCurrentStatus() {
+	public AppStatus getCurrentStatus() {
 		return currentStatus;
 	}
 
-	public RouterLoggerStatus getPreviousStatus() {
+	public AppStatus getPreviousStatus() {
 		return previousStatus;
 	}
 
@@ -95,8 +95,8 @@ public abstract class RouterLoggerEngine {
 		final boolean update = !currentStatus.getStatus().equals(newStatus);
 		if (update) {
 			previousStatus = currentStatus;
-			currentStatus = new RouterLoggerStatus(newStatus);
-			mqttClient.publishStatus(currentStatus);
+			currentStatus = new AppStatus(newStatus);
+			mqttClient.publishAppStatus(currentStatus);
 		}
 		return update;
 	}
@@ -111,7 +111,7 @@ public abstract class RouterLoggerEngine {
 
 		final IReader rdr;
 		try {
-			rdr = (IReader) Class.forName(readerClassName).newInstance();
+			rdr = (IReader) Class.forName(readerClassName).getConstructor().newInstance();
 		}
 		catch (final Exception e) {
 			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), e, configurationKey);
@@ -128,7 +128,7 @@ public abstract class RouterLoggerEngine {
 
 		final IWriter wrt;
 		try {
-			wrt = (IWriter) Class.forName(writerClassName).newInstance();
+			wrt = (IWriter) Class.forName(writerClassName).getConstructor().newInstance();
 		}
 		catch (final Exception e) {
 			throw new ConfigurationException(JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_INVALID, configurationKey) + ' ' + JFaceMessages.get(MSG_KEY_ERR_CONFIGURATION_REVIEW, configuration.getFileName()), e, configurationKey);
@@ -459,8 +459,7 @@ public abstract class RouterLoggerEngine {
 			showInfo(currentData, thresholdsReached);
 
 			// Pubblica via MQTT
-			mqttClient.publishData(currentData);
-			mqttClient.publishThresholds(currentThresholdsReached);
+			mqttClient.publishDeviceStatus(currentData, currentThresholdsReached);
 
 			if (exit) {
 				break;
