@@ -15,11 +15,11 @@ import it.albertus.mqtt.MqttPayloadEncoder;
 import it.albertus.mqtt.MqttQos;
 import it.albertus.mqtt.MqttUtils;
 import it.albertus.net.MimeTypes;
-import it.albertus.routerlogger.dto.RouterDataDto;
-import it.albertus.routerlogger.dto.StatusDto;
+import it.albertus.routerlogger.dto.DeviceStatusDto;
+import it.albertus.routerlogger.dto.AppStatusDto;
 import it.albertus.routerlogger.engine.RouterData;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
-import it.albertus.routerlogger.engine.RouterLoggerStatus;
+import it.albertus.routerlogger.engine.AppStatus;
 import it.albertus.routerlogger.engine.Status;
 import it.albertus.routerlogger.engine.ThresholdsReached;
 import it.albertus.routerlogger.resources.Messages;
@@ -77,13 +77,13 @@ public class MqttClient extends BaseMqttClient {
 		public static final boolean COMPRESSION_ENABLED = false;
 
 		public static final boolean DATA_ENABLED = true;
-		public static final String DATA_TOPIC = "router/logger/data";
+		public static final String DATA_TOPIC = "routerlogger/status/device";
 		public static final byte DATA_QOS = MqttQos.AT_MOST_ONCE.getValue();
 		public static final boolean DATA_RETAINED = true;
 		public static final long DATA_THROTTLING_IN_MILLIS = 0;
 
 		public static final boolean STATUS_ENABLED = true;
-		public static final String STATUS_TOPIC = "router/logger/status";
+		public static final String STATUS_TOPIC = "routerlogger/status/app";
 		public static final byte STATUS_QOS = MqttQos.EXACTLY_ONCE.getValue();
 		public static final boolean STATUS_RETAINED = true;
 
@@ -136,7 +136,7 @@ public class MqttClient extends BaseMqttClient {
 			if (configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
 				final String lwtTopic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
 				if (lwtTopic != null && !lwtTopic.isEmpty()) {
-					options.setWill(lwtTopic, buildPayload(new StatusDto(new RouterLoggerStatus(Status.ABEND)).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
+					options.setWill(lwtTopic, buildPayload(new AppStatusDto(new AppStatus(Status.ABEND)).toJson()), configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS), configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
 				}
 			}
 
@@ -178,10 +178,10 @@ public class MqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publishData(final RouterData data, final ThresholdsReached thresholdsReached) {
+	public void publishDeviceStatus(final RouterData data, final ThresholdsReached thresholdsReached) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_DATA_ENABLED, Defaults.DATA_ENABLED) && System.currentTimeMillis() - lastDataMessageTime >= configuration.getLong(CFG_KEY_MQTT_DATA_THROTTLING_MS, Defaults.DATA_THROTTLING_IN_MILLIS)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_DATA_TOPIC, Defaults.DATA_TOPIC);
-			final MqttMessage message = new MqttMessage(buildPayload(new RouterDataDto(data, thresholdsReached).toJson()));
+			final MqttMessage message = new MqttMessage(buildPayload(new DeviceStatusDto(data, thresholdsReached).toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_DATA_RETAINED, Defaults.DATA_RETAINED));
 			message.setQos(configuration.getByte(CFG_KEY_MQTT_DATA_QOS, Defaults.DATA_QOS));
 			try {
@@ -194,10 +194,10 @@ public class MqttClient extends BaseMqttClient {
 		}
 	}
 
-	public void publishStatus(final RouterLoggerStatus status) {
+	public void publishAppStatus(final AppStatus status) {
 		if (configuration.getBoolean(CFG_KEY_MQTT_ENABLED, Defaults.ENABLED) && configuration.getBoolean(CFG_KEY_MQTT_STATUS_ENABLED, Defaults.STATUS_ENABLED)) {
 			final String topic = configuration.getString(CFG_KEY_MQTT_STATUS_TOPIC, Defaults.STATUS_TOPIC);
-			final MqttMessage message = new MqttMessage(buildPayload(new StatusDto(status).toJson()));
+			final MqttMessage message = new MqttMessage(buildPayload(new AppStatusDto(status).toJson()));
 			message.setRetained(configuration.getBoolean(CFG_KEY_MQTT_STATUS_RETAINED, Defaults.STATUS_RETAINED));
 			message.setQos(configuration.getByte(CFG_KEY_MQTT_STATUS_QOS, Defaults.STATUS_QOS));
 			try {

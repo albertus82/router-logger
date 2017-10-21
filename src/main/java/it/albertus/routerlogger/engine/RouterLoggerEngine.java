@@ -75,19 +75,19 @@ public abstract class RouterLoggerEngine {
 
 	private RouterData currentData;
 	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(Collections.<Threshold, String> emptyMap(), new Date());
-	private RouterLoggerStatus currentStatus = new RouterLoggerStatus(Status.STARTING);
-	private RouterLoggerStatus previousStatus = null;
+	private AppStatus currentStatus = new AppStatus(Status.STARTING);
+	private AppStatus previousStatus = null;
 	private long waitTimeInMillis = configuration.getLong(CFG_KEY_LOGGER_INTERVAL_NORMAL_MS, Defaults.INTERVAL_NORMAL_IN_MILLIS);
 
 	private volatile int iteration = FIRST_ITERATION;
 	private boolean connected = false;
 	private boolean loggedIn = false;
 
-	public RouterLoggerStatus getCurrentStatus() {
+	public AppStatus getCurrentStatus() {
 		return currentStatus;
 	}
 
-	public RouterLoggerStatus getPreviousStatus() {
+	public AppStatus getPreviousStatus() {
 		return previousStatus;
 	}
 
@@ -95,8 +95,8 @@ public abstract class RouterLoggerEngine {
 		final boolean update = !currentStatus.getStatus().equals(newStatus);
 		if (update) {
 			previousStatus = currentStatus;
-			currentStatus = new RouterLoggerStatus(newStatus);
-			mqttClient.publishStatus(currentStatus);
+			currentStatus = new AppStatus(newStatus);
+			mqttClient.publishAppStatus(currentStatus);
 		}
 		return update;
 	}
@@ -459,7 +459,7 @@ public abstract class RouterLoggerEngine {
 			showInfo(currentData, thresholdsReached);
 
 			// Pubblica via MQTT
-			mqttClient.publishData(currentData, currentThresholdsReached);
+			mqttClient.publishDeviceStatus(currentData, currentThresholdsReached);
 
 			if (exit) {
 				break;

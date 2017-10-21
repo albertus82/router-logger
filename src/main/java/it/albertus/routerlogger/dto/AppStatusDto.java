@@ -5,11 +5,11 @@ import java.util.Date;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 
-import it.albertus.routerlogger.engine.RouterLoggerStatus;
+import it.albertus.routerlogger.engine.AppStatus;
 import it.albertus.routerlogger.engine.Status;
 import it.albertus.util.Jsonable;
 
-public class StatusDto implements Serializable, Jsonable {
+public class AppStatusDto implements Serializable, Jsonable {
 
 	private static final long serialVersionUID = -4177252476439888471L;
 
@@ -17,7 +17,7 @@ public class StatusDto implements Serializable, Jsonable {
 	private final String status;
 	private final String description;
 
-	public StatusDto(final RouterLoggerStatus status) {
+	public AppStatusDto(final AppStatus status) {
 		if (status != null) {
 			this.status = status.getStatus().toString();
 			this.description = status.getStatus().getDescription();

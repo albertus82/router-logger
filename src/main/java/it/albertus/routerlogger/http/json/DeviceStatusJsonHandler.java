@@ -6,19 +6,19 @@ import com.sun.net.httpserver.HttpExchange;
 
 import it.albertus.httpserver.annotation.Path;
 import it.albertus.httpserver.config.IHttpServerConfig;
-import it.albertus.routerlogger.dto.StatusDto;
+import it.albertus.routerlogger.dto.DeviceStatusDto;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 
-@Path("/status/status")
-public class StatusJsonHandler extends AbstractJsonHandler {
+@Path("/status/device")
+public class DeviceStatusJsonHandler extends AbstractJsonHandler {
 
-	public StatusJsonHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
+	public DeviceStatusJsonHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
 		super(config, engine);
 	}
 
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
-		final byte[] payload = Payload.createPayload(new StatusDto(engine.getCurrentStatus()).toJson());
+		final byte[] payload = Payload.createPayload(new DeviceStatusDto(engine.getCurrentData(), engine.getCurrentThresholdsReached()).toJson());
 		addRefreshHeader(exchange);
 		sendResponse(exchange, payload);
 	}

@@ -15,7 +15,7 @@ import it.albertus.routerlogger.engine.Threshold;
 import it.albertus.routerlogger.engine.ThresholdsReached;
 import it.albertus.util.Jsonable;
 
-public class RouterDataDto implements Serializable, Jsonable {
+public class DeviceStatusDto implements Serializable, Jsonable {
 
 	private static final long serialVersionUID = -3532671488236848582L;
 
@@ -24,7 +24,7 @@ public class RouterDataDto implements Serializable, Jsonable {
 	private final Map<String, String> data;
 	private final Set<ThresholdDto> thresholds;
 
-	public RouterDataDto(final RouterData routerData, final ThresholdsReached thresholds) {
+	public DeviceStatusDto(final RouterData routerData, final ThresholdsReached thresholds) {
 		if (routerData != null) {
 			this.timestamp = routerData.getTimestamp();
 			this.responseTime = routerData.getResponseTime();

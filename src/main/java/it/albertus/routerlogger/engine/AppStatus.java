@@ -3,14 +3,14 @@ package it.albertus.routerlogger.engine;
 import java.io.Serializable;
 import java.util.Date;
 
-public class RouterLoggerStatus implements Serializable {
+public class AppStatus implements Serializable {
 
 	private static final long serialVersionUID = -5574131723102221930L;
 
 	private final Date timestamp;
 	private final Status status;
 
-	public RouterLoggerStatus(final Status status) {
+	public AppStatus(final Status status) {
 		this.timestamp = new Date();
 		this.status = status;
 	}
@@ -44,10 +44,10 @@ public class RouterLoggerStatus implements Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof RouterLoggerStatus)) {
+		if (!(obj instanceof AppStatus)) {
 			return false;
 		}
-		RouterLoggerStatus other = (RouterLoggerStatus) obj;
+		AppStatus other = (AppStatus) obj;
 		if (status != other.status) {
 			return false;
 		}
