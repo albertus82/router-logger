@@ -36,8 +36,8 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 	}
 
 	@Override
-	protected String getContentType(final String fileName) {
-		return "application/json; charset=" + getCharset().name();
+	protected void setContentTypeHeader(final HttpExchange exchange) {
+		setContentTypeHeader(exchange, "application/json; charset=" + getCharset().name());
 	}
 
 	@Override

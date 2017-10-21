@@ -9,7 +9,7 @@ import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.routerlogger.dto.StatusDto;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 
-@Path("/json/status")
+@Path("/status/status")
 public class StatusJsonHandler extends AbstractJsonHandler {
 
 	public StatusJsonHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {

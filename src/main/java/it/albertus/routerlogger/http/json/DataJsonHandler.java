@@ -9,7 +9,7 @@ import it.albertus.httpserver.config.IHttpServerConfig;
 import it.albertus.routerlogger.dto.RouterDataDto;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 
-@Path("/json/data")
+@Path("/status/data")
 public class DataJsonHandler extends AbstractJsonHandler {
 
 	public DataJsonHandler(final IHttpServerConfig config, final RouterLoggerEngine engine) {
