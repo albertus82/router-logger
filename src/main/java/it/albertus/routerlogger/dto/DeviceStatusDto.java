@@ -56,6 +56,11 @@ public class DeviceStatusDto implements Serializable, Jsonable {
 		return json.toString();
 	}
 
+	@Override
+	public String toString() {
+		return toJson();
+	}
+
 	private static String jsonifyCollection(final String name, final Collection<? extends Jsonable> collection) {
 		final StringBuilder json = new StringBuilder();
 		json.append('"').append(name).append("\":[");
@@ -162,6 +167,11 @@ public class DeviceStatusDto implements Serializable, Jsonable {
 			json.append(",\"excluded\":").append(excluded);
 			json.append(",\"detected\":\"").append(detected).append("\"}");
 			return json.toString();
+		}
+
+		@Override
+		public String toString() {
+			return toJson();
 		}
 
 	}

@@ -25,7 +25,7 @@ public class AppStatus implements Serializable {
 
 	@Override
 	public String toString() {
-		return "RouterLoggerStatus [timestamp=" + timestamp + ", status=" + status + "]";
+		return "AppStatus [timestamp=" + timestamp + ", status=" + status + "]";
 	}
 
 	@Override

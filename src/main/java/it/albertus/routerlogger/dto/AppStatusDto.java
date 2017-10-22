@@ -51,4 +51,9 @@ public class AppStatusDto implements Serializable, Jsonable {
 		return json.toString();
 	}
 
+	@Override
+	public String toString() {
+		return toJson();
+	}
+
 }
