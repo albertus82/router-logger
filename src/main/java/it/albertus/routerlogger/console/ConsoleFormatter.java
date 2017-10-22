@@ -23,11 +23,11 @@ public class ConsoleFormatter extends CustomFormatter {
 		return message;
 	}
 
-	public boolean isPrintOnNewLine() {
+	public synchronized boolean isPrintOnNewLine() {
 		return printOnNewLine;
 	}
 
-	public void setPrintOnNewLine(final boolean printOnNewLine) {
+	public synchronized void setPrintOnNewLine(final boolean printOnNewLine) {
 		this.printOnNewLine = printOnNewLine;
 	}
 
