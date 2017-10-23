@@ -50,34 +50,36 @@ public class RouterLoggerPreferences extends Preferences {
 			returnCode = Window.CANCEL;
 		}
 
-		// Update console font...
-		final String fontDataString = configuration.getString("gui.console.font", true);
-		if (!fontDataString.isEmpty()) {
-			gui.getConsole().setFont(PreferenceConverter.readFontData(fontDataString));
-		}
+		if (gui != null) {
+			// Update console font...
+			final String fontDataString = configuration.getString("gui.console.font", true);
+			if (!fontDataString.isEmpty()) {
+				gui.getConsole().setFont(PreferenceConverter.readFontData(fontDataString));
+			}
 
-		// Check if must update texts...
-		if (gui != null && !language.equals(Messages.getLanguage())) {
-			gui.getMenuBar().updateTexts();
-			gui.getDataTable().updateTexts();
-		}
+			// Check if must update texts...
+			if (!language.equals(Messages.getLanguage())) {
+				gui.getMenuBar().updateTexts();
+				gui.getDataTable().updateTexts();
+			}
 
-		if (!isRestartRequired()) {
-			// Check if restart is required...
-			final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(getPreferenceStore().getString(Preference.READER_CLASS_NAME.getName()));
-			final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(getPreferenceStore().getString(Preference.WRITER_CLASS_NAME.getName()));
-			if (gui != null && (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName))) {
-				try {
-					// Check if configured classes are valid...
-					Class.forName(configuredReaderClassName, false, this.getClass().getClassLoader());
-					Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
-					setRestartRequired(true); // Restart dialog will be shown.
-				}
-				catch (final Exception e) {
-					logger.log(Level.FINE, e.toString(), e);
-				}
-				catch (final LinkageError e) {
-					logger.log(Level.FINE, e.toString(), e);
+			if (!isRestartRequired()) {
+				// Check if restart is required...
+				final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(getPreferenceStore().getString(Preference.READER_CLASS_NAME.getName()));
+				final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(getPreferenceStore().getString(Preference.WRITER_CLASS_NAME.getName()));
+				if (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName)) {
+					try {
+						// Check if configured classes are valid...
+						Class.forName(configuredReaderClassName, false, this.getClass().getClassLoader());
+						Class.forName(configuredWriterClassName, false, this.getClass().getClassLoader());
+						setRestartRequired(true); // Restart dialog will be shown.
+					}
+					catch (final Exception e) {
+						logger.log(Level.FINE, e.toString(), e);
+					}
+					catch (final LinkageError e) {
+						logger.log(Level.FINE, e.toString(), e);
+					}
 				}
 			}
 		}
