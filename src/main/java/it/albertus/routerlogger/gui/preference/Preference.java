@@ -76,7 +76,7 @@ import it.albertus.routerlogger.gui.TrayIcon;
 import it.albertus.routerlogger.gui.preference.field.DatabaseComboFieldEditor;
 import it.albertus.routerlogger.gui.preference.field.ReaderComboFieldEditor;
 import it.albertus.routerlogger.gui.preference.field.ThresholdsListEditor;
-import it.albertus.routerlogger.gui.preference.field.WriterComboFieldEditor;
+import it.albertus.routerlogger.gui.preference.field.WriterListEditor;
 import it.albertus.routerlogger.gui.preference.page.AdvancedMqttPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.CsvPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.DatabasePreferencePage;
@@ -173,7 +173,7 @@ public enum Preference implements IPreference {
 	CONSOLE_SHOW_KEYS(new PreferenceDetailsBuilder(CONSOLE).build(), new FieldEditorDetailsBuilder(WrapStringFieldEditor.class).build()),
 	CONSOLE_SHOW_KEYS_SEPARATOR(new PreferenceDetailsBuilder(CONSOLE).defaultValue(RouterLoggerConfig.Defaults.CONSOLE_SHOW_KEYS_SEPARATOR).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
 
-	WRITER_CLASS_NAME(new PreferenceDetailsBuilder(WRITER).defaultValue(RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()).build(), new FieldEditorDetailsBuilder(WriterComboFieldEditor.class).labelsAndValues(WriterPreferencePage.getWriterComboOptions()).build()),
+	WRITER_CLASS_NAME(new PreferenceDetailsBuilder(WRITER).defaultValue(RouterLoggerEngine.Defaults.WRITER_CLASS.getSimpleName()).build(), new FieldEditorDetailsBuilder(WriterListEditor.class).labelsAndValues(WriterPreferencePage.getWriterComboOptions()).build()),
 
 	CSV_DESTINATION_PATH(new PreferenceDetailsBuilder(CSV).defaultValue(CsvWriter.Defaults.DIRECTORY).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryDialogMessage(new Localized() {
 		@Override
