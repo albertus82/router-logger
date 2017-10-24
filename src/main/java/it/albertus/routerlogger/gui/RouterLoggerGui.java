@@ -304,7 +304,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 			catch (final ConfigurationException e) {
 				// Reset Reader & Writer...
 				setReader(null);
-				setWriter(null);
+				getWriters().clear();
 
 				// Open Preferences dialog...
 				final int buttonId = openErrorMessageBox(shell, e);
@@ -314,7 +314,7 @@ public class RouterLoggerGui extends RouterLoggerEngine implements IShellProvide
 				}
 			}
 		}
-		while (getReader() == null || getWriter() == null);
+		while (getReader() == null || getWriters().isEmpty());
 	}
 
 	@Override

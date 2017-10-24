@@ -6,8 +6,10 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -65,7 +67,7 @@ public abstract class RouterLoggerEngine {
 	protected final MqttClient mqttClient = MqttClient.getInstance();
 
 	private IReader reader;
-	private IWriter writer;
+	private final List<IWriter> writers = new ArrayList<IWriter>();
 
 	protected Thread pollingThread;
 	private volatile boolean interruptible = false;
@@ -74,7 +76,7 @@ public abstract class RouterLoggerEngine {
 	private ShutdownDaemon shutdownDaemon;
 
 	private RouterData currentData;
-	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(Collections.<Threshold, String> emptyMap(), new Date());
+	private ThresholdsReached currentThresholdsReached = new ThresholdsReached(Collections.<Threshold, String>emptyMap(), new Date());
 	private AppStatus currentStatus = new AppStatus(Status.STARTING);
 	private AppStatus previousStatus = null;
 	private long waitTimeInMillis = configuration.getLong(CFG_KEY_LOGGER_INTERVAL_NORMAL_MS, Defaults.INTERVAL_NORMAL_IN_MILLIS);
@@ -426,7 +428,9 @@ public abstract class RouterLoggerEngine {
 			final long timeAfterRead = System.currentTimeMillis();
 			currentData = new RouterData((int) (timeAfterRead - timeBeforeRead), info);
 
-			writer.saveInfo(currentData);
+			for (final IWriter writer : writers) {
+				writer.saveInfo(currentData);
+			}
 
 			/* Impostazione stato di allerta e gestione isteresi... */
 			final Map<Threshold, String> thresholdsReached = configuration.getThresholds().getReached(currentData);
@@ -481,7 +485,9 @@ public abstract class RouterLoggerEngine {
 					loggedIn = false;
 					reader.disconnect();
 					connected = false;
-					writer.release();
+					for (final IWriter writer : writers) {
+						writer.release();
+					}
 				}
 
 				// Sottrazione dal tempo di attesa di quello trascorso durante la scrittura dei dati...
@@ -514,11 +520,13 @@ public abstract class RouterLoggerEngine {
 		catch (final RuntimeException e) {
 			logger.log(Level.FINE, e.toString(), e);
 		}
-		try {
-			writer.release();
-		}
-		catch (final RuntimeException e) {
-			logger.log(Level.FINE, e.toString(), e);
+		for (final IWriter writer : writers) {
+			try {
+				writer.release();
+			}
+			catch (final RuntimeException e) {
+				logger.log(Level.FINE, e.toString(), e);
+			}
 		}
 	}
 
@@ -527,11 +535,12 @@ public abstract class RouterLoggerEngine {
 		setReader(createReader());
 
 		// Inizializzazione del Writer...
-		setWriter(createWriter());
+		getWriters().clear();
+		getWriters().add(createWriter());
 	}
 
 	public boolean canConnect() {
-		return (getReader() != null && getWriter() != null && Status.STARTING.equals(getCurrentStatus().getStatus()) || Status.DISCONNECTED.equals(getCurrentStatus().getStatus()) || Status.ERROR.equals(getCurrentStatus().getStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
+		return (getReader() != null && !getWriters().isEmpty() && Status.STARTING.equals(getCurrentStatus().getStatus()) || Status.DISCONNECTED.equals(getCurrentStatus().getStatus()) || Status.ERROR.equals(getCurrentStatus().getStatus())) && (configuration.getInt("logger.iterations", Defaults.ITERATIONS) <= 0 || getIteration() <= configuration.getInt("logger.iterations", Defaults.ITERATIONS));
 	}
 
 	public boolean canDisconnect() {
@@ -540,7 +549,7 @@ public abstract class RouterLoggerEngine {
 
 	public void connect() {
 		// Avvia thread di interrogazione router...
-		if (getReader() != null && getWriter() != null) {
+		if (getReader() != null && !getWriters().isEmpty()) {
 			boolean connect;
 			try {
 				connect = canConnect();
@@ -666,12 +675,8 @@ public abstract class RouterLoggerEngine {
 		this.reader = reader;
 	}
 
-	public IWriter getWriter() {
-		return writer;
-	}
-
-	protected void setWriter(IWriter writer) {
-		this.writer = writer;
+	public List<IWriter> getWriters() {
+		return writers;
 	}
 
 	protected boolean isInterruptible() {

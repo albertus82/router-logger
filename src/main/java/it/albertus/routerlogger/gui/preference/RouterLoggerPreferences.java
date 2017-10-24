@@ -67,7 +67,7 @@ public class RouterLoggerPreferences extends Preferences {
 				// Check if restart is required...
 				final String configuredReaderClassName = RouterLoggerEngine.getReaderClassName(getPreferenceStore().getString(Preference.READER_CLASS_NAME.getName()));
 				final String configuredWriterClassName = RouterLoggerEngine.getWriterClassName(getPreferenceStore().getString(Preference.WRITER_CLASS_NAME.getName()));
-				if (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriter() == null || !gui.getWriter().getClass().getName().equals(configuredWriterClassName)) {
+				if (gui.getReader() == null || !gui.getReader().getClass().getName().equals(configuredReaderClassName) || gui.getWriters().isEmpty() || !gui.getWriters().get(0).getClass().getName().equals(configuredWriterClassName)) {
 					try {
 						// Check if configured classes are valid...
 						Class.forName(configuredReaderClassName, false, this.getClass().getClassLoader());
