@@ -148,7 +148,7 @@ public class DatabaseWriter extends Writer {
 		PreparedStatement statement = null;
 		try {
 			// Verifica esistenza tabella...
-			final String sql = "SELECT 1 FROM " + sanitizeName(tableName);
+			final String sql = "SELECT 1 FROM " + SqlUtils.sanitizeName(tableName);
 			showSql(sql);
 			statement = connection.prepareStatement(sql);
 			statement.setFetchSize(1);
@@ -165,9 +165,9 @@ public class DatabaseWriter extends Writer {
 	}
 
 	protected void createTable(final String tableName, final Map<String, String> info) throws SQLException {
-		final String timestampColumnType = sanitizeType(configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE));
-		final String responseTimeColumnType = sanitizeType(configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE));
-		final String infoColumnType = sanitizeType(configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE));
+		final String timestampColumnType = SqlUtils.sanitizeType(configuration.getString("database.timestamp.column.type", Defaults.TIMESTAMP_COLUMN_TYPE));
+		final String responseTimeColumnType = SqlUtils.sanitizeType(configuration.getString("database.response.column.type", Defaults.RESPONSE_TIME_COLUMN_TYPE));
+		final String infoColumnType = SqlUtils.sanitizeType(configuration.getString("database.info.column.type", Defaults.INFO_COLUMN_TYPE));
 
 		// Creazione tabella...
 		StringBuilder ddl = new StringBuilder("CREATE TABLE ").append(tableName).append(" (").append(getTimestampColumnName()).append(' ').append(timestampColumnType);
@@ -190,11 +190,11 @@ public class DatabaseWriter extends Writer {
 	}
 
 	protected String getTableName() {
-		return sanitizeName(configuration.getString("database.table.name", Defaults.TABLE_NAME));
+		return SqlUtils.sanitizeName(configuration.getString("database.table.name", Defaults.TABLE_NAME));
 	}
 
 	protected String getColumnName(final String name) {
-		String completeName = sanitizeName(configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name);
+		String completeName = SqlUtils.sanitizeName(configuration.getString("database.column.name.prefix", Defaults.COLUMN_NAME_PREFIX) + name);
 		final int maxLength = configuration.getInt("database.column.name.max.length", Defaults.COLUMN_NAME_MAX_LENGTH);
 		if (completeName.length() > maxLength) {
 			completeName = completeName.substring(0, maxLength);
@@ -222,14 +222,6 @@ public class DatabaseWriter extends Writer {
 
 	protected void showSql(final String sql) {
 		logger.fine(sql);
-	}
-
-	protected static String sanitizeName(final String str) {
-		return str.replaceAll("[^A-Za-z0-9_]+", "");
-	}
-
-	protected static String sanitizeType(final String str) {
-		return str.replaceAll("[^A-Za-z0-9_,() ]+", "");
 	}
 
 }
