@@ -15,7 +15,7 @@ import java.util.List;
 import it.albertus.util.IOUtils;
 import it.albertus.util.sql.SqlUtils;
 
-public class CsvToSqlTransformer {
+public class CsvToSqlConverter {
 
 	protected static final String CSV_FILE_EXTENSION = ".csv";
 	protected static final String SQL_FILE_EXTENSION = ".sql";
@@ -30,7 +30,7 @@ public class CsvToSqlTransformer {
 	private final String csvSeparator;
 	private final DateFormat csvDateFormat;
 
-	public CsvToSqlTransformer(final String sqlTableName, final String sqlColumnNamesPrefix, final String sqlTimestampColumnName, final String sqlResponseTimeColumnName, final int sqlMaxLengthColumnNames, final String csvSeparator, final String csvTimestampPattern) {
+	public CsvToSqlConverter(final String sqlTableName, final String sqlColumnNamesPrefix, final String sqlTimestampColumnName, final String sqlResponseTimeColumnName, final int sqlMaxLengthColumnNames, final String csvSeparator, final String csvTimestampPattern) {
 		this.sqlTableName = sqlTableName;
 		this.sqlColumnNamesPrefix = sqlColumnNamesPrefix;
 		this.sqlTimestampColumnName = sqlTimestampColumnName;
@@ -40,7 +40,7 @@ public class CsvToSqlTransformer {
 		this.csvDateFormat = new SimpleDateFormat(csvTimestampPattern);
 	}
 
-	protected void transform(final File csvFile, final String destDir) throws ParseException, IOException {
+	public void convert(final File csvFile, final String destDir) throws ParseException, IOException {
 		FileReader fr = null;
 		BufferedReader br = null;
 		FileWriter fw = null;
@@ -117,8 +117,9 @@ public class CsvToSqlTransformer {
 		return completeName;
 	}
 
-	public static void main(String[] args) throws ParseException, IOException {
-		new CsvToSqlTransformer("ROUTER_LOG", "RL_", "TIMESTAMP", "RESPONSE_TIME_MS", 30, ";", "dd/MM/yyyy HH:mm:ss.SSS").transform(new File(args[0]), new File(args[0]).getParentFile().getPath());
+	public static void main(final String[] args) throws ParseException, IOException {
+		final File csvFile = new File(args[0]);
+		new CsvToSqlConverter("ROUTER_LOG", "RL_", "TIMESTAMP", "RESPONSE_TIME_MS", 30, ";", "dd/MM/yyyy HH:mm:ss.SSS").convert(csvFile, csvFile.getParent());
 	}
 
 }
