@@ -17,6 +17,9 @@ import it.albertus.util.sql.SqlUtils;
 
 public class CsvToSqlTransformer {
 
+	protected static final String CSV_FILE_EXTENSION = ".csv";
+	protected static final String SQL_FILE_EXTENSION = ".sql";
+
 	private final DateFormat ansiSqlFormat = new SimpleDateFormat("yyyy-M-dd HH:mm:ss.SSS"); // '1998-3-24 04:21:23.456'
 
 	private final DateFormat csvDateFormat;
@@ -35,7 +38,7 @@ public class CsvToSqlTransformer {
 		this.csvDateFormat = new SimpleDateFormat(timestampDateFormat);
 	}
 
-	protected void transform(final File csvFile) throws ParseException, IOException {
+	protected void transform(final File csvFile, final String separator, final String destDir) throws ParseException, IOException {
 		FileReader fr = null;
 		BufferedReader br = null;
 		FileWriter fw = null;
@@ -43,15 +46,15 @@ public class CsvToSqlTransformer {
 		try {
 			fr = new FileReader(csvFile);
 			br = new BufferedReader(fr);
-			final String csvPath = csvFile.getAbsolutePath();
-			final String sqlPath;
-			if (csvPath.toLowerCase().endsWith(".csv")) {
-				sqlPath = csvPath.substring(0, csvPath.lastIndexOf('.')) + ".sql";
+			final String csvFileName = csvFile.getName();
+			final String sqlFileName;
+			if (csvFileName.toLowerCase().endsWith(CSV_FILE_EXTENSION)) {
+				sqlFileName = csvFileName.substring(0, csvFileName.lastIndexOf('.')) + SQL_FILE_EXTENSION;
 			}
 			else {
-				sqlPath = csvPath + ".sql";
+				sqlFileName = csvFileName + SQL_FILE_EXTENSION;
 			}
-			final File sqlFile = new File(sqlPath);
+			final File sqlFile = new File(destDir + File.separator + sqlFileName);
 			if (sqlFile.exists() || sqlFile.isDirectory()) {
 				throw new IllegalStateException("File " + sqlFile + " already exists or is a directory.");
 			}
@@ -60,7 +63,7 @@ public class CsvToSqlTransformer {
 			final String firstLine = br.readLine();
 			final List<String> sqlColumnNames = new ArrayList<String>();
 			if (firstLine != null) {
-				final String[] csvColumnNames = firstLine.split(";");
+				final String[] csvColumnNames = firstLine.split(separator);
 				sqlColumnNames.add(getSqlColumnName(timestampColumnName, columnNamesPrefix, maxLengthColumnNames));
 				sqlColumnNames.add(getSqlColumnName(responseTimeColumnName, columnNamesPrefix, maxLengthColumnNames));
 				for (int i = 2; i < csvColumnNames.length; i++) {
@@ -69,7 +72,7 @@ public class CsvToSqlTransformer {
 				String line;
 				while ((line = br.readLine()) != null) {
 					bw.append("INSERT INTO ").append(tableName).append(" (");
-					final String[] values = line.split(";");
+					final String[] values = line.split(separator);
 					for (int i = 0; i < values.length; i++) {
 						bw.append(sqlColumnNames.get(i));
 						if (i != values.length - 1) {
@@ -104,7 +107,7 @@ public class CsvToSqlTransformer {
 	}
 
 	public static void main(String[] args) throws ParseException, IOException {
-		new CsvToSqlTransformer("ROUTER_LOG", "RL_", "TIMESTAMP", "dd/MM/yyyy HH:mm:ss.SSS", "RESPONSE_TIME_MS", 30).transform(new File(args[0]));
+		new CsvToSqlTransformer("ROUTER_LOG", "RL_", "TIMESTAMP", "dd/MM/yyyy HH:mm:ss.SSS", "RESPONSE_TIME_MS", 30).transform(new File(args[0]), ";", new File(args[0]).getParentFile().getPath());
 	}
 
 }
