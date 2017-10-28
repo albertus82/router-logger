@@ -20,24 +20,24 @@ public class CsvToSqlTransformer {
 	protected static final String CSV_FILE_EXTENSION = ".csv";
 	protected static final String SQL_FILE_EXTENSION = ".sql";
 
-	private final DateFormat ansiSqlFormat = new SimpleDateFormat("yyyy-M-dd HH:mm:ss.SSS"); // '1998-3-24 04:21:23.456'
+	private final DateFormat ansiSqlTimestampFormat = new SimpleDateFormat("yyyy-M-dd HH:mm:ss.SSS"); // '1998-3-24 04:21:23.456'
 
-	private final String tableName;
-	private final String columnNamesPrefix;
-	private final String timestampColumnName;
-	private final String responseTimeColumnName;
-	private final int maxLengthColumnNames;
-	private final String separator;
+	private final String sqlTableName;
+	private final String sqlColumnNamesPrefix;
+	private final String sqlTimestampColumnName;
+	private final String sqlResponseTimeColumnName;
+	private final int sqlMaxLengthColumnNames;
+	private final String csvSeparator;
 	private final DateFormat csvDateFormat;
 
-	public CsvToSqlTransformer(final String tableName, final String columnNamesPrefix, final String timestampColumnName, final String responseTimeColumnName, final int maxLengthColumnNames, final String separator, final String timestampPattern) {
-		this.tableName = tableName;
-		this.columnNamesPrefix = columnNamesPrefix;
-		this.timestampColumnName = timestampColumnName;
-		this.responseTimeColumnName = responseTimeColumnName;
-		this.maxLengthColumnNames = maxLengthColumnNames;
-		this.separator = separator;
-		this.csvDateFormat = new SimpleDateFormat(timestampPattern);
+	public CsvToSqlTransformer(final String sqlTableName, final String sqlColumnNamesPrefix, final String sqlTimestampColumnName, final String sqlResponseTimeColumnName, final int sqlMaxLengthColumnNames, final String csvSeparator, final String csvTimestampPattern) {
+		this.sqlTableName = sqlTableName;
+		this.sqlColumnNamesPrefix = sqlColumnNamesPrefix;
+		this.sqlTimestampColumnName = sqlTimestampColumnName;
+		this.sqlResponseTimeColumnName = sqlResponseTimeColumnName;
+		this.sqlMaxLengthColumnNames = sqlMaxLengthColumnNames;
+		this.csvSeparator = csvSeparator;
+		this.csvDateFormat = new SimpleDateFormat(csvTimestampPattern);
 	}
 
 	protected void transform(final File csvFile, final String destDir) throws ParseException, IOException {
@@ -52,11 +52,11 @@ public class CsvToSqlTransformer {
 			final String firstLine = br.readLine();
 			final List<String> sqlColumnNames = new ArrayList<String>();
 			if (firstLine != null) {
-				final String[] csvColumnNames = firstLine.split(separator);
-				sqlColumnNames.add(getSqlColumnName(timestampColumnName, columnNamesPrefix, maxLengthColumnNames));
-				sqlColumnNames.add(getSqlColumnName(responseTimeColumnName, columnNamesPrefix, maxLengthColumnNames));
+				final String[] csvColumnNames = firstLine.split(csvSeparator);
+				sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+				sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
 				for (int i = 2; i < csvColumnNames.length; i++) {
-					sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], columnNamesPrefix, maxLengthColumnNames));
+					sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
 				}
 				fw = new FileWriter(sqlFile);
 				bw = new BufferedWriter(fw);
@@ -74,15 +74,15 @@ public class CsvToSqlTransformer {
 	}
 
 	protected void writeLine(final String csv, final BufferedWriter sql, final List<? extends CharSequence> tableColumnNames) throws IOException, ParseException {
-		sql.append("INSERT INTO ").append(tableName).append(" (");
-		final String[] values = csv.split(separator);
+		sql.append("INSERT INTO ").append(sqlTableName).append(" (");
+		final String[] values = csv.split(csvSeparator);
 		for (int i = 0; i < values.length; i++) {
 			sql.append(tableColumnNames.get(i));
 			if (i != values.length - 1) {
 				sql.append(',');
 			}
 		}
-		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlFormat.format(csvDateFormat.parse(values[0]))).append("',").append(values[1]).append(',');
+		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlTimestampFormat.format(csvDateFormat.parse(values[0]))).append("',").append(values[1]).append(',');
 		for (int i = 2; i < values.length; i++) {
 			sql.append('\'').append(values[i].replace("'", "''")).append('\'');
 			if (i != values.length - 1) {
