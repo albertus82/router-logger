@@ -1,17 +1,18 @@
-package it.albertus.routerlogger.writer;
+package it.albertus.routerlogger.writer.csv2sql;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.albertus.routerlogger.resources.Messages;
 import it.albertus.util.IOUtils;
 import it.albertus.util.sql.SqlUtils;
 
@@ -31,6 +32,12 @@ public class CsvToSqlConverter {
 	private final DateFormat csvDateFormat;
 
 	public CsvToSqlConverter(final String sqlTableName, final String sqlColumnNamesPrefix, final String sqlTimestampColumnName, final String sqlResponseTimeColumnName, final int sqlMaxLengthColumnNames, final String csvSeparator, final String csvTimestampPattern) {
+		if (sqlTableName == null || sqlTableName.trim().isEmpty()) {
+			throw new IllegalArgumentException("sqlTableName must not be blank");
+		}
+		if (csvSeparator == null || csvSeparator.isEmpty()) {
+			throw new IllegalArgumentException("csvSeparator must not be empty");
+		}
 		this.sqlTableName = sqlTableName;
 		this.sqlColumnNamesPrefix = sqlColumnNamesPrefix;
 		this.sqlTimestampColumnName = sqlTimestampColumnName;
@@ -42,17 +49,17 @@ public class CsvToSqlConverter {
 
 	public void convert(final File csvFile, final String destDir) throws ParseException, IOException {
 		FileReader fr = null;
-		BufferedReader br = null;
+		LineNumberReader br = null;
 		FileWriter fw = null;
 		BufferedWriter bw = null;
 		try {
 			final File sqlFile = getDestinationFile(csvFile, destDir);
 			fr = new FileReader(csvFile);
-			br = new BufferedReader(fr);
+			br = new LineNumberReader(fr);
 			final String firstLine = br.readLine();
 			final List<String> sqlColumnNames = new ArrayList<String>();
 			if (firstLine != null) {
-				final String[] csvColumnNames = firstLine.split(csvSeparator);
+				final String[] csvColumnNames = firstLine.trim().split(csvSeparator);
 				sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
 				sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
 				for (int i = 2; i < csvColumnNames.length; i++) {
@@ -62,7 +69,15 @@ public class CsvToSqlConverter {
 				bw = new BufferedWriter(fw);
 				String line;
 				while ((line = br.readLine()) != null) {
-					writeLine(line, bw, sqlColumnNames);
+					line = line.trim();
+					if (!line.isEmpty()) { // skip empty lines
+						try {
+							writeLine(line, bw, sqlColumnNames);
+						}
+						catch (final Exception e) {
+							throw new IOException(Messages.get("err.csv2sql.runnable", csvFile, br.getLineNumber()), e);
+						}
+					}
 				}
 				bw.write("COMMIT;");
 				bw.newLine();
@@ -93,7 +108,7 @@ public class CsvToSqlConverter {
 		sql.newLine();
 	}
 
-	protected File getDestinationFile(final File csvFile, final String destDir) {
+	protected File getDestinationFile(final File csvFile, final String destDir) throws IOException {
 		final String csvFileName = csvFile.getName();
 		final String sqlFileName;
 		if (csvFileName.toLowerCase().endsWith(CSV_FILE_EXTENSION)) {
@@ -104,7 +119,7 @@ public class CsvToSqlConverter {
 		}
 		final File sqlFile = new File(destDir + File.separator + sqlFileName);
 		if (sqlFile.exists() || sqlFile.isDirectory()) {
-			throw new IllegalStateException("File " + sqlFile + " already exists or is a directory.");
+			throw new IOException(Messages.get("err.csv2sql.destination.exists", sqlFile));
 		}
 		return sqlFile;
 	}
@@ -115,11 +130,6 @@ public class CsvToSqlConverter {
 			completeName = completeName.substring(0, maxLength);
 		}
 		return completeName;
-	}
-
-	public static void main(final String[] args) throws ParseException, IOException {
-		final File csvFile = new File(args[0]);
-		new CsvToSqlConverter("ROUTER_LOG", "RL_", "TIMESTAMP", "RESPONSE_TIME_MS", 30, ";", "dd/MM/yyyy HH:mm:ss.SSS").convert(csvFile, csvFile.getParent());
 	}
 
 }

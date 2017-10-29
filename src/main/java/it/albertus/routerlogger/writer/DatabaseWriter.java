@@ -21,9 +21,12 @@ import it.albertus.util.sql.SqlUtils;
 
 public class DatabaseWriter extends Writer {
 
-	private static final Logger logger = LoggerFactory.getLogger(DatabaseWriter.class);
+	public static final String TIMESTAMP_BASE_COLUMN_NAME = "timestamp";
+	public static final String RESPONSE_TIME_BASE_COLUMN_NAME = "response_time_ms";
 
 	public static final String DESTINATION_KEY = "lbl.writer.destination.database";
+
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseWriter.class);
 
 	public static class Defaults {
 		public static final String TABLE_NAME = "router_log";
@@ -137,11 +140,11 @@ public class DatabaseWriter extends Writer {
 	}
 
 	protected String getResponseTimeColumnName() {
-		return getColumnName("response_time_ms");
+		return getColumnName(RESPONSE_TIME_BASE_COLUMN_NAME);
 	}
 
 	protected String getTimestampColumnName() {
-		return getColumnName("timestamp");
+		return getColumnName(TIMESTAMP_BASE_COLUMN_NAME);
 	}
 
 	protected boolean tableExists(final String tableName) {

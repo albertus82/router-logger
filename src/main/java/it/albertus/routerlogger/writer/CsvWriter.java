@@ -27,6 +27,8 @@ public class CsvWriter extends Writer {
 
 	private static final Logger logger = LoggerFactory.getLogger(CsvWriter.class);
 
+	public static final String DATE_PATTERN = "dd/MM/yyyy HH:mm:ss.SSS";
+	
 	public static final String DESTINATION_KEY = "lbl.writer.destination.csv";
 
 	protected static final String CFG_KEY_CSV_NEWLINE_CHARACTERS = "csv.newline.characters";
@@ -39,7 +41,7 @@ public class CsvWriter extends Writer {
 	protected static final ThreadLocal<DateFormat> dateFormatsColumn = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
-			return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+			return new SimpleDateFormat(DATE_PATTERN);
 		}
 	};
 
