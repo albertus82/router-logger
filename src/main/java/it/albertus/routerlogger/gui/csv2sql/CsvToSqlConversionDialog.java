@@ -352,7 +352,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		csvResponseTimeFlag = new Button(parent, SWT.CHECK);
 		csvResponseTimeFlag.setText(Messages.get("lbl.csv2sql.source.csv.responseTime"));
 		csvResponseTimeFlag.setSelection(true);
-		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(csvResponseTimeFlag);
+		GridDataFactory.swtDefaults().span(2, 1).applyTo(csvResponseTimeFlag);
 	}
 
 	protected void createDestinationGroup(final Shell shell) {
