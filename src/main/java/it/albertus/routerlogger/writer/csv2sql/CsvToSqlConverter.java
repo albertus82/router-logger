@@ -67,18 +67,9 @@ public class CsvToSqlConverter {
 
 	protected void convert(final String sourceFileName, final LineNumberReader reader, final BufferedWriter writer) throws IOException {
 		final String firstLine = reader.readLine();
-		final List<String> sqlColumnNames = new ArrayList<String>();
 		if (firstLine != null) {
 			final String[] csvColumnNames = firstLine.trim().split(csvSeparator);
-			sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-			for (int i = 1; i < csvColumnNames.length; i++) {
-				if (i == 1 && sqlResponseTimeColumnName != null) {
-					sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-				}
-				else {
-					sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-				}
-			}
+			final List<String> sqlColumnNames = getSqlColumnNames(csvColumnNames);
 			String line;
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -94,6 +85,20 @@ public class CsvToSqlConverter {
 			writer.write("COMMIT;");
 			writer.newLine();
 		}
+	}
+
+	protected List<String> getSqlColumnNames(final String[] csvColumnNames) {
+		final List<String> sqlColumnNames = new ArrayList<String>();
+		sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+		for (int i = 1; i < csvColumnNames.length; i++) {
+			if (i == 1 && sqlResponseTimeColumnName != null) {
+				sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			}
+			else {
+				sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			}
+		}
+		return sqlColumnNames;
 	}
 
 	protected void writeLine(final String csv, final BufferedWriter sql, final List<? extends CharSequence> tableColumnNames) throws IOException, ParseException {
