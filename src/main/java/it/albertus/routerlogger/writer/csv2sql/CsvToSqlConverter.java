@@ -38,14 +38,14 @@ public class CsvToSqlConverter {
 		if (csvSeparator == null || csvSeparator.isEmpty()) {
 			throw new IllegalArgumentException("csvSeparator must not be empty");
 		}
+		csvDateFormat = new SimpleDateFormat(csvTimestampPattern);
+		csvDateFormat.setLenient(false);
 		this.sqlTableName = sqlTableName;
 		this.sqlColumnNamesPrefix = sqlColumnNamesPrefix;
 		this.sqlTimestampColumnName = sqlTimestampColumnName;
 		this.sqlResponseTimeColumnName = sqlResponseTimeColumnName;
 		this.sqlMaxLengthColumnNames = sqlMaxLengthColumnNames;
 		this.csvSeparator = csvSeparator;
-		csvDateFormat = new SimpleDateFormat(csvTimestampPattern);
-		csvDateFormat.setLenient(false);
 	}
 
 	public void convert(final File csvFile, final String destDir) throws IOException {

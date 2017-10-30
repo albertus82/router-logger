@@ -49,8 +49,11 @@ public class CsvToSqlConverterTest {
 		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwert yuiop"), File.separator + "x y" + File.separator + "zw" + File.separator);
 		Assert.assertEquals(File.separator + "x y" + File.separator + "zw" + File.separator + "qwert yuiop.sql", destFile.getPath());
 
-		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwert_yuiop.CSV"), File.separator + "x y" + File.separator + "zw" + File.separator);
-		Assert.assertEquals(File.separator + "x y" + File.separator + "zw" + File.separator + "qwert_yuiop.sql", destFile.getPath());
+		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwert_12345.CSV"), File.separator + "x y" + File.separator + "zw" + File.separator);
+		Assert.assertEquals(File.separator + "x y" + File.separator + "zw" + File.separator + "qwert_12345.sql", destFile.getPath());
+
+		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwert_ 12345 .CsV"), File.separator + "asdfg 12345" + File.separator + "zw" + File.separator);
+		Assert.assertEquals(File.separator + "asdfg 12345" + File.separator + "zw" + File.separator + "qwert_ 12345 .sql", destFile.getPath());
 
 		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d.csv" + File.separator + "cde" + File.separator + "QWERT_yuiop.CS"), File.separator + "x-y" + File.separator + "zw" + File.separator);
 		Assert.assertEquals(File.separator + "x-y" + File.separator + "zw" + File.separator + "QWERT_yuiop.CS.sql", destFile.getPath());
