@@ -62,14 +62,13 @@ import it.albertus.util.logging.LoggerFactory;
 
 public class CsvToSqlConversionDialog extends Dialog {
 
-	private static final byte LIST_HEIGHT_ROWS = 6;
-
 	private static final Logger logger = LoggerFactory.getLogger(CsvToSqlConversionDialog.class);
 
 	private final Configuration configuration = RouterLoggerConfig.getInstance();
 
 	private List sourceFilesList;
 	private Button removeButton;
+	private Button clearButton;
 	private Text csvSeparatorText;
 	private Text csvTimestampPatternText;
 	private Button csvResponseTimeFlag;
@@ -155,11 +154,11 @@ public class CsvToSqlConversionDialog extends Dialog {
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
 
 		sourceFilesList = new List(parent, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-		final Point listMinSize = new Point(SWT.DEFAULT, SwtUtils.convertHorizontalDLUsToPixels(sourceFilesList, (int) (10.5f * LIST_HEIGHT_ROWS)));
-		GridDataFactory.fillDefaults().span(1, 2).grab(true, true).minSize(listMinSize).applyTo(sourceFilesList);
+		GridDataFactory.fillDefaults().span(1, 3).grab(true, true).applyTo(sourceFilesList);
 
 		createSourceAddButton(parent);
 		createSourceRemoveButton(parent);
+		createSourceClearButton(parent);
 
 		final ControlValidator<List> validator = new ControlValidator<List>(sourceFilesList) {
 			@Override
@@ -201,6 +200,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 					sourceFilesList.setItems(files.toArray(new String[files.size()]));
 					if (sourceFilesList.getItemCount() > 0) {
 						removeButton.setEnabled(true);
+						clearButton.setEnabled(true);
 					}
 					if (destinationDirectoryText != null && !destinationDirectoryText.isDisposed() && destinationDirectoryText.getCharCount() == 0 && sourceFilesList.getItemCount() > 0) {
 						final String lastItem = sourceFilesList.getItem(sourceFilesList.getItemCount() - 1);
@@ -223,6 +223,21 @@ public class CsvToSqlConversionDialog extends Dialog {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				removeSelectedItemsFromList();
+			}
+		});
+	}
+
+	protected void createSourceClearButton(final Composite parent) {
+		clearButton = new Button(parent, SWT.PUSH);
+		clearButton.setEnabled(false);
+		clearButton.setText(Messages.get("lbl.csv2sql.source.clear"));
+		final int clearButtonWidth = SwtUtils.convertHorizontalDLUsToPixels(clearButton, IDialogConstants.BUTTON_WIDTH);
+		GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).hint(clearButtonWidth, SWT.DEFAULT).applyTo(clearButton);
+
+		clearButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				removeAllItemsFromList();
 			}
 		});
 	}
@@ -254,11 +269,24 @@ public class CsvToSqlConversionDialog extends Dialog {
 			}
 		});
 
+		new MenuItem(contextMenu, SWT.SEPARATOR);
+
+		// Clear...
+		final MenuItem clearMenuItem = new MenuItem(contextMenu, SWT.PUSH);
+		clearMenuItem.setText(Messages.get("lbl.csv2sql.source.clear"));
+		clearMenuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				removeAllItemsFromList();
+			}
+		});
+
 		sourceFilesList.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(final MenuDetectEvent e) {
 				deleteMenuItem.setEnabled(sourceFilesList.getSelectionCount() > 0);
 				selectAllMenuItem.setEnabled(sourceFilesList.getItemCount() > 0);
+				clearMenuItem.setEnabled(sourceFilesList.getItemCount() > 0);
 				contextMenu.setVisible(true);
 			}
 		});
@@ -320,7 +348,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		validators.add(validator);
 	}
 
-	private void createCsvResponseTimeFlag(final Composite parent) {
+	protected void createCsvResponseTimeFlag(final Composite parent) {
 		csvResponseTimeFlag = new Button(parent, SWT.CHECK);
 		csvResponseTimeFlag.setText(Messages.get("lbl.csv2sql.source.csv.responseTime"));
 		csvResponseTimeFlag.setSelection(true);
@@ -568,9 +596,19 @@ public class CsvToSqlConversionDialog extends Dialog {
 			sourceFilesList.remove(sourceFilesList.getSelectionIndices());
 			if (sourceFilesList.getItemCount() == 0) {
 				removeButton.setEnabled(false);
+				clearButton.setEnabled(false);
 			}
+			updateProcessButtonStatus();
 		}
-		updateProcessButtonStatus();
+	}
+
+	protected void removeAllItemsFromList() {
+		if (sourceFilesList.getItemCount() > 0) {
+			sourceFilesList.removeAll();
+			removeButton.setEnabled(false);
+			clearButton.setEnabled(false);
+			updateProcessButtonStatus();
+		}
 	}
 
 }
