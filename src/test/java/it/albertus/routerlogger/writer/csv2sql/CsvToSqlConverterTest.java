@@ -22,14 +22,14 @@ public class CsvToSqlConverterTest {
 
 	@Test
 	public void testConvertUsingStreams() throws IOException {
-		final CsvToSqlConverter converter = new CsvToSqlConverter("my_table", "prefix_", "timestamp", "response_time_ms", 20, ";", "dd/MM/yyyy HH:mm:ss.SSS");
+		final CsvToSqlConverter converter = new CsvToSqlConverter(";", "dd/MM/yyyy HH:mm:ss.SSS","my_table", "prefix_", "timestamp", "response_time_ms", 20);
 		final String converted = convert(converter, "test_ok.csv");
 		verify(converted, "test_ok.sql");
 	}
 
 	@Test
 	public void testConvertException() {
-		final CsvToSqlConverter converter = new CsvToSqlConverter("my_table", "prefix_", "timestamp", "response_time_ms", 20, ";", "yyyy/MM/dd");
+		final CsvToSqlConverter converter = new CsvToSqlConverter(";", "yyyy/MM/dd","my_table", "prefix_", "timestamp", "response_time_ms", 20);
 		try {
 			convert(converter, "test_ok.csv");
 			Assert.assertTrue(false);
@@ -41,7 +41,7 @@ public class CsvToSqlConverterTest {
 
 	@Test
 	public void testGetDestinationFile() throws IOException {
-		final CsvToSqlConverter converter = new CsvToSqlConverter("my_table", "prefix_", "timestamp", "response_time_ms", 20, ";", "dd/MM/yyyy HH:mm:ss.SSS");
+		final CsvToSqlConverter converter = new CsvToSqlConverter(";", "dd/MM/yyyy HH:mm:ss.SSS","my_table", "prefix_", "timestamp", "response_time_ms", 20);
 
 		File destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwertyuiop.csv"), File.separator + "xy" + File.separator + "z w" + File.separator);
 		Assert.assertEquals(File.separator + "xy" + File.separator + "z w" + File.separator + "qwertyuiop.sql", destFile.getPath());

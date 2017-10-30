@@ -69,13 +69,14 @@ public class CsvToSqlConversionDialog extends Dialog {
 	private final Configuration configuration = RouterLoggerConfig.getInstance();
 
 	private List sourceFilesList;
+	private Button removeButton;
+	private Text csvSeparatorText;
+	private Text csvTimestampPatternText;
+	private Button csvResponseTimeFlag;
 	private Text destinationDirectoryText;
 	private Text sqlTableNameText;
 	private Text sqlColumnNamesPrefixText;
 	private Text sqlMaxLengthColumnNamesText;
-	private Text csvSeparatorText;
-	private Text csvTimestampPatternText;
-	private Button removeButton;
 	private Button processButton;
 
 	private final Set<Validator> validators = new HashSet<Validator>();
@@ -145,6 +146,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		createSourceFilesList(group);
 		createCsvSeparatorField(group);
 		createCsvDatePatternField(group);
+		createCsvResponseTimeFlag(group);
 	}
 
 	protected void createSourceFilesList(final Composite parent) {
@@ -213,7 +215,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 	protected void createSourceRemoveButton(final Composite parent) {
 		removeButton = new Button(parent, SWT.PUSH);
 		removeButton.setEnabled(false);
-		removeButton.setText(JFaceMessages.get("lbl.preferences.list.button.remove"));
+		removeButton.setText(Messages.get("lbl.csv2sql.source.remove"));
 		final int removeButtonWidth = SwtUtils.convertHorizontalDLUsToPixels(removeButton, IDialogConstants.BUTTON_WIDTH);
 		GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).hint(removeButtonWidth, SWT.DEFAULT).applyTo(removeButton);
 
@@ -230,7 +232,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 
 		// Remove...
 		final MenuItem deleteMenuItem = new MenuItem(contextMenu, SWT.PUSH);
-		deleteMenuItem.setText(JFaceMessages.get("lbl.preferences.list.button.remove") + SwtUtils.getShortcutLabel(Messages.get("lbl.menu.item.delete.key")));
+		deleteMenuItem.setText(Messages.get("lbl.csv2sql.source.remove") + SwtUtils.getShortcutLabel(Messages.get("lbl.menu.item.delete.key")));
 		deleteMenuItem.setAccelerator(SwtUtils.KEY_DELETE); // dummy
 		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -316,6 +318,13 @@ public class CsvToSqlConversionDialog extends Dialog {
 			}
 		});
 		validators.add(validator);
+	}
+
+	private void createCsvResponseTimeFlag(final Composite parent) {
+		csvResponseTimeFlag = new Button(parent, SWT.CHECK);
+		csvResponseTimeFlag.setText(Messages.get("lbl.csv2sql.source.csv.responseTime"));
+		csvResponseTimeFlag.setSelection(true);
+		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(csvResponseTimeFlag);
 	}
 
 	protected void createDestinationGroup(final Shell shell) {
@@ -473,12 +482,12 @@ public class CsvToSqlConversionDialog extends Dialog {
 			final String sqlTableName = sqlTableNameText.getText().trim();
 			final String sqlColumnNamesPrefix = sqlColumnNamesPrefixText.getText().trim();
 			final String sqlTimestampColumnName = DatabaseWriter.TIMESTAMP_BASE_COLUMN_NAME;
-			final String sqlResponseTimeColumnName = DatabaseWriter.RESPONSE_TIME_BASE_COLUMN_NAME;
+			final String sqlResponseTimeColumnName = csvResponseTimeFlag.getSelection() ? DatabaseWriter.RESPONSE_TIME_BASE_COLUMN_NAME : null;
 			final int sqlMaxLengthColumnNames = Integer.parseInt(sqlMaxLengthColumnNamesText.getText().trim());
 			final String csvSeparator = csvSeparatorText.getText();
 			final String csvTimestampPattern = csvTimestampPatternText.getText().trim();
 
-			final CsvToSqlConverter converter = new CsvToSqlConverter(sqlTableName, sqlColumnNamesPrefix, sqlTimestampColumnName, sqlResponseTimeColumnName, sqlMaxLengthColumnNames, csvSeparator, csvTimestampPattern);
+			final CsvToSqlConverter converter = new CsvToSqlConverter(csvSeparator, csvTimestampPattern, sqlTableName, sqlColumnNamesPrefix, sqlTimestampColumnName, sqlResponseTimeColumnName, sqlMaxLengthColumnNames);
 
 			final CsvToSqlConversionRunnable runnable = new CsvToSqlConversionRunnable(converter, sourceFilesList.getItems(), destinationDirectoryText.getText());
 

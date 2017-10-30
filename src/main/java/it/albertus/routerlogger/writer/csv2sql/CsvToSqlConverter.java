@@ -31,7 +31,7 @@ public class CsvToSqlConverter {
 	private final String csvSeparator;
 	private final DateFormat csvDateFormat;
 
-	public CsvToSqlConverter(final String sqlTableName, final String sqlColumnNamesPrefix, final String sqlTimestampColumnName, final String sqlResponseTimeColumnName, final int sqlMaxLengthColumnNames, final String csvSeparator, final String csvTimestampPattern) {
+	public CsvToSqlConverter(final String csvSeparator, final String csvTimestampPattern, final String sqlTableName, final String sqlColumnNamesPrefix, final String sqlTimestampColumnName, final String sqlResponseTimeColumnName, final int sqlMaxLengthColumnNames) {
 		if (sqlTableName == null || sqlTableName.trim().isEmpty()) {
 			throw new IllegalArgumentException("sqlTableName must not be blank");
 		}
@@ -71,9 +71,13 @@ public class CsvToSqlConverter {
 		if (firstLine != null) {
 			final String[] csvColumnNames = firstLine.trim().split(csvSeparator);
 			sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-			sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-			for (int i = 2; i < csvColumnNames.length; i++) {
-				sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			for (int i = 1; i < csvColumnNames.length; i++) {
+				if (i == 1 && sqlResponseTimeColumnName != null) {
+					sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+				}
+				else {
+					sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+				}
 			}
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -101,10 +105,15 @@ public class CsvToSqlConverter {
 				sql.write(',');
 			}
 		}
-		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlTimestampFormat.format(csvDateFormat.parse(values[0]))).append("',").append(values[1]);
-		for (int i = 2; i < values.length; i++) {
+		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlTimestampFormat.format(csvDateFormat.parse(values[0]))).write('\'');
+		for (int i = 1; i < values.length; i++) {
 			sql.write(',');
-			sql.append('\'').append(values[i].replace("'", "''")).write('\'');
+			if (i == 1 && sqlResponseTimeColumnName != null) {
+				sql.append(values[i]);
+			}
+			else {
+				sql.append('\'').append(values[i].replace("'", "''")).write('\'');
+			}
 		}
 		sql.append(");");
 		sql.newLine();
