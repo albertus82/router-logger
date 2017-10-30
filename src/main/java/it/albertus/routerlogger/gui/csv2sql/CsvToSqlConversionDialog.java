@@ -125,8 +125,9 @@ public class CsvToSqlConversionDialog extends Dialog {
 
 	protected void constrainShellSize(final Shell shell) {
 		shell.pack();
-		shell.setMinimumSize(shell.getSize());
-		shell.setSize(SwtUtils.convertHorizontalDLUsToPixels(sourceFilesList, 280), shell.getSize().y);
+		final Point minSize = shell.getSize();
+		shell.setMinimumSize(minSize);
+		shell.setSize(SwtUtils.convertHorizontalDLUsToPixels(sourceFilesList, 280), minSize.y);
 	}
 
 	protected void createContents(final Shell shell) {
@@ -180,21 +181,21 @@ public class CsvToSqlConversionDialog extends Dialog {
 			}
 		});
 
-		createSourceFilesListMenu();
+		createSourceFilesListMenu(sourceFilesList);
 	}
 
 	protected void createSourceAddButton(final Composite parent) {
-		final Button add = new Button(parent, SWT.PUSH);
-		add.setText(Messages.get("lbl.csv2sql.source.add"));
-		final int addButtonWidth = SwtUtils.convertHorizontalDLUsToPixels(add, IDialogConstants.BUTTON_WIDTH);
-		GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).hint(addButtonWidth, SWT.DEFAULT).applyTo(add);
+		final Button addButton = new Button(parent, SWT.PUSH);
+		addButton.setText(Messages.get("lbl.csv2sql.source.add"));
+		final int addButtonWidth = SwtUtils.convertHorizontalDLUsToPixels(addButton, IDialogConstants.BUTTON_WIDTH);
+		GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).hint(addButtonWidth, SWT.DEFAULT).applyTo(addButton);
 
-		add.addSelectionListener(new SelectionAdapter() {
+		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				final Set<String> files = selectSourceFiles(parent.getShell());
 				if (files != null && !files.isEmpty()) {
-					files.addAll(Arrays.asList(sourceFilesList.getItems()));
+					files.addAll(Arrays.asList(sourceFilesList.getItems())); // merge
 					sourceFilesList.setItems(files.toArray(new String[files.size()]));
 					if (sourceFilesList.getItemCount() > 0) {
 						removeButton.setEnabled(true);
@@ -224,7 +225,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void createSourceFilesListMenu() {
+	protected void createSourceFilesListMenu(final List sourceFilesList) {
 		final Menu contextMenu = new Menu(sourceFilesList);
 
 		// Remove...
