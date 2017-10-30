@@ -80,7 +80,12 @@ public class CsvToSqlConversionDialog extends Dialog {
 
 	private final Set<Validator> validators = new HashSet<Validator>();
 
-	private final FormTextModifyListener textModifyListener = new FormTextModifyListener();
+	private final ModifyListener textModifyListener = new ModifyListener() {
+		@Override
+		public void modifyText(final ModifyEvent me) {
+			updateProcessButtonStatus();
+		}
+	};
 
 	/**
 	 * Constructs a new instance of the <em>CSV to SQL conversion</em> dialog.
@@ -556,13 +561,6 @@ public class CsvToSqlConversionDialog extends Dialog {
 			}
 		}
 		updateProcessButtonStatus();
-	}
-
-	private class FormTextModifyListener implements ModifyListener {
-		@Override
-		public void modifyText(final ModifyEvent me) {
-			updateProcessButtonStatus();
-		}
 	}
 
 }
