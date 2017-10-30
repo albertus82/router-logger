@@ -44,7 +44,8 @@ public class CsvToSqlConverter {
 		this.sqlResponseTimeColumnName = sqlResponseTimeColumnName;
 		this.sqlMaxLengthColumnNames = sqlMaxLengthColumnNames;
 		this.csvSeparator = csvSeparator;
-		this.csvDateFormat = new SimpleDateFormat(csvTimestampPattern);
+		csvDateFormat = new SimpleDateFormat(csvTimestampPattern);
+		csvDateFormat.setLenient(false);
 	}
 
 	public void convert(final File csvFile, final String destDir) throws IOException {

@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,8 +22,20 @@ public class CsvToSqlConverterTest {
 	@Test
 	public void testConvertUsingStreams() throws IOException {
 		final CsvToSqlConverter converter = new CsvToSqlConverter("my_table", "prefix_", "timestamp", "response_time_ms", 20, ";", "dd/MM/yyyy HH:mm:ss.SSS");
-		final String converted = convert(converter, "test.csv");
-		verify(converted, "test.sql");
+		final String converted = convert(converter, "test_ok.csv");
+		verify(converted, "test_ok.sql");
+	}
+
+	@Test
+	public void testException() {
+		final CsvToSqlConverter converter = new CsvToSqlConverter("my_table", "prefix_", "timestamp", "response_time_ms", 20, ";", "yyyy/MM/dd");
+		try {
+			convert(converter, "test_ok.csv");
+			Assert.assertTrue(false);
+		}
+		catch (final IOException e) {
+			Assert.assertEquals(ParseException.class, e.getCause().getClass());
+		}
 	}
 
 	private String convert(final CsvToSqlConverter converter, final String csvFileName) throws IOException {
