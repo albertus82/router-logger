@@ -2,6 +2,7 @@ package it.albertus.routerlogger.writer.csv2sql;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,7 +28,7 @@ public class CsvToSqlConverterTest {
 	}
 
 	@Test
-	public void testException() {
+	public void testConvertException() {
 		final CsvToSqlConverter converter = new CsvToSqlConverter("my_table", "prefix_", "timestamp", "response_time_ms", 20, ";", "yyyy/MM/dd");
 		try {
 			convert(converter, "test_ok.csv");
@@ -36,6 +37,23 @@ public class CsvToSqlConverterTest {
 		catch (final IOException e) {
 			Assert.assertEquals(ParseException.class, e.getCause().getClass());
 		}
+	}
+
+	@Test
+	public void testGetDestinationFile() throws IOException {
+		final CsvToSqlConverter converter = new CsvToSqlConverter("my_table", "prefix_", "timestamp", "response_time_ms", 20, ";", "dd/MM/yyyy HH:mm:ss.SSS");
+
+		File destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwertyuiop.csv"), File.separator + "xy" + File.separator + "z w" + File.separator);
+		Assert.assertEquals(File.separator + "xy" + File.separator + "z w" + File.separator + "qwertyuiop.sql", destFile.getPath());
+
+		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwert yuiop"), File.separator + "x y" + File.separator + "zw" + File.separator);
+		Assert.assertEquals(File.separator + "x y" + File.separator + "zw" + File.separator + "qwert yuiop.sql", destFile.getPath());
+
+		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d" + File.separator + "cde" + File.separator + "qwert_yuiop.CSV"), File.separator + "x y" + File.separator + "zw" + File.separator);
+		Assert.assertEquals(File.separator + "x y" + File.separator + "zw" + File.separator + "qwert_yuiop.sql", destFile.getPath());
+
+		destFile = converter.getDestinationFile(new File(File.separator + "abc" + File.separator + "b c d.csv" + File.separator + "cde" + File.separator + "QWERT_yuiop.CS"), File.separator + "x-y" + File.separator + "zw" + File.separator);
+		Assert.assertEquals(File.separator + "x-y" + File.separator + "zw" + File.separator + "QWERT_yuiop.CS.sql", destFile.getPath());
 	}
 
 	private String convert(final CsvToSqlConverter converter, final String csvFileName) throws IOException {
