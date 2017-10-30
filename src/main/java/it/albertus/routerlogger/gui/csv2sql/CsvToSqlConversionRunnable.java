@@ -3,7 +3,6 @@ package it.albertus.routerlogger.gui.csv2sql;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -32,9 +31,6 @@ public class CsvToSqlConversionRunnable implements IRunnableWithProgress {
 			monitor.subTask(Messages.get("lbl.csv2sql.runnable.subtask.name", i + 1, sourceFiles.length, sourceFile));
 			try {
 				converter.convert(new File(sourceFile), destinationPath);
-			}
-			catch (final ParseException e) {
-				throw new InvocationTargetException(e);
 			}
 			catch (final IOException e) {
 				throw new InvocationTargetException(e);

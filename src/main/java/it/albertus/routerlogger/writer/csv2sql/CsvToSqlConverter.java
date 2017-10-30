@@ -47,44 +47,47 @@ public class CsvToSqlConverter {
 		this.csvDateFormat = new SimpleDateFormat(csvTimestampPattern);
 	}
 
-	public void convert(final File csvFile, final String destDir) throws ParseException, IOException {
+	public void convert(final File csvFile, final String destDir) throws IOException {
 		FileReader fr = null;
-		LineNumberReader br = null;
+		LineNumberReader lnr = null;
 		FileWriter fw = null;
 		BufferedWriter bw = null;
 		try {
-			final File sqlFile = getDestinationFile(csvFile, destDir);
 			fr = new FileReader(csvFile);
-			br = new LineNumberReader(fr);
-			final String firstLine = br.readLine();
-			final List<String> sqlColumnNames = new ArrayList<String>();
-			if (firstLine != null) {
-				final String[] csvColumnNames = firstLine.trim().split(csvSeparator);
-				sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-				sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-				for (int i = 2; i < csvColumnNames.length; i++) {
-					sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-				}
-				fw = new FileWriter(sqlFile);
-				bw = new BufferedWriter(fw);
-				String line;
-				while ((line = br.readLine()) != null) {
-					line = line.trim();
-					if (!line.isEmpty()) { // skip empty lines
-						try {
-							writeLine(line, bw, sqlColumnNames);
-						}
-						catch (final Exception e) {
-							throw new IOException(Messages.get("err.csv2sql.runnable", csvFile, br.getLineNumber()), e);
-						}
-					}
-				}
-				bw.write("COMMIT;");
-				bw.newLine();
-			}
+			lnr = new LineNumberReader(fr);
+			fw = new FileWriter(getDestinationFile(csvFile, destDir));
+			bw = new BufferedWriter(fw);
+			convert(csvFile.getPath(), lnr, bw);
 		}
 		finally {
-			IOUtils.closeQuietly(bw, fw, br, fr);
+			IOUtils.closeQuietly(bw, fw, lnr, fr);
+		}
+	}
+
+	protected void convert(final String sourceFileName, final LineNumberReader reader, final BufferedWriter writer) throws IOException {
+		final String firstLine = reader.readLine();
+		final List<String> sqlColumnNames = new ArrayList<String>();
+		if (firstLine != null) {
+			final String[] csvColumnNames = firstLine.trim().split(csvSeparator);
+			sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			for (int i = 2; i < csvColumnNames.length; i++) {
+				sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			}
+			String line;
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				if (!line.isEmpty()) { // skip empty lines
+					try {
+						writeLine(line, writer, sqlColumnNames);
+					}
+					catch (final Exception e) {
+						throw new IOException(Messages.get("err.csv2sql.runnable", sourceFileName, reader.getLineNumber()), e);
+					}
+				}
+			}
+			writer.write("COMMIT;");
+			writer.newLine();
 		}
 	}
 
@@ -94,15 +97,13 @@ public class CsvToSqlConverter {
 		for (int i = 0; i < values.length; i++) {
 			sql.append(tableColumnNames.get(i));
 			if (i != values.length - 1) {
-				sql.append(',');
+				sql.write(',');
 			}
 		}
-		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlTimestampFormat.format(csvDateFormat.parse(values[0]))).append("',").append(values[1]).append(',');
+		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlTimestampFormat.format(csvDateFormat.parse(values[0]))).append("',").append(values[1]);
 		for (int i = 2; i < values.length; i++) {
-			sql.append('\'').append(values[i].replace("'", "''")).append('\'');
-			if (i != values.length - 1) {
-				sql.append(',');
-			}
+			sql.write(',');
+			sql.append('\'').append(values[i].replace("'", "''")).write('\'');
 		}
 		sql.append(");");
 		sql.newLine();
