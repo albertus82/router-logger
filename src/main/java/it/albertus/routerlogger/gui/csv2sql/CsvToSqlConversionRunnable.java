@@ -16,7 +16,7 @@ public class CsvToSqlConversionRunnable implements IRunnableWithProgress {
 	private final String[] sourceFiles;
 	private final String destinationPath;
 
-	public CsvToSqlConversionRunnable(final CsvToSqlConverter converter, final String[] sourceFiles, final String destinationPath) {
+	CsvToSqlConversionRunnable(final CsvToSqlConverter converter, final String[] sourceFiles, final String destinationPath) {
 		this.converter = converter;
 		this.sourceFiles = sourceFiles;
 		this.destinationPath = destinationPath;

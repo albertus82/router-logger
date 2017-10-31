@@ -123,21 +123,21 @@ public class CsvToSqlConversionDialog extends Dialog {
 		shell.open();
 	}
 
-	protected void constrainShellSize(final Shell shell) {
+	private void constrainShellSize(final Shell shell) {
 		shell.pack();
 		final Point minSize = shell.getSize();
 		shell.setMinimumSize(minSize);
 		shell.setSize(SwtUtils.convertHorizontalDLUsToPixels(sourceFilesList, 280), minSize.y);
 	}
 
-	protected void createContents(final Shell shell) {
+	private void createContents(final Shell shell) {
 		GridLayoutFactory.swtDefaults().numColumns(2).applyTo(shell);
 		createSourceGroup(shell);
 		createDestinationGroup(shell);
 		createButtonBar(shell);
 	}
 
-	protected void createSourceGroup(final Shell parent) {
+	private void createSourceGroup(final Shell parent) {
 		final Group group = new Group(parent, SWT.NONE);
 		group.setText(Messages.get("lbl.csv2sql.source"));
 		GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(group);
@@ -148,7 +148,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		createCsvResponseTimeFlag(group);
 	}
 
-	protected void createSourceFilesList(final Composite parent) {
+	private void createSourceFilesList(final Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(Messages.get("lbl.csv2sql.source.files"));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
@@ -185,7 +185,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		createSourceFilesListMenu(sourceFilesList);
 	}
 
-	protected void createSourceAddButton(final Composite parent) {
+	private void createSourceAddButton(final Composite parent) {
 		final Button addButton = new Button(parent, SWT.PUSH);
 		addButton.setText(Messages.get("lbl.csv2sql.source.add"));
 		final int addButtonWidth = SwtUtils.convertHorizontalDLUsToPixels(addButton, IDialogConstants.BUTTON_WIDTH);
@@ -212,7 +212,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void createSourceRemoveButton(final Composite parent) {
+	private void createSourceRemoveButton(final Composite parent) {
 		removeButton = new Button(parent, SWT.PUSH);
 		removeButton.setEnabled(false);
 		removeButton.setText(Messages.get("lbl.csv2sql.source.remove"));
@@ -227,7 +227,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void createSourceClearButton(final Composite parent) {
+	private void createSourceClearButton(final Composite parent) {
 		clearButton = new Button(parent, SWT.PUSH);
 		clearButton.setEnabled(false);
 		clearButton.setText(Messages.get("lbl.csv2sql.source.clear"));
@@ -242,7 +242,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void createSourceFilesListMenu(final List sourceFilesList) {
+	private void createSourceFilesListMenu(final List sourceFilesList) {
 		final Menu contextMenu = new Menu(sourceFilesList);
 
 		// Remove...
@@ -292,7 +292,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void createCsvSeparatorField(final Composite parent) {
+	private void createCsvSeparatorField(final Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(Messages.get("lbl.csv2sql.source.csv.separator"));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
@@ -313,7 +313,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		validators.add(validator);
 	}
 
-	protected void createCsvDatePatternField(final Composite parent) {
+	private void createCsvDatePatternField(final Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(Messages.get("lbl.csv2sql.source.csv.date.pattern"));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
@@ -348,14 +348,14 @@ public class CsvToSqlConversionDialog extends Dialog {
 		validators.add(validator);
 	}
 
-	protected void createCsvResponseTimeFlag(final Composite parent) {
+	private void createCsvResponseTimeFlag(final Composite parent) {
 		csvResponseTimeFlag = new Button(parent, SWT.CHECK);
 		csvResponseTimeFlag.setText(Messages.get("lbl.csv2sql.source.csv.responseTime"));
 		csvResponseTimeFlag.setSelection(true);
 		GridDataFactory.swtDefaults().span(2, 1).applyTo(csvResponseTimeFlag);
 	}
 
-	protected void createDestinationGroup(final Shell shell) {
+	private void createDestinationGroup(final Shell shell) {
 		final Group group = new Group(shell, SWT.NONE);
 		group.setText(Messages.get("lbl.csv2sql.destination"));
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(group);
@@ -366,7 +366,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		createDatabaseMaxLengthColumnNamesField(group);
 	}
 
-	protected void createDestinationDirectoryField(final Composite parent) {
+	private void createDestinationDirectoryField(final Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(Messages.get("lbl.csv2sql.destination.directory"));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
@@ -394,7 +394,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void createDatabaseTableNameField(final Composite parent) {
+	private void createDatabaseTableNameField(final Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(Messages.get("lbl.csv2sql.destination.table.name"));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
@@ -420,7 +420,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		validators.add(validator);
 	}
 
-	protected void createDatabaseColumnNamePrefixField(final Composite parent) {
+	private void createDatabaseColumnNamePrefixField(final Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(Messages.get("lbl.csv2sql.destination.column.name.prefix"));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
@@ -431,7 +431,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(sqlColumnNamesPrefixText);
 	}
 
-	protected void createDatabaseMaxLengthColumnNamesField(final Composite parent) {
+	private void createDatabaseMaxLengthColumnNamesField(final Composite parent) {
 		final Label label = new Label(parent, SWT.NONE);
 		label.setText(Messages.get("lbl.csv2sql.destination.column.name.max.length"));
 		GridDataFactory.fillDefaults().span(2, 1).applyTo(label);
@@ -453,12 +453,12 @@ public class CsvToSqlConversionDialog extends Dialog {
 		validators.add(validator);
 	}
 
-	protected void createButtonBar(final Shell shell) {
+	private void createButtonBar(final Shell shell) {
 		createProcessButton(shell);
 		createCloseButton(shell);
 	}
 
-	protected void createProcessButton(final Shell shell) {
+	private void createProcessButton(final Shell shell) {
 		processButton = new Button(shell, SWT.PUSH);
 		processButton.setEnabled(false);
 		processButton.setText(Messages.get("lbl.csv2sql.button.convert"));
@@ -472,7 +472,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void createCloseButton(final Shell shell) {
+	private void createCloseButton(final Shell shell) {
 		final Button button = new Button(shell, SWT.PUSH);
 		button.setText(JFaceMessages.get("lbl.button.close"));
 		final int buttonWidth = SwtUtils.convertHorizontalDLUsToPixels(button, IDialogConstants.BUTTON_WIDTH);
@@ -485,13 +485,13 @@ public class CsvToSqlConversionDialog extends Dialog {
 		});
 	}
 
-	protected void updateProcessButtonStatus() {
+	private void updateProcessButtonStatus() {
 		if (processButton != null && !processButton.isDisposed()) {
 			processButton.setEnabled(isValid());
 		}
 	}
 
-	protected boolean isValid() {
+	private boolean isValid() {
 		for (final Validator validator : validators) {
 			if (!validator.isValid()) {
 				return false;
@@ -505,7 +505,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 	 * 
 	 * @param shell the parent shell, needed to open the progress monitor dialog
 	 */
-	protected void process(final Shell shell) {
+	private void process(final Shell shell) {
 		try {
 			final String sqlTableName = sqlTableNameText.getText().trim();
 			final String sqlColumnNamesPrefix = sqlColumnNamesPrefixText.getText().trim();
@@ -538,7 +538,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 
 			final MessageBox box = new MessageBox(shell, SWT.ICON_INFORMATION);
 			box.setText(shell.getText());
-			box.setMessage(Messages.get("msg.csv2sql.success"));
+			box.setMessage(Messages.get("msg.csv2sql.dialog.result.message.success"));
 			box.open();
 		}
 		catch (final InvocationTargetException e) {
@@ -551,7 +551,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 			logger.log(Level.FINE, e.toString(), e);
 			final MessageBox box = new MessageBox(shell, SWT.ICON_INFORMATION);
 			box.setText(shell.getText());
-			box.setMessage(Messages.get("msg.csv2sql.cancelled"));
+			box.setMessage(Messages.get("msg.csv2sql.dialog.result.message.cancelled"));
 			box.open();
 		}
 		catch (final Exception e) {
@@ -567,7 +567,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 	 * @param parent the parent shell
 	 * @return the selected file names
 	 */
-	protected Set<String> selectSourceFiles(final Shell parent) {
+	private Set<String> selectSourceFiles(final Shell parent) {
 		final FileDialog openDialog = new FileDialog(parent, SWT.OPEN | SWT.MULTI);
 		openDialog.setFilterExtensions(new String[] { "*.CSV;*.csv" });
 		openDialog.open();
@@ -584,14 +584,14 @@ public class CsvToSqlConversionDialog extends Dialog {
 	 * @param parent the parent shell
 	 * @return the selected directory
 	 */
-	protected String selectDestinationPath(final Shell parent) {
+	private String selectDestinationPath(final Shell parent) {
 		final DirectoryDialog saveDialog = new DirectoryDialog(parent, SWT.NONE);
 		saveDialog.setText(Messages.get("lbl.csv2sql.destination.dialog.text"));
 		saveDialog.setMessage(Messages.get("lbl.csv2sql.destination.dialog.message"));
 		return saveDialog.open();
 	}
 
-	protected void removeSelectedItemsFromList() {
+	private void removeSelectedItemsFromList() {
 		if (sourceFilesList.getSelectionCount() > 0) {
 			sourceFilesList.remove(sourceFilesList.getSelectionIndices());
 			if (sourceFilesList.getItemCount() == 0) {
@@ -602,7 +602,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 		}
 	}
 
-	protected void removeAllItemsFromList() {
+	private void removeAllItemsFromList() {
 		if (sourceFilesList.getItemCount() > 0) {
 			sourceFilesList.removeAll();
 			removeButton.setEnabled(false);

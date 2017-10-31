@@ -65,7 +65,7 @@ public class CsvToSqlConverter {
 		}
 	}
 
-	protected void convert(final String sourceFileName, final LineNumberReader reader, final BufferedWriter writer) throws IOException {
+	void convert(final String sourceFileName, final LineNumberReader reader, final BufferedWriter writer) throws IOException {
 		final String firstLine = reader.readLine();
 		if (firstLine != null) {
 			final String[] csvColumnNames = firstLine.trim().split(csvSeparator);
@@ -87,44 +87,7 @@ public class CsvToSqlConverter {
 		}
 	}
 
-	protected List<String> getSqlColumnNames(final String[] csvColumnNames) {
-		final List<String> sqlColumnNames = new ArrayList<String>();
-		sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-		for (int i = 1; i < csvColumnNames.length; i++) {
-			if (i == 1 && sqlResponseTimeColumnName != null) {
-				sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-			}
-			else {
-				sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
-			}
-		}
-		return sqlColumnNames;
-	}
-
-	protected void writeLine(final String csv, final BufferedWriter sql, final List<? extends CharSequence> tableColumnNames) throws IOException, ParseException {
-		sql.append("INSERT INTO ").append(sqlTableName).append(" (");
-		final String[] values = csv.split(csvSeparator);
-		for (int i = 0; i < values.length; i++) {
-			sql.append(tableColumnNames.get(i));
-			if (i != values.length - 1) {
-				sql.write(',');
-			}
-		}
-		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlTimestampFormat.format(csvDateFormat.parse(values[0]))).write('\'');
-		for (int i = 1; i < values.length; i++) {
-			sql.write(',');
-			if (i == 1 && sqlResponseTimeColumnName != null) {
-				sql.append(values[i]);
-			}
-			else {
-				sql.append('\'').append(values[i].replace("'", "''")).write('\'');
-			}
-		}
-		sql.append(");");
-		sql.newLine();
-	}
-
-	protected File getDestinationFile(final File csvFile, final String destDir) throws IOException {
+	File getDestinationFile(final File csvFile, final String destDir) throws IOException {
 		final String csvFileName = csvFile.getName();
 		final String sqlFileName;
 		if (csvFileName.toLowerCase().endsWith(CSV_FILE_EXTENSION)) {
@@ -140,7 +103,44 @@ public class CsvToSqlConverter {
 		return sqlFile;
 	}
 
-	protected String getSqlColumnName(final String name, final String prefix, final int maxLength) {
+	private List<String> getSqlColumnNames(final String[] csvColumnNames) {
+		final List<String> sqlColumnNames = new ArrayList<String>();
+		sqlColumnNames.add(getSqlColumnName(sqlTimestampColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+		for (int i = 1; i < csvColumnNames.length; i++) {
+			if (i == 1 && sqlResponseTimeColumnName != null) {
+				sqlColumnNames.add(getSqlColumnName(sqlResponseTimeColumnName, sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			}
+			else {
+				sqlColumnNames.add(getSqlColumnName(csvColumnNames[i], sqlColumnNamesPrefix, sqlMaxLengthColumnNames));
+			}
+		}
+		return sqlColumnNames;
+	}
+
+	private void writeLine(final String csv, final BufferedWriter sql, final List<? extends CharSequence> tableColumnNames) throws IOException, ParseException {
+		sql.append("INSERT INTO ").append(sqlTableName).append(" (");
+		final String[] values = csv.split(csvSeparator);
+		for (int i = 0; i < values.length; i++) {
+			sql.append(tableColumnNames.get(i));
+			if (i != values.length - 1) {
+				sql.write(',');
+			}
+		}
+		sql.append(") VALUES (TIMESTAMP '").append(ansiSqlTimestampFormat.format(csvDateFormat.parse(values[0].trim()))).write('\'');
+		for (int i = 1; i < values.length; i++) {
+			sql.write(',');
+			if (i == 1 && sqlResponseTimeColumnName != null) {
+				sql.append(Integer.toString(Integer.parseInt(values[i].trim())));
+			}
+			else {
+				sql.append('\'').append(values[i].replace("'", "''")).write('\'');
+			}
+		}
+		sql.append(");");
+		sql.newLine();
+	}
+
+	private String getSqlColumnName(final String name, final String prefix, final int maxLength) {
 		String completeName = SqlUtils.sanitizeName(prefix + name);
 		if (completeName.length() > maxLength) {
 			completeName = completeName.substring(0, maxLength);
