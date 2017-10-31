@@ -515,7 +515,7 @@ class CsvToSqlConverterGui implements IShellProvider {
 
 			final CsvToSqlConverter converter = new CsvToSqlConverter(csvSeparator, csvTimestampPattern, sqlTableName, sqlColumnNamesPrefix, sqlTimestampColumnName, sqlResponseTimeColumnName, sqlMaxLengthColumnNames);
 
-			final CsvToSqlConversionRunnable runnable = new CsvToSqlConversionRunnable(converter, sourceFilesList.getItems(), destinationDirectoryText.getText());
+			final CsvToSqlConverterRunnable runnable = new CsvToSqlConverterRunnable(converter, sourceFilesList.getItems(), destinationDirectoryText.getText());
 
 			ProgressMonitorDialog.setDefaultImages(shell.getImages());
 			final ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell) {

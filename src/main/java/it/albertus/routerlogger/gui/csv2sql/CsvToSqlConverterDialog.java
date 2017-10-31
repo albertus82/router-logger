@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class CsvToSqlConversionDialog extends Dialog {
+public class CsvToSqlConverterDialog extends Dialog {
 
 	/**
 	 * Creates a new <em>CSV to SQL converter</em> dialog instance using the
@@ -14,7 +14,7 @@ public class CsvToSqlConversionDialog extends Dialog {
 	 * 
 	 * @see #open()
 	 */
-	public CsvToSqlConversionDialog(final Shell parent) {
+	public CsvToSqlConverterDialog(final Shell parent) {
 		super(parent, SWT.SHEET | SWT.RESIZE);
 	}
 

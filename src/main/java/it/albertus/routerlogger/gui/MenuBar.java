@@ -14,7 +14,7 @@ import it.albertus.jface.SwtUtils;
 import it.albertus.jface.cocoa.CocoaEnhancerException;
 import it.albertus.jface.cocoa.CocoaUIEnhancer;
 import it.albertus.jface.sysinfo.SystemInformationDialog;
-import it.albertus.routerlogger.gui.csv2sql.CsvToSqlConversionDialog;
+import it.albertus.routerlogger.gui.csv2sql.CsvToSqlConverterDialog;
 import it.albertus.routerlogger.gui.listener.AboutListener;
 import it.albertus.routerlogger.gui.listener.ClearConsoleSelectionListener;
 import it.albertus.routerlogger.gui.listener.ClearDataTableSelectionListener;
@@ -209,7 +209,7 @@ public class MenuBar {
 		toolsConvertCsvToSqlMenuItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				new CsvToSqlConversionDialog(gui.getShell()).open();
+				new CsvToSqlConverterDialog(gui.getShell()).open();
 			}
 		});
 

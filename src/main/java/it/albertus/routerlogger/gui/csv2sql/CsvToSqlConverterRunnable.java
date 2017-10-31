@@ -10,13 +10,13 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import it.albertus.routerlogger.resources.Messages;
 import it.albertus.routerlogger.writer.csv2sql.CsvToSqlConverter;
 
-public class CsvToSqlConversionRunnable implements IRunnableWithProgress {
+public class CsvToSqlConverterRunnable implements IRunnableWithProgress {
 
 	private final CsvToSqlConverter converter;
 	private final String[] sourceFiles;
 	private final String destinationPath;
 
-	CsvToSqlConversionRunnable(final CsvToSqlConverter converter, final String[] sourceFiles, final String destinationPath) {
+	CsvToSqlConverterRunnable(final CsvToSqlConverter converter, final String[] sourceFiles, final String destinationPath) {
 		this.converter = converter;
 		this.sourceFiles = sourceFiles;
 		this.destinationPath = destinationPath;
