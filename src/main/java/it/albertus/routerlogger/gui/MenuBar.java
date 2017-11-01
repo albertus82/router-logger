@@ -14,7 +14,6 @@ import it.albertus.jface.SwtUtils;
 import it.albertus.jface.cocoa.CocoaEnhancerException;
 import it.albertus.jface.cocoa.CocoaUIEnhancer;
 import it.albertus.jface.sysinfo.SystemInformationDialog;
-import it.albertus.routerlogger.gui.csv2sql.CsvToSqlConverterDialog;
 import it.albertus.routerlogger.gui.listener.AboutListener;
 import it.albertus.routerlogger.gui.listener.ClearConsoleSelectionListener;
 import it.albertus.routerlogger.gui.listener.ClearDataTableSelectionListener;
@@ -58,7 +57,6 @@ public class MenuBar {
 	private static final String LBL_MENU_ITEM_DISCONNECT = "lbl.menu.item.disconnect";
 	private static final String LBL_MENU_HEADER_TOOLS = "lbl.menu.header.tools";
 	private static final String LBL_MENU_ITEM_PREFERENCES = "lbl.menu.item.preferences";
-	private static final String LBL_MENU_ITEM_CONVERT_CSV_TO_SQL = "lbl.menu.item.convert.csv.to.sql";
 	private static final String LBL_MENU_HEADER_HELP = "lbl.menu.header.help";
 	private static final String LBL_MENU_HEADER_HELP_WINDOWS = "lbl.menu.header.help.windows";
 	private static final String LBL_MENU_ITEM_SYSTEM_INFO = "lbl.menu.item.system.info";
@@ -83,9 +81,8 @@ public class MenuBar {
 	private final MenuItem connectionConnectItem;
 	private final MenuItem connectionDisconnectItem;
 
-	private final MenuItem toolsMenuHeader;
+	private MenuItem toolsMenuHeader;
 	private MenuItem toolsPreferencesMenuItem;
-	private final MenuItem toolsConvertCsvToSqlMenuItem;
 
 	private final MenuItem helpMenuHeader;
 	private final MenuItem helpSystemInfoItem;
@@ -192,26 +189,16 @@ public class MenuBar {
 		connectionDisconnectItem.addSelectionListener(new DisconnectSelectionListener(gui));
 
 		// Tools
-		final Menu toolsMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
-		toolsMenuHeader = new MenuItem(bar, SWT.CASCADE);
-		toolsMenuHeader.setText(Messages.get(LBL_MENU_HEADER_TOOLS));
-		toolsMenuHeader.setMenu(toolsMenu);
-
 		if (!cocoaMenuCreated) {
+			final Menu toolsMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
+			toolsMenuHeader = new MenuItem(bar, SWT.CASCADE);
+			toolsMenuHeader.setText(Messages.get(LBL_MENU_HEADER_TOOLS));
+			toolsMenuHeader.setMenu(toolsMenu);
+
 			toolsPreferencesMenuItem = new MenuItem(toolsMenu, SWT.PUSH);
 			toolsPreferencesMenuItem.setText(Messages.get(LBL_MENU_ITEM_PREFERENCES));
 			toolsPreferencesMenuItem.addSelectionListener(new PreferencesListener(gui));
-			new MenuItem(toolsMenu, SWT.SEPARATOR);
 		}
-
-		toolsConvertCsvToSqlMenuItem = new MenuItem(toolsMenu, SWT.PUSH);
-		toolsConvertCsvToSqlMenuItem.setText(Messages.get(LBL_MENU_ITEM_CONVERT_CSV_TO_SQL));
-		toolsConvertCsvToSqlMenuItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				new CsvToSqlConverterDialog(gui.getShell()).open();
-			}
-		});
 
 		// Help
 		final Menu helpMenu = new Menu(gui.getShell(), SWT.DROP_DOWN);
@@ -259,11 +246,12 @@ public class MenuBar {
 		connectionMenuHeader.setText(Messages.get(LBL_MENU_HEADER_CONNECTION));
 		connectionConnectItem.setText(Messages.get(LBL_MENU_ITEM_CONNECT));
 		connectionDisconnectItem.setText(Messages.get(LBL_MENU_ITEM_DISCONNECT));
-		toolsMenuHeader.setText(Messages.get(LBL_MENU_HEADER_TOOLS));
+		if (toolsMenuHeader != null && !toolsMenuHeader.isDisposed()) {
+			toolsMenuHeader.setText(Messages.get(LBL_MENU_HEADER_TOOLS));
+		}
 		if (toolsPreferencesMenuItem != null && !toolsPreferencesMenuItem.isDisposed()) {
 			toolsPreferencesMenuItem.setText(Messages.get(LBL_MENU_ITEM_PREFERENCES));
 		}
-		toolsConvertCsvToSqlMenuItem.setText(Messages.get(LBL_MENU_ITEM_CONVERT_CSV_TO_SQL));
 		helpMenuHeader.setText(Messages.get(Util.isWindows() ? LBL_MENU_HEADER_HELP_WINDOWS : LBL_MENU_HEADER_HELP));
 		helpSystemInfoItem.setText(Messages.get(LBL_MENU_ITEM_SYSTEM_INFO));
 		if (helpAboutItem != null && !helpAboutItem.isDisposed()) {
