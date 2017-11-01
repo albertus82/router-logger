@@ -23,6 +23,7 @@ public class DatabaseWriter extends Writer {
 
 	public static final String TIMESTAMP_BASE_COLUMN_NAME = "timestamp";
 	public static final String RESPONSE_TIME_BASE_COLUMN_NAME = "response_time_ms";
+	public static final byte COLUMN_NAME_MIN_LENGTH = 8;
 
 	public static final String DESTINATION_KEY = "lbl.writer.destination.database";
 
@@ -34,7 +35,7 @@ public class DatabaseWriter extends Writer {
 		public static final String TIMESTAMP_COLUMN_TYPE = "TIMESTAMP";
 		public static final String RESPONSE_TIME_COLUMN_TYPE = "INTEGER";
 		public static final String INFO_COLUMN_TYPE = "VARCHAR(250)";
-		public static final int COLUMN_NAME_MAX_LENGTH = 30;
+		public static final byte COLUMN_NAME_MAX_LENGTH = 30;
 		public static final int CONNECTION_VALIDATION_TIMEOUT_IN_MILLIS = 2000;
 
 		private Defaults() {

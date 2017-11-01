@@ -196,7 +196,7 @@ public enum Preference implements IPreference {
 	DATABASE_RESPONSE_COLUMN_TYPE(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.RESPONSE_TIME_COLUMN_TYPE).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
 	DATABASE_INFO_COLUMN_TYPE(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.INFO_COLUMN_TYPE).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(false).build()),
 	DATABASE_COLUMN_NAME_PREFIX(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.COLUMN_NAME_PREFIX).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).emptyStringAllowed(true).build()),
-	DATABASE_COLUMN_NAME_MAX_LENGTH(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).textLimit(2).build()),
+	DATABASE_COLUMN_NAME_MAX_LENGTH(new PreferenceDetailsBuilder(DATABASE).defaultValue(DatabaseWriter.Defaults.COLUMN_NAME_MAX_LENGTH).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).textLimit(2).numberMinimum(DatabaseWriter.COLUMN_NAME_MIN_LENGTH).build()),
 
 	THRESHOLDS_EXPRESSIONS(new PreferenceDetailsBuilder(THRESHOLDS).build(), new FieldEditorDetailsBuilder(ThresholdsListEditor.class).build()),
 	THRESHOLDS_SPLIT(new PreferenceDetailsBuilder(THRESHOLDS).defaultValue(RouterLoggerConfig.Defaults.THRESHOLDS_SPLIT).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
