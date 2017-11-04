@@ -631,7 +631,7 @@
 
 	<target name="sonar-main">
 		<propertyfile file="sonar-project.properties">
-			<entry key="sonar.projectKey" value="it.albertus:${artifactId}" />
+			<entry key="sonar.projectKey" value="it.albertus.routerlogger:${artifactId}" />
 			<entry key="sonar.projectName" value="${name}" />
 			<entry key="sonar.projectVersion" value="${version.number}" />
 			<entry key="sonar.sources" value="${build.sourceDirectory}" />
