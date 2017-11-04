@@ -4,14 +4,15 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.jface.preference.page.IPageDefinition;
+import it.albertus.jface.preference.page.LoggingPreferencePage;
 import it.albertus.jface.preference.page.PageDefinitionDetails;
 import it.albertus.jface.preference.page.PageDefinitionDetails.PageDefinitionDetailsBuilder;
+import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
 import it.albertus.routerlogger.reader.AsusDslN12EReader;
 import it.albertus.routerlogger.reader.AsusDslN14UReader;
 import it.albertus.routerlogger.reader.DLinkDsl2750Reader;
 import it.albertus.routerlogger.reader.TpLink8970Reader;
 import it.albertus.routerlogger.resources.Messages;
-import it.albertus.jface.preference.page.RestartHeaderPreferencePage;
 import it.albertus.util.Localized;
 
 public enum PageDefinition implements IPageDefinition {

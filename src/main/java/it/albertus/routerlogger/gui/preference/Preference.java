@@ -61,6 +61,7 @@ import it.albertus.jface.preference.field.ValidatedComboFieldEditor;
 import it.albertus.jface.preference.field.WrapStringFieldEditor;
 import it.albertus.jface.preference.page.BasePreferencePage;
 import it.albertus.jface.preference.page.IPageDefinition;
+import it.albertus.jface.preference.page.LoggingPreferencePage;
 import it.albertus.net.httpserver.config.AuthenticatorDefaultConfig;
 import it.albertus.net.httpserver.config.HttpServerDefaultConfig;
 import it.albertus.routerlogger.console.RouterLoggerConsole;
@@ -238,7 +239,7 @@ public enum Preference implements IPreference {
 	SERVER_AUTHENTICATION(new PreferenceDetailsBuilder(SERVER).parent(SERVER_ENABLED).defaultValue(HttpServerConfig.DEFAULT_AUTHENTICATION_REQUIRED).restartRequired().build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_USERNAME(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(EnhancedStringFieldEditor.class).build()),
 	SERVER_PASSWORD(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).build(), new FieldEditorDetailsBuilder(PasswordFieldEditor.class).hashAlgorithm(AuthenticatorDefaultConfig.PASSWORD_HASH_ALGORITHM).build()),
-	SERVER_LOG_AUTH_FAILED(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).defaultValue(AuthenticatorConfig.DEFAULT_FAILURE_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(new Level[] { Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING })).build()),
+	SERVER_LOG_AUTH_FAILED(new PreferenceDetailsBuilder(SERVER).parent(SERVER_AUTHENTICATION).defaultValue(AuthenticatorConfig.DEFAULT_FAILURE_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(LoggingPreferencePage.getLoggingLevelComboOptions(Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING)).build()),
 	SERVER_THREADS(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfig.DEFAULT_MAX_THREAD_COUNT).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ScaleIntegerFieldEditor.class).scaleMinimum(1).scaleMaximum(Byte.MAX_VALUE).scalePageIncrement(010).build()),
 	SERVER_MAXREQTIME(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerConfig.DEFAULT_MAX_REQ_TIME).restartRequired().parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(-1, Short.MAX_VALUE).labelsAndValues(new LocalizedLabelsAndValues(new Localized() {
 		@Override
@@ -252,7 +253,7 @@ public enum Preference implements IPreference {
 			return Messages.get("lbl.preferences.server.maxrsptime.infinite");
 		}
 	}, -1)).build()),
-	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).separate().defaultValue(HttpServerDefaultConfig.REQUEST_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(new Level[] { Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING })).build()),
+	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).separate().defaultValue(HttpServerDefaultConfig.REQUEST_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(LoggingPreferencePage.getLoggingLevelComboOptions(Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING)).build()),
 	SERVER_COMPRESS_RESPONSE(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerDefaultConfig.COMPRESSION_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	SERVER_HANDLER_ROOT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
@@ -327,7 +328,7 @@ public enum Preference implements IPreference {
 		}
 	}).build()),
 
-	LOGGING_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(RouterLoggerConfig.Defaults.LOGGING_LEVEL.getName()).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions()).build()),
+	LOGGING_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(RouterLoggerConfig.Defaults.LOGGING_LEVEL.getName()).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(LoggingPreferencePage.getLoggingLevelComboOptions()).build()),
 	LOGGING_FILES_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	LOGGING_FILES_PATH(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_ENABLED).defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_PATH).build(), new FieldEditorDetailsBuilder(EnhancedDirectoryFieldEditor.class).emptyStringAllowed(false).directoryMustExist(false).directoryDialogMessage(new Localized() {
 		@Override
@@ -338,7 +339,7 @@ public enum Preference implements IPreference {
 	LOGGING_FILES_AUTOCLEAN_ENABLED(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_ENABLED).defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_AUTOCLEAN_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	LOGGING_FILES_AUTOCLEAN_KEEP(new PreferenceDetailsBuilder(LOGGING).parent(LOGGING_FILES_AUTOCLEAN_ENABLED).defaultValue(RouterLoggerConfig.Defaults.LOGGING_FILES_AUTOCLEAN_KEEP).build(), new FieldEditorDetailsBuilder(ShortFieldEditor.class).numberMinimum(HousekeepingFilter.MIN_HISTORY).build()),
 	LOGGING_EMAIL_ENABLED(new PreferenceDetailsBuilder(LOGGING).separate().defaultValue(EmailHandler.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	LOGGING_EMAIL_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.LEVEL.getName()).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(GeneralPreferencePage.getLoggingLevelComboOptions(EmailHandler.MIN_LEVEL, EmailHandler.MAX_LEVEL)).build()),
+	LOGGING_EMAIL_LEVEL(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.LEVEL.getName()).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(LoggingPreferencePage.getLoggingLevelComboOptions(EmailHandler.MIN_LEVEL, EmailHandler.MAX_LEVEL)).build()),
 	LOGGING_EMAIL_IGNORE_DUPLICATES(new PreferenceDetailsBuilder(LOGGING).defaultValue(EmailHandler.Defaults.IGNORE_DUPLICATES).parent(LOGGING_EMAIL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build());
 
 	private static final String LABEL_KEY_PREFIX = "lbl.preferences.";
