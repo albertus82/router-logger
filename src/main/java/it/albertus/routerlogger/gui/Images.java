@@ -30,10 +30,10 @@ public class Images {
 	private static final Image TRAY_ICON_OVERLAY_WARNING = load("warning.ico").get(0);
 
 	// Icone composte per l'area di notifica (16x16)
-	public static final Image TRAY_ICON_ACTIVE_WARNING = new DecorationOverlayIcon(TRAY_ICON_ACTIVE, ImageDescriptor.createFromImage(Images.TRAY_ICON_OVERLAY_WARNING), IDecoration.BOTTOM_RIGHT).createImage();
-	public static final Image TRAY_ICON_ACTIVE_LOCK = new DecorationOverlayIcon(TRAY_ICON_ACTIVE, ImageDescriptor.createFromImage(Images.TRAY_ICON_OVERLAY_LOCK), IDecoration.BOTTOM_RIGHT).createImage();
-	public static final Image TRAY_ICON_INACTIVE_CLOCK = new DecorationOverlayIcon(TRAY_ICON_INACTIVE, ImageDescriptor.createFromImage(Images.TRAY_ICON_OVERLAY_CLOCK), IDecoration.BOTTOM_RIGHT).createImage();
-	public static final Image TRAY_ICON_INACTIVE_ERROR = new DecorationOverlayIcon(TRAY_ICON_INACTIVE, ImageDescriptor.createFromImage(Images.TRAY_ICON_OVERLAY_ERROR), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ACTIVE_WARNING = new DecorationOverlayIcon(TRAY_ICON_ACTIVE, ImageDescriptor.createFromImage(TRAY_ICON_OVERLAY_WARNING), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_ACTIVE_LOCK = new DecorationOverlayIcon(TRAY_ICON_ACTIVE, ImageDescriptor.createFromImage(TRAY_ICON_OVERLAY_LOCK), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_INACTIVE_CLOCK = new DecorationOverlayIcon(TRAY_ICON_INACTIVE, ImageDescriptor.createFromImage(TRAY_ICON_OVERLAY_CLOCK), IDecoration.BOTTOM_RIGHT).createImage();
+	public static final Image TRAY_ICON_INACTIVE_ERROR = new DecorationOverlayIcon(TRAY_ICON_INACTIVE, ImageDescriptor.createFromImage(TRAY_ICON_OVERLAY_ERROR), IDecoration.BOTTOM_RIGHT).createImage();
 
 	private Images() {
 		throw new IllegalAccessError();
