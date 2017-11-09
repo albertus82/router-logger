@@ -1,6 +1,7 @@
 package it.albertus.routerlogger.http;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,9 +9,12 @@ import java.util.Set;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 
+import com.sun.net.httpserver.Filter;
+
 import it.albertus.net.httpserver.HttpPathHandler;
 import it.albertus.net.httpserver.HttpServerAuthenticator;
 import it.albertus.net.httpserver.config.HttpServerDefaultConfig;
+import it.albertus.net.httpserver.filter.HSTSResponseFilter;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 import it.albertus.routerlogger.http.html.CloseHandler;
@@ -21,8 +25,8 @@ import it.albertus.routerlogger.http.html.LogsHandler;
 import it.albertus.routerlogger.http.html.RestartHandler;
 import it.albertus.routerlogger.http.html.RootHtmlHandler;
 import it.albertus.routerlogger.http.html.StatusHtmlHandler;
-import it.albertus.routerlogger.http.json.DeviceStatusJsonHandler;
 import it.albertus.routerlogger.http.json.AppStatusJsonHandler;
+import it.albertus.routerlogger.http.json.DeviceStatusJsonHandler;
 import it.albertus.util.Configuration;
 
 public class HttpServerConfig extends HttpServerDefaultConfig {
@@ -30,8 +34,12 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	public static final boolean DEFAULT_ENABLED = false;
 	public static final boolean DEFAULT_AUTHENTICATION_REQUIRED = true;
 	public static final short DEFAULT_MAX_REQ_TIME = 10; // seconds
-	public static final short DEFAULT_MAX_RSP_TIME = 900; // seconds
+	public static final short DEFAULT_MAX_RSP_TIME = 15 * 60; // 15 mins (in seconds)
 	public static final byte DEFAULT_MAX_THREAD_COUNT = 12;
+	public static final boolean DEFAULT_SSL_HSTS_ENABLED = false;
+	public static final int DEFAULT_SSL_HSTS_MAX_AGE = 180 * 24 * 60 * 60; // 180 days (in seconds)
+	public static final boolean DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS = true;
+	public static final boolean DEFAULT_SSL_HSTS_PRELOAD = false;
 
 	private final Configuration configuration = RouterLoggerConfig.getInstance();
 
@@ -65,6 +73,19 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	@Override
 	public boolean isEnabled() {
 		return configuration.getBoolean("server.enabled", DEFAULT_ENABLED);
+	}
+
+	@Override
+	public Filter[] getFilters() {
+		final Filter[] defaultFilters = super.getFilters();
+		if (isSslEnabled() && configuration.getBoolean("server.ssl.hsts.enabled", DEFAULT_SSL_HSTS_ENABLED)) {
+			final Filter[] filters = Arrays.copyOf(defaultFilters, defaultFilters.length + 1);
+			filters[filters.length - 1] = new HSTSResponseFilter(configuration.getInt("server.ssl.hsts.maxage", DEFAULT_SSL_HSTS_MAX_AGE), configuration.getBoolean("server.ssl.hsts.includesubdomains", DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS), configuration.getBoolean("server.ssl.hsts.preload", DEFAULT_SSL_HSTS_PRELOAD));
+			return filters;
+		}
+		else {
+			return defaultFilters;
+		}
 	}
 
 	@Override
