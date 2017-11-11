@@ -21,10 +21,12 @@ import static it.albertus.routerlogger.gui.preference.page.PageDefinition.READER
 import static it.albertus.routerlogger.gui.preference.page.PageDefinition.SERVER;
 import static it.albertus.routerlogger.gui.preference.page.PageDefinition.SERVER_HANDLER;
 import static it.albertus.routerlogger.gui.preference.page.PageDefinition.SERVER_HTTPS;
+import static it.albertus.routerlogger.gui.preference.page.PageDefinition.SERVER_HTTPS_ADVANCED;
 import static it.albertus.routerlogger.gui.preference.page.PageDefinition.THRESHOLDS;
 import static it.albertus.routerlogger.gui.preference.page.PageDefinition.WRITER;
 
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -84,6 +86,7 @@ import it.albertus.routerlogger.gui.preference.page.DatabasePreferencePage;
 import it.albertus.routerlogger.gui.preference.page.GeneralPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.MqttPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.ReaderPreferencePage;
+import it.albertus.routerlogger.gui.preference.page.ServerHttpsAdvancedPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.WriterPreferencePage;
 import it.albertus.routerlogger.http.AuthenticatorConfig;
@@ -108,6 +111,7 @@ import it.albertus.routerlogger.util.logging.EmailHandler;
 import it.albertus.routerlogger.writer.CsvWriter;
 import it.albertus.routerlogger.writer.DatabaseWriter;
 import it.albertus.util.Configuration;
+import it.albertus.util.ISupplier;
 import it.albertus.util.Localized;
 import it.albertus.util.logging.HousekeepingFilter;
 
@@ -288,10 +292,21 @@ public enum Preference implements IPreference {
 	SERVER_SSL_PROTOCOL(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_PROTOCOL).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getSslContextAlgorithmsComboOptions()).emptyStringAllowed(false).build()),
 	SERVER_SSL_KMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_KMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getKeyManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
 	SERVER_SSL_TMF_ALGORITHM(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_TMF_ALGORITHM).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).labelsAndValues(ServerHttpsPreferencePage.getTrustManagerFactoryComboOptions()).emptyStringAllowed(false).build()),
-	SERVER_SSL_HSTS_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().separate().defaultValue(HttpServerDefaultConfig.SSL_ENABLED).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_SSL_HSTS_MAXAGE(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_MAX_AGE).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberMinimum(1).emptyStringAllowed(false).build()),
-	SERVER_SSL_HSTS_INCLUDESUBDOMAINS(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_SSL_HSTS_PRELOAD(new PreferenceDetailsBuilder(SERVER_HTTPS).restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_PRELOAD).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+
+	SERVER_SSL_HSTS_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).restartRequired().defaultValue(HttpServerDefaultConfig.SSL_ENABLED).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_SSL_HSTS_MAXAGE(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_MAX_AGE).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).emptyStringAllowed(false).build()),
+	SERVER_SSL_HSTS_INCLUDESUBDOMAINS(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_SSL_HSTS_PRELOAD(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_PRELOAD).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_SSL_REDIRECTION_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).separate().restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_ENABLED).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_SSL_REDIRECTION_LISTENING_PORT(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_LISTENING_PORT).restartRequired().parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
+	SERVER_SSL_REDIRECTION_RESPONSE_CODE(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_RESPONSE_CODE).restartRequired().parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(HttpURLConnection.HTTP_MULT_CHOICE, HttpURLConnection.HTTP_BAD_REQUEST - 1).labelsAndValues(ServerHttpsAdvancedPreferencePage.getRedirectStatusComboOptions()).build()),
+	SERVER_SSL_REDIRECTION_LOCATION_HOST(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).emptyStringAllowed(false).labelsAndValues(new LocalizedLabelsAndValues(new ISupplier<String>() {
+		@Override
+		public String get() {
+			return Messages.get("lbl.preferences.server.ssl.redirection.location.host.auto");
+		}
+	}, HttpServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST)).build()),
+	SERVER_SSL_REDIRECTION_LOCATION_PORT(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_PORT).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
 
 	MQTT_ENABLED(new PreferenceDetailsBuilder(MQTT).defaultValue(MqttClient.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_SERVER_URI(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(UriListEditor.class).horizontalSpan(2).icons(Images.getMainIcons()).build()),

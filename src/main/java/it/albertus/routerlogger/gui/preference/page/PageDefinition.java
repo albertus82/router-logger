@@ -56,6 +56,7 @@ public enum PageDefinition implements IPageDefinition {
 	SERVER(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).build()),
 	SERVER_HANDLER(new PageDefinitionDetailsBuilder().parent(SERVER).build()),
 	SERVER_HTTPS(new PageDefinitionDetailsBuilder().pageClass(ServerHttpsPreferencePage.class).parent(SERVER).build()),
+	SERVER_HTTPS_ADVANCED(new PageDefinitionDetailsBuilder().pageClass(ServerHttpsAdvancedPreferencePage.class).parent(SERVER_HTTPS).build()),
 	MQTT(new PageDefinitionDetailsBuilder().pageClass(MqttPreferencePage.class).build()),
 	MQTT_MESSAGES(new PageDefinitionDetailsBuilder().pageClass(RestartHeaderPreferencePage.class).parent(MQTT).build()),
 	MQTT_ADVANCED(new PageDefinitionDetailsBuilder().pageClass(AdvancedMqttPreferencePage.class).parent(MQTT).build()),
