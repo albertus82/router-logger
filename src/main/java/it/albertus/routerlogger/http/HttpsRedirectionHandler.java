@@ -64,7 +64,6 @@ public class HttpsRedirectionHandler extends AbstractHttpHandler {
 		logger.log(Level.FINE, "Redirecting to: \"{0}\".", location);
 		exchange.sendResponseHeaders(responseCode, -1);
 		exchange.getResponseBody().close();
-		exchange.close();
 	}
 
 }
