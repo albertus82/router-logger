@@ -29,6 +29,7 @@ import it.albertus.routerlogger.http.html.StatusHtmlHandler;
 import it.albertus.routerlogger.http.json.AppStatusJsonHandler;
 import it.albertus.routerlogger.http.json.DeviceStatusJsonHandler;
 import it.albertus.util.Configuration;
+import it.albertus.util.ISupplier;
 
 public class HttpServerConfig extends HttpServerDefaultConfig {
 
@@ -86,7 +87,22 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 		final Filter[] defaultFilters = super.getFilters();
 		if (isSslEnabled() && configuration.getBoolean("server.ssl.hsts.enabled", DEFAULT_SSL_HSTS_ENABLED)) {
 			final Filter[] filters = Arrays.copyOf(defaultFilters, defaultFilters.length + 1);
-			filters[filters.length - 1] = new HSTSResponseFilter(configuration.getInt("server.ssl.hsts.maxage", DEFAULT_SSL_HSTS_MAX_AGE), configuration.getBoolean("server.ssl.hsts.includesubdomains", DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS), configuration.getBoolean("server.ssl.hsts.preload", DEFAULT_SSL_HSTS_PRELOAD));
+			filters[filters.length - 1] = new HSTSResponseFilter(new ISupplier<Integer>() {
+				@Override
+				public Integer get() {
+					return configuration.getInt("server.ssl.hsts.maxage", DEFAULT_SSL_HSTS_MAX_AGE);
+				}
+			}, new ISupplier<Boolean>() {
+				@Override
+				public Boolean get() {
+					return configuration.getBoolean("server.ssl.hsts.includesubdomains", DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS);
+				}
+			}, new ISupplier<Boolean>() {
+				@Override
+				public Boolean get() {
+					return configuration.getBoolean("server.ssl.hsts.preload", DEFAULT_SSL_HSTS_PRELOAD);
+				}
+			});
 			return filters;
 		}
 		else {
