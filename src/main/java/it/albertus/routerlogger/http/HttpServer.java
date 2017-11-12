@@ -19,7 +19,7 @@ public class HttpServer {
 		startRedirectionServer();
 	}
 
-	public void stop() {
+	public synchronized void stop() {
 		stopRedirectionServer();
 		stopMainServer();
 	}
@@ -35,7 +35,6 @@ public class HttpServer {
 		if (redirectionServer == null) {
 			redirectionServer = new LightweightHttpServer(new RedirectionServerConfig(httpServerConfig));
 		}
-
 		redirectionServer.start();
 	}
 
