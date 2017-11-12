@@ -11,7 +11,7 @@ import it.albertus.util.Configuration;
 public class RedirectionServerConfig extends HttpServerDefaultConfig {
 
 	public static final boolean DEFAULT_SSL_REDIRECTION_ENABLED = false;
-	public static final int DEFAULT_SSL_REDIRECTION_LISTENING_PORT = 8080;
+	public static final int DEFAULT_SSL_REDIRECTION_LISTENING_PORT = 80;
 	public static final int DEFAULT_SSL_REDIRECTION_RESPONSE_CODE = HttpURLConnection.HTTP_MOVED_TEMP;
 	public static final String DEFAULT_SSL_REDIRECTION_LOCATION_HOST = "0.0.0.0";
 	public static final int DEFAULT_SSL_REDIRECTION_LOCATION_PORT = 443;
