@@ -36,12 +36,12 @@ public class HttpsRedirectionHandler extends AbstractHttpHandler {
 
 		final int port = config.getSslRedirectionLocationPort();
 		if (port < 1 || port > 65535) {
-			throw new IllegalArgumentException("Invalid port: " + port + ".");
+			throw new IllegalArgumentException("Invalid TCP port: " + port + ".");
 		}
 
 		final int responseCode = config.getSslRedirectionResponseCode();
 		if (responseCode < HttpURLConnection.HTTP_MULT_CHOICE || responseCode >= HttpURLConnection.HTTP_BAD_REQUEST) {
-			throw new IllegalArgumentException("Invalid response code: " + responseCode + ".");
+			throw new IllegalArgumentException("Invalid HTTP response code: " + responseCode + ".");
 		}
 
 		final URI uri = exchange.getRequestURI();

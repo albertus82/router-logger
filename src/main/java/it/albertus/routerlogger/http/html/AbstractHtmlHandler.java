@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import it.albertus.net.httpserver.AbstractHttpHandler;
 import it.albertus.net.httpserver.HttpException;
 import it.albertus.net.httpserver.HttpMethod;
+import it.albertus.net.httpserver.HttpStatusCodes;
 import it.albertus.net.httpserver.config.IHttpServerConfig;
 import it.albertus.net.httpserver.html.HtmlUtils;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
@@ -63,7 +64,7 @@ public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
 	protected void sendError(final HttpExchange exchange, final HttpException e) throws IOException {
 		final StringBuilder html = new StringBuilder(buildHtmlHeader(Messages.get(MSG_KEY_LBL_ERROR, e.getStatusCode())));
 		html.append("<div class=\"page-header\"><h2>").append(HtmlUtils.escapeHtml(Messages.get(MSG_KEY_LBL_ERROR, e.getStatusCode()))).append("</h2></div>").append(NewLine.CRLF);
-		html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : getHttpStatusCodes().get(e.getStatusCode()))).append("</div>").append(NewLine.CRLF);
+		html.append("<div class=\"alert alert-danger alert-h4\" role=\"alert\">").append(HtmlUtils.escapeHtml(StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : HttpStatusCodes.getMap().get(e.getStatusCode()))).append("</div>").append(NewLine.CRLF);
 		html.append(buildHtmlFooter());
 		sendResponse(exchange, html.toString(), e.getStatusCode());
 	}
