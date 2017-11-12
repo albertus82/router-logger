@@ -19,9 +19,9 @@ public class HttpsRedirectionHandler extends AbstractHttpHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpsRedirectionHandler.class);
 
-	private final HttpServerConfig config;
+	private final RedirectionServerConfig config;
 
-	public HttpsRedirectionHandler(final HttpServerConfig config) {
+	public HttpsRedirectionHandler(final RedirectionServerConfig config) {
 		super(config);
 		this.config = config;
 	}
@@ -29,7 +29,7 @@ public class HttpsRedirectionHandler extends AbstractHttpHandler {
 	@Override
 	protected void doGet(final HttpExchange exchange) throws IOException {
 		String host = config.getSslRedirectionLocationHost();
-		if (host == null || host.trim().isEmpty() || HttpServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST.equals(host.trim())) {
+		if (host == null || host.trim().isEmpty() || RedirectionServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST.equals(host.trim())) {
 			host = exchange.getRequestHeaders().getFirst("Host").split(":")[0]; // discard the port number
 			logger.log(Level.CONFIG, "SSL host location not configured. Using the \"Host\" request header: \"{0}\".", host);
 		}

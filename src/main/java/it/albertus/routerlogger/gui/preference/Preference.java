@@ -91,6 +91,7 @@ import it.albertus.routerlogger.gui.preference.page.ServerHttpsPreferencePage;
 import it.albertus.routerlogger.gui.preference.page.WriterPreferencePage;
 import it.albertus.routerlogger.http.AuthenticatorConfig;
 import it.albertus.routerlogger.http.HttpServerConfig;
+import it.albertus.routerlogger.http.RedirectionServerConfig;
 import it.albertus.routerlogger.http.html.CloseHandler;
 import it.albertus.routerlogger.http.html.ConfigurationHandler;
 import it.albertus.routerlogger.http.html.ConnectHandler;
@@ -297,16 +298,16 @@ public enum Preference implements IPreference {
 	SERVER_SSL_HSTS_MAXAGE(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_MAX_AGE).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).emptyStringAllowed(false).build()),
 	SERVER_SSL_HSTS_INCLUDESUBDOMAINS(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_SSL_HSTS_PRELOAD(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_HSTS_PRELOAD).parent(SERVER_SSL_HSTS_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_SSL_REDIRECTION_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).separate().restartRequired().defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_ENABLED).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
-	SERVER_SSL_REDIRECTION_LISTENING_PORT(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_LISTENING_PORT).restartRequired().parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
-	SERVER_SSL_REDIRECTION_RESPONSE_CODE(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_RESPONSE_CODE).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(HttpURLConnection.HTTP_MULT_CHOICE, HttpURLConnection.HTTP_BAD_REQUEST - 1).labelsAndValues(ServerHttpsAdvancedPreferencePage.getRedirectStatusComboOptions()).build()),
-	SERVER_SSL_REDIRECTION_LOCATION_HOST(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).emptyStringAllowed(false).labelsAndValues(new LocalizedLabelsAndValues(new ISupplier<String>() {
+	SERVER_SSL_REDIRECTION_ENABLED(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).separate().restartRequired().defaultValue(RedirectionServerConfig.DEFAULT_SSL_REDIRECTION_ENABLED).parent(SERVER_SSL_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_SSL_REDIRECTION_LISTENING_PORT(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(RedirectionServerConfig.DEFAULT_SSL_REDIRECTION_LISTENING_PORT).restartRequired().parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
+	SERVER_SSL_REDIRECTION_RESPONSE_CODE(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(RedirectionServerConfig.DEFAULT_SSL_REDIRECTION_RESPONSE_CODE).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(ShortComboFieldEditor.class).numberValidRange(HttpURLConnection.HTTP_MULT_CHOICE, HttpURLConnection.HTTP_BAD_REQUEST - 1).labelsAndValues(ServerHttpsAdvancedPreferencePage.getRedirectStatusComboOptions()).build()),
+	SERVER_SSL_REDIRECTION_LOCATION_HOST(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(RedirectionServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(ValidatedComboFieldEditor.class).emptyStringAllowed(false).labelsAndValues(new LocalizedLabelsAndValues(new ISupplier<String>() {
 		@Override
 		public String get() {
 			return Messages.get("lbl.preferences.server.ssl.redirection.location.host.auto");
 		}
-	}, HttpServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST)).build()),
-	SERVER_SSL_REDIRECTION_LOCATION_PORT(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(HttpServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_PORT).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
+	}, RedirectionServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_HOST)).build()),
+	SERVER_SSL_REDIRECTION_LOCATION_PORT(new PreferenceDetailsBuilder(SERVER_HTTPS_ADVANCED).defaultValue(RedirectionServerConfig.DEFAULT_SSL_REDIRECTION_LOCATION_PORT).parent(SERVER_SSL_REDIRECTION_ENABLED).build(), new FieldEditorDetailsBuilder(EnhancedIntegerFieldEditor.class).numberValidRange(1, 65535).build()),
 
 	MQTT_ENABLED(new PreferenceDetailsBuilder(MQTT).defaultValue(MqttClient.Defaults.ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	MQTT_SERVER_URI(new PreferenceDetailsBuilder(MQTT).restartRequired().parent(MQTT_ENABLED).build(), new FieldEditorDetailsBuilder(UriListEditor.class).horizontalSpan(2).icons(Images.getMainIcons()).build()),

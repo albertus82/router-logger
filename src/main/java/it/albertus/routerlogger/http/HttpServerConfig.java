@@ -1,6 +1,5 @@
 package it.albertus.routerlogger.http;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -42,11 +41,6 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	public static final int DEFAULT_SSL_HSTS_MAX_AGE = 180 * 24 * 60 * 60; // 180 days (in seconds)
 	public static final boolean DEFAULT_SSL_HSTS_INCLUDESUBDOMAINS = true;
 	public static final boolean DEFAULT_SSL_HSTS_PRELOAD = false;
-	public static final boolean DEFAULT_SSL_REDIRECTION_ENABLED = false;
-	public static final int DEFAULT_SSL_REDIRECTION_LISTENING_PORT = 8080;
-	public static final int DEFAULT_SSL_REDIRECTION_RESPONSE_CODE = HttpURLConnection.HTTP_MOVED_TEMP;
-	public static final String DEFAULT_SSL_REDIRECTION_LOCATION_HOST = "0.0.0.0";
-	public static final int DEFAULT_SSL_REDIRECTION_LOCATION_PORT = 443;
 
 	private final Configuration configuration = RouterLoggerConfig.getInstance();
 
@@ -203,26 +197,6 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	@Override
 	public boolean isCompressionEnabled() {
 		return configuration.getBoolean("server.compress.response", super.isCompressionEnabled());
-	}
-
-	public boolean isSslRedirectionEnabled() {
-		return configuration.getBoolean("server.ssl.redirection.enabled", DEFAULT_SSL_REDIRECTION_ENABLED);
-	}
-
-	public int getSslRedirectionListeningPort() {
-		return configuration.getInt("server.ssl.redirection.listening.port", DEFAULT_SSL_REDIRECTION_LISTENING_PORT);
-	}
-
-	public int getSslRedirectionResponseCode() {
-		return configuration.getInt("server.ssl.redirection.response.code", DEFAULT_SSL_REDIRECTION_RESPONSE_CODE);
-	}
-
-	public String getSslRedirectionLocationHost() {
-		return configuration.getString("server.ssl.redirection.location.host", DEFAULT_SSL_REDIRECTION_LOCATION_HOST);
-	}
-
-	public int getSslRedirectionLocationPort() {
-		return configuration.getInt("server.ssl.redirection.location.port", DEFAULT_SSL_REDIRECTION_LOCATION_PORT);
 	}
 
 }
