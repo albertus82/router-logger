@@ -259,7 +259,8 @@ public enum Preference implements IPreference {
 		}
 	}, -1)).build()),
 	SERVER_LOG_REQUEST(new PreferenceDetailsBuilder(SERVER).separate().defaultValue(HttpServerDefaultConfig.REQUEST_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(LoggingPreferencePage.getLoggingLevelComboOptions(Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING)).build()),
-	SERVER_COMPRESS_RESPONSE(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerDefaultConfig.COMPRESSION_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
+	SERVER_LOG_RESPONSE(new PreferenceDetailsBuilder(SERVER).defaultValue(HttpServerDefaultConfig.RESPONSE_LOGGING_LEVEL).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultComboFieldEditor.class).labelsAndValues(LoggingPreferencePage.getLoggingLevelComboOptions(Level.OFF, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING)).build()),
+	SERVER_COMPRESS_RESPONSE(new PreferenceDetailsBuilder(SERVER).separate().defaultValue(HttpServerDefaultConfig.COMPRESSION_ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 
 	SERVER_HANDLER_ROOT_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(RootHtmlHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),
 	SERVER_HANDLER_LOGS_ENABLED(new PreferenceDetailsBuilder(SERVER_HANDLER).defaultValue(LogsHandler.Defaults.ENABLED).parent(SERVER_ENABLED).build(), new FieldEditorDetailsBuilder(DefaultBooleanFieldEditor.class).build()),

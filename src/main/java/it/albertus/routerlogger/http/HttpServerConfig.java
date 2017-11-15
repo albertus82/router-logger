@@ -195,6 +195,11 @@ public class HttpServerConfig extends HttpServerDefaultConfig {
 	}
 
 	@Override
+	public String getResponseLoggingLevel() {
+		return configuration.getString("server.log.response", super.getResponseLoggingLevel());
+	}
+
+	@Override
 	public boolean isCompressionEnabled() {
 		return configuration.getBoolean("server.compress.response", super.isCompressionEnabled());
 	}

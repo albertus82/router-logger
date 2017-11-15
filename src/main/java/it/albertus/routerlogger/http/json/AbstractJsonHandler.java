@@ -55,7 +55,7 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 	}
 
 	@Override
-	protected void log(final HttpExchange exchange) {
+	protected void logRequest(final HttpExchange exchange) {
 		Level level = Level.FINEST;
 		try {
 			level = Level.parse(getHttpServerConfig().getRequestLoggingLevel());
@@ -66,7 +66,22 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 		catch (final RuntimeException e) {
 			logger.log(Level.WARNING, e.toString(), e);
 		}
-		doLog(exchange, level);
+		doLogRequest(exchange, level);
+	}
+
+	@Override
+	protected void logResponse(final HttpExchange exchange) {
+		Level level = Level.FINEST;
+		try {
+			level = Level.parse(getHttpServerConfig().getResponseLoggingLevel());
+			if (level.intValue() > Level.FINE.intValue()) {
+				level = Level.FINE;
+			}
+		}
+		catch (final RuntimeException e) {
+			logger.log(Level.WARNING, e.toString(), e);
+		}
+		doLogResponse(exchange, level);
 	}
 
 }

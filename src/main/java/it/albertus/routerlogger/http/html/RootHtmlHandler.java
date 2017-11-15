@@ -96,7 +96,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	}
 
 	@Override
-	protected void log(final HttpExchange exchange) {
+	protected void logRequest(final HttpExchange exchange) {
 		if (requestedStaticResource(exchange)) {
 			Level level = Level.OFF;
 			try {
@@ -108,10 +108,30 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 			if (level.intValue() > Level.FINE.intValue()) {
 				level = Level.FINE;
 			}
-			doLog(exchange, level);
+			doLogRequest(exchange, level);
 		}
 		else {
-			super.log(exchange);
+			super.logRequest(exchange);
+		}
+	}
+
+	@Override
+	protected void logResponse(final HttpExchange exchange) {
+		if (requestedStaticResource(exchange)) {
+			Level level = Level.OFF;
+			try {
+				level = Level.parse(getHttpServerConfig().getResponseLoggingLevel());
+			}
+			catch (final RuntimeException e) {
+				logger.log(Level.WARNING, e.toString(), e);
+			}
+			if (level.intValue() > Level.FINE.intValue()) {
+				level = Level.FINE;
+			}
+			doLogResponse(exchange, level);
+		}
+		else {
+			super.logResponse(exchange);
 		}
 	}
 
