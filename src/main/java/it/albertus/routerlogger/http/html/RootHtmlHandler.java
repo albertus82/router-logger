@@ -8,7 +8,7 @@ import it.albertus.net.MimeTypes;
 import it.albertus.net.httpserver.annotation.Path;
 import it.albertus.net.httpserver.config.IHttpServerConfig;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
-import it.albertus.routerlogger.http.HttpServerConfig;
+import it.albertus.routerlogger.http.HttpServer;
 import it.albertus.routerlogger.reader.AsusDslN12EReader;
 import it.albertus.routerlogger.reader.AsusDslN14UReader;
 import it.albertus.routerlogger.reader.DLinkDsl2750Reader;
@@ -31,7 +31,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	static final String CFG_KEY_ENABLED = "server.handler.root.enabled";
 
-	private static final String RESOURCE_BASE_PATH = '/' + HttpServerConfig.class.getPackage().getName().replace('.', '/') + "/static/";
+	private static final String RESOURCE_BASE_PATH = '/' + HttpServer.class.getPackage().getName().replace('.', '/') + "/static/";
 
 	private final RouterLoggerEngine engine;
 
