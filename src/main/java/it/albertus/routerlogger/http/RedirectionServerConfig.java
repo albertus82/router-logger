@@ -29,6 +29,11 @@ public class RedirectionServerConfig extends HttpServerDefaultConfig {
 	}
 
 	@Override
+	public boolean isEnabled() {
+		return httpServerConfig.isEnabled() && httpServerConfig.isSslEnabled() && routerLoggerConfig.getBoolean("server.ssl.redirection.enabled", DEFAULT_SSL_REDIRECTION_ENABLED);
+	}
+
+	@Override
 	public long getMaxReqTime() {
 		return httpServerConfig.getMaxReqTime();
 	}
@@ -39,18 +44,28 @@ public class RedirectionServerConfig extends HttpServerDefaultConfig {
 	}
 
 	@Override
-	public int getMaxThreadCount() {
-		return 2;
-	}
-
-	@Override
 	public int getMinThreadCount() {
 		return 1;
 	}
 
 	@Override
+	public int getMaxThreadCount() {
+		return 2;
+	}
+
+	@Override
 	public int getPort() {
 		return routerLoggerConfig.getInt("server.ssl.redirection.listening.port", DEFAULT_SSL_REDIRECTION_LISTENING_PORT);
+	}
+
+	@Override
+	public String getRequestLoggingLevel() {
+		return httpServerConfig.getRequestLoggingLevel();
+	}
+
+	@Override
+	public String getResponseLoggingLevel() {
+		return httpServerConfig.getResponseLoggingLevel();
 	}
 
 	public String getSslRedirectionLocationHost() {
@@ -63,11 +78,6 @@ public class RedirectionServerConfig extends HttpServerDefaultConfig {
 
 	public int getSslRedirectionResponseCode() {
 		return routerLoggerConfig.getInt("server.ssl.redirection.response.code", DEFAULT_SSL_REDIRECTION_RESPONSE_CODE);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return httpServerConfig.isEnabled() && httpServerConfig.isSslEnabled() && routerLoggerConfig.getBoolean("server.ssl.redirection.enabled", DEFAULT_SSL_REDIRECTION_ENABLED);
 	}
 
 }

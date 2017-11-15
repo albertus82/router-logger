@@ -41,14 +41,14 @@ public class HttpsRedirectionHandler extends AbstractHttpHandler {
 
 		final int responseCode = config.getSslRedirectionResponseCode();
 		if (responseCode < HttpURLConnection.HTTP_MULT_CHOICE || responseCode >= HttpURLConnection.HTTP_BAD_REQUEST) {
-			throw new IllegalArgumentException("Invalid HTTP response code: " + responseCode + ".");
+			throw new IllegalArgumentException("Invalid HTTP redirection code: " + responseCode + ".");
 		}
 
-		final URI uri = exchange.getRequestURI();
 		final StringBuilder sb = new StringBuilder("https://").append(host);
 		if (port != DEFAULT_HTTPS_PORT) {
 			sb.append(':').append(port);
 		}
+		final URI uri = exchange.getRequestURI();
 		if (uri.getRawPath() != null) {
 			sb.append(uri.getRawPath());
 		}

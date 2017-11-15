@@ -1,8 +1,6 @@
 package it.albertus.routerlogger.http.html;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -18,15 +16,13 @@ import it.albertus.routerlogger.reader.IReader;
 import it.albertus.routerlogger.reader.TpLink8970Reader;
 import it.albertus.routerlogger.resources.Messages;
 import it.albertus.util.NewLine;
-import it.albertus.util.logging.LoggerFactory;
 
 @Path("/")
 public class RootHtmlHandler extends AbstractHtmlHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(RootHtmlHandler.class);
-
 	public static class Defaults {
 		public static final boolean ENABLED = true;
+		public static final boolean LOG_INCLUDE_STATIC = false;
 
 		private Defaults() {
 			throw new IllegalAccessError("Constants class");
@@ -97,40 +93,14 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 
 	@Override
 	protected void logRequest(final HttpExchange exchange) {
-		if (requestedStaticResource(exchange)) {
-			Level level = Level.OFF;
-			try {
-				level = Level.parse(getHttpServerConfig().getRequestLoggingLevel());
-			}
-			catch (final RuntimeException e) {
-				logger.log(Level.WARNING, e.toString(), e);
-			}
-			if (level.intValue() > Level.FINE.intValue()) {
-				level = Level.FINE;
-			}
-			doLogRequest(exchange, level);
-		}
-		else {
+		if (!requestedStaticResource(exchange) || configuration.getBoolean("server.log.include.static", Defaults.LOG_INCLUDE_STATIC)) {
 			super.logRequest(exchange);
 		}
 	}
 
 	@Override
 	protected void logResponse(final HttpExchange exchange) {
-		if (requestedStaticResource(exchange)) {
-			Level level = Level.OFF;
-			try {
-				level = Level.parse(getHttpServerConfig().getResponseLoggingLevel());
-			}
-			catch (final RuntimeException e) {
-				logger.log(Level.WARNING, e.toString(), e);
-			}
-			if (level.intValue() > Level.FINE.intValue()) {
-				level = Level.FINE;
-			}
-			doLogResponse(exchange, level);
-		}
-		else {
+		if (!requestedStaticResource(exchange) || configuration.getBoolean("server.log.include.static", Defaults.LOG_INCLUDE_STATIC)) {
 			super.logResponse(exchange);
 		}
 	}
