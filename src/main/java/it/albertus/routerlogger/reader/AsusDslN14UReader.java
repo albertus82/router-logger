@@ -110,4 +110,9 @@ public class AsusDslN14UReader extends Reader {
 		return Messages.get(DEVICE_MODEL_KEY);
 	}
 
+	@Override
+	public String getImageFileName() {
+		return "asus_dsl_n14u.png";
+	}
+
 }

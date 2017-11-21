@@ -73,4 +73,6 @@ public interface IReader {
 
 	void release();
 
+	String getImageFileName();
+
 }

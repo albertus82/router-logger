@@ -117,4 +117,9 @@ public class AsusDslN12EReader extends Reader {
 		return Messages.get(DEVICE_MODEL_KEY);
 	}
 
+	@Override
+	public String getImageFileName() {
+		return "asus_dsl_n12e.png";
+	}
+
 }

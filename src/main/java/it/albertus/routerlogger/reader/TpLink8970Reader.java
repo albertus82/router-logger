@@ -113,4 +113,9 @@ public class TpLink8970Reader extends Reader {
 		return Messages.get(DEVICE_MODEL_KEY);
 	}
 
+	@Override
+	public String getImageFileName() {
+		return "tplink_td_w8970v1.png";
+	}
+
 }

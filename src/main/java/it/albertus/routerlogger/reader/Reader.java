@@ -213,4 +213,9 @@ public abstract class Reader implements IReader {
 	@Override
 	public void release() {}
 
+	@Override
+	public String getImageFileName() {
+		return "applications-internet.png";
+	}
+
 }

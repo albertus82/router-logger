@@ -78,4 +78,9 @@ public class DLinkDsl2750Reader extends Reader {
 		return Messages.get(DEVICE_MODEL_KEY);
 	}
 
+	@Override
+	public String getImageFileName() {
+		return "dlink_dsl_2750b.png";
+	}
+
 }
