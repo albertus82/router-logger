@@ -5,10 +5,6 @@ clone_depth: 50
 environment:
   JRE6_HOME: $(ProgramFiles)\Java\jdk1.6.0\jre
   ANT_VERSION: 1.10.1
-  VT_API_URL: https://www.virustotal.com/vtapi/v2/file/scan
-  VT_API_DELAY: 15
-  VT_API_KEY:
-    secure: 3sqJDjLAS708tR/LiAqKLZTnLLrhGJuWVzzI4nCjLbUUsZB+PPRG3y0BWWnMo14CDhBT4v6yjHTA23RdopoHDWJlBcGhKELKZOLhHsnJLU8=
 
   matrix:
     - platform: x86
@@ -27,14 +23,24 @@ environment:
       ANT_VERSION: 1.9.9
     - platform: x64
       JAVA_HOME: $(ProgramFiles)\Java\jdk1.8.0
+      environment:
+        VT_API_URL: https://www.virustotal.com/vtapi/v2/file/scan
+        VT_API_DELAY: 15
+        VT_API_KEY:
+          secure: 3sqJDjLAS708tR/LiAqKLZTnLLrhGJuWVzzI4nCjLbUUsZB+PPRG3y0BWWnMo14CDhBT4v6yjHTA23RdopoHDWJlBcGhKELKZOLhHsnJLU8=
+      after_build:
+        - ps: If ($env:APPVEYOR_REPO_TAG -eq 'true') { $env:ARTIFACTS_PATH = 'target\*.*' }
+        - cmd: IF "%APPVEYOR_REPO_TAG%" == "true" FOR /R target %%i IN (*.exe) DO IF "%%~xi" == ".exe" ECHO %%i & curl -v -F "file=@%%i" -F apikey=%VT_API_KEY% %VT_API_URL% & TIMEOUT %VT_API_DELAY% /NOBREAK
+        - cmd: IF "%APPVEYOR_REPO_TAG%" == "true" FOR /R target %%i IN (*.tar.gz) DO ECHO %%i & curl -v -F "file=@%%i" -F apikey=%VT_API_KEY% %VT_API_URL% & TIMEOUT %VT_API_DELAY% /NOBREAK
     - platform: x64
       JAVA_HOME: $(ChocolateyInstall)\lib\jvm\jdk9
+      install:
+        - ps: If ($env:JAVA_HOME -eq ($env:ChocolateyInstall + '\lib\jvm\jdk9')) { cinst jdk9 -i -params 'installdir=C:\\ProgramData\\chocolatey\\lib\\jvm\\jdk9' }
 
 cache:
   - $(ChocolateyInstall)\lib\ant -> .appveyor.yml
 
 install:
-  - ps: If ($env:JAVA_HOME -eq ($env:ChocolateyInstall + '\lib\jvm\jdk9')) { cinst jdk9 -i -params 'installdir=C:\\ProgramData\\chocolatey\\lib\\jvm\\jdk9' }
   - ps: If (!(Test-Path -Path ($env:ChocolateyInstall + '\lib\ant\apache-ant-' + $env:ANT_VERSION))) { cinst ant -i --version $env:ANT_VERSION }
   - cmd: PATH %ChocolateyInstall%\lib\ant\apache-ant-%ANT_VERSION%\bin;%JAVA_HOME%\bin;%PATH%
 
@@ -45,11 +51,6 @@ before_build:
 
 build_script:
   - ant all
-
-after_build:
-  - ps: If ($env:APPVEYOR_REPO_TAG -eq 'true' -and $env:JAVA_HOME -eq ($env:ProgramFiles + '\Java\jdk1.8.0')) { $env:ARTIFACTS_PATH = 'target\*.*' }
-  - cmd: IF "%APPVEYOR_REPO_TAG%" == "true" IF "%JAVA_HOME%" == "%ProgramFiles%\Java\jdk1.8.0" FOR /R target %%i IN (*.exe)    DO IF "%%~xi" == ".exe" ECHO %%i & curl -v -F "file=@%%i" -F apikey=%VT_API_KEY% %VT_API_URL% & TIMEOUT %VT_API_DELAY% /NOBREAK
-  - cmd: IF "%APPVEYOR_REPO_TAG%" == "true" IF "%JAVA_HOME%" == "%ProgramFiles%\Java\jdk1.8.0" FOR /R target %%i IN (*.tar.gz) DO                      ECHO %%i & curl -v -F "file=@%%i" -F apikey=%VT_API_KEY% %VT_API_URL% & TIMEOUT %VT_API_DELAY% /NOBREAK
 
 artifacts:
   - path: $(ARTIFACTS_PATH)
