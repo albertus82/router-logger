@@ -23,11 +23,10 @@ environment:
       ANT_VERSION: 1.9.9
     - platform: x64
       JAVA_HOME: $(ProgramFiles)\Java\jdk1.8.0
-      environment:
-        VT_API_URL: https://www.virustotal.com/vtapi/v2/file/scan
-        VT_API_DELAY: 15
-        VT_API_KEY:
-          secure: 3sqJDjLAS708tR/LiAqKLZTnLLrhGJuWVzzI4nCjLbUUsZB+PPRG3y0BWWnMo14CDhBT4v6yjHTA23RdopoHDWJlBcGhKELKZOLhHsnJLU8=
+      VT_API_URL: https://www.virustotal.com/vtapi/v2/file/scan
+      VT_API_DELAY: 15
+      VT_API_KEY:
+        secure: 3sqJDjLAS708tR/LiAqKLZTnLLrhGJuWVzzI4nCjLbUUsZB+PPRG3y0BWWnMo14CDhBT4v6yjHTA23RdopoHDWJlBcGhKELKZOLhHsnJLU8=
       after_build:
         - ps: If ($env:APPVEYOR_REPO_TAG -eq 'true') { $env:ARTIFACTS_PATH = 'target\*.*' }
         - cmd: IF "%APPVEYOR_REPO_TAG%" == "true" FOR /R target %%i IN (*.exe) DO IF "%%~xi" == ".exe" ECHO %%i & curl -v -F "file=@%%i" -F apikey=%VT_API_KEY% %VT_API_URL% & TIMEOUT %VT_API_DELAY% /NOBREAK
