@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.net.MimeTypes;
+import it.albertus.net.MimeTypesMap;
 import it.albertus.net.httpserver.annotation.Path;
 import it.albertus.net.httpserver.config.IHttpServerConfig;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
@@ -56,7 +56,7 @@ public class RootHtmlHandler extends AbstractHtmlHandler {
 	@Override
 	protected void setContentTypeHeader(final HttpExchange exchange) {
 		if (requestedStaticResource(exchange) && getStaticResource(RESOURCE_BASE_PATH + getPathInfo(exchange)) != null) {
-			setContentTypeHeader(exchange, MimeTypes.getContentType(exchange.getRequestURI().getPath())); // extension based
+			setContentTypeHeader(exchange, MimeTypesMap.getInstance().getContentType(exchange.getRequestURI().getPath())); // extension based
 		}
 		else {
 			super.setContentTypeHeader(exchange); // text/html

@@ -8,13 +8,13 @@ import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.net.httpserver.AbstractHttpHandler;
+import it.albertus.net.httpserver.BaseHttpHandler;
 import it.albertus.net.httpserver.HttpException;
 import it.albertus.net.httpserver.annotation.Path;
 import it.albertus.util.logging.LoggerFactory;
 
 @Path("/")
-public class HttpsRedirectionHandler extends AbstractHttpHandler {
+public class HttpsRedirectionHandler extends BaseHttpHandler {
 
 	private static final int DEFAULT_HTTPS_PORT = 443;
 

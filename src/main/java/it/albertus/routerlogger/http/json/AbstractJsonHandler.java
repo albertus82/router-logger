@@ -5,13 +5,13 @@ import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.net.httpserver.AbstractHttpHandler;
+import it.albertus.net.httpserver.BaseHttpHandler;
 import it.albertus.net.httpserver.config.IHttpServerConfig;
 import it.albertus.routerlogger.engine.RouterLoggerConfig;
 import it.albertus.routerlogger.engine.RouterLoggerEngine;
 import it.albertus.util.logging.LoggerFactory;
 
-public abstract class AbstractJsonHandler extends AbstractHttpHandler {
+public abstract class AbstractJsonHandler extends BaseHttpHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractJsonHandler.class);
 
@@ -36,7 +36,7 @@ public abstract class AbstractJsonHandler extends AbstractHttpHandler {
 
 	@Override
 	protected void setContentTypeHeader(final HttpExchange exchange) {
-		setContentTypeHeader(exchange, "application/json; charset=" + getCharset().name());
+		setContentTypeHeader(exchange, "application/json; charset=" + getCharset().name().toLowerCase());
 	}
 
 	@Override

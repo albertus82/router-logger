@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.net.httpserver.AbstractHttpHandler;
+import it.albertus.net.httpserver.BaseHttpHandler;
 import it.albertus.net.httpserver.HttpException;
 import it.albertus.net.httpserver.HttpMethod;
 import it.albertus.net.httpserver.HttpStatusCodes;
@@ -19,7 +19,7 @@ import it.albertus.util.NewLine;
 import it.albertus.util.StringUtils;
 import it.albertus.util.Version;
 
-public abstract class AbstractHtmlHandler extends AbstractHttpHandler {
+public abstract class AbstractHtmlHandler extends BaseHttpHandler {
 
 	private static final String MSG_KEY_LBL_ERROR = "lbl.server.error";
 

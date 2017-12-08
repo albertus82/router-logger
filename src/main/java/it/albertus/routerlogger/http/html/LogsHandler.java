@@ -19,7 +19,7 @@ import java.util.zip.GZIPOutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import it.albertus.net.MimeTypes;
+import it.albertus.net.MimeTypesMap;
 import it.albertus.net.httpserver.HttpMethod;
 import it.albertus.net.httpserver.RequestParameterExtractor;
 import it.albertus.net.httpserver.annotation.Path;
@@ -116,7 +116,7 @@ public class LogsHandler extends AbstractHtmlHandler {
 			if (!headMethod) {
 				input = new FileInputStream(file);
 			}
-			setContentTypeHeader(exchange, MimeTypes.getContentType(".log"));
+			setContentTypeHeader(exchange, MimeTypesMap.getInstance().getContentType(".log"));
 			exchange.getResponseHeaders().set("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 			if (canCompressResponse(exchange)) {
 				setGzipHeader(exchange);
